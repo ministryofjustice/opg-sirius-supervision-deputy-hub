@@ -73,7 +73,7 @@ jobs:
 
       - name: Build Container
         run: |
-          docker build --tag sirius/sirius-deputy-hub:latest -f docker/sirius-deputy-hub/Dockerfile .
+          docker build --tag sirius/sirius-deputy-hub:latest -f Dockerfile .
       - name: Scan
         run: |
           docker run --rm  -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy sirius/sirius-deputy-hub:latest
