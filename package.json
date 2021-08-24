@@ -1,0 +1,12 @@
+{
+  "name": "opg-sirius-supervision-deputy-hub",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "json-server": "^0.16.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "fakedb": "json-server --watch json-server/db.json"
+  }
+}
