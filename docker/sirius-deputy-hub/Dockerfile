@@ -21,7 +21,21 @@ EXPOSE 2345
 
 ENTRYPOINT ["air"]
 
-FROM golang:1.16 as build-env
+FROM node:14.17.5-alpine3.14 as asset-env
+
+WORKDIR /app
+
+RUN mkdir -p web/static
+
+COPY web/assets web/assets
+COPY webpack.config.js .
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install
+RUN yarn build
+
+FROM base as build-env
 
 WORKDIR /app
 
@@ -43,4 +57,6 @@ RUN apk --update --no-cache add \
 RUN apk --no-cache add tzdata
 
 COPY --from=build-env /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
+COPY --from=build-env /app/web/template web/template
+COPY --from=asset-env /app/web/static web/static
 ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"] 
