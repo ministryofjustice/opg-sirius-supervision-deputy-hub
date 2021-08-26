@@ -28,7 +28,6 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	mux := http.NewServeMux()
-	fmt.Println("before handle / route")
 	mux.Handle("/",
 		wrap(
 			loggingInfoForDeputyHub(client, templates["deputy-hub.gotmpl"])))
