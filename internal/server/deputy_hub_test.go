@@ -10,8 +10,6 @@ import (
 )
 
 type mockDeputyHubInformation struct {
-	count int
-	err   error
 }
 
 func TestNavigateToDeputyHub(t *testing.T) {
