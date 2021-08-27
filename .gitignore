@@ -2,6 +2,8 @@ node_modules
 package-lock.json
 tmp/
 web/static
+cypress/screenshots
+cypress/videos
 
 # binaries
 /main

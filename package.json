@@ -13,6 +13,7 @@
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",
     "css-loader": "^6.2.0",
+    "cypress": "^8.3.0",
     "mini-css-extract-plugin": "^2.2.0",
     "sass": "^1.38.1",
     "sass-loader": "^12.1.0",
@@ -21,6 +22,10 @@
   },
   "scripts": {
     "build": "webpack",
-    "fakedb": "json-server --watch json-server/db.json"
+    "fakedb": "json-server --watch json-server/db.json",
+    "watch": "webpack --watch",
+    "test-sirius": "cd internal/sirius && go test",
+    "test-server": "cd internal/server && go test",
+    "cypress": "cypress open"
   }
 }
