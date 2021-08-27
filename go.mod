@@ -1,3 +1,8 @@
-module github.com/opg-sirius-supervision-deputy-hub
+module github.com/ministryofjustice/opg-sirius-supervision-deputy-hub
 
 go 1.16
+
+require (
+	github.com/pact-foundation/pact-go v1.6.4
+	github.com/stretchr/testify v1.7.0
+)
