@@ -2,11 +2,12 @@ describe("Deputy Hub", () => {
   beforeEach(() => {
       cy.setCookie("Other", "other");
       cy.setCookie("XSRF-TOKEN", "abcde");
-      cy.visit("/");
+      cy.visit("/supervision/deputies/public-authority/");
   });
 
   it("shows opg sirius within banner", () => {
-    cy.contains(".moj-header__link", "OPG Sirius");
+    cy.contains(".moj-header__link", "OPG");
+    cy.contains(".moj-header__link", "Sirius");
   });
 
   const expected = [

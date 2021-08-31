@@ -7,15 +7,23 @@ services:
       context: ..
       dockerfile: ./docker/sirius-deputy-hub/Dockerfile
     ports: ["8888:1234"]
-
     environment:
-      SIRIUS_URL: http://pact-stub:8080
+      SIRIUS_URL: http://json-server:3000
       SIRIUS_PUBLIC_URL: http://localhost:8080
-
-  pact-stub:
-    build: ./pact-stub
-    environment:
-      PACT_DIR: ./pacts
-      PORT: 8080
+  proxy:
+    image: nginx
     volumes:
-      - "../pacts:/app/pacts"
+      - ./dev-proxy/nginx.json-server.conf:/etc/nginx/nginx.conf
+    ports:
+      - '8081:80'
+    external_links:
+      - json-server
+    depends_on:
+      - json-server
+    command: [nginx-debug, '-g', 'daemon off;']
+  json-server:
+    build:
+      context: ..
+      dockerfile: ./docker/json-server/Dockerfile
+    ports:
+      - '3000:3000'
