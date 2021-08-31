@@ -1,15 +1,15 @@
+
 version: "3.6"
+
 services:
   app:
     build:
-      target: dev
+      context: ..
+      dockerfile: ./docker/sirius-deputy-hub/Dockerfile
+    ports: ["8888:1234"]
     environment:
-      SIRIUS_URL: http://docker.for.mac.localhost:8081
-    ports:
-      - '8888:1234'
-      - '2345:2345'
-    volumes:
-      - ..:/app:rw,delegated
+      SIRIUS_URL: http://json-server:3000
+      SIRIUS_PUBLIC_URL: http://localhost:8080
   proxy:
     image: nginx
     volumes:
