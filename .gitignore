@@ -7,3 +7,6 @@ cypress/videos
 
 # binaries
 /main
+
+# IDEs
+.idea

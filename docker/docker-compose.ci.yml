@@ -24,7 +24,7 @@ services:
       - app
       - json-server
     environment:
-      - LHCI_BUILD_CONTEXT__CURRENT_HASH=$CIRCLE_SHA1
+      - LHCI_BUILD_CONTEXT__CURRENT_HASH=$GITHUB_SHA
       - LHCI_BUILD_CONTEXT__GITHUB_REPO_SLUG=ministryofjustice/opg-sirius-supervision-deputy-hub
       - LHCI_GITHUB_APP_TOKEN
 
