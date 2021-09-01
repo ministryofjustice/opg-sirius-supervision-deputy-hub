@@ -13,13 +13,12 @@
             "WCAG2AA.Principle1.Guideline1_3.1_3_1.F92,ARIA4",
             "definition-list"
         ],
-        "hideElements": ".ignore-pagination-bottom, #hook-open-case",
         "runners": [
             "axe",
             "htmlcs"
         ]
     },
     "urls": [
-        "http://app:8888/"
+        "http://deputy-hub:8888/"
     ]
   }

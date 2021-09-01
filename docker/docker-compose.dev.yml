@@ -1,14 +1,21 @@
 version: "3.6"
+
 services:
-  app:
+  deputy-hub:
     build:
+      context: ..
+      dockerfile: ./docker/sirius-deputy-hub/Dockerfile
       target: dev
     ports:
       - '2345:2345'
+      - '8888:1234'
     volumes:
       - ..:/app:rw,delegated
     environment:
       SIRIUS_URL: http://json-server:3000
+      SIRIUS_PUBLIC_URL: http://localhost:8080
+      PREFIX: /supervision/deputies/public-authority
+
   json-server:
     build:
       context: ..
