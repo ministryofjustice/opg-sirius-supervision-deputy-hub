@@ -30,9 +30,9 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	mux := http.NewServeMux()
 	mux.Handle("/",
 		wrap(
-			loggingInfoForDeputyHub(client, templates["deputy-hub.gotmpl"])))
+			renderTemplateForDeputyHub(client, templates["deputy-hub.gotmpl"])))
 
-	// mux.Handle("/health-check", healthCheck())
+	mux.Handle("/health-check", healthCheck())
 
 	static := http.FileServer(http.Dir(webDir + "/static"))
 	mux.Handle("/assets/", static)

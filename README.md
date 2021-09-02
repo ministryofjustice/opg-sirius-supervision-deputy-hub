@@ -14,11 +14,9 @@
 
 The application ran through Docker can be accessed on `localhost:8888/supervision/deputies/public-authority/`.
 
-**Note: Sirius is required to be running in order to authenticate. Ensure that after logging in, you redirect back to the correct port (`8888`)** 
-
 To enable debugging and hot-reloading of Go files:
 
-`docker-compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up --build`
+`docker-compose -f docker/docker-compose.dev.yml up --build`
 
 If you are using VSCode, you can then attach a remote debugger on port `2345`. The same is also possible in Goland.
 You will then be able to use breakpoints to stop and inspect the application.

@@ -21,7 +21,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := loggingInfoForDeputyHub(client, template)
+	handler := renderTemplateForDeputyHub(client, template)
 	err := handler(sirius.PermissionSet{}, w, r)
 
 	assert.Nil(err)

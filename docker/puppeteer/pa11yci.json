@@ -1,9 +1,7 @@
 {
     "defaults": {
         "chromeLaunchConfig": {
-            "args": ["--no-sandbox"],
-            "ignoreHTTPSErrors": true
-        },
+            "args": ["--no-sandbox"]        },
         "headers": {
             "Cookie": "XSRF-TOKEN=abcde; Other=other",
             "OPG-Bypass-Membrane": "1",
