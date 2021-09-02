@@ -26,19 +26,19 @@ describe("Deputy Hub", () => {
   })
 
   it("the nav link should contain supervision", () => {
-    cy.get(".moj-header__navigation-list > :nth-child(1) > a").should("have.attr", "href", "http://localhost:8080/supervision")
+    cy.get(".moj-header__navigation-list > :nth-child(1) > a").should("have.attr", "href", "/supervision")
   })  
   
   it("the nav link should contain lpa", () => {
-    cy.get(".moj-header__navigation-list > :nth-child(2) > a").should("have.attr", "href", "http://localhost:8080/lpa")
+    cy.get(".moj-header__navigation-list > :nth-child(2) > a").should("have.attr", "href", "/lpa")
   })
   
   it("the nav link should contain admin", () => {
-    cy.get(".moj-header__navigation-list > :nth-child(3) > a").should("have.attr", "href", "http://localhost:8080/admin")
+    cy.get(".moj-header__navigation-list > :nth-child(3) > a").should("have.attr", "href", "/admin")
   })
   
   it("the nav link should contain logout", () => {
-    cy.get(".moj-header__navigation-list > :nth-child(4) > a").should("have.attr", "href", "http://localhost:8080/auth/logout")
+    cy.get(".moj-header__navigation-list > :nth-child(4) > a").should("have.attr", "href", "/auth/logout")
   }) 
 
 
