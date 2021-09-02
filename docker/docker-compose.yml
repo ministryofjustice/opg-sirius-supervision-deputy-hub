@@ -1,7 +1,7 @@
 version: "3.6"
 
 services:
-  app:
+  deputy-hub:
     build:
       context: ..
       dockerfile: ./docker/sirius-deputy-hub/Dockerfile
