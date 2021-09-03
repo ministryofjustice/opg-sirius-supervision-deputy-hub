@@ -53,8 +53,21 @@ describe("Deputy Hub", () => {
   it("the footer should contain a link to the open government licence", () => {
     cy.get(".govuk-footer__licence-description > .govuk-footer__link").should("have.attr", "href", "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/")
   })
-  
+
   it("the nav link should contain the crown copyright logo", () => {
     cy.get(".govuk-footer__copyright-logo").should("have.attr", "href", "https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/")
-  }) 
+  })
+
+  it("the page should contain the deputy organisation name", () => {
+    cy.get(".govuk-heading-m").should("contain", "Test Organisation")
+  })
+
+  it("the page should contain the deputy number", () => {
+    cy.get(".govuk-caption-m").eq(0).should("contain",  "Deputy Number: 10000000")
+  })
+
+  it("the page should contain the executive case manager label", () => {
+    cy.get(".govuk-caption-m").eq(1) .should("contain",  "Executive Case Manager:")
+  })
+
 });
