@@ -7,7 +7,7 @@ import (
 )
 
 type DeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 }
 
 type deputyHubVars struct {
@@ -26,15 +26,15 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 
 		ctx := getContext(r)
 
-		//deputyDetails, err := client.GetDeputyDetails(ctx)
-		//if err != nil {
-		//	return err
-		//}
+		deputyDetails, err := client.GetDeputyDetails(ctx, 76)
+		if err != nil {
+			return err
+		}
 
 		vars := deputyHubVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
-			//DeputyDetails: deputyDetails,
+			DeputyDetails: deputyDetails,
 		}
 
 		switch r.Method {

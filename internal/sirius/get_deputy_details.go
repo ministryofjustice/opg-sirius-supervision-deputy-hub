@@ -2,34 +2,20 @@ package sirius
 
 import (
 	"encoding/json"
-
+	"fmt"
 	"net/http"
 )
 
 type DeputyDetails struct {
-	ID          int             `json:"id"`
-	Name        string          `json:"name"`
-	PhoneNumber string          `json:"phoneNumber"`
-	Teams       []MyDetailsTeam `json:"teams"`
-	DisplayName string          `json:"displayName"`
-	Deleted     bool            `json:"deleted"`
-	Email       string          `json:"email"`
-	Firstname   string          `json:"firstname"`
-	Surname     string          `json:"surname"`
-	Roles       []string        `json:"roles"`
-	Locked      bool            `json:"locked"`
-	Suspended   bool            `json:"suspended"`
+	ID               int    `json:"id"`
+	DeputyCasrecId   int `json:"deputyCasrecId"`
+	OrganisationName string `json:"organisationName"`
 }
 
-type MyDetailsTeam struct {
-	DisplayName string `json:"displayName"`
-	TeamId      int    `json:"id"`
-}
-
-func (c *Client) GetDeputyDetails(ctx Context) (DeputyDetails, error) {
+func (c *Client) GetDeputyDetails(ctx Context, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/users/current", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)
 	if err != nil {
 		return v, err
 	}
