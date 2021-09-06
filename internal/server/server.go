@@ -8,6 +8,7 @@ import (
 	"net/url"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/gorilla/mux"
 )
 
 type Logger interface {
@@ -27,19 +28,19 @@ type Template interface {
 func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
-	mux := http.NewServeMux()
-	mux.Handle("/",
+	router := mux.NewRouter()
+	router.Handle("/deputy/{id}",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["deputy-hub.gotmpl"])))
 
-	mux.Handle("/health-check", healthCheck())
+	router.Handle("/health-check", healthCheck())
 
 	static := http.FileServer(http.Dir(webDir + "/static"))
-	mux.Handle("/assets/", static)
-	mux.Handle("/javascript/", static)
-	mux.Handle("/stylesheets/", static)
+	router.Handle("/assets/", static)
+	router.Handle("/javascript/", static)
+	router.Handle("/stylesheets/", static)
 
-	return http.StripPrefix(prefix, mux)
+	return http.StripPrefix(prefix, router)
 }
 
 type RedirectError string
