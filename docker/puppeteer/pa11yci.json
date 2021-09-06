@@ -17,6 +17,6 @@
         ]
     },
     "urls": [
-        "http://deputy-hub:8888/"
+        "http://deputy-hub:8888/deputy/1"
     ]
   }
