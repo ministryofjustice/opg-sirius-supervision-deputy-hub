@@ -1,9 +1,10 @@
 package server
 
 import (
-	"net/http"
-
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type DeputyHubInformation interface {
@@ -25,8 +26,9 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		}
 
 		ctx := getContext(r)
-
-		deputyDetails, err := client.GetDeputyDetails(ctx, 76)
+		routeVars := mux.Vars(r)
+		deputyId, _ := strconv.Atoi(routeVars["id"])
+		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
 		if err != nil {
 			return err
 		}
