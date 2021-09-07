@@ -3,8 +3,11 @@
 {{ define "title" }} OPG Sirius Deputy Hub {{ end }}
 
 {{ define "main" }}
-
-    {{/* TODO added to pass pa11y test- will be removed in later ticket */}}
-    <h1 class="govuk-heading-l">Supervision deputy hub</h1>
-
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-m govuk-!-margin-bottom-0">{{ .DeputyDetails.OrganisationName }}</h1>
+        <span class="govuk-caption-m  govuk-!-margin-bottom-0">Deputy Number: {{ .DeputyDetails.DeputyCasrecId }}</span>
+        <span class="govuk-caption-m  govuk-!-margin-bottom-2">Executive Case Manager:</span>
+      </div>
+    </div>
 {{ end }}
