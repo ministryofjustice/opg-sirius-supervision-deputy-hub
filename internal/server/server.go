@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type Logger interface {
@@ -36,9 +36,9 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/health-check", healthCheck())
 
 	static := http.FileServer(http.Dir(webDir + "/static"))
-	router.Handle("/assets/", static)
-	router.Handle("/javascript/", static)
-	router.Handle("/stylesheets/", static)
+	router.PathPrefix("/assets/").Handler(static)
+	router.PathPrefix("/javascript/").Handler(static)
+	router.PathPrefix("/stylesheets/").Handler(static)
 
 	return http.StripPrefix(prefix, router)
 }
