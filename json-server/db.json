@@ -1,13 +1,101 @@
 {
-  "permissions":{
-      "v1-users": {
-        "permissions": ["PUT", "POST", "DELETE"]
-      },
-      "team": {
-        "permissions": ["GET", "POST", "PUT"]
-      },
-      "v1-teams": {
-        "permissions": ["DELETE"]
-      }
+  "permissions": {
+    "v1-users": {
+      "permissions": [
+        "PUT",
+        "POST",
+        "DELETE"
+      ]
+    },
+    "team": {
+      "permissions": [
+        "GET",
+        "POST",
+        "PUT"
+      ]
+    },
+    "v1-teams": {
+      "permissions": [
+        "DELETE"
+      ]
     }
-  } 
+  },
+  "deputies": [
+    {
+      "id": 1,
+      "uId": "7000-0000-2530",
+      "normalizedUid": 700000002530,
+      "errorMessages": [],
+      "researchOptOut": false,
+      "workPhoneNumber": {
+        "id": 95,
+        "phoneNumber": "",
+        "type": "Work",
+        "default": false
+      },
+      "homePhoneNumber": {
+        "id": 96,
+        "phoneNumber": "",
+        "type": "Home",
+        "default": false
+      },
+      "email": "",
+      "dob": "",
+      "dateOfDeath": "",
+      "salutation": "",
+      "otherNames": "",
+      "addressLine1": "",
+      "addressLine2": "",
+      "addressLine3": "",
+      "town": "",
+      "county": "",
+      "postcode": "",
+      "country": "",
+      "isAirmailRequired": false,
+      "phoneNumber": "",
+      "phoneNumbers": [
+        {
+          "id": 95,
+          "phoneNumber": "",
+          "type": "Work",
+          "default": false
+        },
+        {
+          "id": 96,
+          "phoneNumber": "",
+          "type": "Home",
+          "default": false
+        }
+      ],
+      "reference": [],
+      "correspondenceByPost": false,
+      "correspondenceByPhone": false,
+      "correspondenceByEmail": false,
+      "correspondenceByWelsh": false,
+      "createdDate": "03\/09\/2021",
+      "updatedDate": "2021-09-03T12:13:38+00:00",
+      "personType": "Deputy",
+      "specialCorrespondenceRequirements": {
+        "audioTape": false,
+        "largePrint": false,
+        "hearingImpaired": false,
+        "spellingOfNameRequiresCare": false
+      },
+      "canDelete": false,
+      "deputyStatus": "Active",
+      "orders": [
+        []
+      ],
+      "previousNames": "",
+      "mobileNumber": "",
+      "eveningNumber": "",
+      "newsletter": false,
+      "deputyType": {
+        "handle": "PA",
+        "label": "Public Authority"
+      },
+      "deputyCasrecId": 10000000,
+      "organisationName": "Test Organisation"
+    }
+  ]
+}
