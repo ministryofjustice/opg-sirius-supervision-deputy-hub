@@ -5,7 +5,7 @@ $govuk-assets-path: "/supervision/deputies/public-authority/assets/";
 
 @import "node_modules/govuk-frontend/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
-@import "./scss/sirius-deputy-hub";
+@import "./scss/pa-hub";
 
 .moj-header__container {
   max-width: 98%;
