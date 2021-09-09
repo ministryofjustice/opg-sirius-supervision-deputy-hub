@@ -32,6 +32,9 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["deputy-hub.gotmpl"])))
+	router.Handle("/deputy/{id}/timeline",
+		wrap(
+			renderTemplateForDeputyHub(client, templates["timeline.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
