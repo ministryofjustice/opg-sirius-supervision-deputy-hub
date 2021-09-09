@@ -15,9 +15,17 @@ func TestDeputyDetailsReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `    {
-      "id": 76,
-      "deputyCasrecId": 10000000,
-      "organisationName": "Test Organisation"
+      	"id": 1,
+      	"deputyCasrecId": 10000000,
+      	"organisationName": "Test Organisation",
+		"email": "deputyship@essexcounty.gov.uk",
+		"phoneNumber": "0115 876 5574",
+		"addressLine1": "Deputyship Team",
+		"addressLine2": "Seax House",
+		"addressLine3": "19 Market Rd",
+		"town": "Chelmsford",
+		"county": "Essex",
+		"postcode": "CM1 1GG"
     }`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
@@ -30,12 +38,20 @@ func TestDeputyDetailsReturned(t *testing.T) {
 	}
 
 	expectedResponse := DeputyDetails{
-		ID: 76,
-		DeputyCasrecId: 10000000,
+		ID:               1,
+		DeputyCasrecId:   10000000,
 		OrganisationName: "Test Organisation",
+		Email: "deputyship@essexcounty.gov.uk",
+		PhoneNumber: "0115 876 5574",
+		AddressLine1: "Deputyship Team",
+		AddressLine2: "Seax House",
+		AddressLine3: "19 Market Rd",
+		Town: "Chelmsford",
+		County: "Essex",
+		Postcode: "CM1 1GG",
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 76)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -49,18 +65,18 @@ func TestGetDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 76)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
 
 	expectedResponse := DeputyDetails{
-		ID: 0,
-		DeputyCasrecId: 0,
+		ID:               0,
+		DeputyCasrecId:   0,
 		OrganisationName: "",
 	}
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76",
+		URL:    svr.URL + "/api/v1/deputies/1",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -73,11 +89,11 @@ func TestGetDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 76)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
 
 	expectedResponse := DeputyDetails{
-		ID: 0,
-		DeputyCasrecId: 0,
+		ID:               0,
+		DeputyCasrecId:   0,
 		OrganisationName: "",
 	}
 
