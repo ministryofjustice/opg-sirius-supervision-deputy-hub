@@ -2,7 +2,7 @@
 
 {{ define "main" }}
   <header>
-    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Timeline</h1>
+    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">Timeline</h1>
   </header>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
@@ -10,13 +10,13 @@
           <div class="moj-timeline__item">
             <div class="moj-timeline__header">
               <h2 class="moj-timeline__title"> Correspondence received</h2>
+               <h2 class="moj-timeline__title"> {{ .DeputyEvents }} </h2>
               <p class="moj-timeline__byline">by John Morgan (0115 934 2700)</p>
             </div>
 
             <p class="moj-timeline__date">
               <time datetime="2019-05-21T13:15:00.000Z">21 May 2019 at 1:15pm</time>
             </p>
-
           </div>
         </div>
     </div>

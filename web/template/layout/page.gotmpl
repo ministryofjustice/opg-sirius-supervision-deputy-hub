@@ -31,16 +31,14 @@
       {{ template "header" . }}
       {{ end }}
 
+      <div class="govuk-width-container app-width-container govuk-!-margin-top-5">
+        <main class="govuk-main-wrapper app-main-class govuk-!-margin-top-0" id="main-content" role="main">
+            {{ template "deputy-hub" . }}
 
-      <div class="govuk-width-container app-width-container">
-        <main class="govuk-main-wrapper app-main-class" id="main-content" role="main">
-          {{ template "deputy-hub" . }}
           {{ block "main" . }}{{ end }}
         </main>
       </div>
-
       {{ template "footer" . }}
-
       <script src="{{ prefix "/javascript/all.js" }}"></script>
     </body>
   </html>

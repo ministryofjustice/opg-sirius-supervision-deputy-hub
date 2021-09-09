@@ -1,27 +1,27 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"net/http"
-	"strconv"
+"github.com/gorilla/mux"
+"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+"net/http"
+"strconv"
 )
 
-type DeputyHubInformation interface {
+type DeputyHubEventInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	//GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
 }
 
-type deputyHubVars struct {
+type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	//DeputyEvents sirius.DeputyEvents
+	DeputyEvents sirius.DeputyEvents
 	Error         string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -31,19 +31,16 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
 		if err != nil {
 			return err
 		}
-		//deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
-		//if err != nil {
-		//	return err
-		//}
 
-		vars := deputyHubVars{
+		vars := deputyHubEventVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
-			//DeputyEvents: deputyEvents,
+			DeputyEvents: deputyEvents,
 		}
 
 		switch r.Method {
