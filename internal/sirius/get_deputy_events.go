@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type DeputyEvents []DeputyEvent
@@ -18,6 +19,7 @@ type DeputyEvent struct {
 	User struct {
 		UserId int `json:"id"`
 		UserDisplayName string `json:"displayName"`
+		UserPhoneNumber string `json:"phoneNumber"`
 	} `json:"user"`
 	Event struct {
 		OrderType string `json:"orderType"`
@@ -88,10 +90,14 @@ func EditDeputyEvents(v DeputyEvents) DeputyEvents {
 		return list
 }
 
-func ReformatTimestamp(DeputyEvent) string {
-	return "2020-01-01"
+func ReformatTimestamp(s DeputyEvent) string {
+	//edit time to format required by timeline
+	return s.Timestamp
 }
 
-func ReformatEventType(DeputyEvent) string {
-	return "good event"
+func ReformatEventType(s DeputyEvent) string {
+	stringsArray := strings.Split(s.EventType, "\\")
+	string := stringsArray[5]
+	//add spaces into the name
+	return string
 }
