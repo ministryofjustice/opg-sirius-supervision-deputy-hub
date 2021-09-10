@@ -1,3 +1,4 @@
 {
-    "/api/v1/timeline/*": "/$76"
+    "/api/v1/*": "/$1",
+    "/timeline/:personId": "/timeline"
 }

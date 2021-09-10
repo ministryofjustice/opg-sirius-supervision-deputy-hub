@@ -9,14 +9,12 @@ import (
 
 type DeputyHubInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	//GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
 }
 
 type deputyHubVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	//DeputyEvents sirius.DeputyEvents
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -34,16 +32,11 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		if err != nil {
 			return err
 		}
-		//deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
-		//if err != nil {
-		//	return err
-		//}
 
 		vars := deputyHubVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
-			//DeputyEvents: deputyEvents,
 		}
 
 		switch r.Method {
