@@ -32,7 +32,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router := mux.NewRouter()
 	router.Handle("/deputy/{id}/",
 		wrap(
-			renderTemplateForDeputyHub(client, templates["deputy-hub.gotmpl"])))
+			renderTemplateForDeputyHub(client, templates["dashboard.gotmpl"])))
 	router.Handle("/deputy/{id}/timeline",
 		wrap(
 			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
