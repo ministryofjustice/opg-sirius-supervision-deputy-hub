@@ -97,5 +97,382 @@
       "deputyCasrecId": 10000000,
       "organisationName": "Test Organisation"
     }
-  ]
+  ],
+  "clients": {
+    "limit": 25,
+    "metadata": [],
+    "pages": {
+      "current": 1,
+      "total": 1
+    },
+    "total": 1,
+    "persons": [
+      {
+        "id": 67,
+        "uId": "7000-0000-2118",
+        "normalizedUid": 700000002118,
+        "errorMessages": [],
+        "caseRecNumber": "67422477",
+        "researchOptOut": false,
+        "workPhoneNumber": {
+          "id": 80,
+          "phoneNumber": "07960209814",
+          "type": "Work",
+          "default": false
+        },
+        "homePhoneNumber": null,
+        "mobilePhoneNumber": null,
+        "email": "john.fearless@example.com",
+        "dob": "01\/01\/1923",
+        "dateOfDeath": "",
+        "salutation": "Duke",
+        "firstname": "John",
+        "middlenames": "",
+        "surname": "Fearless",
+        "otherNames": null,
+        "addressLine1": "94 Duckpit Lane",
+        "addressLine2": "Upper Oddington",
+        "addressLine3": "Canvey Island",
+        "town": "",
+        "county": "",
+        "postcode": "GL566WQ",
+        "country": "",
+        "isAirmailRequired": false,
+        "phoneNumber": "07960209814",
+        "phoneNumbers": [
+          {
+            "id": 80,
+            "phoneNumber": "07960209814",
+            "type": "Work",
+            "default": false
+          }
+        ],
+        "reference": [],
+        "correspondenceByPost": true,
+        "correspondenceByPhone": false,
+        "correspondenceByEmail": false,
+        "correspondenceByWelsh": false,
+        "occupation": null,
+        "createdDate": "01\/01\/2015",
+        "updatedDate": "2021-09-13T08:17:01+00:00",
+        "personType": "Client",
+        "specialCorrespondenceRequirements": {
+          "audioTape": false,
+          "largePrint": false,
+          "hearingImpaired": true,
+          "spellingOfNameRequiresCare": false
+        },
+        "interpreterRequired": "",
+        "previousNames": "",
+        "cannotSignForm": null,
+        "applyingForFeeRemission": null,
+        "receivingBenefits": null,
+        "receivedDamageAward": null,
+        "hasLowIncome": null,
+        "signatureDate": null,
+        "hasPreviousLpa": null,
+        "notesForPreviousLpa": null,
+        "companyName": null,
+        "statusDate": "01\/01\/2015",
+        "medicalCondition": "Listeriosis",
+        "clientStatus": {
+          "handle": "OPEN",
+          "label": "Open",
+          "deprecated": null
+        },
+        "clientAccommodation": {
+          "handle": "FAMILY MEMBER\/FRIEND'S HOME",
+          "label": "Family Member\/Friend's Home (including spouse\/civil partner)",
+          "deprecated": false
+        },
+        "orders": [
+          {
+            "id": 59,
+            "uId": "7000-0000-2142",
+            "normalizedUid": 700000002142,
+            "errorMessages": [],
+            "caseRecNumber": "98791056",
+            "caseSubtype": "pfa",
+            "caseAttorneyJointlyAndSeverally": false,
+            "caseAttorneyJointly": false,
+            "caseAttorneyJointlyAndJointlyAndSeverally": false,
+            "howDeputyAppointed": {
+              "handle": "JOINT",
+              "label": "Joint",
+              "deprecated": null
+            },
+            "orderStatus": {
+              "handle": "OPEN",
+              "label": "Open",
+              "deprecated": true
+            },
+            "deputies": [
+              {
+                "statusOnCaseCalculated": {
+                  "handle": "OPEN",
+                  "label": "Open",
+                  "deprecated": null,
+                  "description": "Default status on case creation"
+                },
+                "feePayer": true,
+                "canUnlink": false,
+                "canUnlinkIfError": false,
+                "deputy": {
+                  "id": 68,
+                  "uId": "7000-0000-2175",
+                  "normalizedUid": 700000002175,
+                  "errorMessages": [],
+                  "caseRecNumber": null,
+                  "researchOptOut": false,
+                  "workPhoneNumber": {
+                    "id": 81,
+                    "phoneNumber": "07766456623",
+                    "type": "Work",
+                    "default": false
+                  },
+                  "homePhoneNumber": {
+                    "id": 82,
+                    "phoneNumber": "",
+                    "type": "Home",
+                    "default": false
+                  },
+                  "mobilePhoneNumber": null,
+                  "email": "36k1u17cuzy@madeup.com",
+                  "dob": "01\/01\/1990",
+                  "dateOfDeath": "",
+                  "salutation": "",
+                  "firstname": "Mary",
+                  "middlenames": null,
+                  "surname": "Rich",
+                  "otherNames": "",
+                  "addressLine1": "74 Red Lane",
+                  "addressLine2": "Eriswell",
+                  "addressLine3": "Northwich",
+                  "town": "",
+                  "county": "",
+                  "postcode": "IP285GG",
+                  "country": "United Kingdom",
+                  "isAirmailRequired": true,
+                  "phoneNumber": "07766456623",
+                  "phoneNumbers": [
+                    {
+                      "id": 81,
+                      "phoneNumber": "07766456623",
+                      "type": "Work",
+                      "default": false
+                    },
+                    {
+                      "id": 82,
+                      "phoneNumber": "",
+                      "type": "Home",
+                      "default": false
+                    }
+                  ],
+                  "reference": [],
+                  "correspondenceByPost": false,
+                  "correspondenceByPhone": false,
+                  "correspondenceByEmail": false,
+                  "correspondenceByWelsh": false,
+                  "occupation": null,
+                  "createdDate": "13\/09\/2021",
+                  "updatedDate": "2021-09-13T08:16:59+00:00",
+                  "personType": "Deputy",
+                  "specialCorrespondenceRequirements": {
+                    "audioTape": false,
+                    "largePrint": false,
+                    "hearingImpaired": false,
+                    "spellingOfNameRequiresCare": false
+                  },
+                  "interpreterRequired": null,
+                  "deputyReferenceNumber": null,
+                  "deputyOrderCount": null,
+                  "deputyCompliance": null,
+                  "relationshipToClient": null,
+                  "statusDate": null,
+                  "previousNames": "Bold",
+                  "deputyType": {
+                    "handle": "LAY",
+                    "label": "Lay",
+                    "deprecated": null
+                  }
+                },
+                "deputyType": {
+                  "handle": "LAY",
+                  "label": "Lay",
+                  "deprecated": null
+                },
+                "statusOnCase": {
+                  "handle": "OPEN",
+                  "label": "Open",
+                  "deprecated": null,
+                  "description": "Default status on case creation"
+                },
+                "statusOnCaseOverride": null,
+                "relationshipToClient": {
+                  "handle": "OTHERRELATION",
+                  "label": "Other Relation",
+                  "deprecated": null,
+                  "deputyType": "LAY",
+                  "other": true
+                },
+                "relationshipOther": "Grandchild",
+                "mainCorrespondent": true,
+                "statusChangeDate": null,
+                "statusNotes": null
+              }
+            ],
+            "orderSubtype": {
+              "handle": "NEW DEPUTY",
+              "label": "New deputy",
+              "deprecated": null
+            }
+          },
+          {
+            "id": 60,
+            "uId": "7000-0000-2209",
+            "normalizedUid": 700000002209,
+            "errorMessages": [],
+            "caseRecNumber": "0416778T",
+            "caseSubtype": "hw",
+            "caseAttorneyJointlyAndSeverally": false,
+            "caseAttorneyJointly": false,
+            "caseAttorneyJointlyAndJointlyAndSeverally": false,
+            "howDeputyAppointed": {
+              "handle": "JOINT",
+              "label": "Joint",
+              "deprecated": null
+            },
+            "orderStatus": {
+              "handle": "OPEN",
+              "label": "Open",
+              "deprecated": true
+            },
+            "deputies": [
+              {
+                "statusOnCaseCalculated": {
+                  "handle": "OPEN",
+                  "label": "Open",
+                  "deprecated": null,
+                  "description": "Default status on case creation"
+                },
+                "feePayer": true,
+                "canUnlink": false,
+                "canUnlinkIfError": false,
+                "deputy": {
+                  "id": 68,
+                  "uId": "7000-0000-2175",
+                  "normalizedUid": 700000002175,
+                  "errorMessages": [],
+                  "caseRecNumber": null,
+                  "researchOptOut": false,
+                  "workPhoneNumber": {
+                    "id": 81,
+                    "phoneNumber": "07766456623",
+                    "type": "Work",
+                    "default": false
+                  },
+                  "homePhoneNumber": {
+                    "id": 82,
+                    "phoneNumber": "",
+                    "type": "Home",
+                    "default": false
+                  },
+                  "mobilePhoneNumber": null,
+                  "email": "36k1u17cuzy@madeup.com",
+                  "dob": "01\/01\/1990",
+                  "dateOfDeath": "",
+                  "salutation": "",
+                  "firstname": "Mary",
+                  "middlenames": null,
+                  "surname": "Rich",
+                  "otherNames": "",
+                  "addressLine1": "74 Red Lane",
+                  "addressLine2": "Eriswell",
+                  "addressLine3": "Northwich",
+                  "town": "",
+                  "county": "",
+                  "postcode": "IP285GG",
+                  "country": "United Kingdom",
+                  "isAirmailRequired": true,
+                  "phoneNumber": "07766456623",
+                  "phoneNumbers": [
+                    {
+                      "id": 81,
+                      "phoneNumber": "07766456623",
+                      "type": "Work",
+                      "default": false
+                    },
+                    {
+                      "id": 82,
+                      "phoneNumber": "",
+                      "type": "Home",
+                      "default": false
+                    }
+                  ],
+                  "reference": [],
+                  "correspondenceByPost": false,
+                  "correspondenceByPhone": false,
+                  "correspondenceByEmail": false,
+                  "correspondenceByWelsh": false,
+                  "occupation": null,
+                  "createdDate": "13\/09\/2021",
+                  "updatedDate": "2021-09-13T08:16:59+00:00",
+                  "personType": "Deputy",
+                  "specialCorrespondenceRequirements": {
+                    "audioTape": false,
+                    "largePrint": false,
+                    "hearingImpaired": false,
+                    "spellingOfNameRequiresCare": false
+                  },
+                  "interpreterRequired": null,
+                  "deputyReferenceNumber": null,
+                  "deputyOrderCount": null,
+                  "deputyCompliance": null,
+                  "relationshipToClient": null,
+                  "statusDate": null,
+                  "previousNames": "Bold",
+                  "deputyType": {
+                    "handle": "LAY",
+                    "label": "Lay",
+                    "deprecated": null
+                  }
+                },
+                "deputyType": {
+                  "handle": "LAY",
+                  "label": "Lay",
+                  "deprecated": null
+                },
+                "statusOnCase": {
+                  "handle": "OPEN",
+                  "label": "Open",
+                  "deprecated": null,
+                  "description": "Default status on case creation"
+                },
+                "statusOnCaseOverride": null,
+                "relationshipToClient": {
+                  "handle": "OTHERRELATION",
+                  "label": "Other Relation",
+                  "deprecated": null,
+                  "deputyType": "LAY",
+                  "other": true
+                },
+                "relationshipOther": "Grandchild",
+                "mainCorrespondent": true,
+                "statusChangeDate": null,
+                "statusNotes": null
+              }
+            ],
+            "orderSubtype": {
+              "handle": "NEW DEPUTY",
+              "label": "New deputy",
+              "deprecated": null
+            }
+          }
+        ],
+        "casesManagedAsHybrid": false,
+        "supervisionCaseOwner": [],
+        "maritalStatus": "Married"
+      }
+    ]
+  }
 }

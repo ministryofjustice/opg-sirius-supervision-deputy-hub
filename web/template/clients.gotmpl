@@ -1,0 +1,50 @@
+{{ template "page" . }}
+{{ define "main" }}
+
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">Clients</h1>
+    </header>
+
+    <table id="pa-clients-3" class="govuk-table sortable">
+
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header" aria-sort="none">
+                <button type="button" data-index="0">Client</button>
+            </th>
+            <th scope="col" class="govuk-table__header">Accomodation type</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+            <th scope="col" class="govuk-table__header">Supervision level</th>
+            <th scope="col" class="govuk-table__header">Visits</th>
+            <th scope="col" class="govuk-table__header" aria-sort="none">
+                <button type="button" data-index="5">Report due</button>
+            </th>
+            <th scope="col" class="govuk-table__header" aria-sort="none">
+                <button type="button" data-index="6">CREC</button>
+            </th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+        {{ range .DeputyClientsDetails.Clients }}
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell client_name_ref nowrap">
+                    <a href="">{{ .Firstname }} {{ .Surname }}</a>
+                    <span class="secondary court_ref">71078895</span>
+                </td>
+                <td class="govuk-table__cell">Hostel</td>
+                <td class="govuk-table__cell">Active</td>
+                <td class="govuk-table__cell">Minimal</td>
+                <td class="govuk-table__cell visit_type nowrap">
+                    {{/* TO DO in a future ticket */}}
+                </td>
+                <td class="govuk-table__cell reports nowrap due">
+                    {{/* TO DO in a future ticket */}}
+                </td>
+                <td class="govuk-table__cell">5</td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+
+{{ end }}

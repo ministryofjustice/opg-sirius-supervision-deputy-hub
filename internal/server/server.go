@@ -19,6 +19,7 @@ type Logger interface {
 type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
+	DeputyHubClientInformation
 }
 
 type Template interface {
@@ -31,7 +32,11 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router := mux.NewRouter()
 	router.Handle("/deputy/{id}/",
 		wrap(
-			renderTemplateForDeputyHub(client, templates["deputy-hub.gotmpl"])))
+			renderTemplateForDeputyHub(client, templates["dashboard.gotmpl"])))
+
+	router.Handle("/deputy/{id}/clients",
+		wrap(
+			listClients(client, templates["clients.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
