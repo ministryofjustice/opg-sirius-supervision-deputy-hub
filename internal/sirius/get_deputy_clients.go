@@ -81,7 +81,9 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	}
 
 	var v apiClients
-	err = json.NewDecoder(resp.Body).Decode(&v)
+	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
+		return nil, err
+	}
 
 	clients := make(DeputyClientDetails, len(v.Clients))
 
@@ -99,7 +101,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 			SupervisionLevel:  GetLatestSupervisionLevel(orders),
 		}
 	}
-	return clients, err
+	return clients, nil
 }
 
 func CalculateOrderStatus(orders Orders) string {
