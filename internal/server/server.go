@@ -36,7 +36,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/deputy/{id}/clients",
 		wrap(
-			listClients(client, templates["clients.gotmpl"])))
+			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 

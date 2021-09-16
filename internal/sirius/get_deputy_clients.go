@@ -81,9 +81,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	}
 
 	var v apiClients
-	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, err
-	}
+	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	clients := make(DeputyClientDetails, len(v.Clients))
 

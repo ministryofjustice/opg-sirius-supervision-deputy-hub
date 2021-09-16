@@ -21,7 +21,7 @@ type listClientsVars struct {
 	Errors        sirius.ValidationErrors
 }
 
-func listClients(client DeputyHubClientInformation, tmpl Template) Handler {
+func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
