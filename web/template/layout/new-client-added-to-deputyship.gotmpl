@@ -1,0 +1,10 @@
+{{ define "new-client-added-to-deputyship" }}
+    <ul class="govuk-list govuk-list--bullet">
+        <li> Order number: {{ .Event.OrderNumber }}</li>
+        <li>Sirius ID: {{.Event.SiriusId}} </li>
+        <li>Order type: {{.Event.OrderType}} </li>
+        {{ range .Event.Client }}
+        <li>Client: {{.ClientName}} </li>
+        {{ end }}
+    </ul>
+{{ end }}

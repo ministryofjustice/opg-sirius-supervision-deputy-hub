@@ -1,10 +1,11 @@
 package server
 
 import (
-"github.com/gorilla/mux"
-"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-"net/http"
-"strconv"
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type DeputyHubEventInformation interface {
@@ -32,6 +33,8 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
 		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
+		fmt.Println(deputyEvents)
+		fmt.Println(err)
 		if err != nil {
 			return err
 		}

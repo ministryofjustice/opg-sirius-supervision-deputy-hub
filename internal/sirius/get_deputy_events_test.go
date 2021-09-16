@@ -14,10 +14,42 @@ func TestDeputyEventsReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := `    {
-		"personId": 555,
-		"personName": "kate",
-   }`
+	json := `[
+    {
+      "id": 300,
+      "hash": "AW",
+      "timestamp": "2021-09-09 14:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
+      "user": {
+        "id": 41,
+        "phoneNumber": "12345678",
+        "displayName": "system admin",
+        "email": "system.admin@opgtest.com"
+      },
+      "event": {
+        "orderType": "pfa",
+        "orderUid": "7000-0000-1995",
+        "orderId": "58",
+        "orderCourtRef": "03305972",
+        "courtReferenceNumber": "03305972",
+        "courtReference": "03305972",
+        "personType": "Deputy",
+        "personId": "76",
+        "personUid": "7000-0000-2530",
+        "personName": "Mx Bob Builder",
+        "personCourtRef": null,
+        "additionalPersons": [
+          {
+            "personType": "Client",
+            "personId": "63",
+            "personUid": "7000-0000-1961",
+            "personName": "Test Name",
+            "personCourtRef": "40124126"
+          }
+        ]
+      }
+    }
+  ]`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -30,12 +62,22 @@ func TestDeputyEventsReturned(t *testing.T) {
 
 	expectedResponse := DeputyEvents{
 		DeputyEvent{
-			DeputyID: 555,
-			DeputyName: "kate",
+			TimelineEventId:    300,
+			Timestamp: "2021-09-09 14:01:59",
+			EventType: "DeputyLinkedToOrder",
+			User:  User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678",},
+			Event: Event{
+				DeputyID: "76",
+				DeputyName: "Mx Bob Builder",
+				OrderType:   "pfa",
+				SiriusId:    "7000-0000-1995",
+				OrderNumber: "58",
+				Client: []ClientPerson{{ClientName: "Test Name", ClientId: "63", ClientUid: "7000-0000-1961", ClientCourtRef: "40124126" }},
+			},
 		},
 	}
 
-	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 76)
+	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 1)
 
 	assert.Equal(t, expectedResponse, deputyEvents)
 	assert.Equal(t, nil, err)
@@ -51,17 +93,12 @@ func TestGetDeputyEventsReturnsNewStatusError(t *testing.T) {
 
 	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 76)
 
-	expectedResponse := DeputyEvents{
-		DeputyEvent{
-			DeputyID: 555,
-			DeputyName: "kate",
-		},
-	}
+	expectedResponse := DeputyEvents(nil)
 
 	assert.Equal(t, expectedResponse, deputyEvents)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76",
+		URL:    svr.URL + "/api/v1/timeline/76",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -76,27 +113,7 @@ func TestGetDeputyEventsReturnsUnauthorisedClientError(t *testing.T) {
 
 	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 76)
 
-	//expectedResponse := DeputyEvents {
-	//	DeputyEvent{
-	//		DeputyID: 555,
-	//		DeputyName: "kate",
-	//	},
-	//}
-
-	expectedResponse := DeputyEvents{
-			DeputyEvent{
-				TaskId:    392,
-				Timestamp: "2021-09-09 14:01:59",
-				EventType: "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-				Event{
-					OrderType:   "pfa",
-					SiriusId:    "7000-0000-1995",
-					OrderNumber: "58",
-					DeputyID:    76,
-				}
-			}
-	}
-
+	expectedResponse := DeputyEvents(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyEvents)

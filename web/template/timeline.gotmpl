@@ -10,7 +10,13 @@
         {{ range .DeputyEvents }}
           <div class="moj-timeline__item">
             <div class="moj-timeline__header">
-              <h2 class="moj-timeline__title"> {{ .EventType }} </h2>
+              <h2 class="moj-timeline__title">
+              {{ if eq .EventType "DeputyLinkedToOrder" }}
+                New client added to deputyship
+              {{ else }}
+                {{ .EventType }}
+              {{ end }}
+              </h2>
               <br>
                <h2 class="moj-timeline__title"> </h2>
               <p class="moj-timeline__byline">by {{ .User.UserDisplayName }} ({{.User.UserPhoneNumber}})</p>
@@ -20,24 +26,10 @@
               <time>{{ .Timestamp }}</time>
             </p>
 
-            <ul class="govuk-list govuk-list--bullet">
-               {{ range .Event.Changes}}
-              <li>{{ .FieldName }}</li>
-              <li>From: {{.OldValue}} </li>
-              <li>To: {{.NewValue}} </li>
-              {{ end }}
-            </ul>
-            //main data recorded in ticket
-            <ul class="govuk-list govuk-list--bullet">
-              <li> Order number: {{ .Event.OrderNumber }}</li>
-              <li>Sirius ID: {{.Event.SiriusId}} </li>
-              <li>Order type: {{.Event.OrderType}} </li>
-              {{ range .Event.Client }}
-              <li>Client: {{.ClientName}} </li>
-              {{ end }}
-            </ul>
-             // just a data drop to work out what was needed
-            <p>{{ . }}</p>
+             {{ if eq .EventType "DeputyLinkedToOrder" }}
+                {{ template "new-client-added-to-deputyship" . }}
+             {{ end }}
+
           </div>
          {{ end }}
         </div>

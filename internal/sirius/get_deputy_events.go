@@ -9,34 +9,43 @@ import (
 
 type DeputyEvents []DeputyEvent
 
+
+type User struct {
+	UserId int `json:"id"`
+	UserDisplayName string `json:"displayName"`
+	UserPhoneNumber string `json:"phoneNumber"`
+}
+
+type Event struct {
+	OrderType        string         `json:"orderType"`
+	SiriusId         string         `json:"orderUid"`
+	OrderNumber      string         `json:"orderId"`
+	DeputyID         string            `json:"personId"`
+	DeputyName       string         `json:"personName"`
+	OrganisationName string         `json:"organisationName"`
+	Changes          []Changes      `json:"changes"`
+	Client           []ClientPerson `json:"additionalPersons"`
+}
+
+type Changes struct {
+	FieldName string `json:"fieldName"`
+	OldValue  string `json:"oldValue"`
+	NewValue  string `json:"newValue"`
+}
+
+type ClientPerson struct {
+	ClientName     string `json:"personName"`
+	ClientId       string `json:"personId"`
+	ClientUid      string `json:"personUid"`
+	ClientCourtRef string `json:"personCourtRef"`
+}
+
 type DeputyEvent struct {
-	TaskId int `json:"id"`
-	Timestamp string `json:"timestamp"`
-	EventType string `json:"eventType"`
-	DeputyID               int    `json:"personId"`
-	DeputyName   string `json:"personName"`
-	OrganisationName string `json:"organisationName"`
-	User struct {
-		UserId int `json:"id"`
-		UserDisplayName string `json:"displayName"`
-		UserPhoneNumber string `json:"phoneNumber"`
-	} `json:"user"`
-	Event struct {
-		OrderType string `json:"orderType"`
-		SiriusId string `json:"orderUid"`
-		OrderNumber string `json:"orderId"`
-		Changes []struct {
-			FieldName string `json:"fieldName"`
-			OldValue string `json:"oldValue"`
-			NewValue string `json:"newValue"`
-		}`json:"changes"`
-		Client []struct {
-			ClientName string `json:"personName"`
-			ClientId string `json:"personId"`
-			ClientUid string `json:"personUid"`
-			ClientCourtRef string `json:"personCourtRef"`
-		}`json:"additionalPersons"`
-	} `json:"event"`
+	TimelineEventId  int    `json:"id"`
+	Timestamp        string `json:"timestamp"`
+	EventType        string `json:"eventType"`
+	User             User   `json:"user"`
+	Event            Event  `json:"event"`
 }
 
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
@@ -77,10 +86,7 @@ func EditDeputyEvents(v DeputyEvents) DeputyEvents {
 		event := DeputyEvent{
 			Timestamp:        ReformatTimestamp(s),
 			EventType:        ReformatEventType(s),
-			TaskId:           s.TaskId,
-			DeputyID:         s.DeputyID,
-			DeputyName:       s.DeputyName,
-			OrganisationName: s.OrganisationName,
+			TimelineEventId:  s.TimelineEventId,
 			User:             s.User,
 			Event: s.Event,
 		}

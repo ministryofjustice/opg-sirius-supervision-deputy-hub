@@ -98,83 +98,82 @@
       "organisationName": "Test Organisation"
     }
   ],
-"timeline":
-        [
-  {
-  "id": 392,
-  "hash": "AW",
-  "timestamp": "2021-09-09 14:01:59",
-  "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-  "user": {
-    "id": 41,
-    "phoneNumber": "12345678",
-    "displayName": "system admin",
-    "email": "system.admin@opgtest.com"
-  },
-  "event": {
-    "orderType": "pfa",
-    "orderUid": "7000-0000-1995",
-    "orderId": "58",
-    "orderCourtRef": "03305972",
-    "courtReferenceNumber": "03305972",
-    "courtReference": "03305972",
-    "personType": "Deputy",
-    "personId": 76,
-    "personUid": "7000-0000-2530",
-    "personName": "Mx Bob Builder",
-    "personCourtRef": null,
-    "additionalPersons": [
-      {
-        "personType": "Client",
-        "personId": "63",
-        "personUid": "7000-0000-1961",
-        "personName": "Duke John Fearless",
-        "personCourtRef": "40124126"
+  "timeline": [
+    {
+      "id": 392,
+      "hash": "AW",
+      "timestamp": "2021-09-09 14:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
+      "user": {
+        "id": 41,
+        "phoneNumber": "12345678",
+        "displayName": "system admin",
+        "email": "system.admin@opgtest.com"
+      },
+      "event": {
+        "orderType": "pfa",
+        "orderUid": "7000-0000-1995",
+        "orderId": "58",
+        "orderCourtRef": "03305972",
+        "courtReferenceNumber": "03305972",
+        "courtReference": "03305972",
+        "personType": "Deputy",
+        "personId": "76",
+        "personUid": "7000-0000-2530",
+        "personName": "Mr Bob Builder",
+        "personCourtRef": null,
+        "additionalPersons": [
+          {
+            "personType": "Client",
+            "personId": "63",
+            "personUid": "7000-0000-1961",
+            "personName": "Duke John Fearless",
+            "personCourtRef": "40124126"
+          }
+        ]
       }
-    ]
-  }
-},
-{
-  "id": 394,
-  "hash": "AY",
-  "timestamp": "2021-09-09 14:01:59",
-  "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged",
-  "user": {
-    "id": 41,
-    "phoneNumber": "12345678",
-    "displayName": "system admin",
-    "email": "system.admin@opgtest.com"
-  },
-  "event": {
-    "orderType": "pfa",
-    "orderUid": "7000-0000-1995",
-    "orderId": "58",
-    "orderCourtRef": "03305972",
-    "courtReferenceNumber": "03305972",
-    "courtReference": "03305972",
-    "changes": [
-      {
-        "fieldName": "deputyType",
-        "oldValue": null,
-        "newValue": "LAY",
-        "type": "string"
+    },
+    {
+      "id": 394,
+      "hash": "AY",
+      "timestamp": "2021-09-09 14:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged",
+      "user": {
+        "id": 41,
+        "phoneNumber": "12345678",
+        "displayName": "system admin",
+        "email": "system.admin@opgtest.com"
+      },
+      "event": {
+        "orderType": "pfa",
+        "orderUid": "7000-0000-1995",
+        "orderId": "58",
+        "orderCourtRef": "03305972",
+        "courtReferenceNumber": "03305972",
+        "courtReference": "03305972",
+        "changes": [
+          {
+            "fieldName": "deputyType",
+            "oldValue": null,
+            "newValue": "LAY",
+            "type": "string"
+          }
+        ],
+        "personType": "Deputy",
+        "personId": "76",
+        "personUid": "7000-0000-2530",
+        "personName": "Mx Bob Builder",
+        "personCourtRef": null,
+        "additionalPersons": [
+          {
+            "personType": "Client",
+            "personId": "63",
+            "personUid": "7000-0000-1961",
+            "personName": "Duke John Fearless",
+            "personCourtRef": "40124126"
+          }
+        ]
       }
-    ],
-    "personType": "Deputy",
-    "personId": "76",
-    "personUid": "7000-0000-2530",
-    "personName": "Mx Bob Builder",
-    "personCourtRef": null,
-    "additionalPersons": [
-      {
-        "personType": "Client",
-        "personId": "63",
-        "personUid": "7000-0000-1961",
-        "personName": "Duke John Fearless",
-        "personCourtRef": "40124126"
-      }
-    ]
-  }
-}
-]
+    }
+  ]
 }
