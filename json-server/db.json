@@ -219,8 +219,8 @@
             },
             "orderDate": "26\/05\/2017",
             "orderStatus": {
-              "handle": "ACTIVE",
-              "label": "Active",
+              "handle": "CLOSED",
+              "label": "Closed",
               "deprecated": false
             },
             "deputies": [
@@ -365,7 +365,7 @@
               "label": "Sole",
               "deprecated": null
             },
-            "orderDate": "26\/05\/2017",
+            "orderDate": "26\/05\/2016",
             "orderStatus": {
               "handle": "OPEN",
               "label": "Open",
@@ -816,7 +816,7 @@
             "caseAttorneyJointlyAndJointlyAndSeverally": false,
             "latestSupervisionLevel": {
               "id": 12,
-              "appliesFrom": "01\/12\/2014",
+              "appliesFrom": "01\/12\/2020",
               "supervisionLevel": {
                 "handle": "GENERAL",
                 "label": "General",
@@ -835,7 +835,7 @@
               "label": "Joint",
               "deprecated": null
             },
-            "orderDate": "01\/12\/2014",
+            "orderDate": "01\/12\/2020",
             "orderStatus": {
               "handle": "ACTIVE",
               "label": "Active",

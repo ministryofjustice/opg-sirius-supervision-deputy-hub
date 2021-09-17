@@ -60,7 +60,6 @@ type DeputyClientDetails []DeputyClient
 
 func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetails, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/clients", deputyId), nil)
-
 	if err != nil {
 		return nil, err
 	}
@@ -69,7 +68,6 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	if err != nil {
 		return nil, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -101,7 +99,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 			SupervisionLevel:  GetLatestSupervisionLevel(orders),
 		}
 	}
-	return clients, nil
+	return clients, err
 }
 
 func CalculateOrderStatus(orders Orders) string {
@@ -142,5 +140,20 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 			OrderDate: date,
 		}
 	}
-	return orders
+
+	updatedOrders := removeOpenStatusOrders(orders)
+	return updatedOrders
+}
+
+func removeOpenStatusOrders(orders Orders) Orders {
+	// an order is open when it's with the Allocations team,
+	// and so not yet supervised by the PA team
+
+	var updatedOrders Orders
+	for _, o := range orders {
+		if o.OrderStatus != "Open" {
+			updatedOrders = append(updatedOrders, o)
+		}
+	}
+	return updatedOrders
 }
