@@ -1,0 +1,49 @@
+{{ template "page" . }}
+{{ define "main" }}
+
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">Clients</h1>
+    </header>
+
+    <table id="pa-clients-3" class="govuk-table sortable">
+
+        <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Client</th>
+            <th scope="col" class="govuk-table__header">Accomodation type</th>
+            <th scope="col" class="govuk-table__header">Status</th>
+            <th scope="col" class="govuk-table__header">Supervision level</th>
+            <th scope="col" class="govuk-table__header">Visits</th>
+            <th scope="col" class="govuk-table__header">Report due</th>
+            <th scope="col" class="govuk-table__header">CREC</th>
+        </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+        {{ range .DeputyClientsDetails }}
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell client_name_ref nowrap">
+                    <a href="">
+                        {{if .Firstname}} {{.Firstname}} {{else}} - {{end}}
+                        {{if .Surname}} {{.Surname}} {{else}} - {{end}}
+                    </a>
+                    <span class="secondary court_ref">{{if .CourtRef}} {{.CourtRef}} {{else}} - {{end}}</span>
+                </td>
+                <td class="govuk-table__cell">{{if .AccommodationType}} {{.AccommodationType}} {{else}} - {{end}}</td>
+                <td class="govuk-table__cell">{{if .OrderStatus}} {{.OrderStatus}} {{else}} - {{end}}</td>
+                <td class="govuk-table__cell">{{if .SupervisionLevel}} {{.SupervisionLevel}} {{else}} - {{end}}</td>
+                <td class="govuk-table__cell visit_type nowrap">
+                    {{/* TO DO in a future ticket */}}
+                    -
+                </td>
+                <td class="govuk-table__cell reports nowrap due">
+                    {{/* TO DO in a future ticket */}}
+                    -
+                </td>
+                <td class="govuk-table__cell">{{.RiskScore}}</td>
+            </tr>
+        {{ end }}
+        </tbody>
+    </table>
+
+{{ end }}
