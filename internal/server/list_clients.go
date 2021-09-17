@@ -31,6 +31,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		if err != nil {
+			return err
+		}
 		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId)
 		if err != nil {
 			return err
