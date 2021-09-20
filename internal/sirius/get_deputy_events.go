@@ -73,8 +73,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	DeputyEvents := v
-	DeputyEvents = EditDeputyEvents(v)
+	DeputyEvents := EditDeputyEvents(v)
 
 	return DeputyEvents, err
 
