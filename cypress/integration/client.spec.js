@@ -23,16 +23,5 @@ describe("Clients tab", () => {
 
     it("lists all clients", () => {
         cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 3);
-
-        // const expected = ["Luke Crete", "Council Rented", "Active", "Minimal", "", "", 0,
-        //     "Ashley Jackson", "Supervised Sheltered Accommodation", "Active", "General", "", "", 0,
-        //     "John Fearless", "Family Member/Friend's Home (including spouse/civil partner)",
-        //     "Active", "General", "", "", 5];
-        //
-        // cy.get(".govuk-table__body > .govuk-table__row")
-        //     .children()
-        //     .each(($el, index) => {
-        //         cy.wrap($el).should("contain", expected[index]);
-        //     });
     });
 });

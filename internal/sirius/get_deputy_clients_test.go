@@ -84,7 +84,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	}
 
 	expectedResponse := DeputyClientDetails{
-		DeputyClient{ID: 67, Firstname: "John", Surname: "Fearless", CourtRef: "67422477", RiskScore: 5, AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)", OrderStatus: "Active", SupervisionLevel: "General"},
+		DeputyClient{ClientId: 67, Firstname: "John", Surname: "Fearless", CourtRef: "67422477", RiskScore: 5, AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)", OrderStatus: "Active", SupervisionLevel: "General"},
 	}
 
 	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)

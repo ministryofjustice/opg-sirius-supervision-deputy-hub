@@ -25,7 +25,7 @@ type apiOrders []apiOrder
 
 type apiClients struct {
 	Clients []struct {
-		ID                  int    `json:"id"`
+		ClientId                  int    `json:"id"`
 		Firstname           string `json:"firstname"`
 		Surname             string `json:"surname"`
 		CourtRef            string `json:"caseRecNumber"`
@@ -46,7 +46,7 @@ type Order struct {
 type Orders []Order
 
 type DeputyClient struct {
-	ID                int
+	ClientId                int
 	Firstname         string
 	Surname           string
 	CourtRef          string
@@ -89,7 +89,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 		orders := RestructureOrders(t.Orders)
 
 		clients[i] = DeputyClient{
-			ID:                t.ID,
+			ClientId:                t.ClientId,
 			Firstname:         t.Firstname,
 			Surname:           t.Surname,
 			CourtRef:          t.CourtRef,
