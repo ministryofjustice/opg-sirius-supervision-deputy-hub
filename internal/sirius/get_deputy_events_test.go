@@ -71,7 +71,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 				DeputyName: "Mx Bob Builder",
 				OrderType:   "pfa",
 				SiriusId:    "7000-0000-1995",
-				OrderNumber: "58",
+				OrderNumber: "03305972",
 				Client: []ClientPerson{{ClientName: "Test Name", ClientId: "63", ClientUid: "7000-0000-1961", ClientCourtRef: "40124126" }},
 			},
 		},

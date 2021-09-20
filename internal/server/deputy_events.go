@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 type DeputyHubEventInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
+	MapTemplates(sirius.Context) string
 }
 
 type deputyHubEventVars struct {
@@ -18,6 +18,7 @@ type deputyHubEventVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	DeputyEvents sirius.DeputyEvents
+	MappedEventTitle string
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -33,8 +34,8 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
 		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
-		fmt.Println(deputyEvents)
-		fmt.Println(err)
+		mappedEventTitle := client.MapTemplates(ctx)
+
 		if err != nil {
 			return err
 		}
@@ -44,6 +45,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
 			DeputyEvents: deputyEvents,
+			MappedEventTitle: mappedEventTitle,
 		}
 
 		switch r.Method {

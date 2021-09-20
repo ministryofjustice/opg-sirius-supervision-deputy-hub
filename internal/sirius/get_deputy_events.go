@@ -19,8 +19,8 @@ type User struct {
 type Event struct {
 	OrderType        string         `json:"orderType"`
 	SiriusId         string         `json:"orderUid"`
-	OrderNumber      string         `json:"orderId"`
-	DeputyID         string            `json:"personId"`
+	OrderNumber      string         `json:"orderCourtRef"`
+	DeputyID         string         `json:"personId"`
 	DeputyName       string         `json:"personName"`
 	OrganisationName string         `json:"organisationName"`
 	Changes          []Changes      `json:"changes"`

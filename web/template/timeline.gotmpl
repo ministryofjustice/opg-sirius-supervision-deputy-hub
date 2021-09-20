@@ -1,14 +1,18 @@
 {{ template "page" . }}
 
 {{ define "main" }}
+<div class="main">
   <header>
-    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-3">Timeline</h1>
+    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Timeline</h1>
   </header>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-third">
         <div class="moj-timeline">
         {{ range .DeputyEvents }}
-          <div class="moj-timeline__item">
+                {{ map template[key] }}
+                {{ template "test-template" . }}
+
+            <div class="moj-timeline__item">
             <div class="moj-timeline__header">
               <h2 class="moj-timeline__title">
               {{ if eq .EventType "DeputyLinkedToOrder" }}
@@ -17,8 +21,6 @@
                 {{ .EventType }}
               {{ end }}
               </h2>
-              <br>
-               <h2 class="moj-timeline__title"> </h2>
               <p class="moj-timeline__byline">by {{ .User.UserDisplayName }} ({{.User.UserPhoneNumber}})</p>
             </div>
 
@@ -31,8 +33,11 @@
              {{ end }}
 
           </div>
+
          {{ end }}
         </div>
     </div>
   </div>
+  </div>
+
 {{ end }}
