@@ -21,7 +21,7 @@ describe("Clients tab", () => {
             });
     });
 
-    it("lists all clients", () => {
-        cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 3);
+    it("lists clients with active/closed/duplicate orders", () => {
+        cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 2);
     });
 });

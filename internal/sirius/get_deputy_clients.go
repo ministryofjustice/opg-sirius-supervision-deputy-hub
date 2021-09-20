@@ -25,7 +25,7 @@ type apiOrders []apiOrder
 
 type apiClients struct {
 	Clients []struct {
-		ClientId                  int    `json:"id"`
+		ClientId            int    `json:"id"`
 		Firstname           string `json:"firstname"`
 		Surname             string `json:"surname"`
 		CourtRef            string `json:"caseRecNumber"`
@@ -46,7 +46,7 @@ type Order struct {
 type Orders []Order
 
 type DeputyClient struct {
-	ClientId                int
+	ClientId          int
 	Firstname         string
 	Surname           string
 	CourtRef          string
@@ -83,20 +83,21 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 		return nil, err
 	}
 
-	clients := make(DeputyClientDetails, len(v.Clients))
-
-	for i, t := range v.Clients {
+	var clients DeputyClientDetails
+	for _, t := range v.Clients {
 		orders := RestructureOrders(t.Orders)
-
-		clients[i] = DeputyClient{
-			ClientId:                t.ClientId,
-			Firstname:         t.Firstname,
-			Surname:           t.Surname,
-			CourtRef:          t.CourtRef,
-			RiskScore:         t.RiskScore,
-			AccommodationType: t.ClientAccommodation.Label,
-			OrderStatus:       CalculateOrderStatus(orders),
-			SupervisionLevel:  GetLatestSupervisionLevel(orders),
+		if len(orders) > 0 {
+			var client = DeputyClient{
+				ClientId:          t.ClientId,
+				Firstname:         t.Firstname,
+				Surname:           t.Surname,
+				CourtRef:          t.CourtRef,
+				RiskScore:         t.RiskScore,
+				AccommodationType: t.ClientAccommodation.Label,
+				OrderStatus:       CalculateOrderStatus(orders),
+				SupervisionLevel:  GetLatestSupervisionLevel(orders),
+			}
+			clients = append(clients, client)
 		}
 	}
 	return clients, err
@@ -137,7 +138,7 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 		orders[i] = Order{
 			OrderStatus:      t.OrderStatus.Label,
 			SupervisionLevel: t.LatestSupervisionLevel.SupervisionLevel.Label,
-			OrderDate: date,
+			OrderDate:        date,
 		}
 	}
 
