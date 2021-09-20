@@ -5,6 +5,9 @@ package sirius
 
 //create a map structure?
 
-func (c *Client) MapTemplates(ctx Context) string {
-	return "Mish and Kate"
+func (c *Client) MapTemplates(ctx Context) map[string]string {
+	m := make(map[string]string)
+	m["kate"] = "hi"
+	m["mish"] = "hello"
+	return m
 }

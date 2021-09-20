@@ -6,34 +6,10 @@
     <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Timeline</h1>
   </header>
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
+    <div class="govuk-grid-column-two-thirds">
         <div class="moj-timeline">
         {{ range .DeputyEvents }}
-                {{ map template[key] }}
-                {{ template "test-template" . }}
-
-            <div class="moj-timeline__item">
-            <div class="moj-timeline__header">
-              <h2 class="moj-timeline__title">
-              {{ if eq .EventType "DeputyLinkedToOrder" }}
-                New client added to deputyship
-              {{ else }}
-                {{ .EventType }}
-              {{ end }}
-              </h2>
-              <p class="moj-timeline__byline">by {{ .User.UserDisplayName }} ({{.User.UserPhoneNumber}})</p>
-            </div>
-
-            <p class="moj-timeline__date">
-              <time>{{ .Timestamp }}</time>
-            </p>
-
-             {{ if eq .EventType "DeputyLinkedToOrder" }}
-                {{ template "new-client-added-to-deputyship" . }}
-             {{ end }}
-
-          </div>
-
+           {{ template "timeline-template-renderer" . }}
          {{ end }}
         </div>
     </div>
