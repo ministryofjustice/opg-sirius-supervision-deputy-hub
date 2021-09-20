@@ -31,6 +31,9 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		if err != nil {
+			return err
+		}
 		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
 
 		if err != nil {
