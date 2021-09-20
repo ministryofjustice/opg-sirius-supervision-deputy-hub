@@ -4,6 +4,9 @@
             <li class="moj-sub-navigation__item">
                 <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/" .DeputyDetails.ID) }}aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/" .DeputyDetails.ID) }}">Dashboard</a>
             </li>
+            <li class="moj-sub-navigation__item">
+                <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/clients" .DeputyDetails.ID) }}aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/clients" .DeputyDetails.ID) }}">Clients</a>
+            </li>
         </ul>
     </nav>
 {{ end }}
