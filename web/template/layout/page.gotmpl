@@ -3,7 +3,7 @@
   <html lang="en" class="govuk-template app-html-class">
     <head>
       <meta charset="utf-8">
-      <title>{{ block "title" . }}{{ end }} - Sirius</title>
+      <title> OPG Sirius Deputy Hub  - Sirius</title>
       <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
       <meta name="api-base-uri" content="{{ sirius "" }}">
       <meta name="theme-color" content="blue">
@@ -33,6 +33,7 @@
 
       <div class="govuk-width-container">
         <main class="govuk-main-wrapper app-main-class"  role="main">
+          {{ template "deputy-hub" . }}
           {{ block "main" . }}{{ end }}
         </main>
       </div>

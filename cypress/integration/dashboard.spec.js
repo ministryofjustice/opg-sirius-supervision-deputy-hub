@@ -1,4 +1,4 @@
-describe("Navigation bar", () => {
+describe("Dashboard tab", () => {
   beforeEach(() => {
       cy.setCookie("Other", "other");
       cy.setCookie("XSRF-TOKEN", "abcde");
