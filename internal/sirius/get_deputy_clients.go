@@ -100,6 +100,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 			clients = append(clients, client)
 		}
 	}
+	alphabeticalSort(clients)
 	return clients, err
 }
 
@@ -169,4 +170,14 @@ func removeOpenStatusOrders(orders Orders) Orders {
 		}
 	}
 	return updatedOrders
+}
+
+func alphabeticalSort(clients DeputyClientDetails) {
+	sort.Slice(clients, func(i, j int) bool {
+		if strings.EqualFold(clients[i].Firstname, clients[j].Firstname) {
+			return strings.ToLower(clients[i].Surname) < strings.ToLower(clients[j].Surname)
+		} else {
+			return strings.ToLower(clients[i].Firstname) < strings.ToLower(clients[j].Firstname)
+		}
+	})
 }
