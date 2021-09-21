@@ -47,7 +47,7 @@ func main() {
 				return siriusPublicURL + s
 			},
 		}).
-		ParseGlob(webDir + "/template/layout/*.gotmpl")
+		ParseGlob(webDir + "/template/*/*.gotmpl")
 
 	files, _ := filepath.Glob(webDir + "/template/*.gotmpl")
 	tmpls := map[string]*template.Template{}
