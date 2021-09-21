@@ -1,8 +1,4 @@
-{{ template "page" . }}
-
-{{ define "title" }} OPG Sirius Deputy Hub {{ end }}
-
-{{ define "main" }}
+{{ define "deputy-hub" }}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-m govuk-!-margin-bottom-0">{{ .DeputyDetails.OrganisationName }}</h1>
@@ -13,7 +9,6 @@
     <div class="govuk-grid-row govuk-!-margin-top-5  govuk-!-margin-bottom-5">
         <div class="govuk-grid-column-full">
             {{ template "navigation" . }}
-            {{ template "dashboard" . }}
         </div>
     </div>
 {{ end }}
