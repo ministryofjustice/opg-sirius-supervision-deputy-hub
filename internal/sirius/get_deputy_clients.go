@@ -13,7 +13,7 @@ type apiOrder struct {
 	OrderStatus struct {
 		Label string `json:"label"`
 	}
-	LatestSupervisionLevel struct {
+	LatestSupervisionLevel *struct {
 		SupervisionLevel struct {
 			Label string `json:"label"`
 		}
@@ -94,8 +94,8 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				CourtRef:          t.CourtRef,
 				RiskScore:         t.RiskScore,
 				AccommodationType: t.ClientAccommodation.Label,
-				OrderStatus:       CalculateOrderStatus(orders),
-				SupervisionLevel:  GetLatestSupervisionLevel(orders),
+				OrderStatus:       GetOrderStatus(orders),
+				SupervisionLevel:  GetMostRecentSupervisionLevel(orders),
 			}
 			clients = append(clients, client)
 		}
@@ -103,7 +103,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	return clients, err
 }
 
-func CalculateOrderStatus(orders Orders) string {
+func GetOrderStatus(orders Orders) string {
 	// return the status of the oldest active order for a client
 	// if there isn’t one, the status of the oldest order
 
@@ -119,7 +119,7 @@ func CalculateOrderStatus(orders Orders) string {
 	return orders[0].OrderStatus
 }
 
-func GetLatestSupervisionLevel(orders Orders) string {
+func GetMostRecentSupervisionLevel(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
 		return orders[i].OrderDate.After(orders[j].OrderDate)
 	})
@@ -131,19 +131,31 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 
 	for i, t := range apiOrders {
 		// reformatting order date to yyyy-dd-mm
-		dashDateString := strings.Replace(t.OrderDate, "/", "-", 2)
-		reformattedDate := fmt.Sprintf("%s%s%s%s%s", dashDateString[6:], "-", dashDateString[3:5], "-", dashDateString[:2])
-		date, _ := time.Parse("2006-01-02", reformattedDate)
+		reformattedDate := reformatOrderDate(t.OrderDate)
+
+		var supervisionLevel string
+		if t.LatestSupervisionLevel != nil {
+			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
+		} else {
+			supervisionLevel = ""
+		}
 
 		orders[i] = Order{
 			OrderStatus:      t.OrderStatus.Label,
-			SupervisionLevel: t.LatestSupervisionLevel.SupervisionLevel.Label,
-			OrderDate:        date,
+			SupervisionLevel: supervisionLevel,
+			OrderDate:        reformattedDate,
 		}
 	}
 
 	updatedOrders := removeOpenStatusOrders(orders)
 	return updatedOrders
+}
+
+func reformatOrderDate(orderDate string) time.Time {
+	dashDateString := strings.Replace(orderDate, "/", "-", 2)
+	reformattedDate := fmt.Sprintf("%s%s%s%s%s", dashDateString[6:], "-", dashDateString[3:5], "-", dashDateString[:2])
+	date, _ := time.Parse("2006-01-02", reformattedDate)
+	return date
 }
 
 func removeOpenStatusOrders(orders Orders) Orders {
