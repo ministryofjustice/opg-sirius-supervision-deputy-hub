@@ -9,17 +9,18 @@ import (
 type DeputyNoteCollection []DeputyNote
 
 type DeputyNote struct {
-	ID               int    `json:"id"`
-	DeputyCasrecId   int `json:"deputyCasrecId"`
-	OrganisationName string `json:"organisationName"`
-	Email	string `json:"email"`
-	PhoneNumber string `json:"phoneNumber"`
-	AddressLine1	string `json:"addressLine1"`
-	AddressLine2	string `json:"addressLine2"`
-	AddressLine3	string `json:"addressLine3"`
-	Town string `json:"town"`
-	County string `json:"county"`
-	Postcode string `json:"postcode"`
+	ID              int    `json:"id"`
+	DeputyId        int    `json:"personId"`
+	UserId          int    `json:"userId"`
+	UserDisplayName string `json:"userDisplayName"`
+	UserEmail       string `json:"userEmail"`
+	UserPhoneNumber string `json:"userPhoneNumber"`
+	Type            string `json:"type"`
+	NoteType        string `json:"noteType"`
+	NoteText        string `json:"description"`
+	Name            string `json:"name"`
+	Timestamp       string `json:"createdTime"`
+	Direction       string `json:"direction"`
 }
 
 func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {

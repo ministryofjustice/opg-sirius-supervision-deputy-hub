@@ -175,5 +175,35 @@
         ]
       }
     }
+  ],
+  "notes": [
+    {
+      "personId": 1,
+      "userId": 68,
+      "userDisplayName": "Finance User Testing",
+      "userEmail": "finance.user.testing@opgtest.com",
+      "userPhoneNumber": "12345678",
+      "id": 65,
+      "type": "NEW DEPUTY",
+      "noteType": "ORDER_CREATED",
+      "description": "notes",
+      "name": "This is a HW order...",
+      "createdTime": "20/09/2021 08:50:13",
+      "direction": null
+    },
+    {
+      "personId": 1,
+      "userId": 68,
+      "userDisplayName": "Finance User Testing",
+      "userEmail": "finance.user.testing@opgtest.com",
+      "userPhoneNumber": "12345678",
+      "id": 64,
+      "type": "OPEN",
+      "noteType": "ORDER_STATUS_UPDATED",
+      "description": "...and here are the order status notes",
+      "name": null,
+      "createdTime": "20/09/2021 08:50:12",
+      "direction": null
+    }
   ]
 }
