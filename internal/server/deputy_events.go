@@ -16,7 +16,7 @@ type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyEvents sirius.DeputyEventCollection
+	DeputyEvents  sirius.DeputyEventCollection
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -44,7 +44,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
-			DeputyEvents: deputyEvents,
+			DeputyEvents:  deputyEvents,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

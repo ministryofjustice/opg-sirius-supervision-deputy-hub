@@ -10,7 +10,7 @@ import (
 type DeputyEventCollection []DeputyEvent
 
 type User struct {
-	UserId int `json:"id"`
+	UserId          int    `json:"id"`
 	UserDisplayName string `json:"displayName"`
 	UserPhoneNumber string `json:"phoneNumber"`
 }
@@ -40,11 +40,11 @@ type ClientPerson struct {
 }
 
 type DeputyEvent struct {
-	TimelineEventId  int    `json:"id"`
-	Timestamp        string `json:"timestamp"`
-	EventType        string `json:"eventType"`
-	User             User   `json:"user"`
-	Event            Event  `json:"event"`
+	TimelineEventId int    `json:"id"`
+	Timestamp       string `json:"timestamp"`
+	EventType       string `json:"eventType"`
+	User            User   `json:"user"`
+	Event           Event  `json:"event"`
 }
 
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
@@ -82,16 +82,16 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:        ReformatTimestamp(s),
-			EventType:        ReformatEventType(s),
-			TimelineEventId:  s.TimelineEventId,
-			User:             s.User,
-			Event: s.Event,
+			Timestamp:       ReformatTimestamp(s),
+			EventType:       ReformatEventType(s),
+			TimelineEventId: s.TimelineEventId,
+			User:            s.User,
+			Event:           s.Event,
 		}
 
 		list = append(list, event)
 	}
-		return list
+	return list
 }
 
 func ReformatTimestamp(s DeputyEvent) string {
