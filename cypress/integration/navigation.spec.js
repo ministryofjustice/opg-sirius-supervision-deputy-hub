@@ -8,6 +8,7 @@ describe("Navigation bar", () => {
     const expected = [
         ["Dashboard", "/supervision/deputies/public-authority/deputy/1/"],
         ["Clients", "/supervision/deputies/public-authority/deputy/1/clients"],
+        ["Timeline", "/supervision/deputies/public-authority/deputy/1/timeline"],
     ];
 
     it("has working nav links for different tabs", () => {
