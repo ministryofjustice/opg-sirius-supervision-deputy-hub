@@ -7,19 +7,21 @@ import (
 	"strconv"
 )
 
-type DeputyHubInformation interface {
+type DeputyHubEventInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
 }
 
-type deputyHubVars struct {
+type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
+	DeputyEvents sirius.DeputyEventCollection
 	Error         string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -32,12 +34,19 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		if err != nil {
 			return err
 		}
+		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
 
-		vars := deputyHubVars{
+		if err != nil {
+			return err
+		}
+
+		vars := deputyHubEventVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
+			DeputyEvents: deputyEvents,
 		}
+
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
