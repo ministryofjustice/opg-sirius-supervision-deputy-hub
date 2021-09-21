@@ -23,7 +23,7 @@
         {{ range .DeputyClientsDetails }}
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell client_name_ref nowrap">
-                    <a href="{{ sirius (printf "/supervision/#/clients/%d" .ClientId) }}">
+                    <a class="govuk-link" href="{{ sirius (printf "/supervision/#/clients/%d" .ClientId) }}">
                         {{if .Firstname}} {{.Firstname}} {{else}} - {{end}}
                         {{if .Surname}} {{.Surname}} {{else}} - {{end}}
                     </a>
