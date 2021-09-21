@@ -297,3 +297,11 @@
 .govuk-footer__copyright-logo {
   text-decoration: none;
 }
+
+// mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
+a[href^="mailto:"] {
+  color: #4c2c92;
+  &:hover {
+    color: #003078;
+  }
+}
