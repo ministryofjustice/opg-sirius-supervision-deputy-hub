@@ -95,12 +95,12 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 }
 
 func ReformatTimestamp(s DeputyEvent) string {
-	//edit time to format required by timeline
 	return s.Timestamp
 }
 
 func ReformatEventType(s DeputyEvent) string {
-	stringsArray := strings.Split(s.EventType, "\\")
-	string := stringsArray[5]
-	return string
+	eventTypeArray := strings.Split(s.EventType, "\\")
+	eventTypeArrayLength := len(eventTypeArray)
+	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
+	return eventTypeName
 }

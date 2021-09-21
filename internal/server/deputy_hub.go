@@ -38,12 +38,6 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
 		}
-
-		switch r.Method {
-		case http.MethodGet:
-			return tmpl.ExecuteTemplate(w, "page", vars)
-		default:
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

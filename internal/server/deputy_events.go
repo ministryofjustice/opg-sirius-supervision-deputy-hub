@@ -47,11 +47,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			DeputyEvents: deputyEvents,
 		}
 
-		switch r.Method {
-		case http.MethodGet:
-			return tmpl.ExecuteTemplate(w, "page", vars)
-		default:
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
