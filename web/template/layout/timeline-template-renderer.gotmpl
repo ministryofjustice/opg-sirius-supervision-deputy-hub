@@ -1,0 +1,5 @@
+{{ define "timeline-template-renderer" }}
+       {{ if eq .EventType "DeputyLinkedToOrder" }}
+          {{ template "new-client-added-to-deputyship" . }}
+       {{ end }}
+{{ end }}
