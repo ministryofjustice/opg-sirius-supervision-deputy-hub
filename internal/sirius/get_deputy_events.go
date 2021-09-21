@@ -7,8 +7,7 @@ import (
 	"strings"
 )
 
-type DeputyEvents []DeputyEvent
-
+type DeputyEventCollection []DeputyEvent
 
 type User struct {
 	UserId int `json:"id"`
@@ -48,8 +47,8 @@ type DeputyEvent struct {
 	Event            Event  `json:"event"`
 }
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
-	var v DeputyEvents
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
+	var v DeputyEventCollection
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)
 
@@ -79,8 +78,8 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 
 }
 
-func EditDeputyEvents(v DeputyEvents) DeputyEvents {
-	var list DeputyEvents
+func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
+	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
 			Timestamp:        ReformatTimestamp(s),
@@ -103,6 +102,5 @@ func ReformatTimestamp(s DeputyEvent) string {
 func ReformatEventType(s DeputyEvent) string {
 	stringsArray := strings.Split(s.EventType, "\\")
 	string := stringsArray[5]
-	//add spaces into the name
 	return string
 }

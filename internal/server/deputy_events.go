@@ -9,14 +9,14 @@ import (
 
 type DeputyHubEventInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
 }
 
 type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyEvents sirius.DeputyEvents
+	DeputyEvents sirius.DeputyEventCollection
 	Error         string
 	Errors        sirius.ValidationErrors
 }

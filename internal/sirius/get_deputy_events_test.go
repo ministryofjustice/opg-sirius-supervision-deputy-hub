@@ -60,7 +60,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := DeputyEvents{
+	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId:    300,
 			Timestamp: "2021-09-09 14:01:59",
@@ -93,7 +93,7 @@ func TestGetDeputyEventsReturnsNewStatusError(t *testing.T) {
 
 	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 76)
 
-	expectedResponse := DeputyEvents(nil)
+	expectedResponse := DeputyEventCollection(nil)
 
 	assert.Equal(t, expectedResponse, deputyEvents)
 	assert.Equal(t, StatusError{
@@ -113,7 +113,7 @@ func TestGetDeputyEventsReturnsUnauthorisedClientError(t *testing.T) {
 
 	deputyEvents, err := client.GetDeputyEvents(getContext(nil), 76)
 
-	expectedResponse := DeputyEvents(nil)
+	expectedResponse := DeputyEventCollection(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyEvents)
