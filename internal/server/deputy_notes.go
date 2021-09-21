@@ -8,19 +8,20 @@ import (
 )
 
 type DeputyHubNotesInformation interface {
-	GetDeputyNotes(sirius.Context, int) (error)
+	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 }
 
 type deputyHubNotesVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyNotes sirius.DeputyDetails
+	DeputyNotes   sirius.DeputyNoteCollection
 	Error         string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHubNotes(client DeputyHubInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -38,7 +39,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubInformation, tmpl Template)
 			return err
 		}
 
-		vars := deputyHubVars{
+		vars := deputyHubNotesVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,

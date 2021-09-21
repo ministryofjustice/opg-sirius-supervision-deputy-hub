@@ -20,6 +20,7 @@ type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
 	DeputyHubEventInformation
+	DeputyHubNotesInformation
 }
 
 type Template interface {
