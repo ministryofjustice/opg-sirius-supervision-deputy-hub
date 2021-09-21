@@ -10,10 +10,10 @@ import (
 )
 
 type mockDeputyHubInformation struct {
-	count             int
-	lastCtx           sirius.Context
-	err               error
-	deputyData        sirius.DeputyDetails
+	count      int
+	lastCtx    sirius.Context
+	err        error
+	deputyData sirius.DeputyDetails
 }
 
 func (m *mockDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
