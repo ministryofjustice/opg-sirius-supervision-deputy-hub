@@ -85,7 +85,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 
 	var clients DeputyClientDetails
 	for _, t := range v.Clients {
-		orders := RestructureOrders(t.Orders)
+		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
 			var client = DeputyClient{
 				ClientId:          t.ClientId,
@@ -94,8 +94,8 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				CourtRef:          t.CourtRef,
 				RiskScore:         t.RiskScore,
 				AccommodationType: t.ClientAccommodation.Label,
-				OrderStatus:       GetOrderStatus(orders),
-				SupervisionLevel:  GetMostRecentSupervisionLevel(orders),
+				OrderStatus:       getOrderStatus(orders),
+				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
 			}
 			clients = append(clients, client)
 		}
@@ -104,10 +104,11 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	return clients, err
 }
 
-func GetOrderStatus(orders Orders) string {
-	// return the status of the oldest active order for a client
-	// if there isn’t one, the status of the oldest order
-
+/*
+  getOrderStatus returns the status of the oldest active order for a client.
+  If there isn’t one, the status of the oldest order is returned.
+*/
+func getOrderStatus(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
 		return orders[i].OrderDate.Before(orders[j].OrderDate)
 	})
@@ -120,14 +121,14 @@ func GetOrderStatus(orders Orders) string {
 	return orders[0].OrderStatus
 }
 
-func GetMostRecentSupervisionLevel(orders Orders) string {
+func getMostRecentSupervisionLevel(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
 		return orders[i].OrderDate.After(orders[j].OrderDate)
 	})
 	return orders[0].SupervisionLevel
 }
 
-func RestructureOrders(apiOrders apiOrders) Orders {
+func restructureOrders(apiOrders apiOrders) Orders {
 	orders := make(Orders, len(apiOrders))
 
 	for i, t := range apiOrders {
@@ -160,8 +161,8 @@ func reformatOrderDate(orderDate string) time.Time {
 }
 
 func removeOpenStatusOrders(orders Orders) Orders {
-	// an order is open when it's with the Allocations team,
-	// and so not yet supervised by the PA team
+	/* An order is open when it's with the Allocations team,
+	and so not yet supervised by the PA team */
 
 	var updatedOrders Orders
 	for _, o := range orders {

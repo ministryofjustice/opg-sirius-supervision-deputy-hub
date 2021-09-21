@@ -13,12 +13,12 @@ type DeputyHubClientInformation interface {
 }
 
 type listClientsVars struct {
-	Path          string
-	XSRFToken     string
+	Path                 string
+	XSRFToken            string
 	DeputyClientsDetails sirius.DeputyClientDetails
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
+	DeputyDetails        sirius.DeputyDetails
+	Error                string
+	Errors               sirius.ValidationErrors
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
@@ -40,10 +40,10 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		vars := listClientsVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
+			Path:                 r.URL.Path,
+			XSRFToken:            ctx.XSRFToken,
 			DeputyClientsDetails: deputyClientsDetails,
-			DeputyDetails: deputyDetails,
+			DeputyDetails:        deputyDetails,
 		}
 
 		switch r.Method {
