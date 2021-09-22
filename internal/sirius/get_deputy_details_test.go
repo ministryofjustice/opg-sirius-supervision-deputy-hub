@@ -41,14 +41,14 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		ID:               1,
 		DeputyCasrecId:   10000000,
 		OrganisationName: "Test Organisation",
-		Email: "deputyship@essexcounty.gov.uk",
-		PhoneNumber: "0115 876 5574",
-		AddressLine1: "Deputyship Team",
-		AddressLine2: "Seax House",
-		AddressLine3: "19 Market Rd",
-		Town: "Chelmsford",
-		County: "Essex",
-		Postcode: "CM1 1GG",
+		Email:            "deputyship@essexcounty.gov.uk",
+		PhoneNumber:      "0115 876 5574",
+		AddressLine1:     "Deputyship Team",
+		AddressLine2:     "Seax House",
+		AddressLine3:     "19 Market Rd",
+		Town:             "Chelmsford",
+		County:           "Essex",
+		Postcode:         "CM1 1GG",
 	}
 
 	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)

@@ -19,6 +19,7 @@ type Logger interface {
 type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
+	DeputyHubClientInformation
 	DeputyHubEventInformation
 	DeputyHubNotesInformation
 }
@@ -34,6 +35,11 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["dashboard.gotmpl"])))
+
+	router.Handle("/deputy/{id}/clients",
+		wrap(
+			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
+
 	router.Handle("/deputy/{id}/timeline",
 		wrap(
 			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))

@@ -62,17 +62,17 @@ func TestDeputyEventsReturned(t *testing.T) {
 
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
-			TimelineEventId:    300,
-			Timestamp: "2021-09-09 14:01:59",
-			EventType: "DeputyLinkedToOrder",
-			User:  User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678",},
+			TimelineEventId: 300,
+			Timestamp:       "2021-09-09 14:01:59",
+			EventType:       "DeputyLinkedToOrder",
+			User:            User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678"},
 			Event: Event{
-				DeputyID: "76",
-				DeputyName: "Mx Bob Builder",
+				DeputyID:    "76",
+				DeputyName:  "Mx Bob Builder",
 				OrderType:   "pfa",
 				SiriusId:    "7000-0000-1995",
 				OrderNumber: "03305972",
-				Client: []ClientPerson{{ClientName: "Test Name", ClientId: "63", ClientUid: "7000-0000-1961", ClientCourtRef: "40124126" }},
+				Client:      []ClientPerson{{ClientName: "Test Name", ClientId: "63", ClientUid: "7000-0000-1961", ClientCourtRef: "40124126"}},
 			},
 		},
 	}
