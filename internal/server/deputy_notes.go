@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
+	AddNote(ctx sirius.Context, title, note string, deputyId int) (int, error)
 }
 
 type deputyHubNotesVars struct {
@@ -21,36 +23,72 @@ type deputyHubNotesVars struct {
 	Errors        sirius.ValidationErrors
 }
 
+type addNoteVars struct {
+	Path      	string
+	XSRFToken 	string
+	Title      	string
+	Note   		string
+	Success   	bool
+	Errors    	sirius.ValidationErrors
+}
+
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
-		if err != nil {
-			return err
-		}
-		deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
-		if err != nil {
-			return err
-		}
-
-		vars := deputyHubNotesVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-			DeputyNotes: deputyNotes,
-		}
 
 		switch r.Method {
-		case http.MethodGet:
-			return tmpl.ExecuteTemplate(w, "page", vars)
+			case http.MethodGet:
+
+				deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+				if err != nil {
+					return err
+				}
+				deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
+				if err != nil {
+					return err
+				}
+
+				vars := deputyHubNotesVars{
+					Path:          r.URL.Path,
+					XSRFToken:     ctx.XSRFToken,
+					DeputyDetails: deputyDetails,
+					DeputyNotes: deputyNotes,
+				}
+
+				return tmpl.ExecuteTemplate(w, "page", vars)
+
+			case http.MethodPost:
+
+				var (
+					title   = r.PostFormValue("title")
+					note  	= r.PostFormValue("note")
+				)
+
+				id, err := client.AddNote(ctx, title, note, deputyId)
+
+				if verr, ok := err.(sirius.ValidationError); ok {
+
+					vars := addNoteVars{
+						Path:      r.URL.Path,
+						XSRFToken: ctx.XSRFToken,
+						Title:      title,
+						Note:   note,
+						Errors:    verr.Errors,
+					}
+
+					w.WriteHeader(http.StatusBadRequest)
+					return tmpl.ExecuteTemplate(w, "page", vars)
+				} else if err != nil {
+					return err
+				}
+
+				return RedirectError(fmt.Sprintf("/teams/%d", id))
+
 		default:
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+				return StatusError(http.StatusMethodNotAllowed)
+			}
 	}
 }
