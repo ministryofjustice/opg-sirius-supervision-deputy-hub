@@ -7,21 +7,21 @@ import (
 	"strconv"
 )
 
-type DeputyHubNotesInformation interface {
+type DeputyHubEventInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
 }
 
-type deputyHubNotesVars struct {
+type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyNotes   sirius.DeputyNoteCollection
+	DeputyEvents sirius.DeputyEventCollection
 	Error         string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -34,23 +34,19 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 		if err != nil {
 			return err
 		}
-		deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
+		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
+
 		if err != nil {
 			return err
 		}
 
-		vars := deputyHubNotesVars{
+		vars := deputyHubEventVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
-			DeputyNotes: deputyNotes,
+			DeputyEvents: deputyEvents,
 		}
 
-		switch r.Method {
-		case http.MethodGet:
-			return tmpl.ExecuteTemplate(w, "page", vars)
-		default:
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

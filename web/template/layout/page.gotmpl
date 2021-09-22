@@ -33,12 +33,12 @@
 
       <div class="govuk-width-container">
         <main class="govuk-main-wrapper app-main-class"  role="main">
+            {{ template "deputy-hub" . }}
+
           {{ block "main" . }}{{ end }}
         </main>
       </div>
-
       {{ template "footer" . }}
-
       <script src="{{ prefix "/javascript/all.js" }}"></script>
     </body>
   </html>
