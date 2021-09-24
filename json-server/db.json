@@ -95,6 +95,7 @@
         "label": "Public Authority"
       },
       "deputyCasrecId": 10000000,
+      "deputyNumber": 11,
       "organisationName": "Test Organisation",
       "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)"
     },
@@ -172,6 +173,7 @@
         "label": "Public Authority"
       },
       "deputyCasrecId": 10000001,
+      "deputyNumber": 23,
       "organisationName": "Second Test Organisation",
       "OrganisationTeamOrDepartmentName": "Not PA Team"
     }

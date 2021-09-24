@@ -49,6 +49,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		switch r.Method {
 		case http.MethodGet:
+            if vars.DeputyDetails.OrganisationTeamOrDepartmentName == "PA Team 1 - (Supervision)" {
+                vars.ErrorMessage = "An executive case manager has not been assigned. "
+            }
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
