@@ -10,7 +10,7 @@ import (
 
 type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
+	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteList, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId int) (int, error)
 }
 
@@ -18,7 +18,7 @@ type deputyHubNotesVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyNotes   sirius.DeputyNoteCollection
+	DeputyNotes   sirius.DeputyNoteList
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -55,7 +55,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
 					DeputyDetails: deputyDetails,
-					DeputyNotes: deputyNotes,
+					DeputyNotes:   deputyNotes,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -85,7 +85,8 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				return RedirectError(fmt.Sprintf("/teams/%d", id))
+				//why error?
+				return RedirectError(fmt.Sprintf("/deputy/%d/notes", id))
 
 		default:
 				return StatusError(http.StatusMethodNotAllowed)

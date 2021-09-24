@@ -6,7 +6,17 @@ import (
 	"net/http"
 )
 
-type DeputyNoteCollection []DeputyNote
+type DeputyNoteList struct {
+	Limit	int 	`json:"limit"`
+	Pages	Pages 	`json:"pages"`
+	Total 	int 	`json:"total"`
+	DeputyNotes []DeputyNote	`json:"notes"`
+}
+
+type Pages struct {
+	Current int	`json:"current"`
+	Total	int `json:"total"`
+}
 
 type DeputyNote struct {
 	ID              int    `json:"id"`
@@ -23,8 +33,8 @@ type DeputyNote struct {
 	Direction       string `json:"direction"`
 }
 
-func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
-	var v DeputyNoteCollection
+func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteList, error) {
+	var v DeputyNoteList
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/clients/%d/notes", deputyId), nil)
 

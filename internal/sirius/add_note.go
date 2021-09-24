@@ -8,8 +8,10 @@ import (
 )
 
 type addNoteRequest struct {
-	Title       string `json:"title"`
-	Note        string `json:"note"`
+	Title       string `json:"name"`
+	Note        string `json:"description"`
+	UserId		int    `json:"createdById"`
+	NoteType	string    `json:"noteType"`
 }
 
 func (c *Client) AddNote(ctx Context, title, note string, deputyId int) (int, error) {
@@ -17,6 +19,8 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId int) (int, er
 	err := json.NewEncoder(&body).Encode(addNoteRequest{
 		Title:        title,
 		Note:         note,
+		UserId: 	  68,
+		NoteType:     "PA_DEPUTY_NOTE_CREATED",
 	})
 	if err != nil {
 		return 0, err
@@ -51,8 +55,8 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId int) (int, er
 		return 0, newStatusError(resp)
 	}
 
-	var v apiTeam
+	var v DeputyNote
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	return v.ID, err
+	return v.DeputyId, err
 }
