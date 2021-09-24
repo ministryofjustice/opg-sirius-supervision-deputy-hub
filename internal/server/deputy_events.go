@@ -18,6 +18,7 @@ type deputyHubEventVars struct {
 	DeputyDetails sirius.DeputyDetails
 	DeputyEvents  sirius.DeputyEventCollection
 	Error         string
+	ErrorMessage  string
 	Errors        sirius.ValidationErrors
 }
 
