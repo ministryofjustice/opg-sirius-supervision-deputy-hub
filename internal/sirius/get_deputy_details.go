@@ -10,6 +10,7 @@ type DeputyDetails struct {
 	ID               int    `json:"id"`
 	DeputyCasrecId   int    `json:"deputyCasrecId"`
 	OrganisationName string `json:"organisationName"`
+	OrganisationTeamOrDepartmentName string `json:"organisationTeamOrDepartmentName"`
 	Email            string `json:"email"`
 	PhoneNumber      string `json:"phoneNumber"`
 	AddressLine1     string `json:"addressLine1"`

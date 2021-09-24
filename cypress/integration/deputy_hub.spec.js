@@ -49,7 +49,10 @@ describe("Deputy Hub", () => {
   })
 
   it("the page should contain the executive case manager label", () => {
-    cy.get(".govuk-caption-m").eq(1) .should("contain",  "Executive Case Manager:")
+    cy.get(".govuk-caption-m").eq(1).should("contain",  "Executive Case Manager:")
   })
 
+  it("the page should contain the warning error", () => {
+    cy.get('.moj-banner__message > a').should("contain",  "Assign an executive case manager")
+  })
 });

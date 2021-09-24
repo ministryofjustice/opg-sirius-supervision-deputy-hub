@@ -109,7 +109,85 @@
         "label": "Public Authority"
       },
       "deputyCasrecId": 10000000,
-      "organisationName": "Test Organisation"
+      "organisationName": "Test Organisation",
+      "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)"
+    },
+    {
+      "id": 2,
+      "uId": "7000-0000-2530",
+      "normalizedUid": 700000002530,
+      "errorMessages": [],
+      "researchOptOut": false,
+      "workPhoneNumber": {
+        "id": 95,
+        "phoneNumber": "",
+        "type": "Work",
+        "default": false
+      },
+      "homePhoneNumber": {
+        "id": 96,
+        "phoneNumber": "",
+        "type": "Home",
+        "default": false
+      },
+      "email": "deputyship@essexcounty.gov.uk",
+      "dob": "",
+      "dateOfDeath": "",
+      "salutation": "",
+      "otherNames": "",
+      "addressLine1": "Deputyship Team",
+      "addressLine2": "Seax House",
+      "addressLine3": "19 Market Rd",
+      "town": "Chelmsford",
+      "county": "Essex",
+      "postcode": "CM1 1GG",
+      "country": "",
+      "isAirmailRequired": false,
+      "phoneNumber": "1234567890",
+      "phoneNumbers": [
+        {
+          "id": 95,
+          "phoneNumber": "",
+          "type": "Work",
+          "default": false
+        },
+        {
+          "id": 96,
+          "phoneNumber": "",
+          "type": "Home",
+          "default": false
+        }
+      ],
+      "reference": [],
+      "correspondenceByPost": false,
+      "correspondenceByPhone": false,
+      "correspondenceByEmail": false,
+      "correspondenceByWelsh": false,
+      "createdDate": "03\/09\/2021",
+      "updatedDate": "2021-09-03T12:13:38+00:00",
+      "personType": "Deputy",
+      "specialCorrespondenceRequirements": {
+        "audioTape": false,
+        "largePrint": false,
+        "hearingImpaired": false,
+        "spellingOfNameRequiresCare": false
+      },
+      "canDelete": false,
+      "deputyStatus": "Active",
+      "orders": [
+        []
+      ],
+      "previousNames": "",
+      "mobileNumber": "",
+      "eveningNumber": "",
+      "newsletter": false,
+      "deputyType": {
+        "handle": "PA",
+        "label": "Public Authority"
+      },
+      "deputyCasrecId": 10000001,
+      "organisationName": "Second Test Organisation",
+      "OrganisationTeamOrDepartmentName": "Not PA Team"
     }
   ],
   "clients": {
@@ -558,6 +636,7 @@
                   "relationshipToClient": null,
                   "statusDate": null,
                   "previousNames": "",
+                  "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)",
                   "deputyType": {
                     "handle": "PA",
                     "label": "Public Authority",
@@ -909,6 +988,24 @@
             "personCourtRef": "40124126"
           }
         ]
+      }
+    },
+    {
+      "id": 395,
+      "hash": "AY",
+      "timestamp": "2021-10-10 15:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Client\\PADeputyCreated",
+      "user": {
+        "id": 21,
+        "phoneNumber": "0123456789",
+        "displayName": "Lay Team 1 - (Supervision)",
+        "email": "LayTeam1.team@opgtest.com"
+      },
+      "event": {
+        "personType": "Deputy",
+        "personId": "1",
+        "personUid": "7000-0000-2530",
+        "personName": "Mx Bob Builder"
       }
     }
   ],
