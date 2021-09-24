@@ -18,6 +18,7 @@ type deputyHubEventVars struct {
 	DeputyDetails sirius.DeputyDetails
 	DeputyEvents  sirius.DeputyEventCollection
 	Error         string
+	ErrorMessage  string
 	Errors        sirius.ValidationErrors
 }
 
@@ -46,6 +47,10 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			DeputyDetails: deputyDetails,
 			DeputyEvents:  deputyEvents,
 		}
+
+        if vars.DeputyDetails.OrganisationTeamOrDepartmentName == "PA Team 1 - (Supervision)" {
+            vars.ErrorMessage = "An executive case manager has not been assigned. "
+        }
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
