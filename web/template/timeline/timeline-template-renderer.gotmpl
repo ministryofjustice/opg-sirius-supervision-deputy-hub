@@ -2,4 +2,7 @@
        {{ if eq .EventType "DeputyLinkedToOrder" }}
           {{ template "new-client-added-to-deputyship" . }}
        {{ end }}
+       {{ if eq .EventType "PADeputyCreated" }}
+          {{ template "pa-deputy-created" . }}
+       {{ end }}
 {{ end }}

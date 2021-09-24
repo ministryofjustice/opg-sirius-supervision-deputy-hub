@@ -18,6 +18,7 @@ type listClientsVars struct {
 	DeputyClientsDetails sirius.DeputyClientDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
+	ErrorMessage         string
 	Errors               sirius.ValidationErrors
 }
 
