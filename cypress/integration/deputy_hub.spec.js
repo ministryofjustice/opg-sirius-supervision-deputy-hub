@@ -45,7 +45,7 @@ describe("Deputy Hub", () => {
   })
 
   it("the page should contain the deputy number", () => {
-    cy.get(".govuk-caption-m").eq(0).should("contain",  "Deputy Number: 10000000")
+    cy.get(".govuk-caption-m").eq(0).should("contain",  "Deputy Number: 11")
   })
 
   it("the page should contain the executive case manager label", () => {
