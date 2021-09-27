@@ -40,7 +40,7 @@ func TestNavigateToClientTab(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForClientTab(client, template)
+	handler := renderTemplateForClientTab(client, defaultPATeam, template)
 	err := handler(sirius.PermissionSet{}, w, r)
 
 	assert.Nil(err)
