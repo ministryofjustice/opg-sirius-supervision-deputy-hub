@@ -14,12 +14,13 @@ type addNoteRequest struct {
 	NoteType	string    `json:"noteType"`
 }
 
-func (c *Client) AddNote(ctx Context, title, note string, deputyId int) (int, error) {
+func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) (int, error) {
+
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addNoteRequest{
 		Title:        title,
 		Note:         note,
-		UserId: 	  68,
+		UserId: 	  userId,
 		NoteType:     "PA_DEPUTY_NOTE_CREATED",
 	})
 	if err != nil {
