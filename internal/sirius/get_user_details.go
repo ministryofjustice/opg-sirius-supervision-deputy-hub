@@ -9,7 +9,7 @@ type UserDetails struct {
 	ID          int             `json:"id"`
 }
 
-func (c *Client) UserDetails(ctx Context) (UserDetails, error) {
+func (c *Client) GetUserDetails(ctx Context) (UserDetails, error) {
 	var v UserDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/users/current", nil)
