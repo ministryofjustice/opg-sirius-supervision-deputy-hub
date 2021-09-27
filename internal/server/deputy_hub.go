@@ -16,10 +16,11 @@ type deputyHubVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	Error         string
+	ErrorMessage  string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam string, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -38,6 +39,11 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
 		}
+
+        if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+            vars.ErrorMessage = "An executive case manager has not been assigned. "
+        }
+
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

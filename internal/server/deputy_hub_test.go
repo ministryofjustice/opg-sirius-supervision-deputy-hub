@@ -28,11 +28,12 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 	client := &mockDeputyHubInformation{}
 	template := &mockTemplates{}
+	defaultPATeam := "PA"
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHub(client, template)
+	handler := renderTemplateForDeputyHub(client, defaultPATeam, template)
 	err := handler(sirius.PermissionSet{}, w, r)
 
 	assert.Nil(err)

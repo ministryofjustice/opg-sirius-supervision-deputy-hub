@@ -27,21 +27,21 @@ type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string) http.Handler {
+func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam string) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
 	router.Handle("/deputy/{id}/",
 		wrap(
-			renderTemplateForDeputyHub(client, templates["dashboard.gotmpl"])))
+			renderTemplateForDeputyHub(client, defaultPATeam, templates["dashboard.gotmpl"])))
 
 	router.Handle("/deputy/{id}/clients",
 		wrap(
-			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
+			renderTemplateForClientTab(client, defaultPATeam, templates["clients.gotmpl"])))
 
 	router.Handle("/deputy/{id}/timeline",
 		wrap(
-			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
+			renderTemplateForDeputyHubEvents(client, defaultPATeam, templates["timeline.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
