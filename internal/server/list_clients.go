@@ -22,7 +22,7 @@ type listClientsVars struct {
 	Errors               sirius.ValidationErrors
 }
 
-func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
+func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam string, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -49,7 +49,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		switch r.Method {
 		case http.MethodGet:
-            if vars.DeputyDetails.OrganisationTeamOrDepartmentName == "PA Team 1 - (Supervision)" {
+            if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
                 vars.ErrorMessage = "An executive case manager has not been assigned. "
             }
 			return tmpl.ExecuteTemplate(w, "page", vars)
