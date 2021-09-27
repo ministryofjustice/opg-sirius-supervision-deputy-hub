@@ -32,7 +32,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHub(client, template)
+	handler := renderTemplateForDeputyHub(client, defaultPATeam, template)
 	err := handler(sirius.PermissionSet{}, w, r)
 
 	assert.Nil(err)
