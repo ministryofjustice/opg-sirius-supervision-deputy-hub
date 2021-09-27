@@ -14,7 +14,14 @@ func TestDeputyNotesReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := `[
+	json := `{
+    "limit": 20,
+    "pages": {
+      "current": 1,
+      "total": 1
+    },
+    "total": 2,
+    "notes": [
     {
       "personId": 1,
       "userId": 68,
@@ -43,7 +50,8 @@ func TestDeputyNotesReturned(t *testing.T) {
       "createdTime": "20/09/2021 08:50:12",
       "direction": null
     }
-  ]`
+  ]
+}`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -55,12 +63,12 @@ func TestDeputyNotesReturned(t *testing.T) {
 	}
 
 	expectedResponse := DeputyNoteList{
-		Limit: 0,
+		Limit: 20,
 		Pages: Pages{
-			Current: 0,
-			Total: 0,
+			Current: 1,
+			Total: 1,
 		},
-		Total: 0,
+		Total: 2,
 		DeputyNotes: []DeputyNote{
 			{
 				ID:              65,
