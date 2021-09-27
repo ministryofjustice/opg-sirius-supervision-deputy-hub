@@ -12,7 +12,7 @@ type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteList, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) (int, error)
-	UserDetails(sirius.Context) (sirius.UserDetails, error)
+	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 }
 
 type deputyHubNotesVars struct {
@@ -68,7 +68,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					note  	= r.PostFormValue("note")
 				)
 
-				userId, err := client.UserDetails(ctx)
+				userId, err := client.GetUserDetails(ctx)
 				if err != nil {
 					return err
 				}
