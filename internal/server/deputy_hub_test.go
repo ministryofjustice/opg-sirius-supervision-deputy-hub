@@ -28,6 +28,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 	client := &mockDeputyHubInformation{}
 	template := &mockTemplates{}
+	defaultPATeam := "PA"
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
