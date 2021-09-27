@@ -48,7 +48,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 			DeputyEvents:  deputyEvents,
 		}
 
-        if vars.DeputyDetails.DeputyType.Handle == defaultPATeam {
+        if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
             vars.ErrorMessage = "An executive case manager has not been assigned. "
         }
 
