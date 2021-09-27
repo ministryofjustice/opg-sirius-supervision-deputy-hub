@@ -91,7 +91,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				//why error?
 				return RedirectError(fmt.Sprintf("/deputy/%d/notes", id))
 
 		default:

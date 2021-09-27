@@ -25,7 +25,7 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-      {{ if .Error }}
+      {{ if .Errors }}
       {{ template "error-header" . }}
       {{ else }}
       {{ template "header" . }}
