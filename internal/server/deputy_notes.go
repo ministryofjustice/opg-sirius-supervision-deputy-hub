@@ -68,23 +68,40 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					title   = r.PostFormValue("title")
 					note  	= r.PostFormValue("note")
 				)
-				var titleLengthError sirius.ValidationError
-				//var noteLengthError sirius.ValidationError
+
 				titleLength := len([]rune(title))
-				//noteLength := len([]rune(note))
+				noteLength := len([]rune(note))
 				if titleLength > 255 {
-					titleLengthError = sirius.ValidationError{
-						Message: "The title must be 255 characters or fewer",
-						Errors: sirius.ValidationErrors{},
+					vars.Errors = sirius.ValidationErrors{
+						"": {
+							"titleLengthTooLong": "The title must be 255 characters or fewer",
+						},
 					}
 				}
 
-				//if noteLength > 1000 {
-				//	noteLengthError = sirius.ValidationError{
-				//		Message: "The note must be 1000 characters or fewer",
-				//		Errors: sirius.ValidationErrors{},
-				//	}
+				//vars.Errors = sirius.ValidationErrors{
+				//	"search": {
+				//		"": err.Error(),
+				//	},
 				//}
+				//validationErrors := sirius.ValidationErrors{
+				//	"teamType": {
+				//		"teamTypeInUse": "This team type is already in use",
+				//	},
+				//}
+				//Errors: sirius.ValidationErrors{
+				//	"": {
+				//		"": "problem",
+				//	},
+				//},
+
+				if noteLength > 1000 {
+					vars.Errors = sirius.ValidationErrors{
+						"": {
+							"stringLengthTooLong": "The title must be 255 characters or fewer",
+						},
+					}
+				}
 
 				userId, err := client.GetUserDetails(ctx)
 				if err != nil {
@@ -101,7 +118,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 						Title:      title,
 						Note:   note,
 						Errors:    verr.Errors,
-						Error: titleLengthError,
+						//Error: titleLengthError,
 					}
 
 					w.WriteHeader(http.StatusBadRequest)
