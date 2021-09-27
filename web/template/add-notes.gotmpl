@@ -5,7 +5,9 @@
      <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
-            {{ template "error-summary" .Errors }}
+        {{ if .Error }}
+            {{ template "error-individual" .Error }}
+        {{end}}
 
             <header>
                 <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Add a note</h1>

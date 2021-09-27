@@ -8,11 +8,11 @@
         <ul class="govuk-list govuk-error-summary__list">
           {{ range $k, $v := . }}
             {{ range $v }}
-              <li><a href="#f-{{ $k }}">{{ . }}</a>{{$v}}</li>
+              <li><a href="#f-{{ $k }}">{{ . }}</a></li>
             {{ end }}
           {{ end }}
         </ul>
-                {{ . }}
+
 
       </div>
     </div>

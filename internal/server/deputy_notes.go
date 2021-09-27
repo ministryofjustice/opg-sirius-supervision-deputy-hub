@@ -30,6 +30,7 @@ type addNoteVars struct {
 	Title      	string
 	Note   		string
 	Success   	bool
+	Error    	sirius.ValidationError
 	Errors    	sirius.ValidationErrors
 }
 
@@ -62,11 +63,28 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				return tmpl.ExecuteTemplate(w, "page", vars)
 
 			case http.MethodPost:
-
+				var vars addNoteVars
 				var (
 					title   = r.PostFormValue("title")
 					note  	= r.PostFormValue("note")
 				)
+				var titleLengthError sirius.ValidationError
+				//var noteLengthError sirius.ValidationError
+				titleLength := len([]rune(title))
+				//noteLength := len([]rune(note))
+				if titleLength > 255 {
+					titleLengthError = sirius.ValidationError{
+						Message: "The title must be 255 characters or fewer",
+						Errors: sirius.ValidationErrors{},
+					}
+				}
+
+				//if noteLength > 1000 {
+				//	noteLengthError = sirius.ValidationError{
+				//		Message: "The note must be 1000 characters or fewer",
+				//		Errors: sirius.ValidationErrors{},
+				//	}
+				//}
 
 				userId, err := client.GetUserDetails(ctx)
 				if err != nil {
@@ -77,12 +95,13 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 
-					vars := addNoteVars{
+					vars = addNoteVars{
 						Path:      r.URL.Path,
 						XSRFToken: ctx.XSRFToken,
 						Title:      title,
 						Note:   note,
 						Errors:    verr.Errors,
+						Error: titleLengthError,
 					}
 
 					w.WriteHeader(http.StatusBadRequest)
