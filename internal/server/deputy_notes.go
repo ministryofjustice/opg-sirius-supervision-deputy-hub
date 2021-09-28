@@ -79,7 +79,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 
-					verr.Errors = replaceErrorStrings(verr.Errors)
+					verr.Errors = renameValidationErrorMessages(verr.Errors)
 
 					vars = addNoteVars{
 						Path:      r.URL.Path,
@@ -103,46 +103,32 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 	}
 }
 
-func replaceErrorStrings(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-
+func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
 	errorCollection := sirius.ValidationErrors{}
 
-	titleLengthTooShort := make (map[string]string)
-	titleLengthTooShort["titleLengthTooShort"] = "Enter a title for the note"
-
-	titleLengthTooLong := make (map[string]string)
-	titleLengthTooLong["titleLengthTooLong"] = "The title must be 255 characters or fewer"
-
-	descriptionLengthTooShort := make (map[string]string)
-	descriptionLengthTooShort["titleLengthTooShort"] = "Enter a note"
-
-	descriptionLengthTooLong := make (map[string]string)
-	descriptionLengthTooLong["titleLengthTooLong"] = "The note must be 1000 characters or fewer"
-
-
 	for fieldName, value := range siriusError {
-		if fieldName == "name" {
-			for key, _ := range value {
-				if key == "stringLengthTooLong" {
-					errorCollection["name"] = titleLengthTooLong
-				}
-				if key == "isEmpty" {
-					errorCollection["name"] = titleLengthTooShort
-				}
-			}
-		}
-		if fieldName == "description" {
-			for key, _ := range value {
-				if key == "stringLengthTooLong" {
-					errorCollection["description"] = descriptionLengthTooLong
-				}
-				if key == "isEmpty" {
-					errorCollection["description"] = descriptionLengthTooShort
-				}
-			}
-		}
+		for errorType, errorMessage := range value {
+			err := make(map[string]string)
+			err[errorType] = errorMessage
 
+			if fieldName == "name" && errorType == "stringLengthTooLong" {
+				err[errorType] = "The title must be 255 characters or fewer"
+			}
+
+			if fieldName == "name" && errorType == "isEmpty" {
+				err[errorType] = "Enter a title for the note"
+			}
+
+			if fieldName == "description" && errorType == "stringLengthTooLong" {
+				err[errorType] = "The note must be 1000 characters or fewer"
+			}
+
+			if fieldName == "description" && errorType == "isEmpty" {
+				err[errorType] = "Enter a note"
+			}
+
+			errorCollection[fieldName] = err
+		}
 	}
 	return errorCollection
-
 }
