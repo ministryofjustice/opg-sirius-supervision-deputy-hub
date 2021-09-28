@@ -71,41 +71,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					note  	= r.PostFormValue("note")
 				)
 
-				titleLength := len([]rune(title))
-				noteLength := len([]rune(note))
-
-				if title == "" {
-					vars.Errors = sirius.ValidationErrors{
-						"": {
-							"titleLengthTooShort": " Enter a title for the note",
-						},
-					}
-				}
-
-				if titleLength > 255 {
-					vars.Errors = sirius.ValidationErrors{
-						"": {
-							"titleLengthTooLong": "The title must be 255 characters or fewer",
-						},
-					}
-				}
-
-				if note == "" {
-					vars.Errors = sirius.ValidationErrors{
-						"": {
-							"noteLengthTooShort": " Enter a note",
-						},
-					}
-				}
-
-				if noteLength > 1000 {
-					vars.Errors = sirius.ValidationErrors{
-						"": {
-							"noteLengthTooLong": "The title must be 255 characters or fewer",
-						},
-					}
-				}
-
 				userId, err := client.GetUserDetails(ctx)
 				if err != nil {
 					return err
@@ -113,6 +78,8 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
 
 				if verr, ok := err.(sirius.ValidationError); ok {
+
+					verr.Errors = replaceErrorStrings(verr.Errors)
 
 					vars = addNoteVars{
 						Path:      r.URL.Path,
@@ -134,4 +101,48 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				return StatusError(http.StatusMethodNotAllowed)
 			}
 	}
+}
+
+func replaceErrorStrings(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
+
+	errorCollection := sirius.ValidationErrors{}
+
+	titleLengthTooShort := make (map[string]string)
+	titleLengthTooShort["titleLengthTooShort"] = "Enter a title for the note"
+
+	titleLengthTooLong := make (map[string]string)
+	titleLengthTooLong["titleLengthTooLong"] = "The title must be 255 characters or fewer"
+
+	descriptionLengthTooShort := make (map[string]string)
+	descriptionLengthTooShort["titleLengthTooShort"] = "Enter a note"
+
+	descriptionLengthTooLong := make (map[string]string)
+	descriptionLengthTooLong["titleLengthTooLong"] = "The note must be 1000 characters or fewer"
+
+
+	for fieldName, value := range siriusError {
+		if fieldName == "name" {
+			for key, _ := range value {
+				if key == "stringLengthTooLong" {
+					errorCollection["name"] = titleLengthTooLong
+				}
+				if key == "isEmpty" {
+					errorCollection["name"] = titleLengthTooShort
+				}
+			}
+		}
+		if fieldName == "description" {
+			for key, _ := range value {
+				if key == "stringLengthTooLong" {
+					errorCollection["description"] = descriptionLengthTooLong
+				}
+				if key == "isEmpty" {
+					errorCollection["description"] = descriptionLengthTooShort
+				}
+			}
+		}
+
+	}
+	return errorCollection
+
 }
