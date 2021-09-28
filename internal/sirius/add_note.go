@@ -14,7 +14,7 @@ type addNoteRequest struct {
 	NoteType	string    `json:"noteType"`
 }
 
-func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) (int, error) {
+func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) (error) {
 
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addNoteRequest{
@@ -24,24 +24,24 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) 
 		NoteType:     "PA_DEPUTY_NOTE_CREATED",
 	})
 	if err != nil {
-		return 0, err
+		return err
 	}
 
 	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputy/%d/create-note", deputyId), &body)
 
 	if err != nil {
-		return 0, err
+		return err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return 0, err
+		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return 0, ErrUnauthorized
+		return ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusCreated {
@@ -50,14 +50,13 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) 
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
-			return 0, ValidationError{Errors: v.ValidationErrors}
+			return ValidationError{Errors: v.ValidationErrors}
 		}
 
-		return 0, newStatusError(resp)
+		return newStatusError(resp)
 	}
-
 	var v DeputyNote
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	return v.DeputyId, err
+	return err
 }

@@ -11,7 +11,7 @@ import (
 type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteList, error)
-	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) (int, error)
+	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 }
 
@@ -110,8 +110,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				if err != nil {
 					return err
 				}
-
-				id, err := client.AddNote(ctx, title, note, deputyId, userId.ID)
+				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 
@@ -129,7 +128,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				return RedirectError(fmt.Sprintf("/deputy/%d/notes", id))
+				return RedirectError(fmt.Sprintf("/deputy/%d/notes", deputyId))
 
 		default:
 				return StatusError(http.StatusMethodNotAllowed)
