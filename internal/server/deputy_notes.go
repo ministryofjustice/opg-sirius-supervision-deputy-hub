@@ -31,7 +31,6 @@ type addNoteVars struct {
 	Title      	string
 	Note   		string
 	Success   	bool
-	ErrorMessage bool
 	Error    	sirius.ValidationError
 	Errors    	sirius.ValidationErrors
 }
@@ -74,13 +73,14 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 
 				titleLength := len([]rune(title))
 				noteLength := len([]rune(note))
-				//if titleLength < 1 {
-				//	vars.Errors = sirius.ValidationErrors{
-				//		"": {
-				//			"titleLengthTooShort": " Enter a title for the note",
-				//		},
-				//	}
-				//}
+
+				if title == "" {
+					vars.Errors = sirius.ValidationErrors{
+						"": {
+							"titleLengthTooShort": " Enter a title for the note",
+						},
+					}
+				}
 
 				if titleLength > 255 {
 					vars.Errors = sirius.ValidationErrors{
@@ -90,13 +90,13 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					}
 				}
 
-				//if noteLength < 1 {
-				//	vars.Errors = sirius.ValidationErrors{
-				//		"": {
-				//			"noteLengthTooShort": " Enter a note",
-				//		},
-				//	}
-				//}
+				if note == "" {
+					vars.Errors = sirius.ValidationErrors{
+						"": {
+							"noteLengthTooShort": " Enter a note",
+						},
+					}
+				}
 
 				if noteLength > 1000 {
 					vars.Errors = sirius.ValidationErrors{
@@ -121,7 +121,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 						Title:      title,
 						Note:   note,
 						Errors:    verr.Errors,
-						ErrorMessage: true,
 					}
 
 					w.WriteHeader(http.StatusBadRequest)
