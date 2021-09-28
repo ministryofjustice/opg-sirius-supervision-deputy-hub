@@ -5,8 +5,8 @@
      <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
-        {{ if .Error }}
-            {{ template "error-individual" .Error }}
+        {{ if .Errors }}
+            {{ template "error-summary" .Errors }}
         {{end}}
 
             <header>
@@ -20,13 +20,18 @@
 
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="title">Title (required)</label>
-                    <input class="govuk-input" id="title" name="title" type="text">
+                    <input class="govuk-input" id="title" name="title" type="text"
+                    {{ if .ErrorMessage}} value="{{ .Title }}"{{ end }}>
                 </div>
 
                 <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
                     <div class="govuk-form-group">
                     <label class="govuk-label" for="note">Note (required)</label>
-                    <textarea class="govuk-textarea govuk-js-character-count" id="note" name="note" rows="10" aria-describedby="note-info note-hint"></textarea>
+                    <textarea class="govuk-textarea govuk-js-character-count" id="note" name="note" rows="10" aria-describedby="note-info note-hint">
+                    {{ if .ErrorMessage }}
+                        {{ .Note }}
+                    {{ end }}
+                    </textarea>
                     <div id="note-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You have 1000 characters remaining</div>
                 </div>
             </div>

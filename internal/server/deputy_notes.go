@@ -20,6 +20,7 @@ type deputyHubNotesVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	DeputyNotes   sirius.DeputyNoteList
+	ErrorMessage bool
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -30,6 +31,7 @@ type addNoteVars struct {
 	Title      	string
 	Note   		string
 	Success   	bool
+	ErrorMessage bool
 	Error    	sirius.ValidationError
 	Errors    	sirius.ValidationErrors
 }
@@ -58,6 +60,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					XSRFToken:     ctx.XSRFToken,
 					DeputyDetails: deputyDetails,
 					DeputyNotes:   deputyNotes,
+					ErrorMessage: false,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -71,6 +74,14 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 
 				titleLength := len([]rune(title))
 				noteLength := len([]rune(note))
+				//if titleLength < 1 {
+				//	vars.Errors = sirius.ValidationErrors{
+				//		"": {
+				//			"titleLengthTooShort": " Enter a title for the note",
+				//		},
+				//	}
+				//}
+
 				if titleLength > 255 {
 					vars.Errors = sirius.ValidationErrors{
 						"": {
@@ -79,26 +90,18 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					}
 				}
 
-				//vars.Errors = sirius.ValidationErrors{
-				//	"search": {
-				//		"": err.Error(),
-				//	},
+				//if noteLength < 1 {
+				//	vars.Errors = sirius.ValidationErrors{
+				//		"": {
+				//			"noteLengthTooShort": " Enter a note",
+				//		},
+				//	}
 				//}
-				//validationErrors := sirius.ValidationErrors{
-				//	"teamType": {
-				//		"teamTypeInUse": "This team type is already in use",
-				//	},
-				//}
-				//Errors: sirius.ValidationErrors{
-				//	"": {
-				//		"": "problem",
-				//	},
-				//},
 
 				if noteLength > 1000 {
 					vars.Errors = sirius.ValidationErrors{
 						"": {
-							"stringLengthTooLong": "The title must be 255 characters or fewer",
+							"noteLengthTooLong": "The title must be 255 characters or fewer",
 						},
 					}
 				}
@@ -118,7 +121,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 						Title:      title,
 						Note:   note,
 						Errors:    verr.Errors,
-						//Error: titleLengthError,
+						ErrorMessage: true,
 					}
 
 					w.WriteHeader(http.StatusBadRequest)
