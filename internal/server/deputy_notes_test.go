@@ -1,8 +1,10 @@
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -47,7 +49,7 @@ func (m *mockDeputyHubNotesInformation) GetUserDetails(ctx sirius.Context) (siri
 	return m.userDetailsData, m.err
 }
 
-func TestRenameValidationErrorMessages(t *testing.T) {
+func TestGetNotes(t *testing.T) {
 	assert := assert.New(t)
 
 	client := &mockDeputyHubNotesInformation{}
@@ -74,35 +76,27 @@ func TestRenameValidationErrorMessages(t *testing.T) {
 	}, template.lastVars)
 }
 
-//func TestPostAddNote(t *testing.T) {
-//	assert := assert.New(t)
-//
-//	client := &mockDeputyHubNotesInformation{
-//		deputyData: sirius.DeputyDetails{
-//			ID: 123,
-//		},
-//	}
-//	client.deputyData.ID = 123
-//	client.userDetailsData.ID = 50
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/api/v1/deputy/123/create-note", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	handler := renderTemplateForDeputyHubNotes(client, template)
-//	err := handler(sirius.PermissionSet{}, w, r)
-//	assert.Equal(RedirectError("/deputy/123/notes"), err)
-//
-//	assert.Equal(2, client.count)
-//
-//	assert.Equal(getContext(r), client.lastCtx)
-//
-//	assert.Equal(1, template.count)
-//	assert.Equal("page", template.lastName)
-//	assert.Equal(addNoteVars{
-//		Path:   "/path",
-//		Title:	"Title",
-//		Note:	"Note",
-//	}, template.lastVars)
-//}
+
+//name:map["isEmpty":"Enter a title for the note"]]
+//client.err = sirius.ValidationErrors{}
+
+func TestPostAddNote(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubNotesInformation{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter();
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+	assert.Equal(returnedError, RedirectError("/deputy/123/notes"))
+
+}
+
