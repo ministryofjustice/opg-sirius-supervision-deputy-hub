@@ -6,6 +6,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type DeputyHubNotesInformation interface {
@@ -20,9 +21,9 @@ type deputyHubNotesVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	DeputyNotes   sirius.DeputyNoteList
-	ErrorMessage bool
 	Error         string
 	Errors        sirius.ValidationErrors
+	Success		  bool
 }
 
 type addNoteVars struct {
@@ -54,12 +55,21 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
+				//check if there is a success in url
+				urlTrim := strings.TrimPrefix(r.URL.String(), "/deputy/" + strconv.Itoa(deputyId) + "/notes" )
+				var hasSuccess bool
+				if urlTrim == "?success=true" {
+					hasSuccess = true
+				} else {
+					hasSuccess = false
+				}
+
 				vars := deputyHubNotesVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
 					DeputyDetails: deputyDetails,
 					DeputyNotes:   deputyNotes,
-					ErrorMessage: false,
+					Success: hasSuccess,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -95,7 +105,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				return RedirectError(fmt.Sprintf("/deputy/%d/notes", deputyId))
+				return RedirectError(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
 
 		default:
 				return StatusError(http.StatusMethodNotAllowed)

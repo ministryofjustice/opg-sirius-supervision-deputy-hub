@@ -76,7 +76,6 @@ func TestGetNotes(t *testing.T) {
 	}, template.lastVars)
 }
 
-
 //name:map["isEmpty":"Enter a title for the note"]]
 //client.err = sirius.ValidationErrors{}
 
@@ -97,6 +96,48 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 	assert.Equal(returnedError, RedirectError("/deputy/123/notes"))
-
 }
+
+//
+//func TestRenameValidationErrorWhenPostingNote(t *testing.T) {
+//	assert := assert.New(t)
+//	client := &mockDeputyHubNotesInformation{}
+//
+//	validationErrors := sirius.ValidationErrors{
+//		"teamType": {
+//			"teamTypeInUse": "This team type is already in use",
+//		},
+//	}
+//	//client.addNote = &sirius.ValidationError{
+//	//	Errors: validationErrors,
+//	//}
+//	err1 := errors.New("math: square root of negative number")
+//	client.addNote = err1
+//
+//	template := &mockTemplates{}
+//
+//	w := httptest.NewRecorder()
+//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+//
+//	var returnedError error
+//
+//	testHandler := mux.NewRouter();
+//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+//		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, w, r)
+//	})
+//
+//	testHandler.ServeHTTP(w, r)
+//
+//	assert.Equal(2, client.count)
+//
+//	assert.Equal(1, template.count)
+//	assert.Equal("page", template.lastName)
+//	//assert.Equal(addNoteVars{
+//	//	Path:    "",
+//	//	Errors:  validationErrors,
+//	//}, template.lastVars)
+//
+//	assert.Equal(&sirius.ValidationError{Errors: validationErrors}, returnedError)
+//}
 

@@ -1,6 +1,9 @@
 {{ template "page" . }}
 
 {{ define "main" }}
+    {{ if .Success }}
+           {{ template "success-banner" "Note added" }}
+    {{ end }}
     {{ template "deputy-hub" . }}
     <div class="main">
       <header>
