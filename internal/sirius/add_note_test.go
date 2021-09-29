@@ -39,8 +39,7 @@ func TestAddNote(t *testing.T) {
 	}
 
 	err := client.AddNote(getContext(nil), "fake note title", "fake note text", 76, 51)
-	expectedError := ValidationError{Message:"", Errors:ValidationErrors(nil)}
-	assert.Equal(t, expectedError , err)
+	assert.Nil(t, err)
 }
 
 func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
