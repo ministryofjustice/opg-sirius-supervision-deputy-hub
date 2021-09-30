@@ -22,7 +22,7 @@ describe("Notes", () => {
             cy.get(":nth-child(2) > .govuk-label").should("contain", "Title (required)")
             cy.get(".govuk-character-count > .govuk-form-group > .govuk-label").should("contain", "Note (required)")
             cy.get("#note-info").should("contain", "You have 1000 characters remaining")
-            cy.get(".govuk-button").should("contain", "Add note")
+            cy.get(".govuk-button").should("contain", "Save note")
             cy.get(".govuk-link").should("contain", "Cancel")
         })
 

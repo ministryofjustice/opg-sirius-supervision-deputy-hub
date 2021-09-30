@@ -1,8 +1,10 @@
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -13,6 +15,7 @@ type mockDeputyHubNotesInformation struct {
 	count            int
 	lastCtx          sirius.Context
 	err              error
+	addNote			 error
 	deputyData       sirius.DeputyDetails
 	deputyNotesData sirius.DeputyNoteList
 	userDetailsData sirius.UserDetails
@@ -36,7 +39,7 @@ func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note 
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.addNote
 }
 
 func (m *mockDeputyHubNotesInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
@@ -74,68 +77,125 @@ func TestGetNotes(t *testing.T) {
 	}, template.lastVars)
 }
 
-//name:map["isEmpty":"Enter a title for the note"]]
-//client.err = sirius.ValidationErrors{}
-//
-//func TestPostAddNote(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockDeputyHubNotesInformation{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter();
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//	assert.Equal(returnedError, RedirectError("/deputy/123/notes"))
-//}
+func TestPostAddNote(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubNotesInformation{}
 
-//
-//func TestRenameValidationErrorWhenPostingNote(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockDeputyHubNotesInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"teamType": {
-//			"teamTypeInUse": "This team type is already in use",
-//		},
-//	}
-//	//client.addNote = &sirius.ValidationError{
-//	//	Errors: validationErrors,
-//	//}
-//	err1 := errors.New("math: square root of negative number")
-//	client.addNote = err1
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter();
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//
-//	assert.Equal(2, client.count)
-//
-//	assert.Equal(1, template.count)
-//	assert.Equal("page", template.lastName)
-//	//assert.Equal(addNoteVars{
-//	//	Path:    "",
-//	//	Errors:  validationErrors,
-//	//}, template.lastVars)
-//
-//	assert.Equal(&sirius.ValidationError{Errors: validationErrors}, returnedError)
-//}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
+	var returnedError error
+
+	testHandler := mux.NewRouter();
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+	assert.Equal(returnedError, RedirectError("/deputy/123/notes?success=true"))
+}
+
+func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubNotesInformation{}
+
+	validationErrors := sirius.ValidationErrors{
+		"name": {
+			"stringLengthTooLong": "This team type is already in use",
+		},
+		"description": {
+			"stringLengthTooLong": "This team type is already in use",
+		},
+	}
+	client.addNote = sirius.ValidationError{
+		Errors: validationErrors,
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter();
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+
+	expectedValidationErrors := sirius.ValidationErrors{
+		"name": {
+			"stringLengthTooLong": "The title must be 255 characters or fewer",
+		},
+		"description": {
+			"stringLengthTooLong": "The note must be 1000 characters or fewer",
+		},
+	}
+
+	assert.Equal(3, client.count)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
+	assert.Equal(addNoteVars{
+		Path:    "/123",
+		Errors:  expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
+
+func TestErrorMessageWhenIsEmpty(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubNotesInformation{}
+
+	validationErrors := sirius.ValidationErrors{
+		"name": {
+			"isEmpty": "This team type is already in use",
+		},
+		"description": {
+			"isEmpty": "This team type is already in use",
+		},
+	}
+	client.addNote = sirius.ValidationError{
+		Errors: validationErrors,
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter();
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+
+	expectedValidationErrors := sirius.ValidationErrors{
+		"name": {
+			"isEmpty": "Enter a title for the note",
+		},
+		"description": {
+			"isEmpty": "Enter a note",
+		},
+	}
+
+	assert.Equal(3, client.count)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
+	assert.Equal(addNoteVars{
+		Path:    "/123",
+		Errors:  expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
