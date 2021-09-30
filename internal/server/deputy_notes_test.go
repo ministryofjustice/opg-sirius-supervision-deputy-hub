@@ -15,7 +15,6 @@ type mockDeputyHubNotesInformation struct {
 	err              error
 	deputyData       sirius.DeputyDetails
 	deputyNotesData sirius.DeputyNoteList
-	addNote error
 	userDetailsData sirius.UserDetails
 }
 
