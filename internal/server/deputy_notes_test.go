@@ -128,10 +128,10 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
-		"name": {
+		"1-title": {
 			"stringLengthTooLong": "The title must be 255 characters or fewer",
 		},
-		"description": {
+		"2-note": {
 			"stringLengthTooLong": "The note must be 1000 characters or fewer",
 		},
 	}
@@ -180,10 +180,10 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
-		"name": {
+		"1-title": {
 			"isEmpty": "Enter a title for the note",
 		},
-		"description": {
+		"2-note": {
 			"isEmpty": "Enter a note",
 		},
 	}

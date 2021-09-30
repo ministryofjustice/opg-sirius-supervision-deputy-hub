@@ -130,25 +130,23 @@ func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.V
 	for fieldName, value := range siriusError {
 		for errorType, errorMessage := range value {
 			err := make(map[string]string)
-			err[errorType] = errorMessage
 
 			if fieldName == "name" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The title must be 255 characters or fewer"
-			}
-
-			if fieldName == "name" && errorType == "isEmpty" {
+				errorCollection["1-title"] = err
+			} else if fieldName == "name" && errorType == "isEmpty" {
 				err[errorType] = "Enter a title for the note"
-			}
-
-			if fieldName == "description" && errorType == "stringLengthTooLong" {
+				errorCollection["1-title"] = err
+			} else if fieldName == "description" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The note must be 1000 characters or fewer"
-			}
-
-			if fieldName == "description" && errorType == "isEmpty" {
+				errorCollection["2-note"] = err
+			} else if fieldName == "description" && errorType == "isEmpty" {
 				err[errorType] = "Enter a note"
+				errorCollection["2-note"] = err
+			} else {
+				err[errorType] = errorMessage
+				errorCollection[fieldName] = err
 			}
-
-			errorCollection[fieldName] = err
 		}
 	}
 	return errorCollection
