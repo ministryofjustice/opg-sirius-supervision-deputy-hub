@@ -24,6 +24,7 @@ type deputyHubNotesVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success		  bool
+	SuccessMessage string
 }
 
 type addNoteVars struct {
@@ -34,6 +35,7 @@ type addNoteVars struct {
 	Success   	bool
 	Error    	sirius.ValidationError
 	Errors    	sirius.ValidationErrors
+	DeputyDetails sirius.DeputyDetails
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
@@ -70,6 +72,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					DeputyDetails: deputyDetails,
 					DeputyNotes:   deputyNotes,
 					Success: hasSuccess,
+					SuccessMessage: "Note added",
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -85,7 +88,14 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				if err != nil {
 					return err
 				}
+
+				deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+				if err != nil {
+					return err
+				}
+
 				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
+
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 
@@ -97,6 +107,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 						Title:      title,
 						Note:   note,
 						Errors:    verr.Errors,
+						DeputyDetails: deputyDetails,
 					}
 
 					w.WriteHeader(http.StatusBadRequest)

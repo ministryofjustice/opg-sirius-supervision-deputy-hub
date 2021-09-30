@@ -1,42 +1,40 @@
-{{ template "page-without-deputy-hub" . }}
+{{ template "page" . }}
 
 {{ define "main" }}
-    <div class="main">
-     <div class="govuk-grid-row govuk-!-margin-top-5">
-        <div class="govuk-grid-column-full">
-
+        <div class="main">
             {{ template "error-summary" .Errors }}
+            {{ template "deputy-hub" . }}
+             <div class="govuk-grid-row govuk-!-margin-top-5">
+            <div class="govuk-grid-column-full">
+                <header>
+                    <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Add a note</h1>
+                </header>
 
-            <header>
-                <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Add a note</h1>
-            </header>
+                <div class="govuk-grid-row">
 
-            <div class="govuk-grid-row">
+                <form id="addNote" class="form govuk-grid-column-one-third" method="post">
+                    <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
 
-            <form id="addNote" class="form govuk-grid-column-one-third" method="post">
-                <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
-
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="title">Title (required)</label>
-                    <input class="govuk-input" id="title" name="title" type="text"
-                    {{ if .Errors}} value="{{ .Title }}"{{ end }}>
-                </div>
-
-                <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
                     <div class="govuk-form-group">
-                    <label class="govuk-label" for="note">Note (required)</label>
-                    <textarea class="govuk-textarea govuk-js-character-count" id="note"
-                    name="note" rows="10" aria-describedby="note-info note-hint">{{ if .Errors }}{{ .Note }}{{ end }}</textarea>
-                    <div id="note-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You have 1000 characters remaining</div>
+                        <label class="govuk-label" for="title">Title (required)</label>
+                        <input class="govuk-input" id="title" name="title" type="text"
+                        {{ if .Errors}} value="{{ .Title }}"{{ end }}>
+                    </div>
+
+                    <div class="govuk-character-count" data-module="govuk-character-count" data-maxlength="1000">
+                        <div class="govuk-form-group">
+                        <label class="govuk-label" for="note">Note (required)</label>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="note"
+                        name="note" rows="10" aria-describedby="note-info note-hint">{{ if .Errors }}{{ .Note }}{{ end }}</textarea>
+                        <div id="note-info" class="govuk-hint govuk-character-count__message" aria-live="polite">You have 1000 characters remaining</div>
+                    </div>
                 </div>
+
+                    <div class="govuk-button-group govuk-!-margin-top-7">
+                        <button type="submit" class="govuk-button" data-module="govuk-button">Save note</button>
+                        <a class="govuk-link" href="{{ prefix (printf "/deputy/%d/notes" .DeputyDetails.ID) }}">Cancel</a>
+                    </div>
+
+                </form>
             </div>
-
-                <div class="govuk-button-group govuk-!-margin-top-7">
-                    <button type="submit" class="govuk-button" data-module="govuk-button">Add note</button>
-                    <a class="govuk-link" href="javascript: history.go(-1)">Cancel</a>
-                </div>
-
-            </form>
-        </div>
-
 {{ end }}

@@ -7,7 +7,7 @@ const MojBannerAutoHide = (element) => {
     elements.forEach((bannerElement) => {
       setTimeout(function() {
         bannerElement.classList.add('hide');
-      }, 5000)
+      }, 1000)
     });
   };
   

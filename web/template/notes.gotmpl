@@ -2,9 +2,10 @@
 
 {{ define "main" }}
     {{ if .Success }}
-           {{ template "success-banner" "Note added" }}
+           {{ template "success-banner" . }}
     {{ end }}
     {{ template "deputy-hub" . }}
+    {{ template "navigation" . }}
     <div class="main">
       <header>
         <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Notes</h1>

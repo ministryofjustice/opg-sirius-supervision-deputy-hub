@@ -70,6 +70,7 @@ func TestGetNotes(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(deputyHubNotesVars{
 		Path:      "/path",
+		SuccessMessage: "Note added",
 	}, template.lastVars)
 }
 
