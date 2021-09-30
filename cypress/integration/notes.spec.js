@@ -39,6 +39,25 @@ describe("Notes", () => {
             cy.get(".main > header").should("contain", "Notes");
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
         })
+
+        it("shows the error banner", () => {
+            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
+            cy.get("#title").type("empty string")
+            cy.get("#note").type("empty string")
+            // cy.intercept('POST', '/api/v1/deputy/1/create-note', {
+            //     statusCode: 500,
+            // }).as('addNote')
+            cy.intercept('POST', '/api/v1/deputy/1/create-note', (req) => {
+                req.reply({
+                statusCode: 500,
+                    body: {
+                    name: 'Peter Pan'
+                },
+                })
+            }).as('addNote')
+            cy.get(".govuk-button").should("contain", "Save note").click()
+            cy.wait('@addNote').should('have.property', 'response.statusCode', 500)
+        })
     })
 
 });

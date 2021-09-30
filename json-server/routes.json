@@ -3,5 +3,6 @@
     "/deputy/:personId/clients": "/clients",
     "/timeline/:personId": "/timeline",
     "/clients/:personId/notes": "/notes",
-    "/deputy/:personId/create-note": "/notes/add-note"
+    "/deputy/:personId/create-note": "/notes/add-note",
+    "/users/current": "/users"
 }
