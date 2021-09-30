@@ -9,9 +9,10 @@ describe("Navigation bar", () => {
         ["Dashboard", "/supervision/deputies/public-authority/deputy/1/"],
         ["Clients", "/supervision/deputies/public-authority/deputy/1/clients"],
         ["Timeline", "/supervision/deputies/public-authority/deputy/1/timeline"],
+        ["Notes", "/supervision/deputies/public-authority/deputy/1/notes"],
     ];
 
-    it("has working nav links for different tabs", () => {
+    it("has titles and working nav links for all tabs in the correct order", () => {
         cy.get(".moj-sub-navigation__list")
             .children()
             .each(($el, index) => {

@@ -1,0 +1,23 @@
+{{ template "page" . }}
+
+{{ define "main" }}
+    {{ if .Success }}
+           {{ template "success-banner" "Note added" }}
+    {{ end }}
+    {{ template "deputy-hub" . }}
+    <div class="main">
+      <header>
+        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Notes</h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a class="govuk-button moj-button-menu__item govuk-button--secondary"
+                href="{{ prefix (printf "/deputy/%d/notes/add-note" .DeputyDetails.ID) }}" role="button" draggable="false" data-module="govuk-button">
+                Add a note
+                </a>
+            </div>
+        </div>
+      </header>
+
+  {{ .DeputyNotes }}
+
+{{ end }}
