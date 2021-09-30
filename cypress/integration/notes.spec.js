@@ -67,6 +67,19 @@ describe("Notes", () => {
             cy.get(".govuk-button").should("contain", "Save note").click()
             cy.wait('@addNote').should('have.property', 'response.statusCode', 500)
         })
-    })
 
+        it("shows error banner can return specific statusCode", () => {
+            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
+
+            cy.intercept('POST', '/supervision/deputies/public-authority/deputy/1/notes/add-note', {statusCode: 500}).as('addNote')
+
+            cy.get(".govuk-button").should("contain", "Save note").click()
+            cy.wait('@addNote')
+            cy.get('@addNote').then( xhr => {
+                console.log(xhr)
+                expect(xhr.response.statusCode).to.equal(500)
+            })
+        })
+
+    })
 });
