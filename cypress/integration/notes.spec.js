@@ -40,6 +40,15 @@ describe("Notes", () => {
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
         })
 
+        it("shows success banner with Note added message", () => {
+            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
+            cy.get("#title").type("title")
+            cy.get("#note").type("note")
+            cy.get('form').submit()
+            cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
+            cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "Note added");
+        })
+
         it("shows the error banner", () => {
             cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
             cy.get("#title").type("empty string")
