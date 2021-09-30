@@ -235,7 +235,7 @@
                 "canUnlink": false,
                 "canUnlinkIfError": true,
                 "deputy": {
-                  "id": 76,
+                  "id": 1,
                   "uId": "7000-0000-2530",
                   "normalizedUid": 700000002530,
                   "errorMessages": [],
@@ -472,7 +472,7 @@
                 "canUnlink": false,
                 "canUnlinkIfError": true,
                 "deputy": {
-                  "id": 76,
+                  "id": 1,
                   "uId": "7000-0000-2530",
                   "normalizedUid": 700000002530,
                   "errorMessages": [],
@@ -709,7 +709,7 @@
                 "canUnlink": false,
                 "canUnlinkIfError": true,
                 "deputy": {
-                  "id": 76,
+                  "id": 1,
                   "uId": "7000-0000-2530",
                   "normalizedUid": 700000002530,
                   "errorMessages": [],
@@ -840,7 +840,7 @@
         "courtReferenceNumber": "03305972",
         "courtReference": "03305972",
         "personType": "Deputy",
-        "personId": "76",
+        "personId": "1",
         "personUid": "7000-0000-2530",
         "personName": "Mr Bob Builder",
         "personCourtRef": null,
@@ -882,7 +882,7 @@
           }
         ],
         "personType": "Deputy",
-        "personId": "76",
+        "personId": "1",
         "personUid": "7000-0000-2530",
         "personName": "Mx Bob Builder",
         "personCourtRef": null,
@@ -897,5 +897,43 @@
         ]
       }
     }
-  ]
+  ],
+  "notes": {
+    "limit": 20,
+    "pages": {
+      "current": 1,
+      "total": 1
+    },
+    "total": 2,
+    "notes": [
+      {
+        "personId": 1,
+        "userId": 68,
+        "userDisplayName": "Finance User Testing",
+        "userEmail": "finance.user.testing@opgtest.com",
+        "userPhoneNumber": "12345678",
+        "id": 65,
+        "type": "NEW DEPUTY",
+        "noteType": "ORDER_CREATED",
+        "description": "notes",
+        "name": "This is a HW order...",
+        "createdTime": "20/09/2021 08:50:13",
+        "direction": null
+      },
+      {
+        "personId": 1,
+        "userId": 68,
+        "userDisplayName": "Finance User Testing",
+        "userEmail": "finance.user.testing@opgtest.com",
+        "userPhoneNumber": "12345678",
+        "id": 64,
+        "type": "OPEN",
+        "noteType": "ORDER_STATUS_UPDATED",
+        "description": "...and here are the order status notes",
+        "name": null,
+        "createdTime": "20/09/2021 08:50:12",
+        "direction": null
+      }
+    ]
+  }
 }
