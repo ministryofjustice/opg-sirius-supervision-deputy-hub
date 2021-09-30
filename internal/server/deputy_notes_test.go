@@ -1,10 +1,8 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
-	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -78,25 +76,25 @@ func TestGetNotes(t *testing.T) {
 
 //name:map["isEmpty":"Enter a title for the note"]]
 //client.err = sirius.ValidationErrors{}
-
-func TestPostAddNote(t *testing.T) {
-	assert := assert.New(t)
-	client := &mockDeputyHubNotesInformation{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter();
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-	assert.Equal(returnedError, RedirectError("/deputy/123/notes"))
-}
+//
+//func TestPostAddNote(t *testing.T) {
+//	assert := assert.New(t)
+//	client := &mockDeputyHubNotesInformation{}
+//
+//	w := httptest.NewRecorder()
+//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+//
+//	var returnedError error
+//
+//	testHandler := mux.NewRouter();
+//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+//		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, w, r)
+//	})
+//
+//	testHandler.ServeHTTP(w, r)
+//	assert.Equal(returnedError, RedirectError("/deputy/123/notes"))
+//}
 
 //
 //func TestRenameValidationErrorWhenPostingNote(t *testing.T) {
