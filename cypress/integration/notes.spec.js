@@ -48,38 +48,5 @@ describe("Notes", () => {
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
             cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "Note added");
         })
-
-        it("shows the error banner", () => {
-            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
-            cy.get("#title").type("empty string")
-            cy.get("#note").type("empty string")
-            // cy.intercept('POST', '/api/v1/deputy/1/create-note', {
-            //     statusCode: 500,
-            // }).as('addNote')
-            cy.intercept('POST', '/api/v1/deputy/1/create-note', (req) => {
-                req.reply({
-                statusCode: 500,
-                    body: {
-                    name: 'Peter Pan'
-                },
-                })
-            }).as('addNote')
-            cy.get(".govuk-button").should("contain", "Save note").click()
-            cy.wait('@addNote').should('have.property', 'response.statusCode', 500)
-        })
-
-        it("shows error banner can return specific statusCode", () => {
-            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
-
-            cy.intercept('POST', '/supervision/deputies/public-authority/deputy/1/notes/add-note', {statusCode: 500}).as('addNote')
-
-            cy.get(".govuk-button").should("contain", "Save note").click()
-            cy.wait('@addNote')
-            cy.get('@addNote').then( xhr => {
-                console.log(xhr)
-                expect(xhr.response.statusCode).to.equal(500)
-            })
-        })
-
     })
 });
