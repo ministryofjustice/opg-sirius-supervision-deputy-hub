@@ -33,14 +33,13 @@ func TestAddNote(t *testing.T) {
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
-			StatusCode: 200,
+			StatusCode: 201,
 			Body:       r,
 		}, nil
 	}
 
 	err := client.AddNote(getContext(nil), "fake note title", "fake note text", 76, 51)
-	expectedError := ValidationError{Message:"", Errors:ValidationErrors(nil)}
-	assert.Equal(t, expectedError , err)
+	assert.Nil(t, err)
 }
 
 func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
