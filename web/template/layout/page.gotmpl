@@ -17,23 +17,23 @@
       <link rel="apple-touch-icon" sizes="152x152" href="{{ prefix "/assets/images/govuk-apple-touch-icon-152x152.png"}}">
       <link rel="apple-touch-icon" href="{{ prefix "/assets/images/govuk-apple-touch-icon.png"}}">
 
-      <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet">
-    </head>
 
-    <body class="govuk-template__body sirius-pahub">
-    <script>
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
+          <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet">
+        </head>
 
-      {{ if .Error }}
-      {{ template "error-header" . }}
+        <body class="govuk-template__body sirius-pahub">
+        <script>
+            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+        </script>
+
+       {{ if .Errors }}
+        {{ template "error-header" . }}
       {{ else }}
-      {{ template "header" . }}
+        {{ template "header" . }}
       {{ end }}
 
       <div class="govuk-width-container">
         <main class="govuk-main-wrapper app-main-class"  role="main">
-          {{ template "deputy-hub" . }}
           {{ block "main" . }}{{ end }}
         </main>
       </div>
