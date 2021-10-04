@@ -21,6 +21,7 @@ type Client interface {
 	DeputyHubInformation
 	DeputyHubClientInformation
 	DeputyHubEventInformation
+	DeputyHubNotesInformation
 }
 
 type Template interface {
@@ -42,6 +43,12 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/timeline",
 		wrap(
 			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
+	router.Handle("/deputy/{id}/notes",
+		wrap(
+			renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
+	router.Handle("/deputy/{id}/notes/add-note",
+		wrap(
+			renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
@@ -53,13 +60,13 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	return http.StripPrefix(prefix, router)
 }
 
-type RedirectError string
+type Redirect string
 
-func (e RedirectError) Error() string {
+func (e Redirect) Error() string {
 	return "redirect to " + string(e)
 }
 
-func (e RedirectError) To() string {
+func (e Redirect) To() string {
 	return string(e)
 }
 
@@ -105,7 +112,7 @@ func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, 
 					return
 				}
 
-				if redirect, ok := err.(RedirectError); ok {
+				if redirect, ok := err.(Redirect); ok {
 					http.Redirect(w, r, prefix+redirect.To(), http.StatusFound)
 					return
 				}

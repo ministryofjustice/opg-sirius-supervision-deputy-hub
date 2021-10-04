@@ -1,5 +1,8 @@
 {
     "/api/v1/*": "/$1",
     "/deputy/:personId/clients": "/clients",
-    "/timeline/:personId": "/timeline"
+    "/timeline/:personId": "/timeline",
+    "/clients/:personId/notes": "/notes",
+    "/deputy/:personId/notes": "/notes",
+    "/users/current": "/users"
 }
