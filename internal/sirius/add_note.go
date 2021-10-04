@@ -8,10 +8,10 @@ import (
 )
 
 type addNoteRequest struct {
-	Title       string `json:"name"`
-	Note        string `json:"description"`
-	UserId		int    `json:"createdById"`
-	NoteType	string    `json:"noteType"`
+	Title    string `json:"name"`
+	Note     string `json:"description"`
+	UserId   int    `json:"createdById"`
+	NoteType string `json:"noteType"`
 }
 
 func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) error {
@@ -27,7 +27,7 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) 
 		return err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputy/%d/create-note", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputy/%d/notes", deputyId), &body)
 
 	if err != nil {
 		return err

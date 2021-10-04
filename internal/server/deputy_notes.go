@@ -17,25 +17,30 @@ type DeputyHubNotesInformation interface {
 }
 
 type deputyHubNotesVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	DeputyNotes   sirius.DeputyNoteList
-	Error         string
-	Errors        sirius.ValidationErrors
-	Success		  bool
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
+	DeputyNotes    sirius.DeputyNoteList
+	Error          string
+	Errors         sirius.ValidationErrors
+	Success        bool
 	SuccessMessage string
 }
 
 type addNoteVars struct {
-	Path      	string
-	XSRFToken 	string
-	Title      	string
-	Note   		string
-	Success   	bool
-	Error    	sirius.ValidationError
-	Errors    	sirius.ValidationErrors
+	Path          string
+	XSRFToken     string
+	Title         string
+	Note          string
+	Success       bool
+	Error         sirius.ValidationError
+	Errors        sirius.ValidationErrors
 	DeputyDetails sirius.DeputyDetails
+}
+
+func hasSuccessInUrl(url string, prefix string) bool {
+	urlTrim := strings.TrimPrefix(url, prefix)
+	return urlTrim == "?success=true"
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
@@ -57,14 +62,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				//check if there is a success in url
-				urlTrim := strings.TrimPrefix(r.URL.String(), "/deputy/" + strconv.Itoa(deputyId) + "/notes" )
-				var hasSuccess bool
-				if urlTrim == "?success=true" {
-					hasSuccess = true
-				} else {
-					hasSuccess = false
-				}
+				hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/" + strconv.Itoa(deputyId) + "/notes")
 
 				vars := deputyHubNotesVars{
 					Path:          r.URL.Path,
@@ -116,7 +114,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					return err
 				}
 
-				return RedirectError(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
+				return Redirect(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
 
 		default:
 				return StatusError(http.StatusMethodNotAllowed)

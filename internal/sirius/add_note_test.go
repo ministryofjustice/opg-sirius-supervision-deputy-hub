@@ -54,7 +54,7 @@ func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputy/76/create-note",
+		URL:    svr.URL + "/api/v1/deputy/76/notes",
 		Method: http.MethodPost,
 	}, err)
 }

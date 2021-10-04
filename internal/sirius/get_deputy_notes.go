@@ -7,10 +7,10 @@ import (
 )
 
 type DeputyNoteList struct {
-	Limit	int 	`json:"limit"`
-	Pages	Pages 	`json:"pages"`
-	Total 	int 	`json:"total"`
-	DeputyNotes []DeputyNote	`json:"notes"`
+	Limit       int          `json:"limit"`
+	Pages       Pages        `json:"pages"`
+	Total       int          `json:"total"`
+	DeputyNotes []DeputyNote `json:"notes"`
 }
 
 type Pages struct {

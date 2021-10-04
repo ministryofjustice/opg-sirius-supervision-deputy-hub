@@ -12,11 +12,11 @@ import (
 )
 
 type mockDeputyHubNotesInformation struct {
-	count            int
-	lastCtx          sirius.Context
-	err              error
-	addNote			 error
-	deputyData       sirius.DeputyDetails
+	count           int
+	lastCtx         sirius.Context
+	err             error
+	addNote         error
+	deputyData      sirius.DeputyDetails
 	deputyNotesData sirius.DeputyNoteList
 	userDetailsData sirius.UserDetails
 }
@@ -93,7 +93,7 @@ func TestPostAddNote(t *testing.T) {
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(returnedError, RedirectError("/deputy/123/notes?success=true"))
+	assert.Equal(returnedError, Redirect("/deputy/123/notes?success=true"))
 }
 
 func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
