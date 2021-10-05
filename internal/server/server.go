@@ -42,7 +42,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/deputy/{id}/timeline",
 		wrap(
-			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
+			renderTemplateForDeputyHubEvents(client, defaultPATeam, templates["timeline.gotmpl"])))
 
 	router.Handle("/deputy/{id}/notes",
 		wrap(
