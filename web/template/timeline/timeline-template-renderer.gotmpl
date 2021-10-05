@@ -5,4 +5,7 @@
        {{ if eq .EventType "PADeputyCreated" }}
           {{ template "pa-deputy-created" . }}
        {{ end }}
+       {{ if eq .EventType "PaDetailsChanged" }}
+           {{ template "pa-deputy-changed" . }}
+      {{ end }}
 {{ end }}

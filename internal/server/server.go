@@ -22,6 +22,7 @@ type Client interface {
 	DeputyHubClientInformation
 	DeputyHubEventInformation
 	DeputyHubNotesInformation
+	EditDeputyHubInformation
 }
 
 type Template interface {
@@ -51,6 +52,10 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/notes/add-note",
 		wrap(
 			renderTemplateForDeputyHubNotes(client, defaultPATeam, templates["add-notes.gotmpl"])))
+
+    router.Handle("/deputy/{id}/manage-team-details",
+        wrap(
+            renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
