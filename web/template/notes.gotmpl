@@ -19,6 +19,22 @@
         </div>
       </header>
 
-  {{ .DeputyNotes }}
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <div class="moj-timeline">
 
+             {{ range .DeputyNotes }}
+                     <div class="moj-timeline__item">
+                         <div class="moj-timeline__header">
+                           <h2 class="moj-timeline__title">{{ .Name }}</h2>
+                           <p class="moj-timeline__byline">by {{ .UserDisplayName }} ({{.UserPhoneNumber}})</p>
+                         </div>
+                         <p class="moj-timeline__date"><time>{{ .Timestamp }}</time></p>
+                         <div class="moj-timeline__description" style="white-space: pre-wrap;">{{ .NoteText }}</div>
+                     </div>
+             {{ end }}
+
+             </div>
+        </div>
+      </div>
 {{ end }}
