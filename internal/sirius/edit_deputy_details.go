@@ -87,7 +87,7 @@ func (c *Client) EditDeputyDetails(ctx Context, editDeputyDetailForm DeputyDetai
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
-			return &ValidationError{
+			return ValidationError{
 				Errors: v.ValidationErrors,
 			}
 		}

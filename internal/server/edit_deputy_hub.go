@@ -51,7 +51,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				OrganisationName:                 r.PostFormValue("deputy-name"),
 				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
 				Email:                            r.PostFormValue("email"),
-				PhoneNumber:                      r.PostFormValue("telephone"),
+				WorkPhoneNumber:                  r.PostFormValue("telephone"),
 				AddressLine1:                     r.PostFormValue("address-line-1"),
 				AddressLine2:                     r.PostFormValue("address-line-2"),
 				AddressLine3:                     r.PostFormValue("address-line-3"),
@@ -62,29 +62,29 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
-			deputyDetails, _ := client.GetDeputyDetails(ctx, deputyId)
-
-			vars := editDeputyHubVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-			}
-
-			if err == nil {
-				vars.Success = true
-			}
-
-			if verr, ok := err.(*sirius.ValidationError); ok {
+			if verr, ok := err.(sirius.ValidationError); ok {
                 verr.Errors = renameValidationErrorMessages(verr.Errors)
 
                 vars := editDeputyHubVars{
-                				Path:          r.URL.Path,
-                				XSRFToken:     ctx.XSRFToken,
-                				DeputyDetails: deputyDetails,
-                				Errors: verr.Errors,
+                				Path:           r.URL.Path,
+                				XSRFToken:      ctx.XSRFToken,
+                				DeputyDetails:  deputyDetails,
+                				Errors:         verr.Errors,
                 			}
                 return tmpl.ExecuteTemplate(w, "page", vars)
 			}
+
+            deputyDetails, _ := client.GetDeputyDetails(ctx, deputyId)
+
+            vars := editDeputyHubVars{
+                Path:          r.URL.Path,
+                XSRFToken:     ctx.XSRFToken,
+                DeputyDetails: deputyDetails,
+            }
+
+            if err == nil {
+                vars.Success = true
+            }
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -118,7 +118,7 @@ func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.V
 				errorCollection["organisationTeamOrDepartmentName"] = err
 			}else if fieldName == "addressLine1" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The building or street must be 255 characters or fewer"
-				errorCollection["addressLine1e"] = err
+				errorCollection["addressLine1"] = err
 			}else if fieldName == "addressLine2" && errorType == "stringLengthTooLong" {
 				err[errorType] = "Address line 2 must be 255 characters or fewer"
 				errorCollection["addressLine2"] = err
