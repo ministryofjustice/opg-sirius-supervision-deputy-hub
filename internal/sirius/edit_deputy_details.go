@@ -17,7 +17,7 @@ type editDeputyDetails struct {
 	OrganisationName                    string `json:"organisationName"`
 	OrganisationTeamOrDepartmentName    string `json:"organisationTeamOrDepartmentName"`
 	Email                               string `json:"email"`
-	WorkPhoneNumber                     string `json:"workPhoneNumber"`
+	PhoneNumber                         string `json:"workPhoneNumber"`
 	AddressLine1                        string `json:"addressLine1"`
 	AddressLine2                        string `json:"addressLine2"`
 	AddressLine3                        string `json:"addressLine3"`
@@ -40,7 +40,7 @@ func (c *Client) EditDeputyDetails(ctx Context, editDeputyDetailForm DeputyDetai
         OrganisationName:                   editDeputyDetailForm.OrganisationName,
         OrganisationTeamOrDepartmentName:   editDeputyDetailForm.OrganisationTeamOrDepartmentName,
         Email:                              editDeputyDetailForm.Email,
-        WorkPhoneNumber:                    editDeputyDetailForm.PhoneNumber,
+        PhoneNumber:                        editDeputyDetailForm.PhoneNumber,
         AddressLine1:                       editDeputyDetailForm.AddressLine1,
         AddressLine2:                       editDeputyDetailForm.AddressLine2,
         AddressLine3:                       editDeputyDetailForm.AddressLine3,

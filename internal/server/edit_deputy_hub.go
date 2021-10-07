@@ -51,7 +51,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				OrganisationName:                 r.PostFormValue("deputy-name"),
 				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
 				Email:                            r.PostFormValue("email"),
-				WorkPhoneNumber:                  r.PostFormValue("telephone"),
+				PhoneNumber:                      r.PostFormValue("telephone"),
 				AddressLine1:                     r.PostFormValue("address-line-1"),
 				AddressLine2:                     r.PostFormValue("address-line-2"),
 				AddressLine3:                     r.PostFormValue("address-line-3"),
