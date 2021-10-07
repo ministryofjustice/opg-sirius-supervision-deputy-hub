@@ -56,7 +56,7 @@ describe("Notes", () => {
             cy.get('form').submit()
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
             cy.get(":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title").should("contain", "New note title");
-            cy.get(':nth-last-child(1) > pre > .moj-timeline__description').should("contain", "Note text entered");
+            cy.get(':nth-last-child(1) > .moj-timeline__description').should("contain", "Note text entered");
         })
     })
 });
