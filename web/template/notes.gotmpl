@@ -1,5 +1,4 @@
 {{ template "page" . }}
-
 {{ define "main" }}
     {{ if .Success }}
            {{ template "success-banner" . }}
@@ -18,4 +17,7 @@
             </div>
         </div>
       </header>
+
+  {{ .DeputyNotes }}
+
 {{ end }}
