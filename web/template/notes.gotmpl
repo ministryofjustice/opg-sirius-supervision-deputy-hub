@@ -29,7 +29,7 @@
                            <p class="moj-timeline__byline">by {{ .UserDisplayName }} ({{.UserPhoneNumber}})</p>
                          </div>
                          <p class="moj-timeline__date"><time>{{ .Timestamp }}</time></p>
-                         <pre><div class="moj-timeline__description">{{ .NoteText }}</div></pre>
+                         <div class="moj-timeline__description" style="white-space: pre-wrap;">{{ .NoteText }}</div>
                      </div>
              {{ end }}
 
