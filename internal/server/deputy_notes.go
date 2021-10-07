@@ -94,7 +94,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 
 				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
 
-
 				if verr, ok := err.(sirius.ValidationError); ok {
 
 					verr.Errors = renameValidationErrorMessages(verr.Errors)
