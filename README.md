@@ -24,6 +24,10 @@ You will then be able to use breakpoints to stop and inspect the application.
 Additionally, hot-reloading is provided by Air, so any changes to the Go code (including templates) 
 will rebuild and restart the application without requiring manually stopping and restarting the compose stack.
 
+To develop with your local sirius environment:
+
+`docker-compose -f docker/docker-compose.yml up -d --build`
+
 ### Without docker
 
 Alternatively to set it up not using Docker use below. This hosts it on `localhost:1234`
