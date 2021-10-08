@@ -6,17 +6,7 @@ import (
 	"net/http"
 )
 
-type DeputyNoteList struct {
-	Limit       int          `json:"limit"`
-	Pages       Pages        `json:"pages"`
-	Total       int          `json:"total"`
-	DeputyNotes []DeputyNote `json:"notes"`
-}
-
-type Pages struct {
-	Current int	`json:"current"`
-	Total	int `json:"total"`
-}
+type DeputyNoteCollection []DeputyNote
 
 type DeputyNote struct {
 	ID              int    `json:"id"`
@@ -33,10 +23,10 @@ type DeputyNote struct {
 	Direction       string `json:"direction"`
 }
 
-func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteList, error) {
-	var v DeputyNoteList
+func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
+	var v DeputyNoteCollection
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/clients/%d/notes", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputy/%d/notes", deputyId), nil)
 
 	if err != nil {
 		return v, err
@@ -58,6 +48,35 @@ func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteList, erro
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	return v, err
+	DeputyNotes := EditDeputyNotes(v)
+
+	return DeputyNotes, err
+}
+
+func ReformatTimestampDeputyNote(s DeputyNote) string {
+	return s.Timestamp
+}
+
+func EditDeputyNotes(v DeputyNoteCollection) DeputyNoteCollection {
+	var list DeputyNoteCollection
+	for _, s := range v {
+		note := DeputyNote{
+			DeputyId:        s.DeputyId,
+			UserId:          s.UserId,
+			UserDisplayName: s.UserDisplayName,
+			UserEmail:       s.UserEmail,
+			UserPhoneNumber: s.UserPhoneNumber,
+			ID:              s.ID,
+			Type:            s.Type,
+			NoteType:        s.NoteType,
+			NoteText:     s.NoteText,
+			Name:            s.Name,
+			Timestamp:       s.Timestamp,
+			Direction:       s.Direction,
+		}
+
+		list = append(list, note)
+	}
+	return list
 }
 
