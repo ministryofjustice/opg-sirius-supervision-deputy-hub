@@ -1011,13 +1011,6 @@
       }
     }
   ],
-  "notes": {
-    "limit": 20,
-    "pages": {
-      "current": 1,
-      "total": 1
-    },
-    "total": 2,
     "notes": [
       {
         "personId": 1,
@@ -1029,7 +1022,7 @@
         "type": "NEW DEPUTY",
         "noteType": "ORDER_CREATED",
         "description": "notes",
-        "name": "This is a HW order...",
+        "name": "Note added",
         "createdTime": "20/09/2021 08:50:13",
         "direction": null
       },
@@ -1042,11 +1035,10 @@
         "id": 64,
         "type": "OPEN",
         "noteType": "ORDER_STATUS_UPDATED",
-        "description": "...and here are the order status notes",
-        "name": null,
+        "description": "...and here are the notes",
+        "name": "Email received",
         "createdTime": "20/09/2021 08:50:12",
         "direction": null
       }
     ]
-  }
 }

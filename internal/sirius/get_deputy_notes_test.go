@@ -14,14 +14,7 @@ func TestDeputyNotesReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := `{
-    "limit": 20,
-    "pages": {
-      "current": 1,
-      "total": 1
-    },
-    "total": 2,
-    "notes": [
+	json := `[
     {
       "personId": 1,
       "userId": 68,
@@ -50,8 +43,7 @@ func TestDeputyNotesReturned(t *testing.T) {
       "createdTime": "20/09/2021 08:50:12",
       "direction": null
     }
-  ]
-}`
+  ]`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -62,42 +54,34 @@ func TestDeputyNotesReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := DeputyNoteList{
-		Limit: 20,
-		Pages: Pages{
-			Current: 1,
-			Total: 1,
+	expectedResponse := DeputyNoteCollection{
+		DeputyNote{
+			ID:              65,
+			DeputyId:        1,
+			UserId:          68,
+			UserDisplayName: "Finance User Testing",
+			UserEmail:       "finance.user.testing@opgtest.com",
+			UserPhoneNumber: "12345678",
+			Type:            "NEW DEPUTY",
+			NoteType:        "ORDER_CREATED",
+			NoteText:        "notes",
+			Name:            "This is a HW order...",
+			Timestamp:       "20/09/2021 08:50:13",
+			Direction:       "",
 		},
-		Total: 2,
-		DeputyNotes: []DeputyNote{
-			{
-				ID:              65,
-				DeputyId:        1,
-				UserId:          68,
-				UserDisplayName: "Finance User Testing",
-				UserEmail:       "finance.user.testing@opgtest.com",
-				UserPhoneNumber: "12345678",
-				Type:            "NEW DEPUTY",
-				NoteType:        "ORDER_CREATED",
-				NoteText:        "notes",
-				Name:            "This is a HW order...",
-				Timestamp:       "20/09/2021 08:50:13",
-				Direction:       "",
-			},
-			{
-				ID:              64,
-				DeputyId:        1,
-				UserId:          68,
-				UserDisplayName: "Finance User Testing",
-				UserEmail:       "finance.user.testing@opgtest.com",
-				UserPhoneNumber: "12345678",
-				Type:            "OPEN",
-				NoteType:        "ORDER_STATUS_UPDATED",
-				NoteText:        "...and here are the order status notes",
-				Name:            "",
-				Timestamp:       "20/09/2021 08:50:12",
-				Direction:       "",
-			},
+		DeputyNote{
+			ID:              64,
+			DeputyId:        1,
+			UserId:          68,
+			UserDisplayName: "Finance User Testing",
+			UserEmail:       "finance.user.testing@opgtest.com",
+			UserPhoneNumber: "12345678",
+			Type:            "OPEN",
+			NoteType:        "ORDER_STATUS_UPDATED",
+			NoteText:        "...and here are the order status notes",
+			Name:            "",
+			Timestamp:       "20/09/2021 08:50:12",
+			Direction:       "",
 		},
 	}
 
@@ -117,20 +101,12 @@ func TestGetDeputyNotesReturnsNewStatusError(t *testing.T) {
 
 	deputyNotes, err := client.GetDeputyNotes(getContext(nil), 76)
 
-	expectedResponse := DeputyNoteList{
-		Limit: 0,
-		Pages: Pages{
-			Current: 0,
-			Total: 0,
-		},
-		Total: 0,
-		DeputyNotes: []DeputyNote(nil),
-	}
+	expectedResponse := DeputyNoteCollection(nil)
 
 	assert.Equal(t, expectedResponse, deputyNotes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/clients/76/notes",
+		URL:    svr.URL + "/api/v1/deputy/76/notes",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -145,15 +121,7 @@ func TestGetDeputyNotesReturnsUnauthorisedClientError(t *testing.T) {
 
 	deputyNotes, err := client.GetDeputyNotes(getContext(nil), 76)
 
-	expectedResponse := DeputyNoteList{
-		Limit: 0,
-		Pages: Pages{
-			Current: 0,
-			Total: 0,
-		},
-		Total: 0,
-		DeputyNotes: []DeputyNote(nil),
-	}
+	expectedResponse := DeputyNoteCollection(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyNotes)

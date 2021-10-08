@@ -11,7 +11,7 @@ import (
 
 type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteList, error)
+	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 }
@@ -20,7 +20,7 @@ type deputyHubNotesVars struct {
 	Path           string
 	XSRFToken      string
 	DeputyDetails  sirius.DeputyDetails
-	DeputyNotes    sirius.DeputyNoteList
+	DeputyNotes    sirius.DeputyNoteCollection
 	Error          string
 	Errors         sirius.ValidationErrors
 	ErrorMessage  string
@@ -99,7 +99,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				}
 
 				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
-
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 
