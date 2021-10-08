@@ -17,7 +17,7 @@ type mockDeputyHubNotesInformation struct {
 	err             error
 	addNote         error
 	deputyData      sirius.DeputyDetails
-	deputyNotesData sirius.DeputyNoteList
+	deputyNotesData sirius.DeputyNoteCollection
 	userDetailsData sirius.UserDetails
 }
 
@@ -28,7 +28,7 @@ func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, dep
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteList, error) {
+func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteCollection, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

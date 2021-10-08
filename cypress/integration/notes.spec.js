@@ -44,9 +44,19 @@ describe("Notes", () => {
             cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
             cy.get("#title").type("title")
             cy.get("#note").type("note")
-            cy.get('form').submit()
+            cy.get('#add-note-form').submit()
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
             cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "Note added");
+        })
+
+        it("shows new note on the timeline", () => {
+            cy.visit("/supervision/deputies/public-authority/deputy/1/notes/add-note");
+            cy.get("#title").type("New note title")
+            cy.get("#note").type("Note text entered")
+            cy.get('#add-note-form').submit()
+            cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
+            cy.get(":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title").should("contain", "New note title");
+            cy.get(':nth-last-child(1) > .moj-timeline__description').should("contain", "Note text entered");
         })
     })
 });
