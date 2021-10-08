@@ -23,6 +23,7 @@ type deputyHubNotesVars struct {
 	DeputyNotes    sirius.DeputyNoteList
 	Error          string
 	Errors         sirius.ValidationErrors
+	ErrorMessage  string
 	Success        bool
 	SuccessMessage string
 }
@@ -35,6 +36,7 @@ type addNoteVars struct {
 	Success       bool
 	Error         sirius.ValidationError
 	Errors        sirius.ValidationErrors
+	ErrorMessage  string
 	DeputyDetails sirius.DeputyDetails
 }
 
@@ -43,7 +45,7 @@ func hasSuccessInUrl(url string, prefix string) bool {
 	return urlTrim == "?success=true"
 }
 
-func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam string, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -72,6 +74,10 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 					Success: hasSuccess,
 					SuccessMessage: "Note added",
 				}
+
+                if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+                    vars.ErrorMessage = "An executive case manager has not been assigned. "
+                }
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -107,6 +113,10 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 						Errors:    verr.Errors,
 						DeputyDetails: deputyDetails,
 					}
+
+                    if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+                        vars.ErrorMessage = "An executive case manager has not been assigned. "
+                    }
 
 					w.WriteHeader(http.StatusBadRequest)
 					return tmpl.ExecuteTemplate(w, "page", vars)
