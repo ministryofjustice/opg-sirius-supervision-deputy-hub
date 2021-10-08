@@ -86,7 +86,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
@@ -127,7 +127,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(editDeputyHubVars{
-		Path:    "/123",
+		Path:    "/133",
 		Errors:  expectedValidationErrors,
 	}, template.lastVars)
 
@@ -151,7 +151,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
@@ -174,7 +174,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(editDeputyHubVars{
-		Path:    "/123",
+		Path:    "/133",
 		Errors:  expectedValidationErrors,
 	}, template.lastVars)
 

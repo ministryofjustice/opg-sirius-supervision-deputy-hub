@@ -1,6 +1,7 @@
 package server
 
 import (
+    "fmt"
 	"net/http"
 	"strconv"
 
@@ -63,7 +64,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-                verr.Errors = renameValidationErrorMessages(verr.Errors)
+                verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
 
                 vars := editDeputyHubVars{
                 				Path:           r.URL.Path,
@@ -74,19 +75,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
                 return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-            deputyDetails, _ := client.GetDeputyDetails(ctx, deputyId)
-
-            vars := editDeputyHubVars{
-                Path:          r.URL.Path,
-                XSRFToken:     ctx.XSRFToken,
-                DeputyDetails: deputyDetails,
-            }
-
-            if err == nil {
-                vars.Success = true
-            }
-
-			return tmpl.ExecuteTemplate(w, "page", vars)
+			return Redirect(fmt.Sprintf("/deputy/%d/?success=true", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
@@ -94,7 +83,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 	}
 }
 
-func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
+func renameEditDeputyValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
 	errorCollection := sirius.ValidationErrors{}
 
 	for fieldName, value := range siriusError {

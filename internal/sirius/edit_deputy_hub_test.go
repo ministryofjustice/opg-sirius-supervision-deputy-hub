@@ -86,7 +86,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestAddDeputyNotesReturnsUnauthorisedClientError(t *testing.T) {
+func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))

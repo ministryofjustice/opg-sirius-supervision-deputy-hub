@@ -1,6 +1,9 @@
 {{ template "page" . }}
 {{ define "main" }}
      {{ template "deputy-hub" . }}
+     {{ if .Success }}
+            {{ template "success-banner" . }}
+     {{ end }}
      {{ template "navigation" . }}
 
     <header>
