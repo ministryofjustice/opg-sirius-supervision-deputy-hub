@@ -48,35 +48,5 @@ func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	DeputyNotes := EditDeputyNotes(v)
-
-	return DeputyNotes, err
+	return v, err
 }
-
-func ReformatTimestampDeputyNote(s DeputyNote) string {
-	return s.Timestamp
-}
-
-func EditDeputyNotes(v DeputyNoteCollection) DeputyNoteCollection {
-	var list DeputyNoteCollection
-	for _, s := range v {
-		note := DeputyNote{
-			DeputyId:        s.DeputyId,
-			UserId:          s.UserId,
-			UserDisplayName: s.UserDisplayName,
-			UserEmail:       s.UserEmail,
-			UserPhoneNumber: s.UserPhoneNumber,
-			ID:              s.ID,
-			Type:            s.Type,
-			NoteType:        s.NoteType,
-			NoteText:     s.NoteText,
-			Name:            s.Name,
-			Timestamp:       s.Timestamp,
-			Direction:       s.Direction,
-		}
-
-		list = append(list, note)
-	}
-	return list
-}
-
