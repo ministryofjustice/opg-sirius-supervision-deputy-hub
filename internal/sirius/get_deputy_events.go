@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sort"
 	"strings"
 )
 
@@ -91,6 +92,7 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 
 		list = append(list, event)
 	}
+	SortTimeLineNewestOneFirst(list)
 	return list
 }
 
@@ -103,4 +105,11 @@ func ReformatEventType(s DeputyEvent) string {
 	eventTypeArrayLength := len(eventTypeArray)
 	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
 	return eventTypeName
+}
+
+func SortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
+	sort.Slice(v, func(i, j int) bool {
+		return v[i].Timestamp > v[j].Timestamp
+	})
+	return v
 }
