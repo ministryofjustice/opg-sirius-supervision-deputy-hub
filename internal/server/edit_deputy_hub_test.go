@@ -16,7 +16,6 @@ type mockEditDeputyHubInformation struct {
 	lastCtx    sirius.Context
 	err        error
 	deputyData sirius.DeputyDetails
-	editDeputyData sirius.DeputyDetails
 }
 
 func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
