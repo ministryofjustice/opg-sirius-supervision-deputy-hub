@@ -1,6 +1,9 @@
 {{ template "page" . }}
 {{ define "main" }}
      {{ template "deputy-hub" . }}
+     {{ if .Success }}
+            {{ template "success-banner" . }}
+     {{ end }}
      {{ template "navigation" . }}
 
     <header>
@@ -40,6 +43,7 @@
                         Postal address
                     </dt>
                     <dd class="govuk-summary-list__value">
+                        {{ .DeputyDetails.OrganisationTeamOrDepartmentName }} <br>
                         {{ .DeputyDetails.AddressLine1 }} <br>
                         {{ .DeputyDetails.AddressLine2 }} <br>
                         {{ .DeputyDetails.AddressLine3 }} <br>
@@ -49,6 +53,9 @@
                     </dd>
                 </div>
             </dl>
+          <a href="{{ prefix (printf "/deputy/%d/manage-team-details" .DeputyDetails.ID) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+              Manage team details
+          </a>
         </div>
     </div>
 {{ end }}
