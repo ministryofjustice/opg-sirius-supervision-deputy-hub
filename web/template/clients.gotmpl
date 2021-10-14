@@ -39,8 +39,8 @@
                     -
                 </td>
                 <td class="govuk-table__cell reports nowrap due">
-                    {{/* TO DO in a future ticket */}}
-                    -
+                     {{if .Report.RevisedDueDate}} {{.Report.RevisedDueDate}} {{else}} {{.Report.DueDate}} {{end}}
+                     <span class="secondary court_ref">{{ .Report.Status }}</span>
                 </td>
                 <td class="govuk-table__cell">{{if .RiskScore}} {{.RiskScore}} {{else}} - {{end}}</td>
             </tr>

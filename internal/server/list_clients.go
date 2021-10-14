@@ -35,6 +35,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 		if err != nil {
 			return err
 		}
+
 		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId)
 		if err != nil {
 			return err

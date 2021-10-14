@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 	"time"
+	"io"
+	"os"
 )
 
 type apiOrder struct {
@@ -23,6 +25,12 @@ type apiOrder struct {
 
 type apiOrders []apiOrder
 
+type apiReport struct {
+    DueDate         string  `json:"duedate"`
+    RevisedDueDate  string  `json:"revisedduedate"`
+    Status          string  `json:"status"`
+}
+
 type apiClients struct {
 	Clients []struct {
 		ClientId            int    `json:"id"`
@@ -34,6 +42,7 @@ type apiClients struct {
 			Label string `json:"label"`
 		}
 		Orders apiOrders
+		Report apiReport
 	} `json:"persons"`
 }
 
@@ -59,7 +68,7 @@ type DeputyClient struct {
 type DeputyClientDetails []DeputyClient
 
 func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetails, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/clients", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -68,6 +77,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	if err != nil {
 		return nil, err
 	}
+	io.Copy(os.Stdout, resp.Body)
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -96,6 +106,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
+				Report:            t.Report
 			}
 			clients = append(clients, client)
 		}
