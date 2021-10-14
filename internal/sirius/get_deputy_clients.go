@@ -3,12 +3,12 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 	"time"
-	"io"
-	"os"
 )
 
 type apiOrder struct {
@@ -26,9 +26,9 @@ type apiOrder struct {
 type apiOrders []apiOrder
 
 type apiReport struct {
-    DueDate         string  `json:"duedate"`
-    RevisedDueDate  string  `json:"revisedduedate"`
-    Status          string  `json:"status"`
+	DueDate        string `json:"duedate"`
+	RevisedDueDate string `json:"revisedduedate"`
+	Status         string `json:"status"`
 }
 
 type apiClients struct {
@@ -63,6 +63,7 @@ type DeputyClient struct {
 	AccommodationType string
 	OrderStatus       string
 	SupervisionLevel  string
+	Report            apiReport
 }
 
 type DeputyClientDetails []DeputyClient
@@ -106,7 +107,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				Report:            t.Report
+				Report:            t.Report,
 			}
 			clients = append(clients, client)
 		}
