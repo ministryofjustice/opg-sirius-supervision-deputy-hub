@@ -69,6 +69,13 @@ func TestDeputyClientReturned(t *testing.T) {
             }
           }
         ],
+        "oldestNonLodgedAnnualReport": {
+          "dueDate": "01/01/2016",
+          "revisedDueDate": "01/05/2016",
+          "status": {
+            "label": "Pending"
+          }
+        },
         "riskScore": 5
       }
     ]
@@ -84,7 +91,21 @@ func TestDeputyClientReturned(t *testing.T) {
 	}
 
 	expectedResponse := DeputyClientDetails{
-		DeputyClient{ClientId: 67, Firstname: "John", Surname: "Fearless", CourtRef: "67422477", RiskScore: 5, AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)", OrderStatus: "Active", SupervisionLevel: "General"},
+		DeputyClient{
+		    ClientId: 67,
+		    Firstname: "John",
+		    Surname: "Fearless",
+		    CourtRef: "67422477",
+		    RiskScore: 5,
+		    AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
+		    OrderStatus: "Active",
+		    OldestReport: reportReturned{
+		        DueDate:  "01/01/2016",
+                RevisedDueDate: "01/05/2016",
+                StatusLabel: "Pending",
+		    },
+		    SupervisionLevel: "General",
+		    },
 	}
 
 	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
@@ -107,7 +128,7 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/1/clients",
+		URL:    svr.URL + "/api/v1/deputies/pa/1/clients",
 		Method: http.MethodGet,
 	}, err)
 }

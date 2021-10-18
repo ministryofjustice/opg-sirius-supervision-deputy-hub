@@ -34,9 +34,7 @@ type apiReport struct {
 type reportReturned struct {
 	DueDate        string
 	RevisedDueDate string
-	Status         struct {
-		Label string
-	}
+	StatusLabel    string
 }
 
 type apiClients struct {
@@ -115,7 +113,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport:      reportReturned(t.OldestReport),
+				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
 			}
 			clients = append(clients, client)
 		}

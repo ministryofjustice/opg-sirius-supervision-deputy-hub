@@ -21,18 +21,21 @@
     }
   },
   "users": {
-    "id":51,
-    "name":"case",
-    "phoneNumber":"12345678",
-    "teams":[],
-    "displayName":"case manager",
-    "deleted":false,
-    "email":"case.manager@opgtest.com",
-    "firstname":"case",
-    "surname":"manager",
-    "roles":["OPG User","Case Manager"],
-    "locked":false,
-    "suspended":false
+    "id": 51,
+    "name": "case",
+    "phoneNumber": "12345678",
+    "teams": [],
+    "displayName": "case manager",
+    "deleted": false,
+    "email": "case.manager@opgtest.com",
+    "firstname": "case",
+    "surname": "manager",
+    "roles": [
+      "OPG User",
+      "Case Manager"
+    ],
+    "locked": false,
+    "suspended": false
   },
   "deputies": [
     {
@@ -247,6 +250,15 @@
         "correspondenceByEmail": false,
         "correspondenceByWelsh": false,
         "occupation": null,
+        "oldestNonLodgedAnnualReport": {
+          "dueDate": "21/12/2015",
+          "revisedDueDate": null,
+          "status": {
+            "handle": "NON_COMPLIANT",
+            "label": "Non-compliant",
+            "deprecated": null
+          }
+        },
         "createdDate": "01\/01\/2015",
         "updatedDate": "2021-09-20T06:24:43+00:00",
         "personType": "Client",
@@ -1011,34 +1023,34 @@
       }
     }
   ],
-    "notes": [
-      {
-        "personId": 1,
-        "userId": 68,
-        "userDisplayName": "Finance User Testing",
-        "userEmail": "finance.user.testing@opgtest.com",
-        "userPhoneNumber": "12345678",
-        "id": 65,
-        "type": "NEW DEPUTY",
-        "noteType": "ORDER_CREATED",
-        "description": "notes",
-        "name": "Note added",
-        "createdTime": "20/09/2021 08:50:13",
-        "direction": null
-      },
-      {
-        "personId": 1,
-        "userId": 68,
-        "userDisplayName": "Finance User Testing",
-        "userEmail": "finance.user.testing@opgtest.com",
-        "userPhoneNumber": "12345678",
-        "id": 64,
-        "type": "OPEN",
-        "noteType": "ORDER_STATUS_UPDATED",
-        "description": "...and here are the notes",
-        "name": "Email received",
-        "createdTime": "20/09/2021 08:50:12",
-        "direction": null
-      }
-    ]
+  "notes": [
+    {
+      "personId": 1,
+      "userId": 68,
+      "userDisplayName": "Finance User Testing",
+      "userEmail": "finance.user.testing@opgtest.com",
+      "userPhoneNumber": "12345678",
+      "id": 65,
+      "type": "NEW DEPUTY",
+      "noteType": "ORDER_CREATED",
+      "description": "notes",
+      "name": "Note added",
+      "createdTime": "20/09/2021 08:50:13",
+      "direction": null
+    },
+    {
+      "personId": 1,
+      "userId": 68,
+      "userDisplayName": "Finance User Testing",
+      "userEmail": "finance.user.testing@opgtest.com",
+      "userPhoneNumber": "12345678",
+      "id": 64,
+      "type": "OPEN",
+      "noteType": "ORDER_STATUS_UPDATED",
+      "description": "...and here are the notes",
+      "name": "Email received",
+      "createdTime": "20/09/2021 08:50:12",
+      "direction": null
+    }
+  ]
 }
