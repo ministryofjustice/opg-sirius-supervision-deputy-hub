@@ -9,16 +9,6 @@ import (
 	"time"
 )
 
-// oldestNonLodgedAnnualReport":
-// {"dueDate":"21\/12\/2015",
-// "revisedDueDate":null,
-// "status":{
-// 	"handle":"NON_COMPLIANT",
-// 	"label":"Non-compliant",
-// 	"deprecated":null
-// }
-// }
-
 type apiOrder struct {
 	OrderStatus struct {
 		Label string `json:"label"`
@@ -125,21 +115,13 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport:      getOldestReport(t.OldestReport),
+				OldestReport:      reportReturned(t.OldestReport),
 			}
 			clients = append(clients, client)
 		}
 	}
 	alphabeticalSort(clients)
 	return clients, err
-}
-
-func getOldestReport(report apiReport) reportReturned {
-	var newReport reportReturned
-	newReport.DueDate = report.DueDate
-	newReport.RevisedDueDate = report.RevisedDueDate
-	newReport.Status.Label = report.Status.Label
-	return newReport
 }
 
 /*
