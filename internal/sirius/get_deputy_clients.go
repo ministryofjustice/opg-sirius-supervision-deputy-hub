@@ -23,6 +23,20 @@ type apiOrder struct {
 
 type apiOrders []apiOrder
 
+type apiReport struct {
+	DueDate        string `json:"dueDate"`
+	RevisedDueDate string `json:"revisedDueDate"`
+	Status         struct {
+		Label string `json:"label"`
+	} `json:"status"`
+}
+
+type reportReturned struct {
+	DueDate        string
+	RevisedDueDate string
+	StatusLabel    string
+}
+
 type apiClients struct {
 	Clients []struct {
 		ClientId            int    `json:"id"`
@@ -33,7 +47,8 @@ type apiClients struct {
 		ClientAccommodation struct {
 			Label string `json:"label"`
 		}
-		Orders apiOrders
+		Orders       apiOrders `json:"orders"`
+		OldestReport apiReport `json:"oldestNonLodgedAnnualReport"`
 	} `json:"persons"`
 }
 
@@ -54,12 +69,13 @@ type DeputyClient struct {
 	AccommodationType string
 	OrderStatus       string
 	SupervisionLevel  string
+	OldestReport      reportReturned
 }
 
 type DeputyClientDetails []DeputyClient
 
 func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetails, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/clients", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -68,6 +84,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -96,6 +113,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
+				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
 			}
 			clients = append(clients, client)
 		}
