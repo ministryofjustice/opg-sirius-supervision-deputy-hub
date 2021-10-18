@@ -22,6 +22,7 @@
         </thead>
 
         <tbody class="govuk-table__body">
+        {{ . }}
         {{ range .DeputyClientsDetails }}
             <tr class="govuk-table__row">
                 <td class="govuk-table__cell client_name_ref nowrap">
@@ -39,8 +40,15 @@
                     -
                 </td>
                 <td class="govuk-table__cell reports nowrap due">
-                     {{if .Report.RevisedDueDate}} {{.Report.RevisedDueDate}} {{else}} {{.Report.DueDate}} {{end}}
-                     <span class="secondary court_ref">{{ .Report.Status }}</span>
+                  {{if .OldestReport}}
+                    {{if .OldestReport.RevisedDueDate}} 
+                      {{ .OldestReport.RevisedDueDate}} 
+                    {{ else }}
+                     {{ .OldestReport.DueDate }} 
+                    {{end}}
+                    <br>
+                    {{ .OldestReport.Status.Label }}
+                  {{ end }}
                 </td>
                 <td class="govuk-table__cell">{{if .RiskScore}} {{.RiskScore}} {{else}} - {{end}}</td>
             </tr>

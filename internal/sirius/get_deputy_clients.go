@@ -3,13 +3,21 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"sort"
 	"strings"
 	"time"
 )
+
+// oldestNonLodgedAnnualReport":
+// {"dueDate":"21\/12\/2015",
+// "revisedDueDate":null,
+// "status":{
+// 	"handle":"NON_COMPLIANT",
+// 	"label":"Non-compliant",
+// 	"deprecated":null
+// }
+// }
 
 type apiOrder struct {
 	OrderStatus struct {
@@ -26,9 +34,19 @@ type apiOrder struct {
 type apiOrders []apiOrder
 
 type apiReport struct {
-	DueDate        string `json:"duedate"`
-	RevisedDueDate string `json:"revisedduedate"`
-	Status         string `json:"status"`
+	DueDate        string `json:"dueDate"`
+	RevisedDueDate string `json:"revisedDueDate"`
+	Status         struct {
+		Label string `json:"label"`
+	} `json:"status"`
+}
+
+type reportReturned struct {
+	DueDate        string
+	RevisedDueDate string
+	Status         struct {
+		Label string
+	}
 }
 
 type apiClients struct {
@@ -41,8 +59,8 @@ type apiClients struct {
 		ClientAccommodation struct {
 			Label string `json:"label"`
 		}
-		Orders apiOrders
-		Report apiReport
+		Orders       apiOrders `json:"orders"`
+		OldestReport apiReport `json:"oldestNonLodgedAnnualReport"`
 	} `json:"persons"`
 }
 
@@ -63,7 +81,7 @@ type DeputyClient struct {
 	AccommodationType string
 	OrderStatus       string
 	SupervisionLevel  string
-	Report            apiReport
+	OldestReport      reportReturned
 }
 
 type DeputyClientDetails []DeputyClient
@@ -78,7 +96,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 	if err != nil {
 		return nil, err
 	}
-	io.Copy(os.Stdout, resp.Body)
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -107,13 +125,21 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				Report:            t.Report,
+				OldestReport:      getOldestReport(t.OldestReport),
 			}
 			clients = append(clients, client)
 		}
 	}
 	alphabeticalSort(clients)
 	return clients, err
+}
+
+func getOldestReport(report apiReport) reportReturned {
+	var newReport reportReturned
+	newReport.DueDate = report.DueDate
+	newReport.RevisedDueDate = report.RevisedDueDate
+	newReport.Status.Label = report.Status.Label
+	return newReport
 }
 
 /*
