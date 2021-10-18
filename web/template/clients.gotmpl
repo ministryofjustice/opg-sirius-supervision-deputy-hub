@@ -6,7 +6,6 @@
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">Clients</h1>
     </header>
-
     <table id="pa-clients-3" class="govuk-table sortable">
 
         <thead class="govuk-table__head">
@@ -39,8 +38,16 @@
                     -
                 </td>
                 <td class="govuk-table__cell reports nowrap due">
-                    {{/* TO DO in a future ticket */}}
-                    -
+                  {{if ne .OldestReport.DueDate "" }}
+                    {{if .OldestReport.RevisedDueDate}}
+                      {{ .OldestReport.RevisedDueDate}}
+                    {{ else }}
+                     {{ .OldestReport.DueDate }}
+                    {{end}}
+                    <br>
+                    {{ .OldestReport.StatusLabel }}
+                  {{else}} -
+                  {{ end }}
                 </td>
                 <td class="govuk-table__cell">{{if .RiskScore}} {{.RiskScore}} {{else}} - {{end}}</td>
             </tr>
