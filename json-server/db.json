@@ -933,6 +933,245 @@
         "supervisionCaseOwner": [],
         "riskScore": null,
         "maritalStatus": "Married"
+      },
+      {
+        "id": 71,
+        "uId": "7000-0000-2290",
+        "normalizedUid": 700000002290,
+        "errorMessages": [],
+        "caseRecNumber": "93404674",
+        "researchOptOut": false,
+        "workPhoneNumber": {
+          "id": 87,
+          "phoneNumber": "",
+          "type": "Work",
+          "default": false
+        },
+        "homePhoneNumber": null,
+        "mobilePhoneNumber": null,
+        "email": "",
+        "dob": "01\/01\/1950",
+        "dateOfDeath": "",
+        "salutation": "Test",
+        "firstname": "Something",
+        "middlenames": "Here",
+        "surname": "Here",
+        "otherNames": null,
+        "addressLine1": "addressLine1",
+        "addressLine2": "addressLine2",
+        "addressLine3": "addressLine3",
+        "town": "town",
+        "county": "",
+        "postcode": "AA66 7BB",
+        "country": "",
+        "isAirmailRequired": false,
+        "phoneNumber": "",
+        "phoneNumbers": [
+          {
+            "id": 87,
+            "phoneNumber": "",
+            "type": "Work",
+            "default": false
+          }
+        ],
+        "reference": [],
+        "oldestNonLodgedAnnualReport": null,
+        "correspondenceByPost": true,
+        "correspondenceByPhone": false,
+        "correspondenceByEmail": false,
+        "correspondenceByWelsh": false,
+        "occupation": null,
+        "createdDate": "01\/01\/2016",
+        "updatedDate": "2021-09-20T06:24:50+00:00",
+        "personType": "Client",
+        "specialCorrespondenceRequirements": {
+          "audioTape": false,
+          "largePrint": false,
+          "hearingImpaired": true,
+          "spellingOfNameRequiresCare": false
+        },
+        "interpreterRequired": "",
+        "previousNames": "",
+        "cannotSignForm": null,
+        "applyingForFeeRemission": null,
+        "receivingBenefits": null,
+        "receivedDamageAward": null,
+        "hasLowIncome": null,
+        "signatureDate": null,
+        "hasPreviousLpa": null,
+        "notesForPreviousLpa": null,
+        "companyName": null,
+        "statusDate": "10\/01\/2016",
+        "medicalCondition": "Alzheimer's",
+        "clientStatus": {
+          "handle": "ACTIVE",
+          "label": "Active",
+          "deprecated": null
+        },
+        "clientAccommodation": {
+          "handle": "SUPPORTED HOUSING",
+          "label": "Supported Housing",
+          "deprecated": false
+        },
+        "orders": [
+          {
+            "id": 62,
+            "uId": "7000-0000-2415",
+            "normalizedUid": 700000002415,
+            "errorMessages": [],
+            "caseRecNumber": "16548855",
+            "caseSubtype": "pfa",
+            "caseAttorneyJointlyAndSeverally": false,
+            "caseAttorneyJointly": false,
+            "caseAttorneyJointlyAndJointlyAndSeverally": false,
+            "latestSupervisionLevel": {
+              "id": 16,
+              "appliesFrom": "01\/01\/2016",
+              "supervisionLevel": {
+                "handle": "GENERAL",
+                "label": "General",
+                "deprecated": null
+              },
+              "assetLevel": {
+                "handle": "HIGH",
+                "label": "\u00a321k or more",
+                "deprecated": null
+              },
+              "notes": "Here's some supervision level log notes...",
+              "createdDate": "20\/09\/2021"
+            },
+            "howDeputyAppointed": {
+              "handle": "JOINTANDSEVERALLY",
+              "label": "Joint and Severally",
+              "deprecated": null
+            },
+            "orderDate": "01\/01\/2016",
+            "orderStatus": {
+              "handle": "ACTIVE",
+              "label": "Active",
+              "deprecated": false
+            },
+            "deputies": [
+              {
+                "statusOnCaseCalculated": {
+                  "handle": "ACTIVE",
+                  "label": "Active",
+                  "deprecated": null,
+                  "description": "Deputy linked to an active case"
+                },
+                "feePayer": false,
+                "canUnlink": false,
+                "canUnlinkIfError": true,
+                "deputy": {
+                  "id": 1,
+                  "uId": "7000-0000-2530",
+                  "normalizedUid": 700000002530,
+                  "errorMessages": [],
+                  "caseRecNumber": null,
+                  "researchOptOut": false,
+                  "workPhoneNumber": {
+                    "id": 95,
+                    "phoneNumber": "0123456789",
+                    "type": "Work",
+                    "default": false
+                  },
+                  "homePhoneNumber": {
+                    "id": 96,
+                    "phoneNumber": "",
+                    "type": "Home",
+                    "default": false
+                  },
+                  "mobilePhoneNumber": null,
+                  "email": "test@test.com",
+                  "dob": "",
+                  "dateOfDeath": "",
+                  "salutation": "",
+                  "firstname": null,
+                  "middlenames": null,
+                  "surname": null,
+                  "otherNames": "",
+                  "addressLine1": "Test address line 1",
+                  "addressLine2": "Test address line 2",
+                  "addressLine3": "Test address line 3",
+                  "town": "Test city",
+                  "county": "Test county",
+                  "postcode": "E6 2PU",
+                  "country": "",
+                  "isAirmailRequired": false,
+                  "phoneNumber": "0123456789",
+                  "phoneNumbers": [
+                    {
+                      "id": 95,
+                      "phoneNumber": "0123456789",
+                      "type": "Work",
+                      "default": false
+                    },
+                    {
+                      "id": 96,
+                      "phoneNumber": "",
+                      "type": "Home",
+                      "default": false
+                    }
+                  ],
+                  "reference": [],
+                  "correspondenceByPost": false,
+                  "correspondenceByPhone": false,
+                  "correspondenceByEmail": false,
+                  "correspondenceByWelsh": false,
+                  "occupation": null,
+                  "createdDate": "21\/09\/2021",
+                  "updatedDate": "2021-09-21T05:37:59+00:00",
+                  "personType": "Deputy",
+                  "specialCorrespondenceRequirements": {
+                    "audioTape": false,
+                    "largePrint": false,
+                    "hearingImpaired": false,
+                    "spellingOfNameRequiresCare": false
+                  },
+                  "interpreterRequired": null,
+                  "deputyReferenceNumber": null,
+                  "deputyOrderCount": null,
+                  "deputyCompliance": null,
+                  "relationshipToClient": null,
+                  "statusDate": null,
+                  "previousNames": "",
+                  "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)",
+                  "deputyType": {
+                    "handle": "PA",
+                    "label": "Public Authority",
+                    "deprecated": null
+                  }
+                },
+                "deputyType": {
+                  "handle": "PA",
+                  "label": "Public Authority",
+                  "deprecated": null
+                },
+                "statusOnCase": {
+                  "handle": "ACTIVE",
+                  "label": "Active",
+                  "deprecated": null,
+                  "description": "Deputy linked to an active case"
+                },
+                "statusOnCaseOverride": null,
+                "relationshipToClient": null,
+                "relationshipOther": null,
+                "mainCorrespondent": true,
+                "statusChangeDate": null,
+                "statusNotes": null
+              }
+            ],
+            "orderSubtype": {
+              "handle": "NEW DEPUTY",
+              "label": "New deputy",
+              "deprecated": null
+            }
+          }
+        ],
+        "casesManagedAsHybrid": false,
+        "supervisionCaseOwner": [],
+        "riskScore": null,
+        "maritalStatus": "Widowed"
       }
     ]
   },

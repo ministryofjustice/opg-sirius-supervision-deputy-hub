@@ -38,7 +38,7 @@
                     -
                 </td>
                 <td class="govuk-table__cell reports nowrap due">
-                  {{if .OldestReport}}
+                  {{if ne .OldestReport.DueDate "" }}
                     {{if .OldestReport.RevisedDueDate}}
                       {{ .OldestReport.RevisedDueDate}}
                     {{ else }}
@@ -46,6 +46,7 @@
                     {{end}}
                     <br>
                     {{ .OldestReport.StatusLabel }}
+                  {{else}} -
                   {{ end }}
                 </td>
                 <td class="govuk-table__cell">{{if .RiskScore}} {{.RiskScore}} {{else}} - {{end}}</td>
