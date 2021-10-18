@@ -250,15 +250,6 @@
         "correspondenceByEmail": false,
         "correspondenceByWelsh": false,
         "occupation": null,
-        "oldestNonLodgedAnnualReport": {
-          "dueDate": "21/12/2015",
-          "revisedDueDate": null,
-          "status": {
-            "handle": "NON_COMPLIANT",
-            "label": "Non-compliant",
-            "deprecated": null
-          }
-        },
         "createdDate": "01\/01\/2015",
         "updatedDate": "2021-09-20T06:24:43+00:00",
         "personType": "Client",
@@ -491,6 +482,15 @@
           }
         ],
         "reference": [],
+        "oldestNonLodgedAnnualReport": {
+          "dueDate": "21/12/2015",
+          "revisedDueDate": null,
+          "status": {
+            "handle": "NON_COMPLIANT",
+            "label": "Non-compliant",
+            "deprecated": null
+          }
+        },
         "correspondenceByPost": true,
         "correspondenceByPhone": false,
         "correspondenceByEmail": false,
@@ -729,6 +729,15 @@
           }
         ],
         "reference": [],
+        "oldestNonLodgedAnnualReport": {
+          "dueDate": "01/10/2018",
+          "revisedDueDate": null,
+          "status": {
+            "handle": "PENDING",
+            "label": "Pending",
+            "deprecated": null
+          }
+        },
         "correspondenceByPost": true,
         "correspondenceByPhone": false,
         "correspondenceByEmail": false,

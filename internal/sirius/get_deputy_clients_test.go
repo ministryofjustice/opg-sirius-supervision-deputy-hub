@@ -14,7 +14,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := ` {
+        json := ` {
     "persons": [
       {
         "id": 67,
@@ -105,7 +105,7 @@ func TestDeputyClientReturned(t *testing.T) {
                 StatusLabel: "Pending",
 		    },
 		    SupervisionLevel: "General",
-		    },
+        },
 	}
 
 	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)

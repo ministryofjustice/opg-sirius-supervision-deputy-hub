@@ -24,4 +24,9 @@ describe("Clients tab", () => {
     it("lists clients with active/closed/duplicate orders", () => {
         cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 2);
     });
+
+    it("Clients have a report due dates", () => {
+        cy.get(':nth-child(1) > .reports').should("contain", "21/12/2015");
+        cy.get(':nth-child(2) > .reports').should("contain", "01/10/2018");
+    });
 });
