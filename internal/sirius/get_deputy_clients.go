@@ -74,7 +74,7 @@ type DeputyClient struct {
 
 type DeputyClientDetails []DeputyClient
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string) (DeputyClientDetails, error) {
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string, sortOrder string) (DeputyClientDetails, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
 	if err != nil {
 		return nil, err
@@ -118,14 +118,14 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string) (DeputyCl
 			clients = append(clients, client)
 		}
 	}
-    switch s {
-    case "sort=report_due:asc":
-        reportDueScoreSort(clients)
-    case "sort=crec:asc":
-        SortChosenColumn(clients, "RiskScore")
-    default:
-        SortChosenColumn(clients, "Surname")
-    }
+	switch s {
+	case "sort=report_due":
+		reportDueScoreSort(clients, sortOrder)
+	case "sort=crec":
+		crecScoreSort(clients, sortOrder)
+	default:
+		alphabeticalSort(clients, sortOrder)
+	}
 
 	return clients, err
 }
@@ -199,29 +199,45 @@ func removeOpenStatusOrders(orders Orders) Orders {
 	return updatedOrders
 }
 
-func alphabeticalSort(clients DeputyClientDetails) DeputyClientDetails {
+func alphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	if len(clients) > 1 {
 		sort.Slice(clients, func(i, j int) bool {
-            return clients[i].Surname < clients[j].Surname
+			if sortOrder == "asc" {
+				return clients[i].Surname < clients[j].Surname
+			} else {
+				return clients[i].Surname > clients[j].Surname
+			}
 		})
 	}
 	return clients
 }
 
-func crecScoreSort(clients DeputyClientDetails) DeputyClientDetails {
+func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
-		return clients[i].RiskScore > clients[j].RiskScore
+		if sortOrder == "asc" {
+			return clients[i].RiskScore > clients[j].RiskScore
+		} else {
+			return clients[i].RiskScore < clients[j].RiskScore
+		}
 	})
 	return clients
 }
 
-func reportDueScoreSort(clients DeputyClientDetails) DeputyClientDetails {
+func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
-        if (len(clients[i].OldestReport.RevisedDueDate) != 0) {
-            return clients[i].OldestReport.RevisedDueDate < clients[j].OldestReport.RevisedDueDate
-        } else {
-            return  clients[i].OldestReport.DueDate < clients[j].OldestReport.DueDate
-        }
+		if len(clients[i].OldestReport.RevisedDueDate) != 0 {
+			if sortOrder == "asc" {
+				return clients[i].OldestReport.RevisedDueDate < clients[j].OldestReport.RevisedDueDate
+			} else {
+				return clients[i].OldestReport.RevisedDueDate > clients[j].OldestReport.RevisedDueDate
+			}
+		} else {
+			if sortOrder == "asc" {
+				return clients[i].OldestReport.DueDate < clients[j].OldestReport.DueDate
+			} else {
+				return clients[i].OldestReport.DueDate > clients[j].OldestReport.DueDate
+			}
+		}
 	})
 	return clients
 }
