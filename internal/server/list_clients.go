@@ -5,10 +5,11 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int) (sirius.DeputyClientDetails, error)
+	GetDeputyClients(sirius.Context, int, string) (sirius.DeputyClientDetails, error)
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 }
 
@@ -36,7 +37,11 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			return err
 		}
 
-		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId)
+		t := r.URL.String();
+		s := strings.Split(t, "?");
+		q := s[1]
+
+		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId, q)
 		if err != nil {
 			return err
 		}
