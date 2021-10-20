@@ -227,9 +227,9 @@ func AlphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClien
 func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
 		if sortOrder == "asc" {
-			return clients[i].RiskScore > clients[j].RiskScore
-		} else {
 			return clients[i].RiskScore < clients[j].RiskScore
+		} else {
+			return clients[i].RiskScore > clients[j].RiskScore
 		}
 	})
 	return clients
@@ -237,18 +237,24 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 
 func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
-		if len(clients[i].OldestReport.RevisedDueDate) != 0 {
+		if clients[i].OldestReport.RevisedDueDate != "null" {
+            firstTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[i].OldestReport.RevisedDueDate)
+            secondTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[j].OldestReport.RevisedDueDate)
 			if sortOrder == "asc" {
-				return clients[i].OldestReport.RevisedDueDate < clients[j].OldestReport.RevisedDueDate
+				return  firstTime.Before(secondTime)
 			} else {
-				return clients[i].OldestReport.RevisedDueDate > clients[j].OldestReport.RevisedDueDate
+				return secondTime.Before(firstTime)
 			}
 		} else {
+		    firstTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[i].OldestReport.DueDate)
+            secondTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[j].OldestReport.DueDate)
+            fmt.Println(firstTime)
+            fmt.Println(secondTime)
 			if sortOrder == "asc" {
-				return clients[i].OldestReport.DueDate < clients[j].OldestReport.DueDate
-			} else {
-				return clients[i].OldestReport.DueDate > clients[j].OldestReport.DueDate
-			}
+                return  firstTime.Before(secondTime)
+            } else {
+                return secondTime.Before(firstTime)
+            }
 		}
 	})
 	return clients
