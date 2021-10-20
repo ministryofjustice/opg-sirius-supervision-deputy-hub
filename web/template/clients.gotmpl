@@ -10,19 +10,38 @@
 
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
-                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">Client</button>
+            {{if eq .AriaSorting.SurnameAriaSort "none" }} 
+              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+              onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
+            {{ else if eq .AriaSorting.SurnameAriaSort "ascending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">Client</button>
+            {{ else if eq .AriaSorting.SurnameAriaSort "descending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
+            {{end }}
+
             </th>
             <th scope="col" class="govuk-table__header">Accomodation type</th>
             <th scope="col" class="govuk-table__header">Status</th>
             <th scope="col" class="govuk-table__header">Supervision level</th>
             <th scope="col" class="govuk-table__header">Visits</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+            {{if eq .AriaSorting.ReportDueAriaSort "none" }} 
+              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
               onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=report_due:asc" .DeputyDetails.ID) }}">Report due</button>
-            </th>
-            <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
-                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
-            </th>
+            {{ else if eq .AriaSorting.ReportDueAriaSort "ascending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=report_due:desc" .DeputyDetails.ID) }}">Report due</button>
+            {{ else if eq .AriaSorting.ReportDueAriaSort "descending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=report_due:asc" .DeputyDetails.ID) }}">Report due</button>
+            {{end }}
+              </th>
+            {{if eq .AriaSorting.CRECAriaSort "none" }} 
+              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+              onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
+            {{ else if eq .AriaSorting.CRECAriaSort "ascending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">CREC</button>
+            {{ else if eq .AriaSorting.CRECAriaSort "descending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
+            {{end }}
+             </th>
         </tr>
         </thead>
 

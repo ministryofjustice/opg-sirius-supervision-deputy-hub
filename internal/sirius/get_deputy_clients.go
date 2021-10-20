@@ -74,30 +74,36 @@ type DeputyClient struct {
 
 type DeputyClientDetails []DeputyClient
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string, sortOrder string) (DeputyClientDetails, error) {
+type AriaSorting struct {
+	SurnameAriaSort   string
+	ReportDueAriaSort string
+	CRECAriaSort      string
+}
+
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, ErrUnauthorized
+		return nil, AriaSorting{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, newStatusError(resp)
+		return nil, AriaSorting{}, newStatusError(resp)
 	}
 
 	var v apiClients
 	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	var clients DeputyClientDetails
@@ -118,7 +124,13 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string, sortOrder
 			clients = append(clients, client)
 		}
 	}
-	switch s {
+
+	var aria AriaSorting
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=report_due")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+
+	switch columnBeingSorted {
 	case "sort=report_due":
 		reportDueScoreSort(clients, sortOrder)
 	case "sort=crec":
@@ -127,7 +139,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, s string, sortOrder
 		alphabeticalSort(clients, sortOrder)
 	}
 
-	return clients, err
+	return clients, aria, err
 }
 
 /*
@@ -240,4 +252,18 @@ func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 		}
 	})
 	return clients
+}
+
+func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
+	if functionCalling == columnBeingSorted {
+		if sortOrder == "asc" {
+			return "ascending"
+		} else if sortOrder == "desc" {
+			return "descending"
+		}
+		return "none"
+	} else {
+		return "none"
+	}
+
 }

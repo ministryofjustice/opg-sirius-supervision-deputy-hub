@@ -10,13 +10,14 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int, string, string) (sirius.DeputyClientDetails, error)
+	GetDeputyClients(sirius.Context, int, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 }
 
 type listClientsVars struct {
 	Path                 string
 	XSRFToken            string
+	AriaSorting          sirius.AriaSorting
 	DeputyClientsDetails sirius.DeputyClientDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
@@ -45,7 +46,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 		k1 := k[0]
 		k2 := k[1]
 
-		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId, k1, k2)
+		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, k1, k2)
 		if err != nil {
 			return err
 		}
@@ -55,6 +56,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			XSRFToken:            ctx.XSRFToken,
 			DeputyClientsDetails: deputyClientsDetails,
 			DeputyDetails:        deputyDetails,
+			AriaSorting:          ariaSorting,
 		}
 
 		switch r.Method {
