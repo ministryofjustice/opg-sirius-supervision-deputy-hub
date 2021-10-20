@@ -2,19 +2,20 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyClientReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-        json := ` {
+	json := ` {
     "persons": [
       {
         "id": 67,
@@ -92,25 +93,26 @@ func TestDeputyClientReturned(t *testing.T) {
 
 	expectedResponse := DeputyClientDetails{
 		DeputyClient{
-		    ClientId: 67,
-		    Firstname: "John",
-		    Surname: "Fearless",
-		    CourtRef: "67422477",
-		    RiskScore: 5,
-		    AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
-		    OrderStatus: "Active",
-		    OldestReport: reportReturned{
-		        DueDate:  "01/01/2016",
-                RevisedDueDate: "01/05/2016",
-                StatusLabel: "Pending",
-		    },
-		    SupervisionLevel: "General",
-        },
+			ClientId:          67,
+			Firstname:         "John",
+			Surname:           "Fearless",
+			CourtRef:          "67422477",
+			RiskScore:         5,
+			AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
+			OrderStatus:       "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2016",
+				RevisedDueDate: "01/05/2016",
+				StatusLabel:    "Pending",
+			},
+			SupervisionLevel: "General",
+		},
 	}
 
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
 
 	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
 }
 
@@ -121,10 +123,10 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
 
 	expectedResponse := DeputyClientDetails(nil)
-
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -140,10 +142,392 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
-
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	expectedResponse := DeputyClientDetails(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 }
+
+func SetUpTestData() DeputyClientDetails {
+	clients := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "22/01/2018",
+				RevisedDueDate: "22/06/2018",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "23/01/2017",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+	return clients
+}
+
+func TestAlphabeticalSort(t *testing.T) {
+	testData := SetUpTestData()
+	expectedAscendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "22/01/2018",
+				RevisedDueDate: "22/06/2018",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "23/01/2017",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	expectedDescendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "23/01/2017",
+				RevisedDueDate: "null",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "22/01/2018",
+				RevisedDueDate: "22/06/2018",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+	assert.Equal(t, AlphabeticalSort(testData, "asc"), expectedAscendingResponse)
+	assert.Equal(t, AlphabeticalSort(testData, "desc"), expectedDescendingResponse)
+}
+
+// func TestCrecScoreSort(t *testing.T) {
+// 	testData := SetUpTestData()
+// 	expectedAscendingResponse := DeputyClientDetails{
+// 		DeputyClient{
+// 			ClientId:    92,
+// 			Firstname:   "Louis",
+// 			Surname:     "Dauphin",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "01/01/2000",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    99,
+// 			Firstname:   "Go",
+// 			Surname:     "Taskforce",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "05/01/2017",
+// 				RevisedDueDate: "05/05/2017",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    87,
+// 			Firstname:   "Margaret",
+// 			Surname:     "Bavaria-Straubing",
+// 			RiskScore:   2,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "22/01/2018",
+// 				RevisedDueDate: "22/06/2018",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    76,
+// 			Firstname:   "Agnes",
+// 			Surname:     "Burgundy",
+// 			RiskScore:   5,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "23/01/2017",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 	}
+
+// 	expectedDescendingResponse := DeputyClientDetails{
+// 		DeputyClient{
+// 			ClientId:    76,
+// 			Firstname:   "Agnes",
+// 			Surname:     "Burgundy",
+// 			RiskScore:   5,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "23/01/2017",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    87,
+// 			Firstname:   "Margaret",
+// 			Surname:     "Bavaria-Straubing",
+// 			RiskScore:   2,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "22/01/2018",
+// 				RevisedDueDate: "22/06/2018",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    99,
+// 			Firstname:   "Go",
+// 			Surname:     "Taskforce",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "05/01/2017",
+// 				RevisedDueDate: "05/05/2017",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    92,
+// 			Firstname:   "Louis",
+// 			Surname:     "Dauphin",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "01/01/2000",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 	}
+// 	assert.Equal(t, crecScoreSort(testData, "asc"), expectedAscendingResponse)
+// 	assert.Equal(t, crecScoreSort(testData, "desc"), expectedDescendingResponse)
+// }
+
+// func TestReportDueScoreSortkate(t *testing.T) {
+// 	testData := SetUpTestData()
+// 	expectedAscendingResponse := DeputyClientDetails{
+// 		DeputyClient{
+// 			ClientId:    76,
+// 			Firstname:   "Agnes",
+// 			Surname:     "Burgundy",
+// 			RiskScore:   5,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "23/01/2017",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    92,
+// 			Firstname:   "Louis",
+// 			Surname:     "Dauphin",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "01/01/2000",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+
+// 		DeputyClient{
+// 			ClientId:    99,
+// 			Firstname:   "Go",
+// 			Surname:     "Taskforce",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "05/01/2017",
+// 				RevisedDueDate: "05/05/2017",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    87,
+// 			Firstname:   "Margaret",
+// 			Surname:     "Bavaria-Straubing",
+// 			RiskScore:   2,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "22/01/2018",
+// 				RevisedDueDate: "22/06/2018",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 	}
+
+// 	expectedDescendingResponse := DeputyClientDetails{
+
+// 		DeputyClient{
+// 			ClientId:    87,
+// 			Firstname:   "Margaret",
+// 			Surname:     "Bavaria-Straubing",
+// 			RiskScore:   2,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "22/01/2018",
+// 				RevisedDueDate: "22/06/2018",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    99,
+// 			Firstname:   "Go",
+// 			Surname:     "Taskforce",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "05/01/2017",
+// 				RevisedDueDate: "05/05/2017",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    76,
+// 			Firstname:   "Agnes",
+// 			Surname:     "Burgundy",
+// 			RiskScore:   5,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "23/01/2017",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 		DeputyClient{
+// 			ClientId:    92,
+// 			Firstname:   "Louis",
+// 			Surname:     "Dauphin",
+// 			RiskScore:   1,
+// 			OrderStatus: "Active",
+// 			OldestReport: reportReturned{
+// 				DueDate:        "01/01/2000",
+// 				RevisedDueDate: "null",
+// 				StatusLabel:    "Non-compliant",
+// 			},
+// 		},
+// 	}
+// 	assert.Equal(t, ReportDueScoreSort(testData, "asc"), expectedAscendingResponse)
+// 	assert.Equal(t, ReportDueScoreSort(testData, "desc"), expectedDescendingResponse)
+// }
+
+// func TestChangeSortButtonDirection(t *testing.T) {
+// 	expectedResponse := "none"
+// 	assert.Equal(t, "expectedResponse", changeSortButtonDirection("asc", "sort=report_due", "sort=surname"))
+// }

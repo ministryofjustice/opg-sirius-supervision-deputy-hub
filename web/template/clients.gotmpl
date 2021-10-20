@@ -11,14 +11,13 @@
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             {{if eq .AriaSorting.SurnameAriaSort "none" }} 
-              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+              <th scope="col" class="govuk-table__header" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button"
               onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
-            {{ else if eq .AriaSorting.SurnameAriaSort "ascending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">Client</button>
+            {{ if eq .AriaSorting.SurnameAriaSort "ascending"}}
+              <th scope="col" class="govuk-table__header" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">Client</button>
             {{ else if eq .AriaSorting.SurnameAriaSort "descending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
+              <th scope="col" class="govuk-table__header" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
             {{end }}
-
             </th>
             <th scope="col" class="govuk-table__header">Accomodation type</th>
             <th scope="col" class="govuk-table__header">Status</th>
