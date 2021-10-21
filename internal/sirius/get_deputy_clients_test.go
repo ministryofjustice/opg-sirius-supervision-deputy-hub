@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -544,7 +545,60 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 	assert.Equal(t, expectedDescendingResponse, ReportDueScoreSort(testData, "desc"))
 }
 
-// func TestChangeSortButtonDirection(t *testing.T) {
-// 	expectedResponse := "none"
-// 	assert.Equal(t, "expectedResponse", changeSortButtonDirection("asc", "sort=report_due", "sort=surname"))
-// }
+func TestChangeSortButtonDirection(t *testing.T) {
+	tests := []struct {
+	    sortOrder string
+	    columnBeingSorted string
+	    functionCalling string
+		expectedResponse  string
+	}{
+		{sortOrder: "asc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=surname", expectedResponse: "none"},
+		{sortOrder: "other", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due",  expectedResponse: "none"},
+		{sortOrder: "asc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due", expectedResponse: "ascending"},
+		{sortOrder: "desc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due", expectedResponse: "descending"},
+	}
+
+	for _, tc := range tests {
+		result := ChangeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
+        assert.Equal(t, tc.expectedResponse, result)
+	}
+}
+
+func TestFormatDate(t *testing.T) {
+     expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
+     unformattedDate := "01/01/2000"
+     result := FormatDate(unformattedDate)
+     assert.Equal(t, expectedResponse, result)
+}
+
+func TestCompareDatesReturnsTrueForAsc(t *testing.T) {
+    expectedResponse := true
+    iDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
+    jDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
+    result := CompareDates("asc", iDueDate, jDueDate)
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestCompareDatesReturnsFalseForAsc(t *testing.T) {
+    expectedResponse := false
+    iDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
+    jDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
+    result := CompareDates("asc", iDueDate, jDueDate)
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestCompareDatesReturnsTrueForDesc(t *testing.T) {
+    expectedResponse := false
+    iDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
+    jDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
+    result := CompareDates("desc", iDueDate, jDueDate)
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestCompareDatesReturnsFalseForDesc(t *testing.T) {
+    expectedResponse := true
+    iDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
+    jDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
+    result := CompareDates("desc", iDueDate, jDueDate)
+    assert.Equal(t, expectedResponse, result)
+}

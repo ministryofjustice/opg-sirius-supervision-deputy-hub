@@ -235,14 +235,14 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 	return clients
 }
 
-func formatDate(unformattedDate string) time.Time {
+func FormatDate(unformattedDate string) time.Time {
 	unformattedDateArray := strings.Split(unformattedDate, "/")
 	restructuredDate := unformattedDateArray[2] + "-" + unformattedDateArray[1] + "-" + unformattedDateArray[0]
 	formattedDate, _ := time.Parse("2006-01-02", restructuredDate)
 	return formattedDate
 }
 
-func compareDates(sortOrder string, iDueDate, jDueDate time.Time) bool {
+func CompareDates(sortOrder string, iDueDate, jDueDate time.Time) bool {
 	if sortOrder == "asc" {
 		return iDueDate.Before(jDueDate)
 	} else {
@@ -254,22 +254,22 @@ func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 	sort.Slice(clients, func(i, j int) bool {
 
 		if clients[i].OldestReport.RevisedDueDate != "null" {
-			clientiDueDate := formatDate(clients[i].OldestReport.RevisedDueDate)
+			clientiDueDate := FormatDate(clients[i].OldestReport.RevisedDueDate)
 			if clients[j].OldestReport.RevisedDueDate != "null" {
-				clientjDueDate := formatDate(clients[j].OldestReport.RevisedDueDate)
-				return compareDates(sortOrder, clientiDueDate, clientjDueDate)
+				clientjDueDate := FormatDate(clients[j].OldestReport.RevisedDueDate)
+				return CompareDates(sortOrder, clientiDueDate, clientjDueDate)
 			} else {
-				clientjDueDate := formatDate(clients[j].OldestReport.DueDate)
-				return compareDates(sortOrder, clientiDueDate, clientjDueDate)
+				clientjDueDate := FormatDate(clients[j].OldestReport.DueDate)
+				return CompareDates(sortOrder, clientiDueDate, clientjDueDate)
 			}
 		} else {
-			clientiDueDate := formatDate(clients[i].OldestReport.DueDate)
+			clientiDueDate := FormatDate(clients[i].OldestReport.DueDate)
 			if clients[j].OldestReport.RevisedDueDate != "null" {
-				clientjDueDate := formatDate(clients[j].OldestReport.RevisedDueDate)
-				return compareDates(sortOrder, clientiDueDate, clientjDueDate)
+				clientjDueDate := FormatDate(clients[j].OldestReport.RevisedDueDate)
+				return CompareDates(sortOrder, clientiDueDate, clientjDueDate)
 			} else {
-				clientjDueDate := formatDate(clients[j].OldestReport.DueDate)
-				return compareDates(sortOrder, clientiDueDate, clientjDueDate)
+				clientjDueDate := FormatDate(clients[j].OldestReport.DueDate)
+				return CompareDates(sortOrder, clientiDueDate, clientjDueDate)
 			}
 		}
 	})
