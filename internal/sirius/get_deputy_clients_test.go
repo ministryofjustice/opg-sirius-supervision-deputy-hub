@@ -160,7 +160,7 @@ func SetUpTestData() DeputyClientDetails {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "01/01/2000",
-				RevisedDueDate: "null",
+				RevisedDueDate: "05/05/3000",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -176,7 +176,7 @@ func SetUpTestData() DeputyClientDetails {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    76,
 			Firstname:   "Agnes",
 			Surname:     "Burgundy",
@@ -184,22 +184,22 @@ func SetUpTestData() DeputyClientDetails {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
 				RevisedDueDate: "null",
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
-            ClientId:    99,
-            Firstname:   "Go",
-            Surname:     "Taskforce",
-            RiskScore:   2,
-            OrderStatus: "Active",
-            OldestReport: reportReturned{
-                DueDate:        "05/01/2017",
-                RevisedDueDate: "null",
-                StatusLabel:    "Non-compliant",
-            },
-        },
 	}
 	return clients
 }
@@ -431,18 +431,6 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 	testData := SetUpTestData()
 
 	expectedAscendingResponse := DeputyClientDetails{
-	DeputyClient{
-    			ClientId:    92,
-    			Firstname:   "Louis",
-    			Surname:     "Dauphin",
-    			RiskScore:   1,
-    			OrderStatus: "Active",
-    			OldestReport: reportReturned{
-    				DueDate:        "01/01/2000",
-    				RevisedDueDate: "null",
-    				StatusLabel:    "Non-compliant",
-    			},
-    		},
 		DeputyClient{
 			ClientId:    99,
 			Firstname:   "Go",
@@ -456,17 +444,29 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 			},
 		},
 		DeputyClient{
-        			ClientId:    76,
-        			Firstname:   "Agnes",
-        			Surname:     "Burgundy",
-        			RiskScore:   5,
-        			OrderStatus: "Active",
-        			OldestReport: reportReturned{
-        				DueDate:        "03/01/2017",
-        				RevisedDueDate: "null",
-        				StatusLabel:    "Non-compliant",
-        			},
-        		},
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
 		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
@@ -481,7 +481,7 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedAscendingResponse,  ReportDueScoreSort(testData, "asc"))
+	assert.Equal(t, expectedAscendingResponse, ReportDueScoreSort(testData, "asc"))
 }
 
 // func TestReportDueScoreSortDesc(t *testing.T) {
@@ -544,4 +544,3 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 // 	expectedResponse := "none"
 // 	assert.Equal(t, "expectedResponse", changeSortButtonDirection("asc", "sort=report_due", "sort=surname"))
 // }
-

@@ -236,27 +236,87 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 }
 
 func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+	fmt.Println("before")
+	fmt.Println(clients)
 	sort.Slice(clients, func(i, j int) bool {
+
 		if clients[i].OldestReport.RevisedDueDate != "null" {
-            firstTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[i].OldestReport.RevisedDueDate)
-            secondTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[j].OldestReport.RevisedDueDate)
-			if sortOrder == "asc" {
-				return  firstTime.Before(secondTime)
+			clientiReportRevisedDueDate := clients[i].OldestReport.RevisedDueDate
+			clientiReportRevisedDueDateArray := strings.Split(clientiReportRevisedDueDate, "/")
+			clientiRestructuredRevisedDueDate := clientiReportRevisedDueDateArray[2] + "-" + clientiReportRevisedDueDateArray[1] + "-" + clientiReportRevisedDueDateArray[0]
+			if clients[j].OldestReport.RevisedDueDate != "null" {
+				clientjReportRevisedDueDate := clients[j].OldestReport.RevisedDueDate
+				clientjReportRevisedDueDateArray := strings.Split(clientjReportRevisedDueDate, "/")
+				clientjRestructuredRevisedDueDate := clientjReportRevisedDueDateArray[2] + "-" + clientjReportRevisedDueDateArray[1] + "-" + clientjReportRevisedDueDateArray[0]
+				iRevisedDueDateTime, _ := time.Parse("2006-01-02", clientiRestructuredRevisedDueDate)
+				jRevisedDueDateTime, _ := time.Parse("2006-01-02", clientjRestructuredRevisedDueDate)
+				fmt.Println("iRevisedDueDateTime")
+				fmt.Println(iRevisedDueDateTime)
+				fmt.Println("jRevisedDueDateTime")
+				fmt.Println(jRevisedDueDateTime)
+				if sortOrder == "asc" {
+					return iRevisedDueDateTime.Before(jRevisedDueDateTime)
+				} else {
+					return jRevisedDueDateTime.Before(iRevisedDueDateTime)
+				}
 			} else {
-				return secondTime.Before(firstTime)
+				clientjReportRevisedDueDate := clients[j].OldestReport.DueDate
+				clientjReportRevisedDueDateArray := strings.Split(clientjReportRevisedDueDate, "/")
+				clientjRestructuredRevisedDueDate := clientjReportRevisedDueDateArray[2] + "-" + clientjReportRevisedDueDateArray[1] + "-" + clientjReportRevisedDueDateArray[0]
+				iRevisedDueDateTime, _ := time.Parse("2006-01-02", clientiRestructuredRevisedDueDate)
+				jRevisedDueDateTime, _ := time.Parse("2006-01-02", clientjRestructuredRevisedDueDate)
+				fmt.Println("iRevisedDueDateTime")
+				fmt.Println(iRevisedDueDateTime)
+				fmt.Println("jRevisedDueDateTime")
+				fmt.Println(jRevisedDueDateTime)
+				if sortOrder == "asc" {
+					return iRevisedDueDateTime.Before(jRevisedDueDateTime)
+				} else {
+					return jRevisedDueDateTime.Before(iRevisedDueDateTime)
+				}
 			}
 		} else {
-		    firstTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[i].OldestReport.DueDate)
-            secondTime, _ := time.Parse("time.stdZeroDay/time.stdZeroMonth/time.stdLongYear", clients[j].OldestReport.DueDate)
-            fmt.Println(firstTime)
-            fmt.Println(secondTime)
-			if sortOrder == "asc" {
-                return  firstTime.Before(secondTime)
-            } else {
-                return secondTime.Before(firstTime)
-            }
+			if clients[j].OldestReport.RevisedDueDate != "null" {
+				clientiReportDueDate := clients[i].OldestReport.DueDate
+				clientiReportDueDateArray := strings.Split(clientiReportDueDate, "/")
+				clientiRestructuredDueDate := clientiReportDueDateArray[2] + "-" + clientiReportDueDateArray[1] + "-" + clientiReportDueDateArray[0]
+				clientjReportRevisedDueDate := clients[j].OldestReport.RevisedDueDate
+				clientjReportRevisedDueDateArray := strings.Split(clientjReportRevisedDueDate, "/")
+				clientjRestructuredRevisedDueDate := clientjReportRevisedDueDateArray[2] + "-" + clientjReportRevisedDueDateArray[1] + "-" + clientjReportRevisedDueDateArray[0]
+				iDueDateTime, _ := time.Parse("2006-01-02", clientiRestructuredDueDate)
+				jDueDateTime, _ := time.Parse("2006-01-02", clientjRestructuredRevisedDueDate)
+				fmt.Println("iDueDateTime")
+				fmt.Println(iDueDateTime)
+				fmt.Println("jDueDateTime")
+				fmt.Println(jDueDateTime)
+				if sortOrder == "asc" {
+					return iDueDateTime.Before(jDueDateTime)
+				} else {
+					return jDueDateTime.Before(iDueDateTime)
+				}
+			} else {
+				clientiReportDueDate := clients[i].OldestReport.DueDate
+				clientiReportDueDateArray := strings.Split(clientiReportDueDate, "/")
+				clientiRestructuredDueDate := clientiReportDueDateArray[2] + "-" + clientiReportDueDateArray[1] + "-" + clientiReportDueDateArray[0]
+				clientjReportDueDate := clients[j].OldestReport.DueDate
+				clientjReportDueDateArray := strings.Split(clientjReportDueDate, "/")
+				clientjRestructuredDueDate := clientjReportDueDateArray[2] + "-" + clientjReportDueDateArray[1] + "-" + clientjReportDueDateArray[0]
+				iDueDateTime, _ := time.Parse("2006-01-02", clientiRestructuredDueDate)
+				jDueDateTime, _ := time.Parse("2006-01-02", clientjRestructuredDueDate)
+				fmt.Println("iDueDateTime")
+				fmt.Println(iDueDateTime)
+				fmt.Println("jDueDateTime")
+				fmt.Println(jDueDateTime)
+				if sortOrder == "asc" {
+					return iDueDateTime.Before(jDueDateTime)
+				} else {
+					return jDueDateTime.Before(iDueDateTime)
+				}
+			}
 		}
 	})
+	fmt.Println("after")
+	fmt.Println(clients)
 	return clients
 }
 
