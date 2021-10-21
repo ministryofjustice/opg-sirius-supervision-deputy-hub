@@ -209,7 +209,7 @@ func SetUpTestData() DeputyClientDetails {
 func TestAlphabeticalSortAsc(t *testing.T) {
 	testData := SetUpTestData()
 	expectedAscendingResponse := DeputyClientDetails{
-        DeputyClient{
+		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
 			Surname:     "Bavaria-Straubing",
@@ -233,7 +233,7 @@ func TestAlphabeticalSortAsc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    92,
 			Firstname:   "Louis",
 			Surname:     "Dauphin",
@@ -257,7 +257,7 @@ func TestAlphabeticalSortAsc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-    }
+	}
 
 	assert.Equal(t, AlphabeticalSort(testData, "asc"), expectedAscendingResponse)
 }
@@ -278,7 +278,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    92,
 			Firstname:   "Louis",
 			Surname:     "Dauphin",
@@ -302,7 +302,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
 			Surname:     "Bavaria-Straubing",
@@ -321,7 +321,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 func TestCrecScoreSortAsc(t *testing.T) {
 	testData := SetUpTestData()
 	expectedAscendingResponse := DeputyClientDetails{
-        DeputyClient{
+		DeputyClient{
 			ClientId:    92,
 			Firstname:   "Louis",
 			Surname:     "Dauphin",
@@ -345,7 +345,7 @@ func TestCrecScoreSortAsc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
 			Surname:     "Bavaria-Straubing",
@@ -358,18 +358,18 @@ func TestCrecScoreSortAsc(t *testing.T) {
 			},
 		},
 		DeputyClient{
- 			ClientId:    76,
- 			Firstname:   "Agnes",
- 			Surname:     "Burgundy",
- 			RiskScore:   5,
- 			OrderStatus: "Active",
- 			OldestReport: reportReturned{
- 				DueDate:        "03/01/2017",
- 				RevisedDueDate: "05/05/2017",
- 				StatusLabel:    "Non-compliant",
- 			},
- 		},
-    }
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
 
 	assert.Equal(t, expectedAscendingResponse, CrecScoreSort(testData, "asc"))
 }
@@ -390,7 +390,7 @@ func TestCrecScoreSortDesc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
 			Surname:     "Bavaria-Straubing",
@@ -414,7 +414,7 @@ func TestCrecScoreSortDesc(t *testing.T) {
 				StatusLabel:    "Non-compliant",
 			},
 		},
-        DeputyClient{
+		DeputyClient{
 			ClientId:    92,
 			Firstname:   "Louis",
 			Surname:     "Dauphin",
@@ -492,7 +492,7 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 	testData := SetUpTestData()
 
 	expectedDescendingResponse := DeputyClientDetails{
-        DeputyClient{
+		DeputyClient{
 			ClientId:    87,
 			Firstname:   "Margaret",
 			Surname:     "Bavaria-Straubing",
@@ -505,29 +505,29 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 			},
 		},
 		DeputyClient{
-                ClientId:    92,
-                Firstname:   "Louis",
-                Surname:     "Dauphin",
-                RiskScore:   1,
-                OrderStatus: "Active",
-                OldestReport: reportReturned{
-                    DueDate:        "01/01/2000",
-                    RevisedDueDate: "05/05/3000",
-                    StatusLabel:    "Non-compliant",
-                },
-        },
-        DeputyClient{
-            ClientId:    76,
-            Firstname:   "Agnes",
-            Surname:     "Burgundy",
-            RiskScore:   5,
-            OrderStatus: "Active",
-            OldestReport: reportReturned{
-                DueDate:        "03/01/2017",
-                RevisedDueDate: "05/05/2017",
-                StatusLabel:    "Non-compliant",
-            },
-        },
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
 		DeputyClient{
 			ClientId:    99,
 			Firstname:   "Go",
@@ -547,58 +547,73 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 
 func TestChangeSortButtonDirection(t *testing.T) {
 	tests := []struct {
-	    sortOrder string
-	    columnBeingSorted string
-	    functionCalling string
+		sortOrder         string
+		columnBeingSorted string
+		functionCalling   string
 		expectedResponse  string
 	}{
-		{sortOrder: "asc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=surname", expectedResponse: "none"},
-		{sortOrder: "other", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due",  expectedResponse: "none"},
-		{sortOrder: "asc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due", expectedResponse: "ascending"},
-		{sortOrder: "desc", columnBeingSorted:  "sort=report_due",  functionCalling: "sort=report_due", expectedResponse: "descending"},
+		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=surname", expectedResponse: "none"},
+		{sortOrder: "other", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "none"},
+		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "ascending"},
+		{sortOrder: "desc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "descending"},
 	}
 
 	for _, tc := range tests {
 		result := ChangeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
-        assert.Equal(t, tc.expectedResponse, result)
+		assert.Equal(t, tc.expectedResponse, result)
 	}
 }
 
 func TestFormatDate(t *testing.T) {
-     expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
-     unformattedDate := "01/01/2000"
-     result := FormatDate(unformattedDate)
-     assert.Equal(t, expectedResponse, result)
+	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
+	unformattedDate := "01/01/2000"
+	result := FormatDate(unformattedDate)
+	assert.Equal(t, expectedResponse, result)
 }
 
-func TestCompareDatesReturnsTrueForAsc(t *testing.T) {
-    expectedResponse := true
-    iDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
-    jDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
-    result := CompareDates("asc", iDueDate, jDueDate)
-    assert.Equal(t, expectedResponse, result)
+func TestCompareDates(t *testing.T) {
+	tests := []struct {
+		expectedResponse bool
+		sortOrder        string
+		iDueDate         time.Time
+		jDueDate         time.Time
+		result           bool
+	}{
+
+		{
+			expectedResponse: true,
+			sortOrder:        "asc",
+			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+		},
+		{
+			expectedResponse: false,
+			sortOrder:        "asc",
+			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+		},
+
+		{
+			expectedResponse: false,
+			sortOrder:        "desc",
+			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+		},
+		{
+			expectedResponse: true,
+			sortOrder:        "desc",
+			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+		},
+	}
+
+	for _, tc := range tests {
+		result := CompareDates(tc.sortOrder, tc.iDueDate, tc.jDueDate)
+		assert.Equal(t, tc.expectedResponse, result)
+	}
 }
 
-func TestCompareDatesReturnsFalseForAsc(t *testing.T) {
-    expectedResponse := false
-    iDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
-    jDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
-    result := CompareDates("asc", iDueDate, jDueDate)
-    assert.Equal(t, expectedResponse, result)
-}
-
-func TestCompareDatesReturnsTrueForDesc(t *testing.T) {
-    expectedResponse := false
-    iDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
-    jDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
-    result := CompareDates("desc", iDueDate, jDueDate)
-    assert.Equal(t, expectedResponse, result)
-}
-
-func TestCompareDatesReturnsFalseForDesc(t *testing.T) {
-    expectedResponse := true
-    iDueDate, _ :=  time.Parse("2006-01-02", "2018-01-01")
-    jDueDate, _ :=  time.Parse("2006-01-02", "2000-01-01")
-    result := CompareDates("desc", iDueDate, jDueDate)
-    assert.Equal(t, expectedResponse, result)
+func ParseDateIntoTimeForTest(date string) time.Time {
+	formattedTime, _ := time.Parse("2006-01-02", date)
+	return formattedTime
 }
