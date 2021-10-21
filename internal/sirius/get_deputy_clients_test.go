@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -572,5 +573,18 @@ func TestSetDueDateForSortReturnDueDate(t *testing.T) {
 func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
     expectedResponse := "20/12/2021"
     result := SetDueDateForSort("", "20/12/2021")
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
+    expectedResponse := "00/00/0001"
+    result := SetDueDateForSort("", "")
+    assert.Equal(t, expectedResponse, result)
+}
+
+
+func TestFormattingDate(t *testing.T) {
+    expectedResponse, _ := time.Parse("2006-01-02","2021-01-01")
+    result := FormattingDate("01/01/2021")
     assert.Equal(t, expectedResponse, result)
 }
