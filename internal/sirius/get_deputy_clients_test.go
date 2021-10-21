@@ -571,6 +571,13 @@ func TestFormatDate(t *testing.T) {
 	assert.Equal(t, expectedResponse, result)
 }
 
+func TestFormatDateFailsWithTwoDigitYear(t *testing.T) {
+	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
+	unformattedDate := "01/01/00"
+	result := FormatDate(unformattedDate)
+	assert.NotEqual(t, expectedResponse, result)
+}
+
 func TestCompareDates(t *testing.T) {
 	tests := []struct {
 		expectedResponse bool
