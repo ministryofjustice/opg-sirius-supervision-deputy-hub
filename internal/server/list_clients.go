@@ -39,14 +39,17 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			return err
 		}
 
-		t := r.URL.String()
-		s := strings.Split(t, "?")
-		q := s[1]
-		k := strings.Split(q, ":")
-		k1 := k[0]
-		k2 := k[1]
+		var columnBeingSorted string
+		var sortOrder string
+		urlQuery := strings.Split(r.URL.String(), "?")
+		if len(urlQuery) >= 2 {
+			sortParams := urlQuery[1]
+			sortParamsArray := strings.Split(sortParams, ":")
+			columnBeingSorted = sortParamsArray[0]
+			sortOrder = sortParamsArray[1]
+		}
 
-		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, k1, k2)
+		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}

@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -173,7 +172,7 @@ func SetUpTestData() DeputyClientDetails {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -197,7 +196,7 @@ func SetUpTestData() DeputyClientDetails {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -217,7 +216,7 @@ func TestAlphabeticalSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -253,7 +252,7 @@ func TestAlphabeticalSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -274,7 +273,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -310,7 +309,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -341,7 +340,7 @@ func TestCrecScoreSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -353,7 +352,7 @@ func TestCrecScoreSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -398,7 +397,7 @@ func TestCrecScoreSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -410,7 +409,7 @@ func TestCrecScoreSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -443,7 +442,7 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -479,7 +478,7 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -500,7 +499,7 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "09/11/3018",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -536,7 +535,7 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 			OrderStatus: "Active",
 			OldestReport: reportReturned{
 				DueDate:        "05/01/2017",
-				RevisedDueDate: "null",
+				RevisedDueDate: "",
 				StatusLabel:    "Non-compliant",
 			},
 		},
@@ -564,63 +563,63 @@ func TestChangeSortButtonDirection(t *testing.T) {
 	}
 }
 
-func TestFormatDate(t *testing.T) {
-	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
-	unformattedDate := "01/01/2000"
-	result := FormatDate(unformattedDate)
-	assert.Equal(t, expectedResponse, result)
-}
+// func TestFormatDate(t *testing.T) {
+// 	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
+// 	unformattedDate := "01/01/2000"
+// 	result := FormatDate(unformattedDate)
+// 	assert.Equal(t, expectedResponse, result)
+// }
 
-func TestFormatDateFailsWithTwoDigitYear(t *testing.T) {
-	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
-	unformattedDate := "01/01/00"
-	result := FormatDate(unformattedDate)
-	assert.NotEqual(t, expectedResponse, result)
-}
+// func TestFormatDateFailsWithTwoDigitYear(t *testing.T) {
+// 	expectedResponse, _ := time.Parse("2006-01-02", "2000-01-01")
+// 	unformattedDate := "01/01/00"
+// 	result := FormatDate(unformattedDate)
+// 	assert.NotEqual(t, expectedResponse, result)
+// }
 
-func TestCompareDates(t *testing.T) {
-	tests := []struct {
-		expectedResponse bool
-		sortOrder        string
-		iDueDate         time.Time
-		jDueDate         time.Time
-		result           bool
-	}{
+// func TestCompareDates(t *testing.T) {
+// 	tests := []struct {
+// 		expectedResponse bool
+// 		sortOrder        string
+// 		iDueDate         time.Time
+// 		jDueDate         time.Time
+// 		result           bool
+// 	}{
 
-		{
-			expectedResponse: true,
-			sortOrder:        "asc",
-			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
-			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
-		},
-		{
-			expectedResponse: false,
-			sortOrder:        "asc",
-			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
-			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
-		},
+// 		{
+// 			expectedResponse: true,
+// 			sortOrder:        "asc",
+// 			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+// 			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+// 		},
+// 		{
+// 			expectedResponse: false,
+// 			sortOrder:        "asc",
+// 			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+// 			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+// 		},
 
-		{
-			expectedResponse: false,
-			sortOrder:        "desc",
-			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
-			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
-		},
-		{
-			expectedResponse: true,
-			sortOrder:        "desc",
-			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
-			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
-		},
-	}
+// 		{
+// 			expectedResponse: false,
+// 			sortOrder:        "desc",
+// 			iDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+// 			jDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+// 		},
+// 		{
+// 			expectedResponse: true,
+// 			sortOrder:        "desc",
+// 			iDueDate:         ParseDateIntoTimeForTest("2018-01-01"),
+// 			jDueDate:         ParseDateIntoTimeForTest("2000-01-01"),
+// 		},
+// 	}
 
-	for _, tc := range tests {
-		result := CompareDates(tc.sortOrder, tc.iDueDate, tc.jDueDate)
-		assert.Equal(t, tc.expectedResponse, result)
-	}
-}
+// 	for _, tc := range tests {
+// 		result := CompareDates(tc.sortOrder, tc.iDueDate, tc.jDueDate)
+// 		assert.Equal(t, tc.expectedResponse, result)
+// 	}
+// }
 
-func ParseDateIntoTimeForTest(date string) time.Time {
-	formattedTime, _ := time.Parse("2006-01-02", date)
-	return formattedTime
-}
+// func ParseDateIntoTimeForTest(date string) time.Time {
+// 	formattedTime, _ := time.Parse("2006-01-02", date)
+// 	return formattedTime
+// }
