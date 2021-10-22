@@ -2,19 +2,21 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyClientReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-        json := ` {
+	json := ` {
     "persons": [
       {
         "id": 67,
@@ -92,25 +94,26 @@ func TestDeputyClientReturned(t *testing.T) {
 
 	expectedResponse := DeputyClientDetails{
 		DeputyClient{
-		    ClientId: 67,
-		    Firstname: "John",
-		    Surname: "Fearless",
-		    CourtRef: "67422477",
-		    RiskScore: 5,
-		    AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
-		    OrderStatus: "Active",
-		    OldestReport: reportReturned{
-		        DueDate:  "01/01/2016",
-                RevisedDueDate: "01/05/2016",
-                StatusLabel: "Pending",
-		    },
-		    SupervisionLevel: "General",
-        },
+			ClientId:          67,
+			Firstname:         "John",
+			Surname:           "Fearless",
+			CourtRef:          "67422477",
+			RiskScore:         5,
+			AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
+			OrderStatus:       "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2016",
+				RevisedDueDate: "01/05/2016",
+				StatusLabel:    "Pending",
+			},
+			SupervisionLevel: "General",
+		},
 	}
 
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
 
 	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
 }
 
@@ -121,10 +124,10 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
 
 	expectedResponse := DeputyClientDetails(nil)
-
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -140,10 +143,448 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
-
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
+	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	expectedResponse := DeputyClientDetails(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
+}
+
+func SetUpTestData() DeputyClientDetails {
+	clients := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	return clients
+}
+
+func TestAlphabeticalSortAsc(t *testing.T) {
+	testData := SetUpTestData()
+	expectedAscendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	assert.Equal(t, AlphabeticalSort(testData, "asc"), expectedAscendingResponse)
+}
+
+func TestAlphabeticalSortDesc(t *testing.T) {
+	testData := SetUpTestData()
+
+	expectedDescendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+	assert.Equal(t, AlphabeticalSort(testData, "desc"), expectedDescendingResponse)
+}
+
+func TestCrecScoreSortAsc(t *testing.T) {
+	testData := SetUpTestData()
+	expectedAscendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedAscendingResponse, CrecScoreSort(testData, "asc"))
+}
+
+func TestCrecScoreSortDesc(t *testing.T) {
+	testData := SetUpTestData()
+
+	expectedDescendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedDescendingResponse, CrecScoreSort(testData, "desc"))
+}
+
+func TestReportDueScoreSortAsc(t *testing.T) {
+	testData := SetUpTestData()
+
+	expectedAscendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedAscendingResponse, ReportDueScoreSort(testData, "asc"))
+}
+
+func TestReportDueScoreSortDesc(t *testing.T) {
+	testData := SetUpTestData()
+
+	expectedDescendingResponse := DeputyClientDetails{
+		DeputyClient{
+			ClientId:    87,
+			Firstname:   "Margaret",
+			Surname:     "Bavaria-Straubing",
+			RiskScore:   3,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "09/11/3018",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    92,
+			Firstname:   "Louis",
+			Surname:     "Dauphin",
+			RiskScore:   1,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2000",
+				RevisedDueDate: "05/05/3000",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    76,
+			Firstname:   "Agnes",
+			Surname:     "Burgundy",
+			RiskScore:   5,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "03/01/2017",
+				RevisedDueDate: "05/05/2017",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+		DeputyClient{
+			ClientId:    99,
+			Firstname:   "Go",
+			Surname:     "Taskforce",
+			RiskScore:   2,
+			OrderStatus: "Active",
+			OldestReport: reportReturned{
+				DueDate:        "05/01/2017",
+				RevisedDueDate: "",
+				StatusLabel:    "Non-compliant",
+			},
+		},
+	}
+
+	assert.Equal(t, expectedDescendingResponse, ReportDueScoreSort(testData, "desc"))
+}
+
+func TestChangeSortButtonDirection(t *testing.T) {
+	tests := []struct {
+		sortOrder         string
+		columnBeingSorted string
+		functionCalling   string
+		expectedResponse  string
+	}{
+		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=surname", expectedResponse: "none"},
+		{sortOrder: "other", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "none"},
+		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "ascending"},
+		{sortOrder: "desc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "descending"},
+	}
+
+	for _, tc := range tests {
+		result := ChangeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
+		assert.Equal(t, tc.expectedResponse, result)
+	}
+}
+
+func TestSetDueDateForSortReturnDueDate(t *testing.T) {
+    expectedResponse := "01/01/2021"
+    result := SetDueDateForSort("01/01/2021", "")
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
+    expectedResponse := "20/12/2021"
+    result := SetDueDateForSort("", "20/12/2021")
+    assert.Equal(t, expectedResponse, result)
+}
+
+func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
+    expectedResponse := "12/12/9999"
+    result := SetDueDateForSort("", "")
+    assert.Equal(t, expectedResponse, result)
+}
+
+
+func TestFormattingDate(t *testing.T) {
+    expectedResponse, _ := time.Parse("2006-01-02","2021-01-01")
+    result := FormattingDate("01/01/2021")
+    assert.Equal(t, expectedResponse, result)
 }
