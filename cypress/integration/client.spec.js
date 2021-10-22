@@ -25,12 +25,6 @@ describe("Clients tab", () => {
         cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 3);
     });
 
-    it("Clients have a report due dates", () => {
-        cy.get(':nth-child(1) > .reports').should("contain", "21/12/2015");
-        cy.get(':nth-child(2) > .reports').should("contain", "01/10/2018");
-        cy.get(':nth-child(3) > .reports').should("contain", "-");
-    });
-
     it("Clients surname have been sorted in order of ascending by default", () => {
         cy.get(':nth-child(1) > .client_name_ref > .govuk-link').should("contain", "Burgundy");
         cy.get(':nth-child(2) > .client_name_ref > .govuk-link').should("contain", "Dauphin");
@@ -48,17 +42,18 @@ describe("Clients tab", () => {
 
     it("Clients report due dates have been sorted in order of ascending", () => {
         cy.get(':nth-child(6) > button').click();
-        cy.get(':nth-child(1) > .reports').should("contain", "-");
-        cy.get(':nth-child(2) > .reports').should("contain", "21/12/2015");
-        cy.get(':nth-child(3) > .reports').should("contain", "01/10/2018");
+        cy.get(':nth-child(1) > .reports').should("contain", "21/12/2015");
+        cy.get(':nth-child(2) > .reports').should("contain", "01/10/2018");
+        cy.get(':nth-child(3) > .reports').should("contain", "-");
+
     });
 
     it("Clients report due dates have been sorted in order of descending", () => {
         cy.get(':nth-child(6) > button').click();
         cy.get(':nth-child(6) > button').click();
-        cy.get(':nth-child(1) > .reports').should("contain", "01/10/2018");
-        cy.get(':nth-child(2) > .reports').should("contain", "21/12/2015");
-        cy.get(':nth-child(3) > .reports').should("contain", "-");
+        cy.get(':nth-child(1) > .reports').should("contain", "-");
+        cy.get(':nth-child(2) > .reports').should("contain", "01/10/2018");
+        cy.get(':nth-child(3) > .reports').should("contain", "21/12/2015");
 
     });
 

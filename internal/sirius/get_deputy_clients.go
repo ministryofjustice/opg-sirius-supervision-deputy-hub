@@ -237,14 +237,13 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 }
 
 func SetDueDateForSort(dueDate, revisedDueDate string) string {
-    if dueDate == "" && revisedDueDate == "" {
-       return "00/00/0001"
-    }
 
-	if revisedDueDate != "" {
+    if revisedDueDate != "" {
 		return revisedDueDate
-	} else {
+	} else if dueDate != ""{
 		return dueDate
+	} else {
+       return "12/12/9999"
 	}
 }
 

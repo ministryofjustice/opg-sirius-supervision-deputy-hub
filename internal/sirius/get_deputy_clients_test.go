@@ -577,7 +577,7 @@ func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
 }
 
 func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
-    expectedResponse := "00/00/0001"
+    expectedResponse := "12/12/9999"
     result := SetDueDateForSort("", "")
     assert.Equal(t, expectedResponse, result)
 }
