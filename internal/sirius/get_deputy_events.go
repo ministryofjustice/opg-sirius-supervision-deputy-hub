@@ -83,8 +83,8 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       ReformatTimestamp(s),
-			EventType:       ReformatEventType(s),
+			Timestamp:       s.Timestamp,
+			EventType:       ReformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
 			Event:           s.Event,
@@ -96,20 +96,20 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	return list
 }
 
-func ReformatTimestamp(s DeputyEvent) string {
-	return s.Timestamp
-}
-
-func ReformatEventType(s DeputyEvent) string {
-	eventTypeArray := strings.Split(s.EventType, "\\")
+func ReformatEventType(s string) string {
+	eventTypeArray := strings.Split(s, "\\")
 	eventTypeArrayLength := len(eventTypeArray)
 	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
 	return eventTypeName
 }
 
 func SortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
+	fmt.Println("sort timeline newest one first")
+	fmt.Println(v)
 	sort.Slice(v, func(i, j int) bool {
 		return v[i].Timestamp > v[j].Timestamp
 	})
+	fmt.Println("returned v")
+	fmt.Println(v)
 	return v
 }
