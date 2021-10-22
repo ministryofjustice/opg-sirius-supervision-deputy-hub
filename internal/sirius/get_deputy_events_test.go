@@ -126,26 +126,257 @@ func TestReformatEventType(t *testing.T) {
 	assert.Equal(t, expectedResponse, ReformatEventType(testDeputyEvent))
 }
 
-func TestSortTimeLineNewestOneFirst(t *testing.T) {
-	unsortedData := []DeputyEventCollection{
+func SetUpData() (DeputyEventCollection, DeputyEventCollection) {
+	unsortedData := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp: "2020-01-20 14:39:34",
-			EventType: "PaDetailsChanged",
+			Timestamp:       "2020-10-18 10:11:08",
+			EventType:       "PersonContactDetailsChanged",
 			User: User{
-				UserId: 51,
+				UserId:          51,
 				UserDisplayName: "case manager",
-				UserPhoneNumber: ,
-			}
-			Event: Event{
-				OrderType: ,
+				UserPhoneNumber: "12345678",
 			},
-		}
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "mobileNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "homePhoneNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 387,
+			Timestamp:       "2021-10-18 10:11:06",
+			EventType:       "PaDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "Deputy name",
+						OldValue:  "null",
+						NewValue:  "PaDeputy",
+					},
+					{
+						FieldName: "Telephone",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Email",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Teamordepartmentname",
+						OldValue:  "null",
+						NewValue:  "PA Team 1 - (Supervision)",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 390,
+			Timestamp:       "2020-09-18 10:11:09",
+			EventType:       "DeputyLinkedToOrder",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "pfa",
+				SiriusId:         "7000-0000-2381",
+				OrderNumber:      "18372470",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client: []ClientPerson{
+					{
+						ClientName:     "Duke John Fearless",
+						ClientId:       "72",
+						ClientUid:      "7000-0000-2357",
+						ClientCourtRef: "2001022T",
+					},
+				},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 389,
+			Timestamp:       "2020-10-16 10:11:08",
+			EventType:       "PADeputyCreated",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client:           []ClientPerson{},
+			},
+		},
 	}
+	expectedResponse := DeputyEventCollection{
+		DeputyEvent{
+			TimelineEventId: 387,
+			Timestamp:       "2021-10-18 10:11:06",
+			EventType:       "PaDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "Deputy name",
+						OldValue:  "null",
+						NewValue:  "PaDeputy",
+					},
+					{
+						FieldName: "Telephone",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Email",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Teamordepartmentname",
+						OldValue:  "null",
+						NewValue:  "PA Team 1 - (Supervision)",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 388,
+			Timestamp:       "2020-10-18 10:11:08",
+			EventType:       "PersonContactDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "mobileNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "homePhoneNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 389,
+			Timestamp:       "2020-10-16 10:11:08",
+			EventType:       "PADeputyCreated",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client:           []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 390,
+			Timestamp:       "2020-09-18 10:11:09",
+			EventType:       "DeputyLinkedToOrder",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "pfa",
+				SiriusId:         "7000-0000-2381",
+				OrderNumber:      "18372470",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client: []ClientPerson{
+					{
+						ClientName:     "Duke John Fearless",
+						ClientId:       "72",
+						ClientUid:      "7000-0000-2357",
+						ClientCourtRef: "2001022T",
+					},
+				},
+			},
+		},
+	}
+	return unsortedData, expectedResponse
+}
+func TestSortTimeLineNewestOneFirst(t *testing.T) {
+	unsortedData, expectedResponse := SetUpData()
+	assert.Equal(t, expectedResponse, SortTimeLineNewestOneFirst(unsortedData))
 }
 
-pre sort {388 2020-01-20 14:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{Deputy name  pa deputy} {Telephone  } {Email  } {Team or department name  PA Team 1 - (Supervision)}] []}} {389 2020-02-20 14:39:34 PersonContactDetailsChanged {51 case manager 12345678} {   76   [{mobileNumber  } {homePhoneNumber  }] []}} {390 2020-02-21 14:39:34 PADeputyCreated {51 case manager 12345678} {   76   [] []}} {391 2020-03-19 14:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-1995 22036651 76   [] [{Duke John Fearless 63 7000-0000-1961 66323745}]}} {392 2020-04-18 14:39:34 PersonStatusChanged {51 case manager 12345678} {   76   [] []}} {393 2020-05-16 14:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-1995 22036651 76   [{deputyType  PA}] [{Duke John Fearless 63 7000-0000-1961 66323745}]}} {394 2020-06-12 14:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine1  pa deputy}] []}} {395 2020-01-10 14:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-2290 66345286 76   [] [{Duchess Agnes Burgundy 68 7000-0000-2175 7077934T}]}} {396 2020-01-08 14:39:34 PersonStatusChanged {51 case manager 12345678} {   76   [] []}} {397 2020-01-11 14:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-2290 66345286 76   [{deputyType  PA}] [{Duchess Agnes Burgundy 68 7000-0000-2175 7077934T}]}} {398 2020-06-06 08:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-2472 65784899 76   [] [{King Louis Dauphin 74 7000-0000-2449 58574224}]}} {399 2020-06-04 08:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-2472 65784899 76   [{deputyType  PA}] [{King Louis Dauphin 74 7000-0000-2449 58574224}]}} {400 2020-06-05 12:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine2  1}] []}} {401 2020-06-06 10:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine3  2}] []}}]
-
-sorted
-
-[{394 2020-06-12 14:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine1  pa deputy}] []}} {401 2020-06-06 10:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine3  2}] []}} {398 2020-06-06 08:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-2472 65784899 76   [] [{King Louis Dauphin 74 7000-0000-2449 58574224}]}} {400 2020-06-05 12:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{AddressLine2  1}] []}} {399 2020-06-04 08:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-2472 65784899 76   [{deputyType  PA}] [{King Louis Dauphin 74 7000-0000-2449 58574224}]}} {393 2020-05-16 14:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-1995 22036651 76   [{deputyType  PA}] [{Duke John Fearless 63 7000-0000-1961 66323745}]}} {392 2020-04-18 14:39:34 PersonStatusChanged {51 case manager 12345678} {   76   [] []}} {391 2020-03-19 14:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-1995 22036651 76   [] [{Duke John Fearless 63 7000-0000-1961 66323745}]}} {390 2020-02-21 14:39:34 PADeputyCreated {51 case manager 12345678} {   76   [] []}} {389 2020-02-20 14:39:34 PersonContactDetailsChanged {51 case manager 12345678} {   76   [{mobileNumber  } {homePhoneNumber  }] []}} {388 2020-01-20 14:39:34 PaDetailsChanged {51 case manager 12345678} {   76   [{Deputy name  pa deputy} {Telephone  } {Email  } {Team or department name  PA Team 1 - (Supervision)}] []}} {397 2020-01-11 14:39:34 DeputyOrderDetailsChanged {51 case manager 12345678} {pfa 7000-0000-2290 66345286 76   [{deputyType  PA}] [{Duchess Agnes Burgundy 68 7000-0000-2175 7077934T}]}} {395 2020-01-10 14:39:34 DeputyLinkedToOrder {51 case manager 12345678} {pfa 7000-0000-2290 66345286 76   [] [{Duchess Agnes Burgundy 68 7000-0000-2175 7077934T}]}} {396 2020-01-08 14:39:34 PersonStatusChanged {51 case manager 12345678} {   76   [] []}}]
+func TestEditDeputyEvents(t *testing.T) {
+	unsortedData, expectedResponse := SetUpData()
+	assert.Equal(t, expectedResponse, EditDeputyEvents(unsortedData))
+}

@@ -104,12 +104,8 @@ func ReformatEventType(s string) string {
 }
 
 func SortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
-	fmt.Println("sort timeline newest one first")
-	fmt.Println(v)
 	sort.Slice(v, func(i, j int) bool {
 		return v[i].Timestamp > v[j].Timestamp
 	})
-	fmt.Println("returned v")
-	fmt.Println(v)
 	return v
 }
