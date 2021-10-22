@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyEventsReturned(t *testing.T) {
@@ -117,4 +118,265 @@ func TestGetDeputyEventsReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyEvents)
+}
+
+func TestReformatEventType(t *testing.T) {
+	expectedResponse := "DeputyOrderDetailsChanged"
+	testDeputyEvent := "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged"
+	assert.Equal(t, expectedResponse, ReformatEventType(testDeputyEvent))
+}
+
+func SetUpData() (DeputyEventCollection, DeputyEventCollection) {
+	unsortedData := DeputyEventCollection{
+		DeputyEvent{
+			TimelineEventId: 388,
+			Timestamp:       "2020-10-18 10:11:08",
+			EventType:       "PersonContactDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "mobileNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "homePhoneNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 387,
+			Timestamp:       "2021-10-18 10:11:06",
+			EventType:       "PaDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "Deputy name",
+						OldValue:  "null",
+						NewValue:  "PaDeputy",
+					},
+					{
+						FieldName: "Telephone",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Email",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Teamordepartmentname",
+						OldValue:  "null",
+						NewValue:  "PA Team 1 - (Supervision)",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 390,
+			Timestamp:       "2020-09-18 10:11:09",
+			EventType:       "DeputyLinkedToOrder",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "pfa",
+				SiriusId:         "7000-0000-2381",
+				OrderNumber:      "18372470",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client: []ClientPerson{
+					{
+						ClientName:     "Duke John Fearless",
+						ClientId:       "72",
+						ClientUid:      "7000-0000-2357",
+						ClientCourtRef: "2001022T",
+					},
+				},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 389,
+			Timestamp:       "2020-10-16 10:11:08",
+			EventType:       "PADeputyCreated",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client:           []ClientPerson{},
+			},
+		},
+	}
+	expectedResponse := DeputyEventCollection{
+		DeputyEvent{
+			TimelineEventId: 387,
+			Timestamp:       "2021-10-18 10:11:06",
+			EventType:       "PaDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "Deputy name",
+						OldValue:  "null",
+						NewValue:  "PaDeputy",
+					},
+					{
+						FieldName: "Telephone",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Email",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "Teamordepartmentname",
+						OldValue:  "null",
+						NewValue:  "PA Team 1 - (Supervision)",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 388,
+			Timestamp:       "2020-10-18 10:11:08",
+			EventType:       "PersonContactDetailsChanged",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes: []Changes{
+					{
+						FieldName: "mobileNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+					{
+						FieldName: "homePhoneNumber",
+						OldValue:  "null",
+						NewValue:  "null",
+					},
+				},
+				Client: []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 389,
+			Timestamp:       "2020-10-16 10:11:08",
+			EventType:       "PADeputyCreated",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "null",
+				SiriusId:         "null",
+				OrderNumber:      "null",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client:           []ClientPerson{},
+			},
+		},
+		DeputyEvent{
+			TimelineEventId: 390,
+			Timestamp:       "2020-09-18 10:11:09",
+			EventType:       "DeputyLinkedToOrder",
+			User: User{
+				UserId:          51,
+				UserDisplayName: "case manager",
+				UserPhoneNumber: "12345678",
+			},
+			Event: Event{
+				OrderType:        "pfa",
+				SiriusId:         "7000-0000-2381",
+				OrderNumber:      "18372470",
+				DeputyID:         "76",
+				DeputyName:       "null",
+				OrganisationName: "null",
+				Changes:          []Changes{},
+				Client: []ClientPerson{
+					{
+						ClientName:     "Duke John Fearless",
+						ClientId:       "72",
+						ClientUid:      "7000-0000-2357",
+						ClientCourtRef: "2001022T",
+					},
+				},
+			},
+		},
+	}
+	return unsortedData, expectedResponse
+}
+func TestSortTimeLineNewestOneFirst(t *testing.T) {
+	unsortedData, expectedResponse := SetUpData()
+	assert.Equal(t, expectedResponse, SortTimeLineNewestOneFirst(unsortedData))
+}
+
+func TestEditDeputyEvents(t *testing.T) {
+	unsortedData, expectedResponse := SetUpData()
+	assert.Equal(t, expectedResponse, EditDeputyEvents(unsortedData))
 }
