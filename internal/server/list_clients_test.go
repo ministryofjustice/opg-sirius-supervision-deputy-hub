@@ -15,6 +15,7 @@ type mockDeputyHubClientInformation struct {
 	err              error
 	deputyData       sirius.DeputyDetails
 	deputyClientData sirius.DeputyClientDetails
+	ariaSorting      sirius.AriaSorting
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
@@ -24,11 +25,11 @@ func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, de
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int) (sirius.DeputyClientDetails, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.err
+	return m.deputyClientData, m.ariaSorting, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {
@@ -36,7 +37,7 @@ func TestNavigateToClientTab(t *testing.T) {
 
 	client := &mockDeputyHubClientInformation{}
 	template := &mockTemplates{}
-    defaultPATeam := "PA"
+	defaultPATeam := "PA"
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
