@@ -565,26 +565,25 @@ func TestChangeSortButtonDirection(t *testing.T) {
 }
 
 func TestSetDueDateForSortReturnDueDate(t *testing.T) {
-    expectedResponse := "01/01/2021"
-    result := SetDueDateForSort("01/01/2021", "")
-    assert.Equal(t, expectedResponse, result)
+	expectedResponse := "01/01/2021"
+	result := SetDueDateForSort("01/01/2021", "")
+	assert.Equal(t, expectedResponse, result)
 }
 
 func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
-    expectedResponse := "20/12/2021"
-    result := SetDueDateForSort("", "20/12/2021")
-    assert.Equal(t, expectedResponse, result)
+	expectedResponse := "20/12/2021"
+	result := SetDueDateForSort("", "20/12/2021")
+	assert.Equal(t, expectedResponse, result)
 }
 
 func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
-    expectedResponse := "12/12/9999"
-    result := SetDueDateForSort("", "")
-    assert.Equal(t, expectedResponse, result)
+	expectedResponse := "12/12/9999"
+	result := SetDueDateForSort("", "")
+	assert.Equal(t, expectedResponse, result)
 }
 
-
 func TestFormattingDate(t *testing.T) {
-    expectedResponse, _ := time.Parse("2006-01-02","2021-01-01")
-    result := FormattingDate("01/01/2021")
-    assert.Equal(t, expectedResponse, result)
+	expectedResponse, _ := time.Parse("2006-01-02", "2021-01-01")
+	result := FormattingDate("01/01/2021")
+	assert.Equal(t, expectedResponse, result)
 }

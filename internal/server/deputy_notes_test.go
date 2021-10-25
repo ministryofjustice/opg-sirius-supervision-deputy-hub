@@ -73,7 +73,7 @@ func TestGetNotes(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(deputyHubNotesVars{
-		Path:      "/path",
+		Path:           "/path",
 		SuccessMessage: "Note added",
 	}, template.lastVars)
 }
@@ -89,7 +89,7 @@ func TestPostAddNote(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, nil)(sirius.PermissionSet{}, w, r)
 	})
@@ -123,7 +123,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
 	})
@@ -144,8 +144,8 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:    "/123",
-		Errors:  expectedValidationErrors,
+		Path:   "/123",
+		Errors: expectedValidationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -176,7 +176,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
 	})
@@ -197,8 +197,8 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:    "/123",
-		Errors:  expectedValidationErrors,
+		Path:   "/123",
+		Errors: expectedValidationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)

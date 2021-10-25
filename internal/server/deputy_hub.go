@@ -12,13 +12,13 @@ type DeputyHubInformation interface {
 }
 
 type deputyHubVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	ErrorMessage  string
-	Errors        sirius.ValidationErrors
-	Success       bool
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
+	Error          string
+	ErrorMessage   string
+	Errors         sirius.ValidationErrors
+	Success        bool
 	SuccessMessage string
 }
 
@@ -36,19 +36,19 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam strin
 			return err
 		}
 
-		hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/" + strconv.Itoa(deputyId) + "/")
+		hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/")
 
 		vars := deputyHubVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-            Success: hasSuccess,
-            SuccessMessage: "Team details updated",
+			Path:           r.URL.Path,
+			XSRFToken:      ctx.XSRFToken,
+			DeputyDetails:  deputyDetails,
+			Success:        hasSuccess,
+			SuccessMessage: "Team details updated",
 		}
 
-        if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-            vars.ErrorMessage = "An executive case manager has not been assigned. "
-        }
+		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+			vars.ErrorMessage = "An executive case manager has not been assigned. "
+		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

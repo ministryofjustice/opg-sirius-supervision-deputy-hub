@@ -37,7 +37,7 @@ func TestNavigateToClientTab(t *testing.T) {
 
 	client := &mockDeputyHubClientInformation{}
 	template := &mockTemplates{}
-    defaultPATeam := "PA"
+	defaultPATeam := "PA"
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)

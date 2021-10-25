@@ -238,28 +238,28 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 
 func SetDueDateForSort(dueDate, revisedDueDate string) string {
 
-    if revisedDueDate != "" {
+	if revisedDueDate != "" {
 		return revisedDueDate
-	} else if dueDate != ""{
+	} else if dueDate != "" {
 		return dueDate
 	} else {
-       return "12/12/9999"
+		return "12/12/9999"
 	}
 }
 
 func FormattingDate(dateString string) time.Time {
-    dateArray := strings.Split(dateString, "/")
-    reformattedDate := dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0]
-    dateTime, _ := time.Parse("2006-01-02", reformattedDate)
-    return dateTime
+	dateArray := strings.Split(dateString, "/")
+	reformattedDate := dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0]
+	dateTime, _ := time.Parse("2006-01-02", reformattedDate)
+	return dateTime
 }
 
 func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
 		x := SetDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
 		y := SetDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
-        dateTimeI := FormattingDate(x)
-        dateTimeJ := FormattingDate(y)
+		dateTimeI := FormattingDate(x)
+		dateTimeJ := FormattingDate(y)
 
 		if sortOrder == "asc" {
 			return dateTimeI.Before(dateTimeJ)

@@ -33,8 +33,8 @@ describe("Clients tab", () => {
     });
 
     it("Clients surname have been sorted in order of descending", () => {
-        cy.get(':nth-child(7) > button').click();
-        cy.get(':nth-child(7) > button').click();
+        cy.get('[label="sort-name-column-ascending"] > button').click();
+        cy.get('[label="sort-name-column-descending"] > button').click();
         cy.get(':nth-child(1) > .client_name_ref > .govuk-link').should("contain", "Here");
         cy.get(':nth-child(2) > .client_name_ref > .govuk-link').should("contain", "Dauphin");
         cy.get(':nth-child(3) > .client_name_ref > .govuk-link').should("contain", "Burgundy");
