@@ -11,7 +11,7 @@
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             {{if eq .AriaSorting.SurnameAriaSort "none" }} 
-              <th scope="col" class="govuk-table__header" label="sort-name-column-ascending" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button"
+              <th scope="col" class="govuk-table__header" label="sort-name-column-none" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button"
               onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Client</button>
             {{ else if eq .AriaSorting.SurnameAriaSort "ascending"}}
               <th scope="col" class="govuk-table__header" label="sort-name-column-ascending" aria-sort="{{.AriaSorting.SurnameAriaSort}}"><button type="button"
@@ -26,21 +26,21 @@
             <th scope="col" class="govuk-table__header">Supervision level</th>
             <th scope="col" class="govuk-table__header">Visits</th>
             {{if eq .AriaSorting.ReportDueAriaSort "none" }} 
-              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+              <th scope="col" class="govuk-table__header" label="sort-due-date-column-none" aria-sort="none"><button type="button"
               onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">Report due</button>
             {{ else if eq .AriaSorting.ReportDueAriaSort "ascending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">Report due</button>
+              <th scope="col" class="govuk-table__header" label="sort-due-date-column-ascending" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">Report due</button>
             {{ else if eq .AriaSorting.ReportDueAriaSort "descending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">Report due</button>
+              <th scope="col" class="govuk-table__header" label="sort-due-date-column-descending" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">Report due</button>
             {{end }}
               </th>
             {{if eq .AriaSorting.CRECAriaSort "none" }} 
-              <th scope="col" class="govuk-table__header" aria-sort="none"><button type="button"
+              <th scope="col" class="govuk-table__header" label="sort-aria-column-none" aria-sort="none"><button type="button"
               onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
             {{ else if eq .AriaSorting.CRECAriaSort "ascending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">CREC</button>
+              <th scope="col" class="govuk-table__header" label="sort-aria-column-ascending" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">CREC</button>
             {{ else if eq .AriaSorting.CRECAriaSort "descending"}}
-              <th scope="col" class="govuk-table__header" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
+              <th scope="col" class="govuk-table__header" label="sort-aria-column-descending" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
             {{end }}
              </th>
         </tr>
@@ -49,7 +49,7 @@
         <tbody class="govuk-table__body">
         {{ range .DeputyClientsDetails }}
             <tr class="govuk-table__row">
-                <td class="govuk-table__cell client_name_ref nowrap">
+                <td class="govuk-table__cell client_name_ref nowrap" label="clientId {{.ClientId}}">
                     <a class="govuk-link" href="{{ sirius (printf "/supervision/#/clients/%d" .ClientId) }}">
                         {{if .Firstname}} {{.Firstname}} {{else}} - {{end}}
                         {{if .Surname}} {{.Surname}} {{else}} - {{end}}
