@@ -23,7 +23,7 @@ type deputyHubNotesVars struct {
 	DeputyNotes    sirius.DeputyNoteCollection
 	Error          string
 	Errors         sirius.ValidationErrors
-	ErrorMessage  string
+	ErrorMessage   string
 	Success        bool
 	SuccessMessage string
 }
@@ -53,81 +53,81 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		switch r.Method {
-			case http.MethodGet:
+		case http.MethodGet:
 
-				deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
-				if err != nil {
-					return err
-				}
-				deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
-				if err != nil {
-					return err
-				}
+			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			if err != nil {
+				return err
+			}
+			deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
+			if err != nil {
+				return err
+			}
 
-				hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/" + strconv.Itoa(deputyId) + "/notes")
+			hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/notes")
 
-				vars := deputyHubNotesVars{
+			vars := deputyHubNotesVars{
+				Path:           r.URL.Path,
+				XSRFToken:      ctx.XSRFToken,
+				DeputyDetails:  deputyDetails,
+				DeputyNotes:    deputyNotes,
+				Success:        hasSuccess,
+				SuccessMessage: "Note added",
+			}
+
+			if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+				vars.ErrorMessage = "An executive case manager has not been assigned. "
+			}
+
+			return tmpl.ExecuteTemplate(w, "page", vars)
+
+		case http.MethodPost:
+			var vars addNoteVars
+			var (
+				title = r.PostFormValue("title")
+				note  = r.PostFormValue("note")
+			)
+
+			userId, err := client.GetUserDetails(ctx)
+			if err != nil {
+				return err
+			}
+
+			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			if err != nil {
+				return err
+			}
+
+			err = client.AddNote(ctx, title, note, deputyId, userId.ID)
+
+			if verr, ok := err.(sirius.ValidationError); ok {
+
+				verr.Errors = renameValidationErrorMessages(verr.Errors)
+
+				vars = addNoteVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
+					Title:         title,
+					Note:          note,
+					Errors:        verr.Errors,
 					DeputyDetails: deputyDetails,
-					DeputyNotes:   deputyNotes,
-					Success: hasSuccess,
-					SuccessMessage: "Note added",
 				}
 
-                if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-                    vars.ErrorMessage = "An executive case manager has not been assigned. "
-                }
+				if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+					vars.ErrorMessage = "An executive case manager has not been assigned. "
+				}
 
+				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
+			} else if err != nil {
+				return err
+			}
 
-			case http.MethodPost:
-				var vars addNoteVars
-				var (
-					title   = r.PostFormValue("title")
-					note  	= r.PostFormValue("note")
-				)
-
-				userId, err := client.GetUserDetails(ctx)
-				if err != nil {
-					return err
-				}
-
-				deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
-				if err != nil {
-					return err
-				}
-
-				err = client.AddNote(ctx, title, note, deputyId, userId.ID)
-
-				if verr, ok := err.(sirius.ValidationError); ok {
-
-					verr.Errors = renameValidationErrorMessages(verr.Errors)
-
-					vars = addNoteVars{
-						Path:      r.URL.Path,
-						XSRFToken: ctx.XSRFToken,
-						Title:      title,
-						Note:   note,
-						Errors:    verr.Errors,
-						DeputyDetails: deputyDetails,
-					}
-
-                    if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-                        vars.ErrorMessage = "An executive case manager has not been assigned. "
-                    }
-
-					w.WriteHeader(http.StatusBadRequest)
-					return tmpl.ExecuteTemplate(w, "page", vars)
-				} else if err != nil {
-					return err
-				}
-
-				return Redirect(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
+			return Redirect(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
 
 		default:
-				return StatusError(http.StatusMethodNotAllowed)
-			}
+			return StatusError(http.StatusMethodNotAllowed)
+		}
 	}
 }
 
