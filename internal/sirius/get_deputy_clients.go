@@ -248,9 +248,8 @@ func SetDueDateForSort(dueDate, revisedDueDate string) string {
 }
 
 func FormattingDate(dateString string) time.Time {
-	dateArray := strings.Split(dateString, "/")
-	reformattedDate := dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0]
-	dateTime, _ := time.Parse("2006-01-02", reformattedDate)
+	reformattedDate := strings.ReplaceAll(dateString, "/", "-")
+    dateTime, _ := time.Parse("02-01-2006", reformattedDate)
 	return dateTime
 }
 
