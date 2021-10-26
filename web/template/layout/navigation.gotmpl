@@ -8,7 +8,7 @@
                          <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/" .DeputyDetails.ID) }} aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/" .DeputyDetails.ID) }}">Dashboard</a>
                      </li>
                       <li class="moj-sub-navigation__item">
-                             <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/clients" .DeputyDetails.ID) }}aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/clients" .DeputyDetails.ID) }}">Clients</a>
+                             <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">Clients</a>
                       </li>
                      <li class="moj-sub-navigation__item">
                          <a class="moj-sub-navigation__link" {{ if eq .Path (printf "/deputy/%d/timeline" .DeputyDetails.ID) }} aria-current="page"{{ end }} href="{{ prefix (printf "/deputy/%d/timeline" .DeputyDetails.ID) }}">Timeline</a>
