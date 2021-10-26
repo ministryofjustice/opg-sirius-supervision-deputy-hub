@@ -48,9 +48,9 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 			DeputyEvents:  deputyEvents,
 		}
 
-        if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-            vars.ErrorMessage = "An executive case manager has not been assigned. "
-        }
+		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+			vars.ErrorMessage = "An executive case manager has not been assigned. "
+		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
