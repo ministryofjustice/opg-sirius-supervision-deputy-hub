@@ -50,6 +50,7 @@ type latestCompletedVisit struct {
 	VisitCompletedDate  string
 	VisitReportMarkedAs string
 	VisitUrgency        string
+	RagRatingLowerCase  string
 }
 
 type apiClients struct {
@@ -142,9 +143,10 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 					t.OldestReport.Status.Label,
 				},
 				LatestCompletedVisit: latestCompletedVisit{
-					t.LatestCompletedVisit.VisitCompletedDate,
+					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					t.LatestCompletedVisit.VisitUrgency.Label,
+					(t.LatestCompletedVisit.VisitUrgency.Label + " Visit"),
+					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
 
@@ -298,4 +300,14 @@ func changeSortButtonDirection(sortOrder string, columnBeingSorted string, funct
 		return "none"
 	}
 
+}
+
+func reformatCompletedDate(unformattedDate string) string {
+	if len(unformattedDate) > 1 {
+		dateArray := strings.Split(unformattedDate, "T")
+		dateArraySplitIntoDMY := strings.Split(dateArray[0], "-")
+		reformattedDate := dateArraySplitIntoDMY[2] + "/" + dateArraySplitIntoDMY[1] + "/" + dateArraySplitIntoDMY[0]
+		return reformattedDate
+	}
+	return ""
 }
