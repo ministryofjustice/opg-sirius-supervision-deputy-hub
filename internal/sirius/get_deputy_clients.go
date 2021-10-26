@@ -51,6 +51,7 @@ type latestCompletedVisit struct {
 	VisitCompletedDate  string
 	VisitReportMarkedAs string
 	VisitUrgency        string
+	RagRatingLowerCase  string
 }
 
 type apiClients struct {
@@ -137,16 +138,16 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 					t.OldestReport.Status.Label,
 				},
 				LatestCompletedVisit: latestCompletedVisit{
-					t.LatestCompletedVisit.VisitCompletedDate,
+					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					t.LatestCompletedVisit.VisitUrgency.Label,
+					(t.LatestCompletedVisit.VisitUrgency.Label + " Visit"),
+					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
 			clients = append(clients, client)
 		}
 	}
 	alphabeticalSort(clients)
-	fmt.Printf("%+v\n", clients)
 	return clients, err
 }
 
@@ -229,4 +230,14 @@ func alphabeticalSort(clients DeputyClientDetails) {
 			}
 		})
 	}
+}
+
+func reformatCompletedDate(unformattedDate string) string {
+	if len(unformattedDate) > 1 {
+		dateArray := strings.Split(unformattedDate, "T")
+		dateArraySplitIntoDMY := strings.Split(dateArray[0], "-")
+		reformattedDate := dateArraySplitIntoDMY[2] + "/" + dateArraySplitIntoDMY[1] + "/" + dateArraySplitIntoDMY[0]
+		return reformattedDate
+	}
+	return ""
 }

@@ -1,10 +1,11 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubClientInformation interface {
@@ -50,9 +51,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 
 		switch r.Method {
 		case http.MethodGet:
-            if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-                vars.ErrorMessage = "An executive case manager has not been assigned. "
-            }
+			if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+				vars.ErrorMessage = "An executive case manager has not been assigned. "
+			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

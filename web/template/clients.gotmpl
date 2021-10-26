@@ -36,10 +36,12 @@
                 <td class="govuk-table__cell visit_type nowrap">
                 {{ if ne .LatestCompletedVisit.VisitCompletedDate ""}}
                     {{.LatestCompletedVisit.VisitCompletedDate}}
-                    {{.LatestCompletedVisit.VisitUrgency}}
-                    {{ if ne .LatestCompletedVisit.VisitReportMarkedAs ""}}
-                        {{.LatestCompletedVisit.VisitReportMarkedAs}}
-                    {{ else }} - {{ end }}
+                    <span class="secondary">{{.LatestCompletedVisit.VisitUrgency}}</span>
+                    <span class="secondary rag {{.LatestCompletedVisit.RagRatingLowerCase}}">
+                      {{ if ne .LatestCompletedVisit.VisitReportMarkedAs ""}}
+                          {{.LatestCompletedVisit.VisitReportMarkedAs}}
+                    </span>
+                      {{ else }} - {{ end }}
                 {{ else }}
                     -
                 {{ end }}
