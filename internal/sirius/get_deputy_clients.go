@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -145,7 +146,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 				LatestCompletedVisit: latestCompletedVisit{
 					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					(t.LatestCompletedVisit.VisitUrgency.Label + " Visit"),
+					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
