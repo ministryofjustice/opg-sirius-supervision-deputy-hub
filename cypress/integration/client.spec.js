@@ -30,4 +30,14 @@ describe("Clients tab", () => {
         cy.get(':nth-child(2) > .reports').should("contain", "01/10/2018");
         cy.get(':nth-child(3) > .reports').should("contain", "-");
     });
+
+    it("Clients have a latest visit recorded", () => {
+      cy.get(':nth-child(1) > .visit_type').should("contain", "01/01/2000");
+      cy.get(':nth-child(1) > .visit_type').should("contain", "Standard visit");
+      cy.get(':nth-child(1) > .visit_type').should("contain", "Green");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "03/03/2020");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "Urgent visit");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "Red");
+      cy.get(':nth-child(3) > .visit_type').should("contain", "-");
+  });
 });
