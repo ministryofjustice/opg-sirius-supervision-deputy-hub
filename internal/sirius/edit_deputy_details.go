@@ -47,12 +47,6 @@ func (c *Client) EditDeputyDetails(ctx Context, editDeputyDetailForm DeputyDetai
 		Town:                             editDeputyDetailForm.Town,
 		County:                           editDeputyDetailForm.County,
 		Postcode:                         editDeputyDetailForm.Postcode,
-		Salutation:                       "",
-		Firstname:                        "",
-		OtherNames:                       "",
-		Surname:                          "",
-		Dob:                              "",
-		PreviousNames:                    "",
 		DeputyType: Deputy{Handle: "PA",
 			Label: "Public Authority"},
 	})
