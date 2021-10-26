@@ -36,6 +36,22 @@ type reportReturned struct {
 	StatusLabel    string
 }
 
+type apiLatestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs struct {
+		Label string `json:"label"`
+	} `json:"visitReportMarkedAs"`
+	VisitUrgency struct {
+		Label string `json:"label"`
+	} `json:"visitUrgency"`
+}
+
+type latestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs string
+	VisitUrgency        string
+}
+
 type apiClients struct {
 	Clients []struct {
 		ClientId            int    `json:"id"`
@@ -46,8 +62,9 @@ type apiClients struct {
 		ClientAccommodation struct {
 			Label string `json:"label"`
 		}
-		Orders       apiOrders `json:"orders"`
-		OldestReport apiReport `json:"oldestNonLodgedAnnualReport"`
+		Orders               apiOrders               `json:"orders"`
+		OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
+		LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
 	} `json:"persons"`
 }
 
@@ -60,15 +77,16 @@ type Order struct {
 type Orders []Order
 
 type DeputyClient struct {
-	ClientId          int
-	Firstname         string
-	Surname           string
-	CourtRef          string
-	RiskScore         int
-	AccommodationType string
-	OrderStatus       string
-	SupervisionLevel  string
-	OldestReport      reportReturned
+	ClientId             int
+	Firstname            string
+	Surname              string
+	CourtRef             string
+	RiskScore            int
+	AccommodationType    string
+	OrderStatus          string
+	SupervisionLevel     string
+	OldestReport         reportReturned
+	LatestCompletedVisit latestCompletedVisit
 }
 
 type DeputyClientDetails []DeputyClient
@@ -118,7 +136,16 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
+				OldestReport: reportReturned{
+					t.OldestReport.DueDate,
+					t.OldestReport.RevisedDueDate,
+					t.OldestReport.Status.Label,
+				},
+				LatestCompletedVisit: latestCompletedVisit{
+					t.LatestCompletedVisit.VisitCompletedDate,
+					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
+					t.LatestCompletedVisit.VisitUrgency.Label,
+				},
 			}
 
 			clients = append(clients, client)

@@ -60,8 +60,15 @@
                 <td class="govuk-table__cell">{{if .OrderStatus}} {{.OrderStatus}} {{else}} - {{end}}</td>
                 <td class="govuk-table__cell">{{if .SupervisionLevel}} {{.SupervisionLevel}} {{else}} - {{end}}</td>
                 <td class="govuk-table__cell visit_type nowrap">
-                    {{/* TO DO in a future ticket */}}
+                {{ if ne .LatestCompletedVisit.VisitCompletedDate ""}}
+                    {{.LatestCompletedVisit.VisitCompletedDate}}
+                    {{.LatestCompletedVisit.VisitUrgency}}
+                    {{ if ne .LatestCompletedVisit.VisitReportMarkedAs ""}}
+                        {{.LatestCompletedVisit.VisitReportMarkedAs}}
+                    {{ else }} - {{ end }}
+                {{ else }}
                     -
+                {{ end }}
                 </td>
                 <td class="govuk-table__cell reports nowrap due">
                   {{if ne .OldestReport.DueDate "" }}
