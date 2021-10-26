@@ -6,7 +6,7 @@ import (
 )
 
 type UserDetails struct {
-	ID          int             `json:"id"`
+	ID int `json:"id"`
 }
 
 func (c *Client) GetUserDetails(ctx Context) (UserDetails, error) {

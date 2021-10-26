@@ -18,10 +18,10 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) 
 
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addNoteRequest{
-		Title:        title,
-		Note:         note,
-		UserId: 	  userId,
-		NoteType:     "PA_DEPUTY_NOTE_CREATED",
+		Title:    title,
+		Note:     note,
+		UserId:   userId,
+		NoteType: "PA_DEPUTY_NOTE_CREATED",
 	})
 	if err != nil {
 		return err
