@@ -2,19 +2,20 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyClientReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-        json := ` {
+	json := ` {
     "persons": [
       {
         "id": 67,
@@ -92,20 +93,20 @@ func TestDeputyClientReturned(t *testing.T) {
 
 	expectedResponse := DeputyClientDetails{
 		DeputyClient{
-		    ClientId: 67,
-		    Firstname: "John",
-		    Surname: "Fearless",
-		    CourtRef: "67422477",
-		    RiskScore: 5,
-		    AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
-		    OrderStatus: "Active",
-		    OldestReport: reportReturned{
-		        DueDate:  "01/01/2016",
-                RevisedDueDate: "01/05/2016",
-                StatusLabel: "Pending",
-		    },
-		    SupervisionLevel: "General",
-        },
+			ClientId:          67,
+			Firstname:         "John",
+			Surname:           "Fearless",
+			CourtRef:          "67422477",
+			RiskScore:         5,
+			AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
+			OrderStatus:       "Active",
+			OldestReport: reportReturned{
+				DueDate:        "01/01/2016",
+				RevisedDueDate: "01/05/2016",
+				StatusLabel:    "Pending",
+			},
+			SupervisionLevel: "General",
+		},
 	}
 
 	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), 1)
@@ -146,4 +147,12 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
+}
+
+func TestReformatCompletedDateReturnsNullIfNoDate(t *testing.T) {
+	assert.Equal(t, "", reformatVisitCompletedDate(""))
+}
+
+func TestReformatCompletedDateReturnsDateInCorrectFormat(t *testing.T) {
+	assert.Equal(t, "25/02/2020", reformatVisitCompletedDate("2020-02-25T00:00:00+00:00"))
 }
