@@ -150,9 +150,9 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 }
 
 func TestReformatCompletedDateReturnsNullIfNoDate(t *testing.T) {
-	assert.Equal(t, "", reformatCompletedDate(""))
+	assert.Equal(t, "", reformatVisitCompletedDate(""))
 }
 
 func TestReformatCompletedDateReturnsDateInCorrectFormat(t *testing.T) {
-	assert.Equal(t, "25/02/2020", reformatCompletedDate("2020-02-25T00:00:00+00:00"))
+	assert.Equal(t, "25/02/2020", reformatVisitCompletedDate("2020-02-25T00:00:00+00:00"))
 }

@@ -138,7 +138,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 					t.OldestReport.Status.Label,
 				},
 				LatestCompletedVisit: latestCompletedVisit{
-					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
+					reformatVisitCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
 					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
@@ -232,12 +232,10 @@ func alphabeticalSort(clients DeputyClientDetails) {
 	}
 }
 
-func reformatCompletedDate(unformattedDate string) string {
+func reformatVisitCompletedDate(unformattedDate string) string {
 	if len(unformattedDate) > 1 {
-		dateArray := strings.Split(unformattedDate, "T")
-		dateArraySplitIntoDMY := strings.Split(dateArray[0], "-")
-		reformattedDate := dateArraySplitIntoDMY[2] + "/" + dateArraySplitIntoDMY[1] + "/" + dateArraySplitIntoDMY[0]
-		return reformattedDate
+		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
+		return date.Format("02/01/2006")
 	}
 	return ""
 }
