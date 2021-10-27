@@ -39,15 +39,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			return err
 		}
 
-		var columnBeingSorted string
-		var sortOrder string
-		urlQuery := strings.Split(r.URL.String(), "?")
-		if len(urlQuery) >= 2 {
-			sortParams := urlQuery[1]
-			sortParamsArray := strings.Split(sortParams, ":")
-			columnBeingSorted = sortParamsArray[0]
-			sortOrder = sortParamsArray[1]
-		}
+		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
 
 		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, columnBeingSorted, sortOrder)
 		if err != nil {
@@ -67,4 +59,16 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 		}
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
+}
+
+func parseUrl(url string) (string, string) {
+	urlQuery := strings.Split(url, "?")
+	if len(urlQuery) >= 2 {
+		sortParams := urlQuery[1]
+		sortParamsArray := strings.Split(sortParams, ":")
+		columnBeingSorted := sortParamsArray[0]
+		sortOrder := sortParamsArray[1]
+		return columnBeingSorted, sortOrder
+	}
+	return "", ""
 }

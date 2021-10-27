@@ -172,7 +172,7 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 
 	for i, t := range apiOrders {
 		// reformatting order date to yyyy-dd-mm
-		reformattedDate := ReformatOrderDate(t.OrderDate)
+		reformattedDate := FormattingDate(t.OrderDate)
 
 		var supervisionLevel string
 		if t.LatestSupervisionLevel != nil {
@@ -192,11 +192,10 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 	return updatedOrders
 }
 
-func ReformatOrderDate(orderDate string) time.Time {
-	dashDateString := strings.Replace(orderDate, "/", "-", 2)
-	reformattedDate := fmt.Sprintf("%s%s%s%s%s", dashDateString[6:], "-", dashDateString[3:5], "-", dashDateString[:2])
-	date, _ := time.Parse("2006-01-02", reformattedDate)
-	return date
+func FormattingDate(dateString string) time.Time {
+	reformattedDate := strings.ReplaceAll(dateString, "/", "-")
+	dateTime, _ := time.Parse("02-01-2006", reformattedDate)
+	return dateTime
 }
 
 func RemoveOpenStatusOrders(orders Orders) Orders {
@@ -245,12 +244,6 @@ func SetDueDateForSort(dueDate, revisedDueDate string) string {
 	} else {
 		return "12/12/9999"
 	}
-}
-
-func FormattingDate(dateString string) time.Time {
-	reformattedDate := strings.ReplaceAll(dateString, "/", "-")
-    dateTime, _ := time.Parse("02-01-2006", reformattedDate)
-	return dateTime
 }
 
 func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
