@@ -1,7 +1,7 @@
 package server
 
 import (
-    "fmt"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -64,15 +64,15 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-                verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
+				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
 
-                vars := editDeputyHubVars{
-                				Path:           r.URL.Path,
-                				XSRFToken:      ctx.XSRFToken,
-                				DeputyDetails:  deputyDetails,
-                				Errors:         verr.Errors,
-                			}
-                return tmpl.ExecuteTemplate(w, "page", vars)
+				vars := editDeputyHubVars{
+					Path:          r.URL.Path,
+					XSRFToken:     ctx.XSRFToken,
+					DeputyDetails: deputyDetails,
+					Errors:        verr.Errors,
+				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
 			return Redirect(fmt.Sprintf("/deputy/%d/?success=true", deputyId))
@@ -94,9 +94,9 @@ func renameEditDeputyValidationErrorMessages(siriusError sirius.ValidationErrors
 				err[errorType] = "The deputy name must be 255 characters or fewer"
 				errorCollection["organisationName"] = err
 			} else if fieldName == "organisationName" && errorType == "isEmpty" {
-                err[errorType] = "Enter a deputy name"
-                errorCollection["organisationName"] = err
-            } else if fieldName == "workPhoneNumber" && errorType == "stringLengthTooLong" {
+				err[errorType] = "Enter a deputy name"
+				errorCollection["organisationName"] = err
+			} else if fieldName == "workPhoneNumber" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The telephone number must be 255 characters or fewer"
 				errorCollection["workPhoneNumber"] = err
 			} else if fieldName == "email" && errorType == "stringLengthTooLong" {
@@ -105,22 +105,22 @@ func renameEditDeputyValidationErrorMessages(siriusError sirius.ValidationErrors
 			} else if fieldName == "organisationTeamOrDepartmentName" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The team or department must be 255 characters or fewer"
 				errorCollection["organisationTeamOrDepartmentName"] = err
-			}else if fieldName == "addressLine1" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "addressLine1" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The building or street must be 255 characters or fewer"
 				errorCollection["addressLine1"] = err
-			}else if fieldName == "addressLine2" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "addressLine2" && errorType == "stringLengthTooLong" {
 				err[errorType] = "Address line 2 must be 255 characters or fewer"
 				errorCollection["addressLine2"] = err
-			}else if fieldName == "addressLine3" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "addressLine3" && errorType == "stringLengthTooLong" {
 				err[errorType] = "AddressLine 3 must be 255 characters or fewer"
 				errorCollection["addressLine3"] = err
-			}else if fieldName == "town" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "town" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The town or city must be 255 characters or fewer"
 				errorCollection["town"] = err
-			}else if fieldName == "county" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "county" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The county must be 255 characters or fewer"
 				errorCollection["county"] = err
-			}else if fieldName == "postcode" && errorType == "stringLengthTooLong" {
+			} else if fieldName == "postcode" && errorType == "stringLengthTooLong" {
 				err[errorType] = "The postcode must be 255 characters or fewer"
 				errorCollection["postcode"] = err
 			} else {
