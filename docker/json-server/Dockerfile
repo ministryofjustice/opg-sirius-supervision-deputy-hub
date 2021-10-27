@@ -26,4 +26,4 @@ RUN yarn install
 
 COPY --from=build-assets /app/web/static/ public
 
-ENTRYPOINT ["node", "server.js"]
+ENTRYPOINT ["yarn", "serve"]
