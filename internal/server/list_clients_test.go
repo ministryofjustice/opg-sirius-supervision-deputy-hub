@@ -50,3 +50,23 @@ func TestNavigateToClientTab(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 }
+
+func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
+	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients?sort=crec:desc"
+	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+
+	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
+	assert.Equal(t, resultSortOrder, sortOrder)
+
+}
+
+func TestParseUrlReturnsEmptyStrings(t *testing.T) {
+	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients"
+	expectedResponseColumnBeingSorted, sortOrder := "", ""
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+
+	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
+	assert.Equal(t, resultSortOrder, sortOrder)
+
+}
