@@ -15,6 +15,7 @@ type mockDeputyHubClientInformation struct {
 	err              error
 	deputyData       sirius.DeputyDetails
 	deputyClientData sirius.DeputyClientDetails
+	ariaSorting      sirius.AriaSorting
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
@@ -24,11 +25,11 @@ func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, de
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int) (sirius.DeputyClientDetails, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.err
+	return m.deputyClientData, m.ariaSorting, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {
@@ -48,4 +49,24 @@ func TestNavigateToClientTab(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
+	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients?sort=crec:desc"
+	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+
+	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
+	assert.Equal(t, resultSortOrder, sortOrder)
+
+}
+
+func TestParseUrlReturnsEmptyStrings(t *testing.T) {
+	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients"
+	expectedResponseColumnBeingSorted, sortOrder := "", ""
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+
+	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
+	assert.Equal(t, resultSortOrder, sortOrder)
+
 }
