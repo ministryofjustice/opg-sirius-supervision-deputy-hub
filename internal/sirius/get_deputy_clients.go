@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -36,6 +37,23 @@ type reportReturned struct {
 	StatusLabel    string
 }
 
+type apiLatestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs struct {
+		Label string `json:"label"`
+	} `json:"visitReportMarkedAs"`
+	VisitUrgency struct {
+		Label string `json:"label"`
+	} `json:"visitUrgency"`
+}
+
+type latestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs string
+	VisitUrgency        string
+	RagRatingLowerCase  string
+}
+
 type apiClients struct {
 	Clients []struct {
 		ClientId            int    `json:"id"`
@@ -46,8 +64,9 @@ type apiClients struct {
 		ClientAccommodation struct {
 			Label string `json:"label"`
 		}
-		Orders       apiOrders `json:"orders"`
-		OldestReport apiReport `json:"oldestNonLodgedAnnualReport"`
+		Orders               apiOrders               `json:"orders"`
+		OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
+		LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
 	} `json:"persons"`
 }
 
@@ -60,15 +79,16 @@ type Order struct {
 type Orders []Order
 
 type DeputyClient struct {
-	ClientId          int
-	Firstname         string
-	Surname           string
-	CourtRef          string
-	RiskScore         int
-	AccommodationType string
-	OrderStatus       string
-	SupervisionLevel  string
-	OldestReport      reportReturned
+	ClientId             int
+	Firstname            string
+	Surname              string
+	CourtRef             string
+	RiskScore            int
+	AccommodationType    string
+	OrderStatus          string
+	SupervisionLevel     string
+	OldestReport         reportReturned
+	LatestCompletedVisit latestCompletedVisit
 }
 
 type DeputyClientDetails []DeputyClient
@@ -118,7 +138,17 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
+				OldestReport: reportReturned{
+					t.OldestReport.DueDate,
+					t.OldestReport.RevisedDueDate,
+					t.OldestReport.Status.Label,
+				},
+				LatestCompletedVisit: latestCompletedVisit{
+					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
+					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
+					(t.LatestCompletedVisit.VisitUrgency.Label),
+					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+				},
 			}
 
 			clients = append(clients, client)
@@ -271,4 +301,12 @@ func changeSortButtonDirection(sortOrder string, columnBeingSorted string, funct
 		return "none"
 	}
 
+}
+
+func reformatCompletedDate(unformattedDate string) string {
+	if len(unformattedDate) > 1 {
+		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
+		return date.Format("02/01/2006")
+	}
+	return ""
 }
