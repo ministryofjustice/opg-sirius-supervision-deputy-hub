@@ -12,7 +12,7 @@ describe("Clients tab", () => {
     it("displays 7 column headings", () => {
         cy.get('.govuk-table__row').find('th').should('have.length', 7)
 
-        const expected = ["Client", "Accomodation type", "Status", "Supervision level", "Visits", "Report due", "CREC"];
+        const expected = ["Client", "Accommodation type", "Status", "Supervision level", "Visits", "Report due", "CREC"];
 
         cy.get(".govuk-table__head > .govuk-table__row")
             .children()
