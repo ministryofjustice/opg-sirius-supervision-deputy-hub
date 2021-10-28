@@ -70,4 +70,14 @@ describe("Clients tab", () => {
         cy.get(':nth-child(2) > .data-crec').should("contain", "3");
         cy.get(':nth-child(3) > .data-crec').should("contain", "2");
     });
+
+    it("Clients have a latest visit recorded", () => {
+      cy.get(':nth-child(1) > .visit_type').should("contain", "01/01/2000");
+      cy.get(':nth-child(1) > .visit_type').should("contain", "Standard visit");
+      cy.get(':nth-child(1) > .visit_type').should("contain", "Green");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "03/03/2020");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "Urgent visit");
+      cy.get(':nth-child(2) > .visit_type').should("contain", "Red");
+      cy.get(':nth-child(3) > .visit_type').should("contain", "-");
+  });
 });
