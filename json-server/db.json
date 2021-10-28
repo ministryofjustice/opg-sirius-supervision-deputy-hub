@@ -685,7 +685,7 @@
         ],
         "casesManagedAsHybrid": false,
         "supervisionCaseOwner": [],
-        "riskScore": null,
+        "riskScore": 2,
         "maritalStatus": "Widowed"
       },
       {
@@ -931,7 +931,7 @@
         ],
         "casesManagedAsHybrid": false,
         "supervisionCaseOwner": [],
-        "riskScore": null,
+        "riskScore": 3,
         "maritalStatus": "Married"
       },
       {
@@ -1170,7 +1170,7 @@
         ],
         "casesManagedAsHybrid": false,
         "supervisionCaseOwner": [],
-        "riskScore": null,
+        "riskScore": 4,
         "maritalStatus": "Widowed"
       }
     ]

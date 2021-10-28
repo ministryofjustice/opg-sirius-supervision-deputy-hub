@@ -1,20 +1,23 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int) (sirius.DeputyClientDetails, error)
+	GetDeputyClients(sirius.Context, int, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 }
 
 type listClientsVars struct {
 	Path                 string
 	XSRFToken            string
+	AriaSorting          sirius.AriaSorting
 	DeputyClientsDetails sirius.DeputyClientDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
@@ -36,7 +39,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			return err
 		}
 
-		deputyClientsDetails, err := client.GetDeputyClients(ctx, deputyId)
+		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
+
+		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
@@ -46,16 +51,24 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			XSRFToken:            ctx.XSRFToken,
 			DeputyClientsDetails: deputyClientsDetails,
 			DeputyDetails:        deputyDetails,
+			AriaSorting:          ariaSorting,
 		}
 
-		switch r.Method {
-		case http.MethodGet:
-            if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-                vars.ErrorMessage = "An executive case manager has not been assigned. "
-            }
-			return tmpl.ExecuteTemplate(w, "page", vars)
-		default:
-			return StatusError(http.StatusMethodNotAllowed)
+		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+			vars.ErrorMessage = "An executive case manager has not been assigned. "
 		}
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
+}
+
+func parseUrl(url string) (string, string) {
+	urlQuery := strings.Split(url, "?")
+	if len(urlQuery) >= 2 {
+		sortParams := urlQuery[1]
+		sortParamsArray := strings.Split(sortParams, ":")
+		columnBeingSorted := sortParamsArray[0]
+		sortOrder := sortParamsArray[1]
+		return columnBeingSorted, sortOrder
+	}
+	return "", ""
 }
