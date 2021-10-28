@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -74,30 +73,36 @@ type DeputyClient struct {
 
 type DeputyClientDetails []DeputyClient
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetails, error) {
+type AriaSorting struct {
+	SurnameAriaSort   string
+	ReportDueAriaSort string
+	CRECAriaSort      string
+}
+
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, ErrUnauthorized
+		return nil, AriaSorting{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, newStatusError(resp)
+		return nil, AriaSorting{}, newStatusError(resp)
 	}
 
 	var v apiClients
 	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	var clients DeputyClientDetails
@@ -115,15 +120,30 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
 				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
 			}
+
 			clients = append(clients, client)
 		}
 	}
-	alphabeticalSort(clients)
-	return clients, err
+
+	var aria AriaSorting
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+
+	switch columnBeingSorted {
+	case "sort=reportdue":
+		reportDueScoreSort(clients, sortOrder)
+	case "sort=crec":
+		crecScoreSort(clients, sortOrder)
+	default:
+		alphabeticalSort(clients, sortOrder)
+	}
+
+	return clients, aria, err
 }
 
 /*
-  getOrderStatus returns the status of the oldest active order for a client.
+	GetOrderStatus returns the status of the oldest active order for a client.
   If there isn’t one, the status of the oldest order is returned.
 */
 func getOrderStatus(orders Orders) string {
@@ -151,7 +171,7 @@ func restructureOrders(apiOrders apiOrders) Orders {
 
 	for i, t := range apiOrders {
 		// reformatting order date to yyyy-dd-mm
-		reformattedDate := reformatOrderDate(t.OrderDate)
+		reformattedDate := formatDate(t.OrderDate)
 
 		var supervisionLevel string
 		if t.LatestSupervisionLevel != nil {
@@ -171,11 +191,9 @@ func restructureOrders(apiOrders apiOrders) Orders {
 	return updatedOrders
 }
 
-func reformatOrderDate(orderDate string) time.Time {
-	dashDateString := strings.Replace(orderDate, "/", "-", 2)
-	reformattedDate := fmt.Sprintf("%s%s%s%s%s", dashDateString[6:], "-", dashDateString[3:5], "-", dashDateString[:2])
-	date, _ := time.Parse("2006-01-02", reformattedDate)
-	return date
+func formatDate(dateString string) time.Time {
+	dateTime, _ := time.Parse("02/01/2006", dateString)
+	return dateTime
 }
 
 func removeOpenStatusOrders(orders Orders) Orders {
@@ -191,14 +209,66 @@ func removeOpenStatusOrders(orders Orders) Orders {
 	return updatedOrders
 }
 
-func alphabeticalSort(clients DeputyClientDetails) {
+func alphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	if len(clients) > 1 {
 		sort.Slice(clients, func(i, j int) bool {
-			if strings.EqualFold(clients[i].Firstname, clients[j].Firstname) {
-				return strings.ToLower(clients[i].Surname) < strings.ToLower(clients[j].Surname)
+			if sortOrder == "asc" {
+				return clients[i].Surname < clients[j].Surname
 			} else {
-				return strings.ToLower(clients[i].Firstname) < strings.ToLower(clients[j].Firstname)
+				return clients[i].Surname > clients[j].Surname
 			}
 		})
 	}
+	return clients
+}
+
+func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+	sort.Slice(clients, func(i, j int) bool {
+		if sortOrder == "asc" {
+			return clients[i].RiskScore < clients[j].RiskScore
+		} else {
+			return clients[i].RiskScore > clients[j].RiskScore
+		}
+	})
+	return clients
+}
+
+func setDueDateForSort(dueDate, revisedDueDate string) string {
+	if revisedDueDate != "" {
+		return revisedDueDate
+	} else if dueDate != "" {
+		return dueDate
+	} else {
+		return "12/12/9999"
+	}
+}
+
+func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+	sort.Slice(clients, func(i, j int) bool {
+		x := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
+		y := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
+		dateTimeI := formatDate(x)
+		dateTimeJ := formatDate(y)
+
+		if sortOrder == "asc" {
+			return dateTimeI.Before(dateTimeJ)
+		} else {
+			return dateTimeJ.Before(dateTimeI)
+		}
+	})
+	return clients
+}
+
+func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
+	if functionCalling == columnBeingSorted {
+		if sortOrder == "asc" {
+			return "ascending"
+		} else if sortOrder == "desc" {
+			return "descending"
+		}
+		return "none"
+	} else {
+		return "none"
+	}
+
 }
