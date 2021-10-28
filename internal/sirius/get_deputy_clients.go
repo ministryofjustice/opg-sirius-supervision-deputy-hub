@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
-	"strings"
 	"time"
 )
 
@@ -108,7 +107,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 
 	var clients DeputyClientDetails
 	for _, t := range v.Clients {
-		orders := RestructureOrders(t.Orders)
+		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
 			var client = DeputyClient{
 				ClientId:          t.ClientId,
@@ -117,8 +116,8 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 				CourtRef:          t.CourtRef,
 				RiskScore:         t.RiskScore,
 				AccommodationType: t.ClientAccommodation.Label,
-				OrderStatus:       GetOrderStatus(orders),
-				SupervisionLevel:  GetMostRecentSupervisionLevel(orders),
+				OrderStatus:       getOrderStatus(orders),
+				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
 				OldestReport:      reportReturned{t.OldestReport.DueDate, t.OldestReport.RevisedDueDate, t.OldestReport.Status.Label},
 			}
 
@@ -127,17 +126,17 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 	}
 
 	var aria AriaSorting
-	aria.SurnameAriaSort = ChangeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
-	aria.ReportDueAriaSort = ChangeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
-	aria.CRECAriaSort = ChangeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
 
 	switch columnBeingSorted {
 	case "sort=reportdue":
-		ReportDueScoreSort(clients, sortOrder)
+		reportDueScoreSort(clients, sortOrder)
 	case "sort=crec":
-		CrecScoreSort(clients, sortOrder)
+		crecScoreSort(clients, sortOrder)
 	default:
-		AlphabeticalSort(clients, sortOrder)
+		alphabeticalSort(clients, sortOrder)
 	}
 
 	return clients, aria, err
@@ -147,7 +146,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 	GetOrderStatus returns the status of the oldest active order for a client.
   If there isn’t one, the status of the oldest order is returned.
 */
-func GetOrderStatus(orders Orders) string {
+func getOrderStatus(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
 		return orders[i].OrderDate.Before(orders[j].OrderDate)
 	})
@@ -160,19 +159,19 @@ func GetOrderStatus(orders Orders) string {
 	return orders[0].OrderStatus
 }
 
-func GetMostRecentSupervisionLevel(orders Orders) string {
+func getMostRecentSupervisionLevel(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
 		return orders[i].OrderDate.After(orders[j].OrderDate)
 	})
 	return orders[0].SupervisionLevel
 }
 
-func RestructureOrders(apiOrders apiOrders) Orders {
+func restructureOrders(apiOrders apiOrders) Orders {
 	orders := make(Orders, len(apiOrders))
 
 	for i, t := range apiOrders {
 		// reformatting order date to yyyy-dd-mm
-		reformattedDate := FormattingDate(t.OrderDate)
+		reformattedDate := formatDate(t.OrderDate)
 
 		var supervisionLevel string
 		if t.LatestSupervisionLevel != nil {
@@ -188,17 +187,16 @@ func RestructureOrders(apiOrders apiOrders) Orders {
 		}
 	}
 
-	updatedOrders := RemoveOpenStatusOrders(orders)
+	updatedOrders := removeOpenStatusOrders(orders)
 	return updatedOrders
 }
 
-func FormattingDate(dateString string) time.Time {
-	reformattedDate := strings.ReplaceAll(dateString, "/", "-")
-	dateTime, _ := time.Parse("02-01-2006", reformattedDate)
+func formatDate(dateString string) time.Time {
+	dateTime, _ := time.Parse("02/01/2006", dateString)
 	return dateTime
 }
 
-func RemoveOpenStatusOrders(orders Orders) Orders {
+func removeOpenStatusOrders(orders Orders) Orders {
 	/* An order is open when it's with the Allocations team,
 	and so not yet supervised by the PA team */
 
@@ -211,7 +209,7 @@ func RemoveOpenStatusOrders(orders Orders) Orders {
 	return updatedOrders
 }
 
-func AlphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+func alphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	if len(clients) > 1 {
 		sort.Slice(clients, func(i, j int) bool {
 			if sortOrder == "asc" {
@@ -224,7 +222,7 @@ func AlphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClien
 	return clients
 }
 
-func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
 		if sortOrder == "asc" {
 			return clients[i].RiskScore < clients[j].RiskScore
@@ -235,8 +233,7 @@ func CrecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 	return clients
 }
 
-func SetDueDateForSort(dueDate, revisedDueDate string) string {
-
+func setDueDateForSort(dueDate, revisedDueDate string) string {
 	if revisedDueDate != "" {
 		return revisedDueDate
 	} else if dueDate != "" {
@@ -246,12 +243,12 @@ func SetDueDateForSort(dueDate, revisedDueDate string) string {
 	}
 }
 
-func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
-		x := SetDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
-		y := SetDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
-		dateTimeI := FormattingDate(x)
-		dateTimeJ := FormattingDate(y)
+		x := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
+		y := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
+		dateTimeI := formatDate(x)
+		dateTimeJ := formatDate(y)
 
 		if sortOrder == "asc" {
 			return dateTimeI.Before(dateTimeJ)
@@ -262,7 +259,7 @@ func ReportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 	return clients
 }
 
-func ChangeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
+func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
 	if functionCalling == columnBeingSorted {
 		if sortOrder == "asc" {
 			return "ascending"

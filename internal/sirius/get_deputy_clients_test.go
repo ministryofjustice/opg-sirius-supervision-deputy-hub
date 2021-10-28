@@ -259,7 +259,7 @@ func TestAlphabeticalSortAsc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, AlphabeticalSort(testData, "asc"), expectedAscendingResponse)
+	assert.Equal(t, alphabeticalSort(testData, "asc"), expectedAscendingResponse)
 }
 
 func TestAlphabeticalSortDesc(t *testing.T) {
@@ -315,7 +315,7 @@ func TestAlphabeticalSortDesc(t *testing.T) {
 			},
 		},
 	}
-	assert.Equal(t, AlphabeticalSort(testData, "desc"), expectedDescendingResponse)
+	assert.Equal(t, alphabeticalSort(testData, "desc"), expectedDescendingResponse)
 }
 
 func TestCrecScoreSortAsc(t *testing.T) {
@@ -371,7 +371,7 @@ func TestCrecScoreSortAsc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedAscendingResponse, CrecScoreSort(testData, "asc"))
+	assert.Equal(t, expectedAscendingResponse, crecScoreSort(testData, "asc"))
 }
 
 func TestCrecScoreSortDesc(t *testing.T) {
@@ -428,7 +428,7 @@ func TestCrecScoreSortDesc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedDescendingResponse, CrecScoreSort(testData, "desc"))
+	assert.Equal(t, expectedDescendingResponse, crecScoreSort(testData, "desc"))
 }
 
 func TestReportDueScoreSortAsc(t *testing.T) {
@@ -485,7 +485,7 @@ func TestReportDueScoreSortAsc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedAscendingResponse, ReportDueScoreSort(testData, "asc"))
+	assert.Equal(t, expectedAscendingResponse, reportDueScoreSort(testData, "asc"))
 }
 
 func TestReportDueScoreSortDesc(t *testing.T) {
@@ -542,7 +542,7 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 		},
 	}
 
-	assert.Equal(t, expectedDescendingResponse, ReportDueScoreSort(testData, "desc"))
+	assert.Equal(t, expectedDescendingResponse, reportDueScoreSort(testData, "desc"))
 }
 
 func TestChangeSortButtonDirection(t *testing.T) {
@@ -559,31 +559,31 @@ func TestChangeSortButtonDirection(t *testing.T) {
 	}
 
 	for _, tc := range tests {
-		result := ChangeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
+		result := changeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
 		assert.Equal(t, tc.expectedResponse, result)
 	}
 }
 
 func TestSetDueDateForSortReturnDueDate(t *testing.T) {
 	expectedResponse := "01/01/2021"
-	result := SetDueDateForSort("01/01/2021", "")
+	result := setDueDateForSort("01/01/2021", "")
 	assert.Equal(t, expectedResponse, result)
 }
 
 func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
 	expectedResponse := "20/12/2021"
-	result := SetDueDateForSort("", "20/12/2021")
+	result := setDueDateForSort("", "20/12/2021")
 	assert.Equal(t, expectedResponse, result)
 }
 
 func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
 	expectedResponse := "12/12/9999"
-	result := SetDueDateForSort("", "")
+	result := setDueDateForSort("", "")
 	assert.Equal(t, expectedResponse, result)
 }
 
-func TestFormattingDate(t *testing.T) {
+func TestFormatDate(t *testing.T) {
 	expectedResponse, _ := time.Parse("2006-01-02", "2021-01-01")
-	result := FormattingDate("01/01/2021")
+	result := formatDate("01/01/2021")
 	assert.Equal(t, expectedResponse, result)
 }
