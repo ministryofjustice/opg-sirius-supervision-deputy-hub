@@ -1,11 +1,5 @@
 const getFailRoute = (req) => {
-    if (req.headers && req.headers.cookie) {
-        const match = req.headers.cookie.match(/fail-route=(?<failRoute>\w+);/)
-
-        if (match && match.groups) {
-            return req.headers.cookie.match(/fail-route=(?<failRoute>\w+);/).groups.failRoute
-        }
-    }
+    return req.headers?.cookie?.match(/fail-route=(?<failRoute>\w+);/)?.groups.failRoute
 }
 
 module.exports = (req, res, next) => {
