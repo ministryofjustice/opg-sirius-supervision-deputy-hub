@@ -622,3 +622,17 @@ func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
 
 	assert.Equal(t, expectedResponse, result)
 }
+
+func TestGetMostRecentSupervisionLevel(t *testing.T) {
+	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+
+	orderData := Orders{
+		Order{OrderStatus: "Close", SupervisionLevel: "Minimal", OrderDate: dateOne},
+		Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
+	}
+	expectedResponse := "General"
+	result := getMostRecentSupervisionLevel(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
