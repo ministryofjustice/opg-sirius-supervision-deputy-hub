@@ -595,3 +595,96 @@ func TestReformatCompletedDateReturnsNullIfNoDate(t *testing.T) {
 func TestReformatCompletedDateReturnsDateInCorrectFormat(t *testing.T) {
 	assert.Equal(t, "25/02/2020", reformatCompletedDate("2020-02-25T00:00:00+00:00"))
 }
+
+func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
+	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+
+	orderData := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateOne},
+		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateTwo},
+	}
+	expectedResponse := "Active"
+	result := getOrderStatus(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
+	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+
+	orderData := Orders{
+		Order{OrderStatus: "Close", SupervisionLevel: "General", OrderDate: dateOne},
+		Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
+	}
+	expectedResponse := "Close"
+	result := getOrderStatus(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
+func TestGetMostRecentSupervisionLevel(t *testing.T) {
+	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+
+	orderData := Orders{
+		Order{OrderStatus: "Close", SupervisionLevel: "Minimal", OrderDate: dateOne},
+		Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
+	}
+	expectedResponse := "General"
+	result := getMostRecentSupervisionLevel(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
+func TestRestructureOrders(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Active"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = "Minimal"
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	dateOne, _ := time.Parse("02/01/2006", unformattedDataOrder1.OrderDate)
+
+	expectedResponse := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "Minimal", OrderDate: dateOne},
+	}
+	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
+}
+
+func TestRestructureOrdersReturnsEmptySupervisionLevel(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Active"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = ""
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	dateOne, _ := time.Parse("02/01/2006", unformattedDataOrder1.OrderDate)
+
+	expectedResponse := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "", OrderDate: dateOne},
+	}
+	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
+}
+
+func TestRestructureOrdersReturnsNilForAnOpenOrder(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Open"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = "General"
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	assert.Nil(t, restructureOrders(unformattedData))
+}
