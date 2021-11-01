@@ -602,7 +602,7 @@ func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 
 	orderData := Orders{
 		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateOne},
-		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateTwo},
+		Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
 	}
 	expectedResponse := "Active"
 	result := getOrderStatus(orderData)
@@ -687,4 +687,22 @@ func TestRestructureOrdersReturnsNilForAnOpenOrder(t *testing.T) {
 	}
 
 	assert.Nil(t, restructureOrders(unformattedData))
+}
+
+func TestRestructureOrdersReturnsEmptyStringForNilSupervisionLevel(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Active"
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	dateOne, _ := time.Parse("02/01/2006", unformattedDataOrder1.OrderDate)
+
+	expectedResponse := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "", OrderDate: dateOne},
+	}
+	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
 }
