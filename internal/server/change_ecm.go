@@ -50,7 +50,7 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 			changeDeputyECMForm := sirius.DeputyDetails{
 				ID:                               deputyId,
 				OrganisationName:                 deputyDetails.OrganisationName,
-				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
+				OrganisationTeamOrDepartmentName: r.PostFormValue("enter-ecm"),
 				Email:                            deputyDetails.Email,
 				PhoneNumber:                      deputyDetails.PhoneNumber,
 				AddressLine1:                     deputyDetails.AddressLine1,

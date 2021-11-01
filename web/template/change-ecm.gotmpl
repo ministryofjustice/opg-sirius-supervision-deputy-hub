@@ -14,21 +14,20 @@
 
           <div class="govuk-grid-row">
 
-            <form class="govuk-grid-column-one-third" data-dashlane-rid="8741d7065a520cd5" data-form-type="">
+            <form id="change-ecm-form" class="change-ecm govuk-grid-column-full" method="post">
+                <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
 
-              <p class="govuk-body govuk-!-margin-bottom-5" for="autocomplete-default">Current ECM: John Smith</p>
+              <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: John Smith</p>
 
-              <label class="govuk-label" for="autocomplete-progressiveEnhancement">Enter an Executive Case Manager name</label>
+              <label class="govuk-label" for="enter-ecm">Enter an Executive Case Manager name</label>
               <div class="autocomplete-wrapper">
-
+                <input class="govuk-input" id="enter-ecm" name="title" type="text"> </input>
               </div>
 
               <div class="govuk-button-group govuk-!-margin-top-7">
-                <a class="govuk-button" href="/sirius/pa-hub/1-3/" data-module="govuk-button">
-                  Save ECM
-                </a>
-
-                <a class="govuk-link" href="javascript: history.go(-1)">Cancel</a>
+                <button type="submit" class="govuk-button" data-module="govuk-button">Change ECM</button>
+                 
+                <a class="govuk-link" href="{{ prefix (printf "/deputy/%d/" .DeputyDetails.ID) }}">Cancel</a>
 
               </div>
 

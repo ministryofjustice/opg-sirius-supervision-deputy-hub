@@ -7,21 +7,12 @@ import (
 	"net/http"
 )
 
-func (c *Client) ChangeECM(ctx Context, editDeputyDetailForm DeputyDetails) error {
+func (c *Client) ChangeECM(ctx Context, changeDeputyECMForm DeputyDetails) error {
 	var body bytes.Buffer
-	// can keep org team and dept name but need to autofill rest of data
+
 	err := json.NewEncoder(&body).Encode(editDeputyDetails{
-		// ID:                               editDeputyDetailForm.ID,
-		// OrganisationName:                 editDeputyDetailForm.OrganisationName,
-		OrganisationTeamOrDepartmentName: editDeputyDetailForm.OrganisationTeamOrDepartmentName,
-		// Email:                            editDeputyDetailForm.Email,
-		// PhoneNumber:                      editDeputyDetailForm.PhoneNumber,
-		// AddressLine1:                     editDeputyDetailForm.AddressLine1,
-		// AddressLine2:                     editDeputyDetailForm.AddressLine2,
-		// AddressLine3:                     editDeputyDetailForm.AddressLine3,
-		// Town:                             editDeputyDetailForm.Town,
-		// County:                           editDeputyDetailForm.County,
-		// Postcode:                         editDeputyDetailForm.Postcode,
+		ID:                               changeDeputyECMForm.ID,
+		OrganisationTeamOrDepartmentName: changeDeputyECMForm.OrganisationTeamOrDepartmentName,
 		DeputyType: Deputy{Handle: "PA",
 			Label: "Public Authority"},
 	})
@@ -29,7 +20,7 @@ func (c *Client) ChangeECM(ctx Context, editDeputyDetailForm DeputyDetails) erro
 		return err
 	}
 
-	requestURL := fmt.Sprintf("/api/v1/deputies/%d", editDeputyDetailForm.ID)
+	requestURL := fmt.Sprintf("/api/v1/deputies/%d", changeDeputyECMForm.ID)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
