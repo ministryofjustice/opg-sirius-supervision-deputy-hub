@@ -13,7 +13,7 @@ type apiOrder struct {
 	OrderStatus struct {
 		Label string `json:"label"`
 	}
-	LatestSupervisionLevel *struct {
+	LatestSupervisionLevel struct {
 		SupervisionLevel struct {
 			Label string `json:"label"`
 		}
@@ -126,7 +126,9 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 	}
 
 	var clients DeputyClientDetails
+
 	for _, t := range v.Clients {
+		fmt.Printf("%+v\n", t.Orders)
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
 			var client = DeputyClient{
@@ -153,6 +155,8 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 
 			clients = append(clients, client)
 		}
+		fmt.Println("orders")
+		fmt.Println(orders)
 	}
 
 	var aria AriaSorting
@@ -204,7 +208,7 @@ func restructureOrders(apiOrders apiOrders) Orders {
 		reformattedDate := formatDate(t.OrderDate)
 
 		var supervisionLevel string
-		if t.LatestSupervisionLevel != nil {
+		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
 			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
 		} else {
 			supervisionLevel = ""

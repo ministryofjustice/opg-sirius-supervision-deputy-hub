@@ -636,3 +636,39 @@ func TestGetMostRecentSupervisionLevel(t *testing.T) {
 
 	assert.Equal(t, expectedResponse, result)
 }
+
+func TestRestructureOrders(t *testing.T) {
+
+	unformattedData := apiOrders{
+		apiOrder{
+			OrderStatus: {
+				Label: "Active",
+			},
+			LatestSupervisionLevel: {
+				SupervisionLevel: {
+					Label: "General",
+				},
+			},
+			OrderDate: "01/12/2014",
+		},
+	}
+
+	// [{OrderStatus:{Label:Active} LatestSupervisionLevel:{SupervisionLevel:{Label:General}} OrderDate:01/12/2014}]
+	// orders
+	expectedResponse := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: "2014-12-01 00:00:00 +0000 UTC"},
+	}
+	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
+}
+
+// type apiOrder struct {
+// 	OrderStatus struct {
+// 		Label string `json:"label"`
+// 	}
+// 	LatestSupervisionLevel struct {
+// 		SupervisionLevel struct {
+// 			Label string `json:"label"`
+// 		}
+// 	}
+// 	OrderDate string `json:"orderDate"`
+// }
