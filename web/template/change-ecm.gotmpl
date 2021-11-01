@@ -1,0 +1,41 @@
+{{ template "page" . }}
+
+{{ define "main" }}
+  <div class="main">
+      {{/* {{ template "error-summary" .Errors }} */}}
+    {{/* {{ template "deputy-hub" . }} */}}
+    <div class="govuk-grid-row govuk-!-margin-top-5">
+      <div class="govuk-grid-column-full">
+        <header>
+          <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">Change Executive Case Manager</h1>
+        </header>
+
+        <div class="govuk-grid-row">
+
+          <div class="govuk-grid-row">
+
+            <form class="govuk-grid-column-one-third" data-dashlane-rid="8741d7065a520cd5" data-form-type="">
+
+              <p class="govuk-body govuk-!-margin-bottom-5" for="autocomplete-default">Current ECM: John Smith</p>
+
+              <label class="govuk-label" for="autocomplete-progressiveEnhancement">Enter an Executive Case Manager name</label>
+              <div class="autocomplete-wrapper">
+
+              </div>
+
+              <div class="govuk-button-group govuk-!-margin-top-7">
+                <a class="govuk-button" href="/sirius/pa-hub/1-3/" data-module="govuk-button">
+                  Save ECM
+                </a>
+
+                <a class="govuk-link" href="javascript: history.go(-1)">Cancel</a>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{{ end }}

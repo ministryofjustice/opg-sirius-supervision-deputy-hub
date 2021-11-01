@@ -23,6 +23,7 @@ type Client interface {
 	DeputyHubEventInformation
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
+	ChangeDeputyECMInformation
 }
 
 type Template interface {
@@ -56,6 +57,10 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
+
+	router.Handle("/deputy/{id}/dashboard/change-ecm",
+		wrap(
+			renderTemplateForChangeDeputyECMHub(client, templates["change-ecm.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
