@@ -47,10 +47,15 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+			fmt.Println("in server post method")
+
+			fmt.Println("new ecm post value is ")
+			fmt.Println(r.PostFormValue("new-ecm"))
+
 			changeDeputyECMForm := sirius.DeputyDetails{
 				ID:                               deputyId,
 				OrganisationName:                 deputyDetails.OrganisationName,
-				OrganisationTeamOrDepartmentName: r.PostFormValue("enter-ecm"),
+				OrganisationTeamOrDepartmentName: r.PostFormValue("new-ecm"),
 				Email:                            deputyDetails.Email,
 				PhoneNumber:                      deputyDetails.PhoneNumber,
 				AddressLine1:                     deputyDetails.AddressLine1,

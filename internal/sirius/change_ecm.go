@@ -10,6 +10,8 @@ import (
 func (c *Client) ChangeECM(ctx Context, changeDeputyECMForm DeputyDetails) error {
 	var body bytes.Buffer
 
+	fmt.Println("in sirius change ecm func")
+
 	err := json.NewEncoder(&body).Encode(editDeputyDetails{
 		ID:                               changeDeputyECMForm.ID,
 		OrganisationTeamOrDepartmentName: changeDeputyECMForm.OrganisationTeamOrDepartmentName,
@@ -23,6 +25,8 @@ func (c *Client) ChangeECM(ctx Context, changeDeputyECMForm DeputyDetails) error
 	requestURL := fmt.Sprintf("/api/v1/deputies/%d", changeDeputyECMForm.ID)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
+
+	fmt.Println("after req")
 
 	if err != nil {
 		return err

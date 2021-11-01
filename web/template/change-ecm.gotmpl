@@ -17,11 +17,11 @@
             <form id="change-ecm-form" class="change-ecm govuk-grid-column-full" method="post">
                 <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
 
-              <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: John Smith</p>
+              <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: {{.DeputyDetails.OrganisationTeamOrDepartmentName}}</p>
 
-              <label class="govuk-label" for="enter-ecm">Enter an Executive Case Manager name</label>
+              <label class="govuk-label" for="new-ecm">Enter an Executive Case Manager name</label>
               <div class="autocomplete-wrapper">
-                <input class="govuk-input" id="enter-ecm" name="title" type="text"> </input>
+                <input class="govuk-input" id="new-ecm" name="new-ecm" type="text"></input>
               </div>
 
               <div class="govuk-button-group govuk-!-margin-top-7">
