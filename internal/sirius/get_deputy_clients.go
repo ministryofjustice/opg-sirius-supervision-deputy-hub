@@ -128,7 +128,6 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 	var clients DeputyClientDetails
 
 	for _, t := range v.Clients {
-		fmt.Printf("%+v\n", t.Orders)
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
 			var client = DeputyClient{
@@ -155,8 +154,6 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 
 			clients = append(clients, client)
 		}
-		fmt.Println("orders")
-		fmt.Println(orders)
 	}
 
 	var aria AriaSorting

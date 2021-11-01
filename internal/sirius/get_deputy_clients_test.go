@@ -639,36 +639,52 @@ func TestGetMostRecentSupervisionLevel(t *testing.T) {
 
 func TestRestructureOrders(t *testing.T) {
 
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Active"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = "Minimal"
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
 	unformattedData := apiOrders{
-		apiOrder{
-			OrderStatus: {
-				Label: "Active",
-			},
-			LatestSupervisionLevel: {
-				SupervisionLevel: {
-					Label: "General",
-				},
-			},
-			OrderDate: "01/12/2014",
-		},
+		unformattedDataOrder1,
 	}
 
-	// [{OrderStatus:{Label:Active} LatestSupervisionLevel:{SupervisionLevel:{Label:General}} OrderDate:01/12/2014}]
-	// orders
+	dateOne, _ := time.Parse("02/01/2006", unformattedDataOrder1.OrderDate)
+
 	expectedResponse := Orders{
-		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: "2014-12-01 00:00:00 +0000 UTC"},
+		Order{OrderStatus: "Active", SupervisionLevel: "Minimal", OrderDate: dateOne},
 	}
 	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
 }
 
-// type apiOrder struct {
-// 	OrderStatus struct {
-// 		Label string `json:"label"`
-// 	}
-// 	LatestSupervisionLevel struct {
-// 		SupervisionLevel struct {
-// 			Label string `json:"label"`
-// 		}
-// 	}
-// 	OrderDate string `json:"orderDate"`
-// }
+func TestRestructureOrdersReturnsEmptySupervisionLevel(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Active"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = ""
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	dateOne, _ := time.Parse("02/01/2006", unformattedDataOrder1.OrderDate)
+
+	expectedResponse := Orders{
+		Order{OrderStatus: "Active", SupervisionLevel: "", OrderDate: dateOne},
+	}
+	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
+}
+
+func TestRestructureOrdersReturnsNilForAnOpenOrder(t *testing.T) {
+
+	unformattedDataOrder1 := apiOrder{}
+	unformattedDataOrder1.OrderStatus.Label = "Open"
+	unformattedDataOrder1.LatestSupervisionLevel.SupervisionLevel.Label = "General"
+	unformattedDataOrder1.OrderDate = "01/12/2014"
+
+	unformattedData := apiOrders{
+		unformattedDataOrder1,
+	}
+
+	assert.Nil(t, restructureOrders(unformattedData))
+}
