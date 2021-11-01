@@ -28,6 +28,8 @@ To develop with your local sirius environment:
 
 `docker-compose -f docker/docker-compose.yml up -d --build`
 
+Note that if you are integrating with local Sirius instead of the mock server, you will need to use a valid deputy id in the url.
+
 ### Without docker
 
 Alternatively to set it up not using Docker use below. This hosts it on `localhost:1234`

@@ -1327,5 +1327,18 @@
       "createdTime": "20/09/2021 08:50:12",
       "direction": null
     }
+  ],
+  "errors": [
+    {
+      "id": "notes",
+      "validation_errors": {
+        "name": {
+          "stringLengthTooLong": "The title must be 255 characters or fewer"
+        },
+        "description": {
+          "isEmpty": "Value is required and can't be empty"
+        }
+      }
+    }
   ]
 }
