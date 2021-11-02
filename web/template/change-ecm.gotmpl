@@ -17,7 +17,12 @@
             <form id="change-ecm-form" class="change-ecm govuk-grid-column-one-third" method="post">
               <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
 
-              <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: {{.DeputyDetails.OrganisationTeamOrDepartmentName}}</p>
+               
+              <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: 
+              {{ if ne .DeputyDetails.OrganisationTeamOrDepartmentName .DefaultPaTeam }}
+                {{.DeputyDetails.OrganisationTeamOrDepartmentName}}
+              {{end}}
+              </p>
 
               <label class="govuk-label" for="new-ecm">Enter an Executive Case Manager name</label>
               <div class="autocomplete-wrapper">

@@ -9,21 +9,22 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
-type ChangeDeputyECMInformation interface {
+type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
 	ChangeECM(sirius.Context, sirius.DeputyDetails, sirius.DeputyDetails) error
 }
 
-type changeDeputyECMHubVars struct {
+type changeECMHubVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success       bool
+	DefaultPaTeam string
 }
 
-func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl Template) Handler {
+func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam string, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -38,16 +39,17 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 				return err
 			}
 
-			vars := changeDeputyECMHubVars{
+			vars := changeECMHubVars{
 				Path:          r.URL.Path,
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
+				DefaultPaTeam: defaultPATeam,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			changeDeputyECMForm := sirius.DeputyDetails{
+			changeECMForm := sirius.DeputyDetails{
 				ID:                               deputyId,
 				OrganisationName:                 deputyDetails.OrganisationName,
 				OrganisationTeamOrDepartmentName: r.PostFormValue("new-ecm"),
@@ -61,16 +63,17 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 				Postcode:                         deputyDetails.Postcode,
 			}
 
-			err := client.ChangeECM(ctx, changeDeputyECMForm, deputyDetails)
+			err := client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
 
-				vars := changeDeputyECMHubVars{
+				vars := changeECMHubVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
 					DeputyDetails: deputyDetails,
 					Errors:        verr.Errors,
+					DefaultPaTeam: defaultPATeam,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

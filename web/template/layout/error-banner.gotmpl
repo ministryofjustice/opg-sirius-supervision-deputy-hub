@@ -5,7 +5,7 @@
   </svg>
   <div class="moj-banner__message">
     <span class="moj-banner__assistive">Warning</span>
-    {{ .ErrorMessage }}<a href="#">Assign an executive case manager</a>
+    {{ .ErrorMessage }}<a href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a>
   </div>
 </div>
 {{ end }}
