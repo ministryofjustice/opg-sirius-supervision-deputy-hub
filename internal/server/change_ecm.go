@@ -63,21 +63,28 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam strin
 				Postcode:                         deputyDetails.Postcode,
 			}
 
+			vars := changeECMHubVars{
+				Path:          r.URL.Path,
+				XSRFToken:     ctx.XSRFToken,
+				DeputyDetails: deputyDetails,
+				DefaultPaTeam: defaultPATeam,
+			}
+
+			error := validateInput(changeECMForm.OrganisationTeamOrDepartmentName)
+			if error != nil {
+				vars.Errors = error
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
 			err := client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
+				vars.Errors = verr.Errors
 
-				vars := changeECMHubVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					DeputyDetails: deputyDetails,
-					Errors:        verr.Errors,
-					DefaultPaTeam: defaultPATeam,
-				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			return Redirect(fmt.Sprintf("/deputy/%d/?success=true", deputyId))
+			return Redirect(fmt.Sprintf("/deputy/%d/", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
@@ -85,18 +92,12 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam strin
 	}
 }
 
-// func renameEditDeputyValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-// 	errorCollection := sirius.ValidationErrors{}
-
-// 	for fieldName, value := range siriusError {
-// 		for errorType, errorMessage := range value {
-// 			err := make(map[string]string)
-
-// 			if fieldName == "organisationTeamOrDepartmentName" && errorType == "stringLengthTooLong" {
-// 				err[errorType] = "The team or department must be 255 characters or fewer"
-// 				errorCollection["organisationTeamOrDepartmentName"] = err
-// 			}
-// 		}
-// 	}
-// 	return errorCollection
-// }
+func validateInput(newECM string) sirius.ValidationErrors {
+	if len(newECM) < 1 {
+		newError := sirius.ValidationErrors{
+			"Change ECM": {"": "Select an executive case manager"},
+		}
+		return newError
+	}
+	return nil
+}
