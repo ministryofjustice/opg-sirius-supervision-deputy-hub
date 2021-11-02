@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyDetailsReturned(t *testing.T) {
