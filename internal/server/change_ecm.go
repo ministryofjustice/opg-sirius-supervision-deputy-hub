@@ -11,7 +11,7 @@ import (
 
 type ChangeDeputyECMInformation interface {
 	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	ChangeECM(sirius.Context, sirius.DeputyDetails) error
+	ChangeECM(sirius.Context, sirius.DeputyDetails, sirius.DeputyDetails) error
 }
 
 type changeDeputyECMHubVars struct {
@@ -47,11 +47,6 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			fmt.Println("in server post method")
-
-			fmt.Println("new ecm post value is ")
-			fmt.Println(r.PostFormValue("new-ecm"))
-
 			changeDeputyECMForm := sirius.DeputyDetails{
 				ID:                               deputyId,
 				OrganisationName:                 deputyDetails.OrganisationName,
@@ -66,7 +61,7 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 				Postcode:                         deputyDetails.Postcode,
 			}
 
-			err := client.ChangeECM(ctx, changeDeputyECMForm)
+			err := client.ChangeECM(ctx, changeDeputyECMForm, deputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
@@ -79,7 +74,6 @@ func renderTemplateForChangeDeputyECMHub(client ChangeDeputyECMInformation, tmpl
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-
 			return Redirect(fmt.Sprintf("/deputy/%d/?success=true", deputyId))
 
 		default:
