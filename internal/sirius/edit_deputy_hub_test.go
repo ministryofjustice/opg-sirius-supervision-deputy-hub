@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEditDeputyDetails(t *testing.T) {
@@ -51,7 +52,7 @@ func TestEditDeputyDetails(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), "defaultPATeam", editDeputyDetailForm)
 	assert.Nil(t, err)
 }
 
@@ -77,7 +78,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), "defaultPATeam", editDeputyDetailForm)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -108,7 +109,7 @@ func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), "defaultPATeam", editDeputyDetailForm)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }
