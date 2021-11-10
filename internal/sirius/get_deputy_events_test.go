@@ -64,7 +64,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 300,
-			Timestamp:       "2021-09-09 14:01:59",
+			Timestamp:       "09/09/2021 14:01:59",
 			EventType:       "DeputyLinkedToOrder",
 			User:            User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678"},
 			Event: Event{
