@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 )
 
 type DeputyEventCollection []DeputyEvent
@@ -73,18 +74,18 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollecti
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	DeputyEvents := EditDeputyEvents(v)
+	DeputyEvents := editDeputyEvents(v)
 
 	return DeputyEvents, err
 
 }
 
-func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
+func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       s.Timestamp,
-			EventType:       ReformatEventType(s.EventType),
+			Timestamp:       formatDateAndTime(s.Timestamp),
+			EventType:       reformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
 			Event:           s.Event,
@@ -92,20 +93,28 @@ func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 
 		list = append(list, event)
 	}
-	SortTimeLineNewestOneFirst(list)
+	sortTimeLineNewestOneFirst(list)
 	return list
 }
 
-func ReformatEventType(s string) string {
+func reformatEventType(s string) string {
 	eventTypeArray := strings.Split(s, "\\")
 	eventTypeArrayLength := len(eventTypeArray)
 	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
 	return eventTypeName
 }
 
-func SortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
+func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
 	sort.Slice(v, func(i, j int) bool {
-		return v[i].Timestamp > v[j].Timestamp
+		changeToTimeTypeI, _ := time.Parse("02/01/2006 15:04:05", v[i].Timestamp)
+		changeToTimeTypeJ, _ := time.Parse("02/01/2006 15:04:05", v[j].Timestamp)
+		return changeToTimeTypeJ.Before(changeToTimeTypeI)
 	})
 	return v
+}
+
+func formatDateAndTime(dateString string) string {
+	stringTodateTime, _ := time.Parse("2006-01-02 15:04:05", dateString)
+	dateTime := stringTodateTime.Format("02/01/2006 15:04:05")
+	return dateTime
 }
