@@ -93,7 +93,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, "defaultPATeam", template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, "", template)(sirius.PermissionSet{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -158,7 +158,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, "defaultPATeam", template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, "", template)(sirius.PermissionSet{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

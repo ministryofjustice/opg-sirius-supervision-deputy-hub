@@ -52,7 +52,7 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		Postcode:         "CM1 1GG",
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "defaultPATeam", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -66,7 +66,7 @@ func TestGetDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "defaultPATeam", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,
@@ -90,7 +90,7 @@ func TestGetDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "defaultPATeam", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,

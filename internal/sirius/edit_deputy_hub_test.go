@@ -52,7 +52,7 @@ func TestEditDeputyDetails(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), "defaultPATeam", editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), "", editDeputyDetailForm)
 	assert.Nil(t, err)
 }
 
