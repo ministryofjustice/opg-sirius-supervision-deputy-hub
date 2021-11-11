@@ -6,23 +6,29 @@ import (
 	"net/http"
 )
 
-type DeputyDetails struct {
-	ID                               int    `json:"id"`
-	DeputyCasrecId                   int    `json:"deputyCasrecId"`
-	DeputyNumber                     int    `json:"deputyNumber"`
-	OrganisationName                 string `json:"organisationName"`
-	OrganisationTeamOrDepartmentName string `json:"organisationTeamOrDepartmentName"`
-	Email                            string `json:"email"`
-	PhoneNumber                      string `json:"phoneNumber"`
-	AddressLine1                     string `json:"addressLine1"`
-	AddressLine2                     string `json:"addressLine2"`
-	AddressLine3                     string `json:"addressLine3"`
-	Town                             string `json:"town"`
-	County                           string `json:"county"`
-	Postcode                         string `json:"postcode"`
+type executiveCaseManager struct {
+	EcmId   int    `json:"id"`
+	EcmName string `json:"displayName"`
 }
 
-func (c *Client) GetDeputyDetails(ctx Context, deputyId int) (DeputyDetails, error) {
+type DeputyDetails struct {
+	ID                               int                  `json:"id"`
+	DeputyCasrecId                   int                  `json:"deputyCasrecId"`
+	DeputyNumber                     int                  `json:"deputyNumber"`
+	OrganisationName                 string               `json:"organisationName"`
+	OrganisationTeamOrDepartmentName string               `json:"organisationTeamOrDepartmentName"`
+	Email                            string               `json:"email"`
+	PhoneNumber                      string               `json:"phoneNumber"`
+	AddressLine1                     string               `json:"addressLine1"`
+	AddressLine2                     string               `json:"addressLine2"`
+	AddressLine3                     string               `json:"addressLine3"`
+	Town                             string               `json:"town"`
+	County                           string               `json:"county"`
+	Postcode                         string               `json:"postcode"`
+	ExecutiveCaseManager             executiveCaseManager `json:"executiveCaseManager"`
+}
+
+func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam string, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)
@@ -46,5 +52,10 @@ func (c *Client) GetDeputyDetails(ctx Context, deputyId int) (DeputyDetails, err
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
+
+	if v.ExecutiveCaseManager.EcmName == "" {
+		v.ExecutiveCaseManager.EcmName = defaultPATeam
+	}
+
 	return v, err
 }
