@@ -163,6 +163,12 @@
         }
       ],
       "reference": [],
+      "executiveCaseManager": {
+        "id": 72,
+        "name": "LayTeam1",
+        "displayName": "LayTeam1 User2",
+        "surname": "User2"
+      },
       "correspondenceByPost": false,
       "correspondenceByPhone": false,
       "correspondenceByEmail": false,

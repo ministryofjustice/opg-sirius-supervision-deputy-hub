@@ -9,7 +9,7 @@ describe("Deputy Hub", () => {
         cy.get(".govuk-caption-m").eq(0).should("contain",  "Deputy Number: 23")
     })
 
-    it("the page should not contain the warning error", () => {
+    it("the page should not contain the warning error and shows ecm", () => {
     cy.get('.moj-banner__message > a').should('not.exist')
     })
 });
