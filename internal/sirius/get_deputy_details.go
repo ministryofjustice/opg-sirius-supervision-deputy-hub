@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type executiveCaseManager struct {
+type ExecutiveCaseManager struct {
 	EcmId   int    `json:"id"`
 	EcmName string `json:"displayName"`
 }
@@ -25,7 +25,7 @@ type DeputyDetails struct {
 	Town                             string               `json:"town"`
 	County                           string               `json:"county"`
 	Postcode                         string               `json:"postcode"`
-	ExecutiveCaseManager             executiveCaseManager `json:"executiveCaseManager"`
+	ExecutiveCaseManager             ExecutiveCaseManager `json:"executiveCaseManager"`
 }
 
 func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam string, deputyId int) (DeputyDetails, error) {
