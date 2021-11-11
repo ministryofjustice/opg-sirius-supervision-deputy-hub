@@ -53,9 +53,5 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam string, deputyId in
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	if v.ExecutiveCaseManager.EcmName == "" {
-		v.ExecutiveCaseManager.EcmName = defaultPATeam
-	}
-
 	return v, err
 }
