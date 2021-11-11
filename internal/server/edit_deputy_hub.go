@@ -10,8 +10,8 @@ import (
 )
 
 type EditDeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
-	EditDeputyDetails(sirius.Context, sirius.DeputyDetails) error
+	GetDeputyDetails(sirius.Context, string, int) (sirius.DeputyDetails, error)
+	EditDeputyDetails(sirius.Context, string, sirius.DeputyDetails) error
 }
 
 type editDeputyHubVars struct {
@@ -23,13 +23,13 @@ type editDeputyHubVars struct {
 	Success       bool
 }
 
-func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Template) Handler {
+func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam string, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 
 		switch r.Method {
 		case http.MethodGet:
@@ -61,7 +61,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				Postcode:                         r.PostFormValue("postcode"),
 			}
 
-			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
+			err := client.EditDeputyDetails(ctx, defaultPATeam, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)

@@ -2,15 +2,16 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubNotesInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, string, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
@@ -55,7 +56,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
@@ -75,7 +76,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				SuccessMessage: "Note added",
 			}
 
-			if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+			if vars.DeputyDetails.ExecutiveCaseManager.EcmName == defaultPATeam {
 				vars.ErrorMessage = "An executive case manager has not been assigned. "
 			}
 
@@ -93,7 +94,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
@@ -113,7 +114,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 					DeputyDetails: deputyDetails,
 				}
 
-				if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+				if vars.DeputyDetails.ExecutiveCaseManager.EcmName == defaultPATeam {
 					vars.ErrorMessage = "An executive case manager has not been assigned. "
 				}
 
