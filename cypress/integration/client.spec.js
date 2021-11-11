@@ -12,7 +12,7 @@ describe("Clients tab", () => {
     it("displays 7 column headings", () => {
         cy.get('.govuk-table__row').find('th').should('have.length', 7)
 
-        const expected = ["Client", "Accommodation type", "Status", "Supervision level", "Visits", "Report due", "CREC"];
+        const expected = ["Client", "Accommodation type", "Status", "Supervision level", "Visits", "Report due", "Risk"];
 
         cy.get(".govuk-table__head > .govuk-table__row")
             .children()
@@ -56,14 +56,14 @@ describe("Clients tab", () => {
 
     });
 
-    it("Clients crec have been sorted in order of ascending", () => {
+    it("Clients risk have been sorted in order of ascending", () => {
         cy.get('[label="sort-aria-column-none"] > button').click();
         cy.get(':nth-child(1) > .data-crec').should("contain", "2");
         cy.get(':nth-child(2) > .data-crec').should("contain", "3");
         cy.get(':nth-child(3) > .data-crec').should("contain", "4");
     });
 
-    it("Clients crec have been sorted in order of descending", () => {
+    it("Clients risk have been sorted in order of descending", () => {
         cy.get('[label="sort-aria-column-none"] > button').click();
         cy.get('[label="sort-aria-column-ascending"] > button').click();
         cy.get(':nth-child(1) > .data-crec').should("contain", "4");
