@@ -11,7 +11,7 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, int, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, string, int) (sirius.DeputyDetails, error)
 }
 
 type listClientsVars struct {
@@ -34,7 +34,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 		if err != nil {
 			return err
 		}
@@ -54,7 +54,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			AriaSorting:          ariaSorting,
 		}
 
-		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+		if vars.DeputyDetails.ExecutiveCaseManager.EcmName == defaultPATeam {
 			vars.ErrorMessage = "An executive case manager has not been assigned. "
 		}
 		return tmpl.ExecuteTemplate(w, "page", vars)

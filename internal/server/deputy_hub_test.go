@@ -16,7 +16,7 @@ type mockDeputyHubInformation struct {
 	deputyData sirius.DeputyDetails
 }
 
-func (m *mockDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam string, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
