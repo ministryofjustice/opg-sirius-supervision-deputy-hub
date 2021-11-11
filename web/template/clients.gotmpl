@@ -2,12 +2,11 @@
 {{ define "main" }}
    {{ template "deputy-hub" . }}
    {{ template "navigation" . }}
-
+   <div class="main">
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">Clients</h1>
     </header>
     <table id="pa-clients-3" class="govuk-table sortable">
-
         <thead class="govuk-table__head">
         <tr class="govuk-table__row">
             {{if eq .AriaSorting.SurnameAriaSort "none" }} 
@@ -36,11 +35,11 @@
               </th>
             {{if eq .AriaSorting.CRECAriaSort "none" }} 
               <th scope="col" class="govuk-table__header" label="sort-aria-column-none" aria-sort="none"><button type="button"
-              onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
+              onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">Risk</button>
             {{ else if eq .AriaSorting.CRECAriaSort "ascending"}}
-              <th scope="col" class="govuk-table__header" label="sort-aria-column-ascending" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">CREC</button>
+              <th scope="col" class="govuk-table__header" label="sort-aria-column-ascending" aria-sort="ascending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">Risk</button>
             {{ else if eq .AriaSorting.CRECAriaSort "descending"}}
-              <th scope="col" class="govuk-table__header" label="sort-aria-column-descending" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">CREC</button>
+              <th scope="col" class="govuk-table__header" label="sort-aria-column-descending" aria-sort="descending"><button type="button" onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">Risk</button>
             {{end }}
              </th>
         </tr>
@@ -89,5 +88,5 @@
         {{ end }}
         </tbody>
     </table>
-
+  </div>
 {{ end }}
