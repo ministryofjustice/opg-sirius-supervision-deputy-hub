@@ -19,7 +19,7 @@
 
 
               <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: 
-              {{ if ne .DeputyDetails.ExecutiveCaseManager.EcmName .DefaultPaTeam }}
+              {{ if ne .DeputyDetails.ExecutiveCaseManager.EcmId .DefaultPaTeam }}
                 {{.DeputyDetails.ExecutiveCaseManager.EcmName}}
               {{end}}
               </p>

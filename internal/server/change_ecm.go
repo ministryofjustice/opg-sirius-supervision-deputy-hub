@@ -11,7 +11,7 @@ import (
 
 type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
-	ChangeECM(sirius.Context, sirius.DeputyDetails, sirius.DeputyDetails) error
+	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
 type changeECMHubVars struct {
@@ -51,15 +51,18 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 		case http.MethodPost:
 
 			EcmIdValue, err := strconv.Atoi(r.PostFormValue("new-ecm"))
+
+			fmt.Println("ecm id value")
+			fmt.Println(EcmIdValue)
+
 			if err != nil {
 				return err
 			}
 
-			changeECMForm := sirius.DeputyDetails{
-				ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-					EcmId:EcmIdValue,
-				},
-			}
+			changeECMForm := sirius.ExecutiveCaseManagerOutgoing{EcmId: EcmIdValue}
+
+			fmt.Println("change ecm form")
+			fmt.Println(changeECMForm)
 
 			vars := changeECMHubVars{
 				Path:          r.URL.Path,
@@ -68,11 +71,11 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				DefaultPaTeam: defaultPATeam,
 			}
 
-			error := validateInput(changeECMForm.OrganisationTeamOrDepartmentName)
-			if error != nil {
-				vars.Errors = error
-				return tmpl.ExecuteTemplate(w, "page", vars)
-			}
+			//error := validateInput(changeECMForm.OrganisationTeamOrDepartmentName)
+			//if error != nil {
+			//	vars.Errors = error
+			//	return tmpl.ExecuteTemplate(w, "page", vars)
+			//}
 
 			err = client.ChangeECM(ctx, changeECMForm, deputyDetails)
 

@@ -7,19 +7,18 @@ import (
 	"net/http"
 )
 
-func (c *Client) ChangeECM(ctx Context, changeECMForm, deputyDetails DeputyDetails) error {
+func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoing, deputyDetails DeputyDetails) error {
 	var body bytes.Buffer
 
-	err := json.NewEncoder(&body).Encode(DeputyDetails{
-		ExecutiveCaseManager: ExecutiveCaseManager{
-			EcmId: changeECMForm.ExecutiveCaseManager.EcmId,
-		},
-	})
+	err := json.NewEncoder(&body).Encode(ExecutiveCaseManagerOutgoing{EcmId: changeECMForm.EcmId})
 	if err != nil {
 		return err
 	}
 
-	requestURL := fmt.Sprintf("/api/v1/deputies/%d/edit/allocate", changeECMForm.ID)
+	requestURL := fmt.Sprintf("/api/v1/deputies/%d/ecm", deputyDetails.ID)
+
+	fmt.Println("request url")
+	fmt.Println(requestURL)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
