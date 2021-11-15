@@ -33,7 +33,7 @@ type editDeputyDetails struct {
 	DeputyType                       Deputy `json:"deputyType"`
 }
 
-func (c *Client) EditDeputyDetails(ctx Context, DefaultClient string, editDeputyDetailForm DeputyDetails) error {
+func (c *Client) EditDeputyDetails(ctx Context, editDeputyDetailForm DeputyDetails) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(editDeputyDetails{
 		ID:                               editDeputyDetailForm.ID,

@@ -11,7 +11,7 @@ import (
 
 type EditDeputyHubInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
-	EditDeputyDetails(sirius.Context, int, sirius.DeputyDetails) error
+	EditDeputyDetails(sirius.Context, sirius.DeputyDetails) error
 }
 
 type editDeputyHubVars struct {
@@ -61,7 +61,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATe
 				Postcode:                         r.PostFormValue("postcode"),
 			}
 
-			err := client.EditDeputyDetails(ctx, defaultPATeam, editDeputyDetailForm)
+			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
