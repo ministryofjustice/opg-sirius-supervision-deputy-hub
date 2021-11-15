@@ -18,7 +18,7 @@ type mockDeputyHubClientInformation struct {
 	ariaSorting      sirius.AriaSorting
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam string, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -37,7 +37,7 @@ func TestNavigateToClientTab(t *testing.T) {
 
 	client := &mockDeputyHubClientInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)

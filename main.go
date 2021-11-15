@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -24,7 +25,8 @@ func main() {
 	siriusURL := getEnv("SIRIUS_URL", "http://localhost:8080")
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
-	defaultPATeam := getEnv("DEFAULT_PA_TEAM", `PA Team 1 - (Supervision)`)
+	defaultPATeamString := getEnv("DEFAULT_PA_TEAM", `PA Team 1 - (Supervision)`)
+	defaultPATeam, err := strconv.Atoi(defaultPATeamString)
 
 	layouts, _ := template.
 		New("").

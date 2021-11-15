@@ -28,7 +28,7 @@ type DeputyDetails struct {
 	ExecutiveCaseManager             executiveCaseManager `json:"executiveCaseManager"`
 }
 
-func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam string, deputyId int) (DeputyDetails, error) {
+func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)
@@ -53,8 +53,8 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam string, deputyId in
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	if v.ExecutiveCaseManager.EcmName == "" {
-		v.ExecutiveCaseManager.EcmName = defaultPATeam
+	if v.ExecutiveCaseManager.EcmId == 0 {
+		v.ExecutiveCaseManager.EcmId = defaultPATeam
 	}
 
 	return v, err

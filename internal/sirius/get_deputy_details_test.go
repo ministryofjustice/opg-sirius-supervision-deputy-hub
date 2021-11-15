@@ -50,9 +50,13 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		Town:             "Chelmsford",
 		County:           "Essex",
 		Postcode:         "CM1 1GG",
+		ExecutiveCaseManager: executiveCaseManager{
+			EcmId:23,
+			EcmName:"",
+		},
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -66,7 +70,7 @@ func TestGetDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,
@@ -90,7 +94,7 @@ func TestGetDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), "", 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,

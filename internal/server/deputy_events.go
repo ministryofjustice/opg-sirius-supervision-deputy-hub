@@ -9,7 +9,7 @@ import (
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyDetails(sirius.Context, string, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
 }
 
@@ -23,7 +23,7 @@ type deputyHubEventVars struct {
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -49,7 +49,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 			DeputyEvents:  deputyEvents,
 		}
 
-		if vars.DeputyDetails.ExecutiveCaseManager.EcmName == defaultPATeam {
+		if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
 			vars.ErrorMessage = "An executive case manager has not been assigned. "
 		}
 
