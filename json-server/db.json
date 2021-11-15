@@ -85,6 +85,11 @@
         }
       ],
       "reference": [],
+      "executiveCaseManager" : {
+        "id": 23,
+        "name": "PA Team 1 - (Supervision)",
+        "displayName": "PA Team 1 - (Supervision)"
+      },
       "correspondenceByPost": false,
       "correspondenceByPhone": false,
       "correspondenceByEmail": false,
@@ -113,8 +118,7 @@
       },
       "deputyCasrecId": 10000000,
       "deputyNumber": 11,
-      "organisationName": "Test Organisation",
-      "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)"
+      "organisationName": "Test Organisation"
     },
     {
       "id": 2,
@@ -163,6 +167,12 @@
         }
       ],
       "reference": [],
+      "executiveCaseManager": {
+        "id": 72,
+        "name": "LayTeam1",
+        "displayName": "LayTeam1 User2",
+        "surname": "User2"
+      },
       "correspondenceByPost": false,
       "correspondenceByPhone": false,
       "correspondenceByEmail": false,
@@ -383,6 +393,12 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
+                  "executiveCaseManager": {
+                    "id": 23,
+                    "name": "PA Team 1 - (Supervision)",
+                    "displayName": "PA Team 1 - (Supervision)"
+                  },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
                   "correspondenceByEmail": false,
@@ -642,6 +658,12 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
+                  "executiveCaseManager": {
+                    "id": 23,
+                    "name": "PA Team 1 - (Supervision)",
+                    "displayName": "PA Team 1 - (Supervision)"
+                  },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
                   "correspondenceByEmail": false,
@@ -902,6 +924,12 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
+                  "executiveCaseManager": {
+                    "id": 23,
+                    "name": "PA Team 1 - (Supervision)",
+                    "displayName": "PA Team 1 - (Supervision)"
+                  },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
                   "correspondenceByEmail": false,
@@ -1141,6 +1169,12 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 88,
+                  "executiveCaseManager": {
+                    "id": 23,
+                    "name": "PA Team 1 - (Supervision)",
+                    "displayName": "PA Team 1 - (Supervision)"
+                  },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
                   "correspondenceByEmail": false,

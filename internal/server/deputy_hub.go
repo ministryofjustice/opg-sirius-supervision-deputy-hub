@@ -1,14 +1,15 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
 type deputyHubVars struct {
@@ -22,7 +23,7 @@ type deputyHubVars struct {
 	SuccessMessage string
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -31,7 +32,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam strin
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 		if err != nil {
 			return err
 		}
@@ -46,7 +47,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam strin
 			SuccessMessage: "Team details updated",
 		}
 
-		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
+		if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
 			vars.ErrorMessage = "An executive case manager has not been assigned. "
 		}
 
