@@ -118,8 +118,7 @@
       },
       "deputyCasrecId": 10000000,
       "deputyNumber": 11,
-      "organisationName": "Test Organisation",
-      "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)"
+      "organisationName": "Test Organisation"
     },
     {
       "id": 2,
@@ -394,6 +393,7 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
                   "executiveCaseManager": {
                     "id": 23,
                     "name": "PA Team 1 - (Supervision)",
@@ -658,6 +658,7 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
                   "executiveCaseManager": {
                     "id": 23,
                     "name": "PA Team 1 - (Supervision)",
@@ -923,6 +924,7 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 66,
                   "executiveCaseManager": {
                     "id": 23,
                     "name": "PA Team 1 - (Supervision)",
@@ -1167,6 +1169,7 @@
                     }
                   ],
                   "reference": [],
+                  "deputyNumber": 88,
                   "executiveCaseManager": {
                     "id": 23,
                     "name": "PA Team 1 - (Supervision)",
