@@ -55,6 +55,7 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) 
 
 	if v.ExecutiveCaseManager.EcmId == 0 {
 		v.ExecutiveCaseManager.EcmId = defaultPATeam
+		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
 	}
 
 	return v, err
