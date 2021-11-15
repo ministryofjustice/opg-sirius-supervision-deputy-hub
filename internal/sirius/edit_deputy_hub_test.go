@@ -52,7 +52,7 @@ func TestEditDeputyDetails(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), "", editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 	assert.Nil(t, err)
 }
 
@@ -78,7 +78,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), "", editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -109,7 +109,7 @@ func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), "", editDeputyDetailForm)
+	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

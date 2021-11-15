@@ -10,7 +10,7 @@ import (
 )
 
 type ChangeECMInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	ChangeECM(sirius.Context, sirius.DeputyDetails, sirius.DeputyDetails) error
 }
 
@@ -21,16 +21,16 @@ type changeECMHubVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success       bool
-	DefaultPaTeam string
+	DefaultPaTeam int
 }
 
-func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 
 		switch r.Method {
 		case http.MethodGet:
@@ -49,9 +49,15 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam strin
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+
+			EcmIdValue, err := strconv.Atoi(r.PostFormValue("new-ecm"))
+			if err != nil {
+				return err
+			}
+
 			changeECMForm := sirius.DeputyDetails{
-				ExecutiveCaseManager: ExecutiveCaseManager{
-					EcmId: r.PostFormValue("new-ecm"),
+				ExecutiveCaseManager: sirius.ExecutiveCaseManager{
+					EcmId:EcmIdValue,
 				},
 			}
 
@@ -68,7 +74,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam strin
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.ChangeECM(ctx, changeECMForm, deputyDetails)
+			err = client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)

@@ -10,8 +10,8 @@ import (
 )
 
 type EditDeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, string, int) (sirius.DeputyDetails, error)
-	EditDeputyDetails(sirius.Context, string, sirius.DeputyDetails) error
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
+	EditDeputyDetails(sirius.Context, int, sirius.DeputyDetails) error
 }
 
 type editDeputyHubVars struct {
@@ -23,7 +23,7 @@ type editDeputyHubVars struct {
 	Success       bool
 }
 
-func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
