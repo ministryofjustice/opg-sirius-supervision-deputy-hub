@@ -26,7 +26,6 @@ func main() {
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
 	defaultPATeamString := getEnv("DEFAULT_PA_TEAM", `PA Team 1 - (Supervision)`)
-	defaultPATeam, err := strconv.Atoi(defaultPATeamString)
 
 	layouts, _ := template.
 		New("").
@@ -60,6 +59,11 @@ func main() {
 	}
 
 	client, err := sirius.NewClient(http.DefaultClient, siriusURL)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	defaultPATeam, err := strconv.Atoi(defaultPATeamString)
 	if err != nil {
 		logger.Fatal(err)
 	}
