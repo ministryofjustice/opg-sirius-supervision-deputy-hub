@@ -25,7 +25,7 @@ func main() {
 	siriusURL := getEnv("SIRIUS_URL", "http://localhost:8080")
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
-	defaultPATeamString := getEnv("DEFAULT_PA_TEAM", "23")
+	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
 
 	layouts, _ := template.
 		New("").
@@ -63,7 +63,7 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	defaultPATeam, err := strconv.Atoi(defaultPATeamString)
+	defaultPATeam, err := strconv.Atoi(DefaultPaTeam)
 	if err != nil{
 		logger.Print("Error converting defaultPaString to int")
 	}

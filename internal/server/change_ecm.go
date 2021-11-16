@@ -11,6 +11,7 @@ import (
 
 type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
+	GetPaDeputyTeamMembers(sirius.Context, int) (sirius.Team, error)
 	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
@@ -18,6 +19,7 @@ type changeECMHubVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
+	EcmTeamDetails sirius.Team
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success       bool
@@ -31,9 +33,14 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
+		if err != nil {
+			return err
+		}
 
 		switch r.Method {
 		case http.MethodGet:
+
+			ecmTeamDetails, err := client.GetPaDeputyTeamMembers(ctx, defaultPATeam)
 
 			if err != nil {
 				return err
@@ -44,6 +51,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
 				DefaultPaTeam: defaultPATeam,
+				EcmTeamDetails: ecmTeamDetails,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
@@ -52,17 +60,11 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 			EcmIdValue, err := strconv.Atoi(r.PostFormValue("new-ecm"))
 
-			fmt.Println("ecm id value")
-			fmt.Println(EcmIdValue)
-
 			if err != nil {
 				return err
 			}
 
 			changeECMForm := sirius.ExecutiveCaseManagerOutgoing{EcmId: EcmIdValue}
-
-			fmt.Println("change ecm form")
-			fmt.Println(changeECMForm)
 
 			vars := changeECMHubVars{
 				Path:          r.URL.Path,
@@ -71,7 +73,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				DefaultPaTeam: defaultPATeam,
 			}
 
-			//error := validateInput(changeECMForm.OrganisationTeamOrDepartmentName)
+			//error := validateInput(changeECMForm.EcmId)
 			//if error != nil {
 			//	vars.Errors = error
 			//	return tmpl.ExecuteTemplate(w, "page", vars)
@@ -93,12 +95,12 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 	}
 }
 
-func validateInput(newECM string) sirius.ValidationErrors {
-	if len(newECM) < 1 {
-		newError := sirius.ValidationErrors{
-			"Change ECM": {"": "Select an executive case manager"},
-		}
-		return newError
-	}
-	return nil
-}
+//func validateInput(newECM int) sirius.ValidationErrors {
+//	if newECM < 1 {
+//		newError := sirius.ValidationErrors{
+//			"Change ECM": {"": "Select an executive case manager"},
+//		}
+//		return newError
+//	}
+//	return nil
+//}
