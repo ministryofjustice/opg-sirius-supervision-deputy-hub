@@ -18,7 +18,7 @@ type mockEditDeputyHubInformation struct {
 	deputyData sirius.DeputyDetails
 }
 
-func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -37,7 +37,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 
 	client := &mockEditDeputyHubInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
@@ -93,7 +93,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -158,7 +158,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
