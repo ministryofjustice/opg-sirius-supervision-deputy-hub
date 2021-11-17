@@ -47,20 +47,12 @@ func TestGetPaDeputyTeamUsersReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := Team{
-		ID:          23,
-		DisplayName: "PA Team 1 - (Supervision)",
-		Type:        "PA",
-		Email:       "PATeam1.team@opgtest.com",
-		PhoneNumber: "0123456789",
-		Members: []TeamMember{
+	expectedResponse := []TeamMember{
 			{
 				ID:          92,
 				DisplayName: "PATeam1 User1",
-				Email:       "pa1@opgtest.com",
 			},
-		},
-	}
+		}
 
 	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
 
@@ -78,7 +70,7 @@ func TestGetPaDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
 
 	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
 
-	expectedResponse := Team{ID: 0}
+	expectedResponse := []TeamMember([]TeamMember{})
 
 	assert.Equal(t, expectedResponse, paDeputyTeam)
 	assert.Equal(t, StatusError{
@@ -98,7 +90,7 @@ func TestGetPaDeputyTeamUsersReturnsUnauthorisedClientError(t *testing.T) {
 
 	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
 
-	expectedResponse := Team{ID: 0}
+	expectedResponse := []TeamMember([]TeamMember{})
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, paDeputyTeam)

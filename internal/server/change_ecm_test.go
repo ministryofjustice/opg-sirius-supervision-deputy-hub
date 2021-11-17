@@ -14,7 +14,7 @@ type mockChangeECMInformation struct {
 	lastCtx         sirius.Context
 	err             error
 	DeputyDetails sirius.DeputyDetails
-	EcmTeamDetails sirius.Team
+	EcmTeamDetails []sirius.TeamMember
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success       bool
@@ -28,7 +28,7 @@ func (m *mockChangeECMInformation) GetDeputyDetails(ctx sirius.Context, defaultP
 	return m.DeputyDetails, m.err
 }
 
-func (m *mockChangeECMInformation) GetPaDeputyTeamMembers(ctx sirius.Context, deputyId int) (sirius.Team, error) {
+func (m *mockChangeECMInformation) GetPaDeputyTeamMembers(ctx sirius.Context, deputyId int) ([]sirius.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

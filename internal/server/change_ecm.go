@@ -11,7 +11,7 @@ import (
 
 type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
-	GetPaDeputyTeamMembers(sirius.Context, int) (sirius.Team, error)
+	GetPaDeputyTeamMembers(sirius.Context, int) ([]sirius.TeamMember, error)
 	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
@@ -19,7 +19,7 @@ type changeECMHubVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	EcmTeamDetails sirius.Team
+	EcmTeamDetails []sirius.TeamMember
 	Error         string
 	Errors        sirius.ValidationErrors
 	Success       bool

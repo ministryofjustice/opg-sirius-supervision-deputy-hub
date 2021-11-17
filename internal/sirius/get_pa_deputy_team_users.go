@@ -29,60 +29,43 @@ type TeamMember struct {
 }
 
 type Team struct {
-	ID          int
-	DisplayName string
 	Members     []TeamMember
-	Type        string
-	TypeLabel   string
-	Email       string
-	PhoneNumber string
 }
 
 
-func (c *Client) GetPaDeputyTeamMembers(ctx Context, defaultPATeam int) (Team, error) {
+func (c *Client) GetPaDeputyTeamMembers(ctx Context, defaultPATeam int) ([]TeamMember, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/teams/"+strconv.Itoa(defaultPATeam), nil)
 	if err != nil {
-		return Team{}, err
+		return []TeamMember{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return Team{}, err
+		return []TeamMember{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return Team{}, ErrUnauthorized
+		return []TeamMember{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return Team{}, newStatusError(resp)
+		return []TeamMember{}, newStatusError(resp)
 	}
 
 	var v apiTeam
 	if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return Team{}, err
+		return []TeamMember{}, err
 	}
 
-	team := Team{
-		ID:          v.ID,
-		DisplayName: v.DisplayName,
-		Type:        "",
-		Email:       v.Email,
-		PhoneNumber: v.PhoneNumber,
-	}
+	team := Team{}
 
 	for _, m := range v.Members {
 		team.Members = append(team.Members, TeamMember{
 			ID:          m.ID,
 			DisplayName: m.DisplayName,
-			Email:       m.Email,
 		})
 	}
 
-	if v.TeamType != nil {
-		team.Type = v.TeamType.Handle
-	}
-
-	return team, nil
+	return team.Members, nil
 }
