@@ -58,8 +58,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 		case http.MethodPost:
 
-			EcmIdValue, err := strconv.Atoi(r.PostFormValue("new-ecm"))
-
+			EcmIdValue, err := strconv.Atoi(r.PostFormValue("select-ecm"))
 			if err != nil {
 				return err
 			}

@@ -25,7 +25,6 @@ type apiTeam struct {
 type TeamMember struct {
 	ID          int
 	DisplayName string
-	Email       string
 }
 
 type Team struct {

@@ -18,23 +18,26 @@
             <form id="change-ecm-form" class="change-ecm govuk-grid-column-one-third" method="post">
               <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
 
-
               <p class="govuk-body govuk-!-margin-bottom-5" for="current-ecm">Current ECM: 
               {{ if ne .DeputyDetails.ExecutiveCaseManager.EcmId .DefaultPaTeam }}
                 {{.DeputyDetails.ExecutiveCaseManager.EcmName}}
               {{end}}
               </p>
 
-              <label class="govuk-label" for="new-ecm">Enter an Executive Case Manager name</label>
-              <div class="autocomplete-wrapper">
-                <input class="govuk-input" id="new-ecm" name="new-ecm" type="text"></input>
+              <label class="govuk-label" for="select-ecm">Enter an Executive Case Manager name</label>
+              <div class="autocomplete-wrapper" id="select-ecm-dropdown">
+                <select id="select-ecm" name="select-ecm">
+                <option value=""></option>
+                    {{range .EcmTeamDetails}}
+                        <option value="{{.ID}}">{{.DisplayName}}</option>
+                    {{end}}
+                </select>
               </div>
 
               <div class="govuk-button-group govuk-!-margin-top-7">
                 <button type="submit" class="govuk-button" data-module="govuk-button">Change ECM</button>
 
                 <a class="govuk-link" href="{{ prefix (printf "/deputy/%d/" .DeputyDetails.ID) }}">Cancel</a>
-
               </div>
 
             </form>
