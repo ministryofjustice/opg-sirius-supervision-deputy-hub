@@ -17,9 +17,6 @@ func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoi
 
 	requestURL := fmt.Sprintf("/api/v1/deputies/%d/ecm", deputyDetails.ID)
 
-	fmt.Println("request url")
-	fmt.Println(requestURL)
-
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
 	if err != nil {
