@@ -1,11 +1,11 @@
 package server
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 type DeputyHubInformation interface {
@@ -37,14 +37,23 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			return err
 		}
 
-		hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/")
-
 		vars := deputyHubVars{
 			Path:           r.URL.Path,
 			XSRFToken:      ctx.XSRFToken,
 			DeputyDetails:  deputyDetails,
-			Success:        hasSuccess,
-			SuccessMessage: "Team details updated",
+		}
+
+		urlString := r.URL.String()
+		splitStringByQuestion := strings.Split(urlString, "?")
+		if len(splitStringByQuestion) > 1 {
+			vars.Success = true
+			splitString := strings.Split(splitStringByQuestion[1], "=")
+
+			if splitString[1] == "ecm" {
+				vars.SuccessMessage = "Ecm changed to " + deputyDetails.ExecutiveCaseManager.EcmName
+			} else if splitString[1] == "teamDetails" {
+				vars.SuccessMessage = "Team details updated"
+			}
 		}
 
 		if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {

@@ -7,12 +7,13 @@ import (
 	"net/http"
 )
 
-func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoing, deputyDetails DeputyDetails) error {
+func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoing, deputyDetails DeputyDetails) (ExecutiveCaseManager, error) {
 	var body bytes.Buffer
+	var Ecm ExecutiveCaseManager
 
 	err := json.NewEncoder(&body).Encode(ExecutiveCaseManagerOutgoing{EcmId: changeECMForm.EcmId})
 	if err != nil {
-		return err
+		return Ecm, err
 	}
 
 	requestURL := fmt.Sprintf("/api/v1/deputies/%d/ecm", deputyDetails.ID)
@@ -20,20 +21,20 @@ func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoi
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
 	if err != nil {
-		return err
+		return Ecm, err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.http.Do(req)
 
 	if err != nil {
-		return err
+		return Ecm, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return ErrUnauthorized
+		return Ecm, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
@@ -42,13 +43,13 @@ func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoi
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
-			return ValidationError{
+			return Ecm, ValidationError{
 				Errors: v.ValidationErrors,
 			}
 		}
 
-		return newStatusError(resp)
+		return Ecm, newStatusError(resp)
 	}
 
-	return nil
+	return Ecm, nil
 }
