@@ -68,6 +68,7 @@ func TestGetChangeECM(t *testing.T) {
 	assert.Equal(changeECMHubVars{
 		Path:          "/path",
 		DefaultPaTeam: 23,
+		SuccessMessage: "new ecm is",
 	}, template.lastVars)
 }
 

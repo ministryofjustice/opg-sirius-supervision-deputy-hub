@@ -54,9 +54,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			AriaSorting:          ariaSorting,
 		}
 
-		if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
-			vars.ErrorMessage = "An executive case manager has not been assigned. "
-		}
+		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

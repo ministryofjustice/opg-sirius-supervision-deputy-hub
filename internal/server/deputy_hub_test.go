@@ -41,3 +41,23 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 }
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=ecm", "Jon Snow")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Ecm changed to Jon Snow")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/", "Jon Snow")
+	assert.Equal(t, false, Success)
+	assert.Equal(t, SuccessMessage, "")
+}
+
+func TestCheckForDefaultEcmIdReturnsMessageIfTrue(t *testing.T) {
+	assert.Equal(t, "An executive case manager has not been assigned. ", checkForDefaultEcmId(23, 23))
+}
+
+func TestCheckForDefaultEcmIdReturnsNullIfFalse(t *testing.T) {
+	assert.Equal(t, "", checkForDefaultEcmId(25, 23))
+}

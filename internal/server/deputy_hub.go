@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -36,30 +37,39 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		if err != nil {
 			return err
 		}
-
+		fmt.Println("url")
+		fmt.Println(r.URL.String())
 		vars := deputyHubVars{
 			Path:           r.URL.Path,
 			XSRFToken:      ctx.XSRFToken,
 			DeputyDetails:  deputyDetails,
 		}
 
-		urlString := r.URL.String()
-		splitStringByQuestion := strings.Split(urlString, "?")
-		if len(splitStringByQuestion) > 1 {
-			vars.Success = true
-			splitString := strings.Split(splitStringByQuestion[1], "=")
+		vars.Success, vars.SuccessMessage = createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
 
-			if splitString[1] == "ecm" {
-				vars.SuccessMessage = "Ecm changed to " + deputyDetails.ExecutiveCaseManager.EcmName
-			} else if splitString[1] == "teamDetails" {
-				vars.SuccessMessage = "Team details updated"
-			}
-		}
-
-		if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
-			vars.ErrorMessage = "An executive case manager has not been assigned. "
-		}
+		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
+}
+
+func createSuccessAndSuccessMessageForVars(url string, EcmName string) (bool, string) {
+	splitStringByQuestion := strings.Split(url, "?")
+	if len(splitStringByQuestion) > 1 {
+		splitString := strings.Split(splitStringByQuestion[1], "=")
+
+		if splitString[1] == "ecm" {
+			return true, "Ecm changed to " + EcmName
+		} else if splitString[1] == "teamDetails" {
+			return true, "Team details updated"
+		}
+	}
+	return false, ""
+}
+
+func checkForDefaultEcmId( EcmId, defaultPaTeam int) string {
+	if EcmId == defaultPaTeam {
+		return "An executive case manager has not been assigned. "
+	}
+	return ""
 }

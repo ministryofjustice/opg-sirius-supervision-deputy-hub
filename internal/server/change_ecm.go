@@ -12,7 +12,7 @@ import (
 type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetPaDeputyTeamMembers(sirius.Context, int) ([]sirius.TeamMember, error)
-	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) (sirius.ExecutiveCaseManager, error)
+	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
 type changeECMHubVars struct {
@@ -25,7 +25,6 @@ type changeECMHubVars struct {
 	Success        bool
 	SuccessMessage string
 	DefaultPaTeam  int
-	Ecm sirius.ExecutiveCaseManager
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
@@ -79,43 +78,21 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 			EcmIdStringValue := r.PostFormValue("select-ecm")
 
-			fmt.Println("EcmIdStringValue")
-			fmt.Println(EcmIdStringValue)
-
 			if EcmIdStringValue == "" {
 				vars.Errors = sirius.ValidationErrors{
 					"Change ECM": {"": "Select an executive case manager"},
 				}
+				EcmIdStringValue = "0"
 			}
 
-			fmt.Println("vars.Errors")
-			fmt.Println(vars.Errors)
-
-			var newValue string
-
-
-			if EcmIdStringValue == "" {
-				newValue = "0"
-			} else {
-				newValue = EcmIdStringValue
-			}
-
-			fmt.Println("newValue")
-			fmt.Println(newValue)
-
-			EcmIdValue, err := strconv.Atoi(newValue);
+			EcmIdValue, err := strconv.Atoi(EcmIdStringValue)
 			if err != nil {
 				return err
 			}
 
 			changeECMForm := sirius.ExecutiveCaseManagerOutgoing{EcmId: EcmIdValue}
 
-			Ecm, err := client.ChangeECM(ctx, changeECMForm, deputyDetails)
-
-			vars.Ecm = Ecm
-
-			fmt.Println("length of vars errors")
-			fmt.Println(len(vars.Errors))
+			err = client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
 			if len(vars.Errors) >= 1 {
 				return tmpl.ExecuteTemplate(w, "page", vars)
