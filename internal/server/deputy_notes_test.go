@@ -1,11 +1,12 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/gorilla/mux"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +22,7 @@ type mockDeputyHubNotesInformation struct {
 	userDetailsData sirius.UserDetails
 }
 
-func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -54,7 +55,7 @@ func TestGetNotes(t *testing.T) {
 
 	client := &mockDeputyHubNotesInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
@@ -81,7 +82,7 @@ func TestGetNotes(t *testing.T) {
 func TestPostAddNote(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockDeputyHubNotesInformation{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -115,7 +116,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -168,7 +169,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
