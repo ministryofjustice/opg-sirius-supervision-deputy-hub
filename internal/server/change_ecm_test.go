@@ -10,15 +10,15 @@ import (
 )
 
 type mockChangeECMInformation struct {
-	count           int
-	lastCtx         sirius.Context
-	err             error
-	DeputyDetails sirius.DeputyDetails
+	count          int
+	lastCtx        sirius.Context
+	err            error
+	DeputyDetails  sirius.DeputyDetails
 	EcmTeamDetails []sirius.TeamMember
-	Error         string
-	Errors        sirius.ValidationErrors
-	Success       bool
-	DefaultPaTeam int
+	Error          string
+	Errors         sirius.ValidationErrors
+	Success        bool
+	DefaultPaTeam  int
 }
 
 func (m *mockChangeECMInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
@@ -66,7 +66,7 @@ func TestGetChangeECM(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(changeECMHubVars{
-		Path:           "/path",
+		Path:          "/path",
 		DefaultPaTeam: 23,
 	}, template.lastVars)
 }

@@ -48,11 +48,11 @@ func TestGetPaDeputyTeamUsersReturned(t *testing.T) {
 	}
 
 	expectedResponse := []TeamMember{
-			{
-				ID:          92,
-				DisplayName: "PATeam1 User1",
-			},
-		}
+		{
+			ID:          92,
+			DisplayName: "PATeam1 User1",
+		},
+	}
 
 	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
 

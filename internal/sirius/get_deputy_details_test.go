@@ -51,8 +51,8 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		County:           "Essex",
 		Postcode:         "CM1 1GG",
 		ExecutiveCaseManager: ExecutiveCaseManager{
-			EcmId:23,
-			EcmName:"Public Authority Deputy Team",
+			EcmId:   23,
+			EcmName: "Public Authority Deputy Team",
 		},
 	}
 

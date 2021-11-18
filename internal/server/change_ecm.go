@@ -16,14 +16,14 @@ type ChangeECMInformation interface {
 }
 
 type changeECMHubVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
 	EcmTeamDetails []sirius.TeamMember
-	Error         string
-	Errors        sirius.ValidationErrors
-	Success       bool
-	DefaultPaTeam int
+	Error          string
+	Errors         sirius.ValidationErrors
+	Success        bool
+	DefaultPaTeam  int
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
@@ -47,10 +47,10 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 			}
 
 			vars := changeECMHubVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-				DefaultPaTeam: defaultPATeam,
+				Path:           r.URL.Path,
+				XSRFToken:      ctx.XSRFToken,
+				DeputyDetails:  deputyDetails,
+				DefaultPaTeam:  defaultPATeam,
 				EcmTeamDetails: ecmTeamDetails,
 			}
 

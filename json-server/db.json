@@ -1371,5 +1371,54 @@
         }
       }
     }
+  ],
+  "teams": [
+  {
+    "id": 23,
+    "name": "PA Team 1 - (Supervision)",
+    "phoneNumber": "0123456789",
+    "displayName": "PA Team 1 - (Supervision)",
+    "deleted": false,
+    "email": "PATeam1.team@opgtest.com",
+    "members": [
+      {
+        "id": 92,
+        "name": "Cersei",
+        "phoneNumber": "12345678",
+        "displayName": "Cersei Lannister",
+        "deleted": false,
+        "email": "cerseilannister@opgtest.com"
+      },
+      {
+        "id": 93,
+        "name": "Jon",
+        "phoneNumber": "1555678",
+        "displayName": "Jon Snow",
+        "deleted": false,
+        "email": "jonsnow@opgtest.com"
+      },
+      {
+        "id": 94,
+        "name": "Eddard",
+        "phoneNumber": "888845555",
+        "displayName": "Eddard Stark",
+        "deleted": false,
+        "email": "eddardstark@opgtest.com"
+      }
+    ],
+    "children": [],
+    "teamType": {
+      "handle": "PA",
+      "label": "PA"
+    }
+  }
+  ],
+  "ecm": [
+    {
+      "id": 93,
+      "name": "Jon",
+      "displayName": "Jon Snow"
+    }
   ]
+
 }
