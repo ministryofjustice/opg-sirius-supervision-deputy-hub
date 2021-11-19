@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -37,8 +36,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		if err != nil {
 			return err
 		}
-		fmt.Println("url")
-		fmt.Println(r.URL.String())
+
 		vars := deputyHubVars{
 			Path:           r.URL.Path,
 			XSRFToken:      ctx.XSRFToken,
@@ -67,7 +65,7 @@ func createSuccessAndSuccessMessageForVars(url string, EcmName string) (bool, st
 	return false, ""
 }
 
-func checkForDefaultEcmId( EcmId, defaultPaTeam int) string {
+func checkForDefaultEcmId(EcmId, defaultPaTeam int) string {
 	if EcmId == defaultPaTeam {
 		return "An executive case manager has not been assigned. "
 	}

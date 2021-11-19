@@ -78,6 +78,12 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 			EcmIdStringValue := r.PostFormValue("select-ecm")
 
+			fmt.Println("ecm string value")
+			fmt.Println(EcmIdStringValue)
+
+			fmt.Println("is ecm string null")
+			fmt.Println(EcmIdStringValue == "")
+
 			if EcmIdStringValue == "" {
 				vars.Errors = sirius.ValidationErrors{
 					"Change ECM": {"": "Select an executive case manager"},
