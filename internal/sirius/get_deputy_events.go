@@ -72,7 +72,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollecti
 
 	if resp.StatusCode != http.StatusOK {
 		return v, newStatusError(resp)
-	}∂
+	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	DeputyEvents := editDeputyEvents(v)

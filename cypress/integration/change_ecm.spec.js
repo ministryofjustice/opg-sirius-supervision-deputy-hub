@@ -31,6 +31,12 @@ describe("Change ECM", () => {
         cy.get('form').submit()
     })
 
+    it("has a timeline event for when an ecm is changed", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
+        cy.get(":nth-child(1) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
+        cy.get(":nth-child(1) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
+    })
+
 });
 
 describe("Change ECM links to Dashboard", () => {
@@ -47,7 +53,7 @@ describe("Change ECM links to Dashboard", () => {
     })
 
     it("has displays a warning if ECM is not set which links to the Change ECM page", () => {
-        cy.get(".moj-banner__message > a").should("contain", "Assign an executive case manager").click();
+        cy.get(".moj-banner__message > li > a").should("contain", "Assign an executive case manager").click();
         cy.url().should('include', '/change-ecm');
         cy.get("h1").should("contain", "Change Executive Case Manager");
     })
