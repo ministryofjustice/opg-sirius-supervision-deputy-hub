@@ -14,11 +14,11 @@ describe("Change ECM", () => {
         cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
     });
 
-    it("has a drop down populated with members of the PA Deputy Team", () => {
-        cy.get("#select-ecm").select('Cersei Lannister').should('have.value', '92');
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get("#select-ecm").select('Eddard Stark').should('have.value', '94');
-    })
+    // it("has a drop down populated with members of the PA Deputy Team", () => {
+    //     cy.get("#select-ecm").select('Cersei Lannister').should('have.value', '92');
+    //     cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
+    //     cy.get("#select-ecm").select('Eddard Stark').should('have.value', '94');
+    // })
 
     it("directs me back to dashboard page if I press cancel", () => {
         cy.get(".govuk-link").should("contain", "Cancel").click();
@@ -26,10 +26,10 @@ describe("Change ECM", () => {
         cy.get("h1").should("contain", "Dashboard");
     })
 
-    it("allows me to fill in and submit the ecm form", () => {
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get('form').submit()
-    })
+    // it("allows me to fill in and submit the ecm form", () => {
+    //     cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
+    //     cy.get('form').submit()
+    // })
 
     it("has a timeline event for when an ecm is changed", () => {
         cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
