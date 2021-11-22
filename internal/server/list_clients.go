@@ -53,8 +53,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
 		}
-
+    
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
+
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

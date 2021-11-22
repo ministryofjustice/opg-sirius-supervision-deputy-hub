@@ -77,7 +77,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 			}
 
 			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:

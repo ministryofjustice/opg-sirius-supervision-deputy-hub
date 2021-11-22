@@ -1,8 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 	"strings"
@@ -44,8 +42,8 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		}
 
 		vars.Success, vars.SuccessMessage = createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
-
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
+
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

@@ -57,7 +57,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, defaultPATeam, templates["manage-team-details.gotmpl"])))
-
+  
 	router.Handle("/deputy/{id}/change-ecm",
 		wrap(
 			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))

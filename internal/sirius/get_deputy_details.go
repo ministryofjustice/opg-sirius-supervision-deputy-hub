@@ -30,6 +30,7 @@ type DeputyDetails struct {
 	County                           string               `json:"county"`
 	Postcode                         string               `json:"postcode"`
 	ExecutiveCaseManager             ExecutiveCaseManager `json:"executiveCaseManager"`
+
 }
 
 func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) (DeputyDetails, error) {
@@ -61,5 +62,6 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) 
 		v.ExecutiveCaseManager.EcmId = defaultPATeam
 		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
 	}
+
 	return v, err
 }
