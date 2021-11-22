@@ -5,12 +5,10 @@
   </svg>
   <div class="govuk-error-summary__body">
       <ul class="govuk-list govuk-error-summary__list">
-          <div class="moj-banner__message">
-            <span class="moj-banner__assistive">Warning</span>
-            <li> {{ .ErrorMessage }}<a href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a></li>
-          </div>
-        </div>
+        <span class="moj-banner__assistive">Warning</span>
+        <li>{{ .ErrorMessage }}<a href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a></li>
       </ul>
   </div>
+ </div>
 {{ end }}
 

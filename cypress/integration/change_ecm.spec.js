@@ -20,7 +20,7 @@ describe("Change ECM", () => {
         cy.get("#select-ecm").select('Eddard Stark').should('have.value', '94');
     })
 
-    it("has directs me back to dashboard page if I press cancel", () => {
+    it("directs me back to dashboard page if I press cancel", () => {
         cy.get(".govuk-link").should("contain", "Cancel").click();
         cy.url().should('not.include', '/change-ecm')
         cy.get("h1").should("contain", "Dashboard");
@@ -52,8 +52,8 @@ describe("Change ECM links to Dashboard", () => {
         cy.get("h1").should("contain", "Change Executive Case Manager");
     })
 
-    it("has displays a warning if ECM is not set which links to the Change ECM page", () => {
-        cy.get(".moj-banner__message > li > a").should("contain", "Assign an executive case manager").click();
+    it("displays a warning if ECM is not set which links to the Change ECM page", () => {
+        cy.get(".govuk-list > li > a").should("contain", "Assign an executive case manager").click();
         cy.url().should('include', '/change-ecm');
         cy.get("h1").should("contain", "Change Executive Case Manager");
     })
