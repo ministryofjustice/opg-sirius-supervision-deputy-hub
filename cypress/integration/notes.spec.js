@@ -1,5 +1,10 @@
 describe("Notes", () => {
     beforeEach(() => {
+        Cypress.on('uncaught:exception', (err, runnable) => {
+            // returning false here prevents Cypress from
+            // failing the test
+            return false
+        })
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
     });
