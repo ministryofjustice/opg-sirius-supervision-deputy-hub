@@ -1,3 +1,9 @@
+Cypress.on('uncaught:exception', (err, runnable) => {
+    // returning false here prevents Cypress from
+    // failing the test
+    return false
+})
+
 describe("Clients tab", () => {
     beforeEach(() => {
       cy.setCookie("Other", "other");
