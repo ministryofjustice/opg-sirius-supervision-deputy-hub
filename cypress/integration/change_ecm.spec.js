@@ -15,9 +15,10 @@ describe("Change ECM", () => {
     });
 
     it("has a drop down populated with members of the PA Deputy Team", () => {
-        cy.get("#select-ecm").select('Cersei Lannister').should('have.value', '92');
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get("#select-ecm").select('Eddard Stark').should('have.value', '94');
+        cy.get("#select-ecm").type('S');
+        cy.get("#select-ecm__listbox").find('li').should('have.length', 3);
+        cy.get("#select-ecm").type('now');
+        cy.get("#select-ecm__listbox").find('li').should('have.length', 1);
     })
 
     it("directs me back to dashboard page if I press cancel", () => {
@@ -27,8 +28,12 @@ describe("Change ECM", () => {
     })
 
     it("allows me to fill in and submit the ecm form", () => {
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get('form').submit()
+        cy.setCookie("success-bypass", "true");
+        cy.get("#select-ecm").type('S');
+        cy.contains("#select-ecm__listbox", 'Jon Snow').click();
+        cy.get('form').submit();
+        // cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/");
+        // cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "ECM changed successfully");
     })
 
     it("has a timeline event for when an ecm is changed", () => {

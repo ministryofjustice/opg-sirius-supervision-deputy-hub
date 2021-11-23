@@ -64,7 +64,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/health-check", healthCheck())
 
-	static := http.FileServer(http.Dir(webDir + "/static"))
+	static := staticFileHandler(webDir)
 	router.PathPrefix("/assets/").Handler(static)
 	router.PathPrefix("/javascript/").Handler(static)
 	router.PathPrefix("/stylesheets/").Handler(static)
@@ -173,4 +173,12 @@ func getContext(r *http.Request) sirius.Context {
 		Cookies:   r.Cookies(),
 		XSRFToken: token,
 	}
+}
+
+func staticFileHandler(webDir string) http.Handler {
+	h := http.FileServer(http.Dir(webDir + "/static"))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "must-revalidate")
+		h.ServeHTTP(w, r)
+	})
 }

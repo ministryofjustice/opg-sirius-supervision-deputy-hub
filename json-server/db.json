@@ -1417,14 +1417,13 @@
   }
   ],
   "ecm": [
-        {
-          "id": 93,
-          "name": "Jon",
-          "phoneNumber": "1555678",
-          "displayName": "Jon Snow",
-          "deleted": false,
-          "email": "jonsnow@opgtest.com"
-        }
+    {
+      "id": 93,
+      "name": "Jon",
+      "phoneNumber": "1555678",
+      "displayName": "Jon Snow",
+      "deleted": false,
+      "email": "jonsnow@opgtest.com"
+    }
   ]
-
 }
