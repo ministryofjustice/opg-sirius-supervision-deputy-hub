@@ -35,7 +35,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'javascript/[name].js',
+    filename: 'javascript/[name].[contenthash].js',
     path: path.resolve(__dirname, 'web/static')
   },
   plugins: [
@@ -46,7 +46,7 @@ module.exports = {
       ]
     }),
     new MiniCssExtractPlugin({
-      filename: 'stylesheets/[name].css'
+      filename: 'stylesheets/[name].[contenthash].css'
     }),
   ]
 }
