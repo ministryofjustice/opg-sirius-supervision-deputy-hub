@@ -2,9 +2,7 @@
 describe("Deputy Hub", () => {
   beforeEach(() => {
     Cypress.on('uncaught:exception', (err, runnable) => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
+      if (err.name == 'selectElement is not defined'){return false}
     })
 
     cy.setCookie("Other", "other");

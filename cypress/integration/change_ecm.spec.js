@@ -1,9 +1,9 @@
+
 describe("Change ECM", () => {
     beforeEach(() => {
         Cypress.on('uncaught:exception', (err, runnable) => {
-            // returning false here prevents Cypress from
-            // failing the test
-            return false
+            if (err.message == 'selectElement is not defined'){return false}
+            if (err.name == 'selectElement is not defined'){return false}
         })
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
@@ -20,21 +20,17 @@ describe("Change ECM", () => {
     });
 
     it("has a drop down populated with members of the PA Deputy Team", () => {
-        cy.get("#select-ecm").select('Cersei Lannister').should('have.value', '92');
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get("#select-ecm").select('Eddard Stark').should('have.value', '94');
-    })
+        cy.get("#select-ecm").should('contain', 'Jon Snow')
+        cy.get("#select-ecm").should('contain', 'Cersei Lannister')
+        cy.get("#select-ecm").should('contain', 'Eddard Stark')
+        cy.get("#select-ecm").should('not.contain', 'Fake PA Deputy Name')
+    });
 
     it("directs me back to dashboard page if I press cancel", () => {
         cy.get(".govuk-link").should("contain", "Cancel").click();
         cy.url().should('not.include', '/change-ecm')
         cy.get("h1").should("contain", "Dashboard");
-    })
-
-    it("allows me to fill in and submit the ecm form", () => {
-        cy.get("#select-ecm").select('Jon Snow').should('have.value', '93');
-        cy.get('form').submit()
-    })
+    });
 
     it("has a timeline event for when an ecm is changed", () => {
         cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")

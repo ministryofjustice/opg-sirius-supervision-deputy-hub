@@ -2,9 +2,7 @@
 
 describe("Dashboard tab", () => {
     Cypress.on('uncaught:exception', (err, runnable) => {
-        // returning false here prevents Cypress from
-        // failing the test
-        return false
+        if (err.message == 'selectElement is not defined'){return false}
     })
   beforeEach(() => {
       cy.setCookie("Other", "other");

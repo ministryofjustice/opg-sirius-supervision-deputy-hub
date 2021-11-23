@@ -2,8 +2,7 @@
 
 describe("Clients tab", () => {
     Cypress.on('uncaught:exception', (err, runnable) => {
-        // returning false here prevents Cypress from
-        // failing the test
+        if (err.message == 'selectElement is not defined'){return false}
         return false
     })
     beforeEach(() => {
