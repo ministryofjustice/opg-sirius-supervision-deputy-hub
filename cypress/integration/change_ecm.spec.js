@@ -2,8 +2,7 @@
 describe("Change ECM", () => {
     beforeEach(() => {
         Cypress.on('uncaught:exception', (err, runnable) => {
-            if (err.message == 'selectElement is not defined'){return false}
-            if (err.name == 'selectElement is not defined'){return false}
+            if (err.message.includes('selectElement is not defined')){return false}
         })
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
