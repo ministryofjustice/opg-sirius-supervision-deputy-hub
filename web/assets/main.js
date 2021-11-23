@@ -7,4 +7,4 @@ GOVUKFrontend.initAll();
 
 MojBannerAutoHide(document.querySelector('.app-main-class'));
 
-accessibleAutocomplete.enhanceSelectElement({selectElement: document.querySelector("#select-ecm"), defaultValue: ""})
+accessibleAutocomplete.enhanceSelectElement({'selectElement': document.querySelector("#select-ecm"), 'defaultValue': ""})
