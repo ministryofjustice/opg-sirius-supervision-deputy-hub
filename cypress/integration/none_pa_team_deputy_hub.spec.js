@@ -1,8 +1,5 @@
 describe("Deputy Hub", () => {
   beforeEach(() => {
-      Cypress.on('uncaught:exception', (err, runnable) => {
-          if (err.message.includes('selectElement is not defined')){return false}
-      })
       cy.setCookie("Other", "other");
       cy.setCookie("XSRF-TOKEN", "abcde");
       cy.visit("/supervision/deputies/public-authority/deputy/2/");

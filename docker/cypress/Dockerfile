@@ -7,4 +7,3 @@ ENV CYPRESS_baseUrl=http://deputy-hub:8888
 
 COPY cypress.json .
 COPY cypress cypress
-COPY web/assets web/assets

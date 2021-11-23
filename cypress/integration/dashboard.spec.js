@@ -1,9 +1,4 @@
-
-
 describe("Dashboard tab", () => {
-    Cypress.on('uncaught:exception', (err, runnable) => {
-        if (err.message.includes('selectElement is not defined')){return false}
-    })
   beforeEach(() => {
       cy.setCookie("Other", "other");
       cy.setCookie("XSRF-TOKEN", "abcde");
