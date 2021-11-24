@@ -9,7 +9,13 @@ describe("Change ECM", () => {
         cy.get("h1").should("contain", "Change Executive Case Manager");
     })
 
-    it("includes current ecm or leaves blank if none is set", () => {
+    it("includes leaves current ecm blank if none is set", () => {
+        cy.get(".govuk-body").should("contain", "Current ECM:");
+        cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
+    });
+
+    it("shows ecm if is set", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/2/change-ecm");
         cy.get(".govuk-body").should("contain", "Current ECM:");
         cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
     });
@@ -28,12 +34,14 @@ describe("Change ECM", () => {
     })
 
     it("allows me to fill in and submit the ecm form", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/1/change-ecm");
         cy.setCookie("success-route", "ecm");
         cy.get("#select-ecm").type('S');
         cy.contains("#select-ecm__listbox", 'Jon Snow').click();
         cy.get('form').submit();
         cy.url().should("contain", "?success=ecm");
         cy.get("h1").should("contain", "Dashboard");
+        cy.get(".moj-banner--success").should("contain", "Ecm changed to Pa Deputy Team" );
     })
 
     it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
@@ -75,6 +83,12 @@ describe("Change ECM links to Dashboard", () => {
         cy.get(".govuk-list > li > a").should("contain", "Assign an executive case manager").click();
         cy.url().should('include', '/change-ecm');
         cy.get("h1").should("contain", "Change Executive Case Manager");
+    })
+
+    it("does not display warning when ecm set", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/2/");
+        cy.get(".govuk-\\!-margin-bottom-2").should("contain", "LayTeam1 User2")
+        cy.get(".govuk-list > li > a").should("not.exist");
     })
 
 });

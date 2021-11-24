@@ -77,9 +77,6 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollecti
 
 	DeputyEvents := editDeputyEvents(v)
 
-	fmt.Println("timeline");
-	fmt.Println(DeputyEvents)
-
 	return DeputyEvents, err
 
 }
