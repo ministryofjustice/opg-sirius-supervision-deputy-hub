@@ -41,7 +41,7 @@ describe("Change ECM", () => {
         cy.get('form').submit();
         cy.url().should("contain", "?success=ecm");
         cy.get("h1").should("contain", "Dashboard");
-        cy.get(".moj-banner--success").should("contain", "Ecm changed to Public Authority Deputy Team" );
+        cy.get(".moj-banner--success").should("contain", "Ecm changed to" );
     })
 
     it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
