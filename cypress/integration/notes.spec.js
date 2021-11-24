@@ -58,7 +58,7 @@ describe("Notes", () => {
         })
 
         it("redirects me to main notes page if I cancel adding a note", () => {
-            cy.get(".govuk-link").should("contain", "Cancel").click()
+            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click()
             cy.get(".main > header").should("contain", "Notes");
             cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/notes");
         })

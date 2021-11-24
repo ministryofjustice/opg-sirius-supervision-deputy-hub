@@ -28,6 +28,13 @@ describe("Dashboard tab", () => {
 
     it("has a href link for email addresses", () => {
         cy.get(".govuk-summary-list__value > a").should("have.attr", "href");
+    });
+
+    it("displays warning when no ecm set", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/1/notes");
+        cy.get(':nth-child(1) > .moj-sub-navigation__link').click();
+        cy.setCookie("fail-route", "dashboard")
+        cy.get(".govuk-list > li").should("contain", "An executive case manager has not been assigned. Assign an executive case manager");
     })
 
 });
