@@ -28,12 +28,12 @@ describe("Change ECM", () => {
     })
 
     it("allows me to fill in and submit the ecm form", () => {
-        cy.setCookie("success-bypass", "true");
+        cy.setCookie("success-route", "ecm");
         cy.get("#select-ecm").type('S');
         cy.contains("#select-ecm__listbox", 'Jon Snow').click();
         cy.get('form').submit();
-        // cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/");
-        // cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "ECM changed successfully");
+        cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/");
+        cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "Ecm changed to");
     })
 
     it("has a timeline event for when an ecm is changed", () => {
