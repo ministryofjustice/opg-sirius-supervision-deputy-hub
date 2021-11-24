@@ -9,7 +9,7 @@ describe("Change ECM", () => {
         cy.get("h1").should("contain", "Change Executive Case Manager");
     })
 
-    it("includes leaves current ecm blank if none is set", () => {
+    it("leaves current ecm blank if none is set", () => {
         cy.get(".govuk-body").should("contain", "Current ECM:");
         cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
     });
@@ -17,7 +17,7 @@ describe("Change ECM", () => {
     it("shows ecm if is set", () => {
         cy.visit("/supervision/deputies/public-authority/deputy/2/change-ecm");
         cy.get(".govuk-body").should("contain", "Current ECM:");
-        cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
+        cy.get(".govuk-body").should("contain", "LayTeam1 User2");
     });
 
     it("has a drop down populated with members of the PA Deputy Team", () => {

@@ -42,10 +42,22 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	assert.Equal(http.StatusOK, resp.StatusCode)
 }
 
-func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnSuccess(t *testing.T) {
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
 	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=ecm", "Jon Snow")
 	assert.Equal(t, true, Success)
 	assert.Equal(t, SuccessMessage, "Ecm changed to Jon Snow")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=teamDetails", "Jon Snow")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Team details updated")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=otherMessage", "Jon Snow")
+	assert.Equal(t, false, Success)
+	assert.Equal(t, SuccessMessage, "")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
