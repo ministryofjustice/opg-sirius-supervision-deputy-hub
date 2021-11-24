@@ -3,13 +3,12 @@ FROM node:14.17.5-alpine3.14 as build-assets
 
 WORKDIR /app
 
+COPY web/ web
 RUN mkdir -p web/static
 
-COPY web/assets web/assets
-COPY webpack.config.js .
-COPY package.json .
-COPY yarn.lock .
+COPY yarn.lock web
 
+WORKDIR /app/web
 RUN yarn install
 RUN yarn build
 

@@ -5,5 +5,5 @@ WORKDIR /root
 ENV CYPRESS_VIDEO=false
 ENV CYPRESS_baseUrl=http://deputy-hub:8888
 
-COPY cypress.json .
+COPY cypress/cypress.json .
 COPY cypress cypress

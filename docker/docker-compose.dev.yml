@@ -1,5 +1,9 @@
 version: "3.6"
 
+volumes:
+  # prevents the local built assets interfering with the docker build
+  static:
+
 services:
   deputy-hub:
     build:
@@ -11,6 +15,7 @@ services:
       - '8888:1234'
     volumes:
       - ..:/app:rw,delegated
+      - static:/app/web/static
     environment:
       SIRIUS_URL: http://json-server:3000
       SIRIUS_PUBLIC_URL: http://localhost:8080

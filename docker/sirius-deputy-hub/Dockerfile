@@ -11,29 +11,30 @@ RUN apk update \
     git \
     && update-ca-certificates
 
+FROM node:14.17.5-alpine3.14 as asset-env
+
+WORKDIR /app
+
+COPY web/ web
+RUN mkdir -p web/static
+
+COPY yarn.lock web
+
+WORKDIR /app/web
+RUN yarn install
+RUN yarn build
+
 ### Development with hot reload and debugger
 FROM base AS dev
 WORKDIR /app
+
+COPY --from=asset-env /app/web/static web/static
 
 RUN go get -u github.com/cosmtrek/air && go install github.com/go-delve/delve/cmd/dlv@latest
 EXPOSE 8080
 EXPOSE 2345
 
 ENTRYPOINT ["air"]
-
-FROM node:14.17.5-alpine3.14 as asset-env
-
-WORKDIR /app
-
-RUN mkdir -p web/static
-
-COPY web/assets web/assets
-COPY webpack.config.js .
-COPY package.json .
-COPY yarn.lock .
-
-RUN yarn install
-RUN yarn build
 
 FROM base as build-env
 

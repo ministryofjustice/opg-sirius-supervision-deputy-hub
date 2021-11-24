@@ -4,7 +4,7 @@ var MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   entry: {
-    all: './web/assets/main.js'
+    all: './assets/main.js'
   },
   mode: 'production',
   devtool: 'source-map',
@@ -36,13 +36,13 @@ module.exports = {
   },
   output: {
     filename: 'javascript/[name].js',
-    path: path.resolve(__dirname, 'web/static')
+    path: path.resolve(__dirname, 'static')
   },
   plugins: [
     new CopyPlugin({
       patterns: [
-        { from: 'node_modules/govuk-frontend/govuk/assets/images', to: path.resolve(__dirname, 'web/static/assets/images') },
-        { from: 'node_modules/@ministryofjustice/frontend/moj/assets/images', to: path.resolve(__dirname, 'web/static/assets/images') },
+        { from: 'node_modules/govuk-frontend/govuk/assets/images', to: path.resolve(__dirname, 'static/assets/images') },
+        { from: 'node_modules/@ministryofjustice/frontend/moj/assets/images', to: path.resolve(__dirname, 'static/assets/images') },
       ]
     }),
     new MiniCssExtractPlugin({
