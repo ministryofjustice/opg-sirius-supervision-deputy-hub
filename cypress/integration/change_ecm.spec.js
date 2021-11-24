@@ -40,8 +40,6 @@ describe("Change ECM", () => {
         cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
         cy.get(":nth-child(2) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
         cy.get(":nth-child(2) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
-        cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/");
-        cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "Ecm changed to");
     })
 
     it("has a timeline event for when an ecm is allocated", () => {
