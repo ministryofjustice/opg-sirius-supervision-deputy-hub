@@ -76,10 +76,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				SuccessMessage: "Note added",
 			}
 
-			if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
-				vars.ErrorMessage = "An executive case manager has not been assigned. "
-			}
-
+			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -114,9 +111,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 					DeputyDetails: deputyDetails,
 				}
 
-				if vars.DeputyDetails.ExecutiveCaseManager.EcmId == defaultPATeam {
-					vars.ErrorMessage = "An executive case manager has not been assigned. "
-				}
+				vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)

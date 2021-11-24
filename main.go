@@ -66,6 +66,7 @@ func main() {
 	defaultPATeam, err := strconv.Atoi(DefaultPaTeam)
 	if err != nil{
 		logger.Print("Error converting DEFAULT_PA_TEAM to int")
+
 	}
 
 	server := &http.Server{

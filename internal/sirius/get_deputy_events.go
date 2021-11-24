@@ -24,6 +24,7 @@ type Event struct {
 	DeputyID         string         `json:"personId"`
 	DeputyName       string         `json:"personName"`
 	OrganisationName string         `json:"organisationName"`
+	ExecutiveCaseManager string `json:"executiveCaseManager"`
 	Changes          []Changes      `json:"changes"`
 	Client           []ClientPerson `json:"additionalPersons"`
 }
