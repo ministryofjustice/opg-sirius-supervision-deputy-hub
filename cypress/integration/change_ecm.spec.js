@@ -32,14 +32,28 @@ describe("Change ECM", () => {
         cy.get("#select-ecm").type('S');
         cy.contains("#select-ecm__listbox", 'Jon Snow').click();
         cy.get('form').submit();
-        // cy.url().should("contain", "/supervision/deputies/public-authority/deputy/1/");
-        // cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should("contain", "ECM changed successfully");
+        cy.url().should("contain", "?success=ecm");
+        cy.get("h1").should("contain", "Dashboard");
     })
 
-    it("has a timeline event for when an ecm is changed", () => {
+    it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
         cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
-        cy.get(":nth-child(1) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
-        cy.get(":nth-child(1) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
+        cy.get(":nth-child(2) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
+        cy.get(":nth-child(2) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
+    })
+
+    it("has a timeline event for when an ecm is allocated", () => {
+        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
+        cy.get(":nth-child(1) > .moj-timeline__header").should('contain', 'Executive Case Manager changed to PATeam1 User1');
+        cy.get(":nth-child(1) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by case manager (12345678)')
+    })
+
+    it("displays warning when no ecm chosen and form submitted", () => {
+        cy.setCookie("fail-route", "ecm")
+        cy.get("#select-ecm").type('S');
+        cy.get('form').submit();
+        cy.get('.govuk-error-summary').should('contain', 'There is a problem');
+        cy.get('.govuk-list > li > a').should('contain', 'Select an executive case manager');
     })
 
 });
