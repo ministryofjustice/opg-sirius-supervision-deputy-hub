@@ -42,13 +42,17 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 		switch r.Method {
 		case http.MethodGet:
+			var SuccessMessage string
 			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
 
 			hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId))
-			SuccessMessage := "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
+			if hasSuccess {
+				SuccessMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
+			}
+
 
 			vars := changeECMHubVars{
 				Path:           r.URL.Path,
