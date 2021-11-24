@@ -53,6 +53,6 @@ describe("Deputy Hub", () => {
   })
 
   it("the page should contain the warning error", () => {
-    cy.get('.moj-banner__message > a').should("contain",  "Assign an executive case manager")
+    cy.get('.govuk-list > li > a').should("contain",  "Assign an executive case manager")
   })
 });

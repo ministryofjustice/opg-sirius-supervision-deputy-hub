@@ -24,6 +24,7 @@ type Event struct {
 	DeputyID         string         `json:"personId"`
 	DeputyName       string         `json:"personName"`
 	OrganisationName string         `json:"organisationName"`
+	ExecutiveCaseManager string `json:"executiveCaseManager"`
 	Changes          []Changes      `json:"changes"`
 	Client           []ClientPerson `json:"additionalPersons"`
 }
@@ -75,6 +76,9 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollecti
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	DeputyEvents := editDeputyEvents(v)
+
+	fmt.Println("timeline");
+	fmt.Println(DeputyEvents)
 
 	return DeputyEvents, err
 
