@@ -28,6 +28,10 @@ describe("Dashboard tab", () => {
 
     it("has a href link for email addresses", () => {
         cy.get(".govuk-summary-list__value > a").should("have.attr", "href");
+    });
+
+    it("displays warning when no ecm set", () => {
+        cy.get(".govuk-list > li").should("contain", "An executive case manager has not been assigned. Assign an executive case manager");
     })
 
 });

@@ -395,9 +395,9 @@
                   "reference": [],
                   "deputyNumber": 66,
                   "executiveCaseManager": {
-                    "id": 23,
-                    "name": "PA Team 1 - (Supervision)",
-                    "displayName": "PA Team 1 - (Supervision)"
+                    "id": 25,
+                    "name": "Ecm",
+                    "displayName": "Ecm"
                   },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
@@ -660,9 +660,9 @@
                   "reference": [],
                   "deputyNumber": 66,
                   "executiveCaseManager": {
-                    "id": 23,
-                    "name": "PA Team 1 - (Supervision)",
-                    "displayName": "PA Team 1 - (Supervision)"
+                  "id": 25,
+                  "name": "Ecm",
+                  "displayName": "Ecm"
                   },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
@@ -926,9 +926,9 @@
                   "reference": [],
                   "deputyNumber": 66,
                   "executiveCaseManager": {
-                    "id": 23,
-                    "name": "PA Team 1 - (Supervision)",
-                    "displayName": "PA Team 1 - (Supervision)"
+                    "id": 25,
+                    "name": "Ecm",
+                    "displayName": "Ecm"
                   },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
@@ -1171,9 +1171,9 @@
                   "reference": [],
                   "deputyNumber": 88,
                   "executiveCaseManager": {
-                    "id": 23,
-                    "name": "PA Team 1 - (Supervision)",
-                    "displayName": "PA Team 1 - (Supervision)"
+                    "id": 25,
+                    "name": "Ecm",
+                    "displayName": "Ecm"
                   },
                   "correspondenceByPost": false,
                   "correspondenceByPhone": false,
@@ -1272,6 +1272,26 @@
       }
     },
     {
+      "id": 402,
+      "hash": "AY",
+      "timestamp": "2021-11-24 14:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocated",
+      "user": {
+        "id": 51,
+        "phoneNumber": "12345678",
+        "displayName": "case manager",
+        "email": "case.manager@opgtest.com"
+      },
+      "event": {
+        "deputyName": "mrs deputy",
+        "personType": "Deputy",
+        "executiveCaseManager": "PATeam1 User1",
+        "personId": "1",
+        "personUid": "7000-0000-2530",
+        "personName": "Mr Bob Builder"
+      }
+    },
+    {
       "id": 394,
       "hash": "AY",
       "timestamp": "2021-09-09 14:01:59",
@@ -1362,6 +1382,7 @@
       "direction": null
     }
   ],
+
   "errors": [
     {
       "id": "notes",
@@ -1373,6 +1394,83 @@
           "isEmpty": "Value is required and can't be empty"
         }
       }
+    },
+    {
+      "id": "ecm",
+      "validation_errors": {
+        "Change ECM": {
+          "": "Select an executive case manager"
+        }
+      }
+    },
+    {
+      "id": "dashboard",
+      "validation_errors": {
+        "": {
+          "": "An executive case manager has not been assigned."
+        }
+      }
+    }
+  ],
+  "successes": [
+    {
+      "id": "ecm",
+      "name": "Jon",
+      "phoneNumber": "1555678",
+      "displayName": "Jon Snow",
+      "deleted": false,
+      "email": "jonsnow@opgtest.com"
+    }
+  ],
+  "teams": [
+  {
+    "id": 23,
+    "name": "PA Team 1 - (Supervision)",
+    "phoneNumber": "0123456789",
+    "displayName": "PA Team 1 - (Supervision)",
+    "deleted": false,
+    "email": "PATeam1.team@opgtest.com",
+    "members": [
+      {
+        "id": 92,
+        "name": "Cersei",
+        "phoneNumber": "12345678",
+        "displayName": "Cersei Lannister",
+        "deleted": false,
+        "email": "cerseilannister@opgtest.com"
+      },
+      {
+        "id": 93,
+        "name": "Jon",
+        "phoneNumber": "1555678",
+        "displayName": "Jon Snow",
+        "deleted": false,
+        "email": "jonsnow@opgtest.com"
+      },
+      {
+        "id": 94,
+        "name": "Eddard",
+        "phoneNumber": "888845555",
+        "displayName": "Eddard Stark",
+        "deleted": false,
+        "email": "eddardstark@opgtest.com"
+      }
+    ],
+    "children": [],
+    "teamType": {
+      "handle": "PA",
+      "label": "PA"
+    }
+  }
+  ],
+  "ecm": [
+    {
+      "id": 93,
+      "name": "Jon",
+      "phoneNumber": "1555678",
+      "displayName": "Jon Snow",
+      "deleted": false,
+      "email": "jonsnow@opgtest.com"
     }
   ]
 }

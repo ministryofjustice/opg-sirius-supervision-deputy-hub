@@ -8,4 +8,7 @@
        {{ if eq .EventType "PaDetailsChanged" }}
            {{ template "pa-deputy-changed" . }}
       {{ end }}
+      {{ if eq .EventType "DeputyAllocated" }}
+             {{ template "pa-deputy-allocated" . }}
+      {{ end }}
 {{ end }}
