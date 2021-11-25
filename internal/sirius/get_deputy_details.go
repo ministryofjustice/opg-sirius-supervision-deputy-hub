@@ -12,7 +12,7 @@ type ExecutiveCaseManager struct {
 }
 
 type ExecutiveCaseManagerOutgoing struct {
-	EcmId int
+	EcmId int `json:"ecmId"`
 }
 
 type DeputyDetails struct {

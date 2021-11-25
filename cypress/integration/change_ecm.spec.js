@@ -39,21 +39,8 @@ describe("Change ECM", () => {
         cy.get("#select-ecm").type('S');
         cy.contains("#select-ecm__listbox", 'Jon Snow').click();
         cy.get('form').submit();
-        cy.url().should("contain", "?success=ecm");
         cy.get("h1").should("contain", "Dashboard");
         cy.get(".moj-banner--success").should("contain", "Ecm changed to" );
-    })
-
-    it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
-        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
-        cy.get(":nth-child(2) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
-        cy.get(":nth-child(2) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
-    })
-
-    it("has a timeline event for when an ecm is allocated", () => {
-        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline")
-        cy.get(":nth-child(1) > .moj-timeline__header").should('contain', 'Executive Case Manager changed to PATeam1 User1');
-        cy.get(":nth-child(1) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by case manager (12345678)')
     })
 
     it("displays warning when no ecm chosen and form submitted", () => {
@@ -91,4 +78,22 @@ describe("Change ECM links to Dashboard", () => {
         cy.get(".govuk-list > li > a").should("not.exist");
     })
 
+});
+
+describe("Timelink links to Change ECM page", () => {
+    beforeEach(() => {
+        cy.setCookie("Other", "other");
+        cy.setCookie("XSRF-TOKEN", "abcde");
+        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline");
+    });
+
+    it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
+        cy.get(":nth-child(2) > .moj-timeline__header").should('contain', 'Executive Case Manager set to Public Authority deputy team');
+        cy.get(":nth-child(2) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by Lay Team 1 - (Supervision')
+    })
+
+    it("has a timeline event for when an ecm is allocated", () => {
+        cy.get(":nth-child(1) > .moj-timeline__header").should('contain', 'Executive Case Manager changed to PATeam1 User1');
+        cy.get(":nth-child(1) > .moj-timeline__header > .moj-timeline__byline").should('contain', 'by case manager (12345678)')
+    })
 });
