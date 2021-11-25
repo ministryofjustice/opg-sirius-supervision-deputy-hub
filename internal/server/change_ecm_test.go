@@ -81,7 +81,7 @@ func TestPostChangeECM(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{EcmId:26}"))
+	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{ecmId:26}"))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error

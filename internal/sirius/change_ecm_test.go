@@ -14,7 +14,7 @@ func TestChangeECM(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := `{"EcmId": 32}`
+	json := `{"ecmId": 32}`
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
