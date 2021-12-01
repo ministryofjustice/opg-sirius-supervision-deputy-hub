@@ -38,17 +38,24 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 - `go build main.go `
 - `./main `
 
-  -------------------------------------------------------------------
+-------------------------------------------------------------------
 
 ## Run Cypress tests
  
 `docker-compose -f docker/docker-compose.dev.yml up -d --build `
  
 `yarn && yarn cypress `
-    
+
+### Run the unit/functional tests
+
+test sirius files: `yarn test-sirius`
+test server files: `yarn test-server`
+Run all Go tests: `go test ./...`
+
 -------------------------------------------------------------------
-## Run the unit/functional tests
 
-test sirius files: `test-sirius`
+## Formatting
 
-test server files: `test-server`
+This project uses the standard Golang styleguide, and can be autoformatting by running `gofmt -s -w .`.
+
+To format .gotmpl files and other assets, we use Prettier, which can be run using `yarn fmt`.
