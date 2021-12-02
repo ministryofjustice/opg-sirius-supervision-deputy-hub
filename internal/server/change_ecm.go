@@ -106,7 +106,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			return Redirect(fmt.Sprintf("/deputy/%d/?success=ecm", deputyId))
+			return Redirect(fmt.Sprintf("/deputy/%d?success=ecm", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
