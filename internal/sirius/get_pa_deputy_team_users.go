@@ -1,9 +1,9 @@
 package sirius
 
 import (
-"encoding/json"
-"net/http"
-"strconv"
+	"encoding/json"
+	"net/http"
+	"strconv"
 )
 
 type apiTeam struct {
@@ -28,9 +28,8 @@ type TeamMember struct {
 }
 
 type Team struct {
-	Members     []TeamMember
+	Members []TeamMember
 }
-
 
 func (c *Client) GetPaDeputyTeamMembers(ctx Context, defaultPATeam int) ([]TeamMember, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/teams/"+strconv.Itoa(defaultPATeam), nil)

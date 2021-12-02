@@ -1,14 +1,14 @@
 {{ define "timeline-template-renderer" }}
-       {{ if eq .EventType "DeputyLinkedToOrder" }}
-          {{ template "new-client-added-to-deputyship" . }}
-       {{ end }}
-       {{ if eq .EventType "PADeputyCreated" }}
-          {{ template "pa-deputy-created" . }}
-       {{ end }}
-       {{ if eq .EventType "PaDetailsChanged" }}
-           {{ template "pa-deputy-changed" . }}
-      {{ end }}
-      {{ if eq .EventType "DeputyAllocated" }}
-             {{ template "pa-deputy-allocated" . }}
-      {{ end }}
+    {{ if eq .EventType "DeputyLinkedToOrder" }}
+        {{ template "new-client-added-to-deputyship" . }}
+    {{ end }}
+    {{ if eq .EventType "PADeputyCreated" }}
+        {{ template "pa-deputy-created" . }}
+    {{ end }}
+    {{ if eq .EventType "PaDetailsChanged" }}
+        {{ template "pa-deputy-changed" . }}
+    {{ end }}
+    {{ if eq .EventType "DeputyAllocated" }}
+        {{ template "pa-deputy-allocated" . }}
+    {{ end }}
 {{ end }}

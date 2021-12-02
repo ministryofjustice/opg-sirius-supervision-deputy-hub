@@ -136,4 +136,3 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 
 	assert.Equal(expectedValidationError, returnedError)
 }
-

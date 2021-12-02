@@ -38,9 +38,9 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		}
 
 		vars := deputyHubVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
-			DeputyDetails:  deputyDetails,
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyDetails: deputyDetails,
 		}
 
 		vars.Success, vars.SuccessMessage = createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
