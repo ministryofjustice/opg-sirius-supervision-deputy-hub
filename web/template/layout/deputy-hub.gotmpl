@@ -3,10 +3,16 @@
         {{ template "error-banner" . }}
     {{ end }}
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-m govuk-!-margin-bottom-0">{{ .DeputyDetails.OrganisationName }}</h1>
-        <span class="govuk-caption-m  govuk-!-margin-bottom-0">Deputy Number: {{ .DeputyDetails.DeputyNumber }}</span>
-        <span class="govuk-caption-m  govuk-!-margin-bottom-2">Executive Case Manager: {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}</span>
-      </div>
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-m govuk-!-margin-bottom-0">
+                {{ .DeputyDetails.OrganisationName }}
+            </h1>
+            <span class="govuk-caption-m  govuk-!-margin-bottom-0">
+                {{ printf "Deputy Number: %v" .DeputyDetails.DeputyNumber }}
+            </span>
+            <span class="govuk-caption-m  govuk-!-margin-bottom-2">
+                {{ printf "Executive Case Manager: %v" .DeputyDetails.ExecutiveCaseManager.EcmName }}
+            </span>
+        </div>
     </div>
 {{ end }}

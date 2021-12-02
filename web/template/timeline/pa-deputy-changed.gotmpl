@@ -1,18 +1,18 @@
 {{ define "pa-deputy-changed" }}
     <div class="moj-timeline__item">
         <div class="moj-timeline__header">
-          <h2 class="moj-timeline__title">
-           Deputy team details changed
-          </h2>
-          <p class="moj-timeline__byline">by {{ .User.UserDisplayName }} ({{.User.UserPhoneNumber}})</p>
+            <h2 class="moj-timeline__title">Deputy team details changed</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
         </div>
         <p class="moj-timeline__date">
-          <time>{{ .Timestamp }}</time>
+            <time>{{ .Timestamp }}</time>
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
-             {{ range .Event.Changes }}
-                <li>{{ .FieldName }}: {{ .NewValue }}</li>
+                {{ range .Event.Changes }}
+                    <li>{{ printf "%v: %v" .FieldName .NewValue }}</li>
                 {{ end }}
             </ul>
         </div>

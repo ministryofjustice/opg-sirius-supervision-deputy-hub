@@ -34,7 +34,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
-	router.Handle("/deputy/{id}/",
+	router.Handle("/deputy/{id}",
 		wrap(
 			renderTemplateForDeputyHub(client, defaultPATeam, templates["dashboard.gotmpl"])))
 
