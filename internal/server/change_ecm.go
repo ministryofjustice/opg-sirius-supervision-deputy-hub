@@ -39,7 +39,6 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 			return err
 		}
 
-
 		switch r.Method {
 		case http.MethodGet:
 			var SuccessMessage string
@@ -52,7 +51,6 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 			if hasSuccess {
 				SuccessMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
 			}
-
 
 			vars := changeECMHubVars{
 				Path:           r.URL.Path,
@@ -73,10 +71,10 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 			}
 
 			vars := changeECMHubVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-				DefaultPaTeam: defaultPATeam,
+				Path:           r.URL.Path,
+				XSRFToken:      ctx.XSRFToken,
+				DeputyDetails:  deputyDetails,
+				DefaultPaTeam:  defaultPATeam,
 				EcmTeamDetails: ecmTeamDetails,
 			}
 
@@ -108,11 +106,10 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			return Redirect(fmt.Sprintf("/deputy/%d/?success=ecm", deputyId))
+			return Redirect(fmt.Sprintf("/deputy/%d?success=ecm", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
 }
-

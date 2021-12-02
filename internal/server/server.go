@@ -34,7 +34,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
-	router.Handle("/deputy/{id}/",
+	router.Handle("/deputy/{id}",
 		wrap(
 			renderTemplateForDeputyHub(client, defaultPATeam, templates["dashboard.gotmpl"])))
 
@@ -57,7 +57,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, defaultPATeam, templates["manage-team-details.gotmpl"])))
-  
+
 	router.Handle("/deputy/{id}/change-ecm",
 		wrap(
 			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
@@ -105,7 +105,7 @@ type errorVars struct {
 	Path      string
 	Code      int
 	Error     string
-	Errors	  string
+	Errors    string
 }
 
 type ErrorHandlerClient interface {
@@ -165,7 +165,7 @@ func notFoundHandler(tmplError Template, siriusURL string) http.HandlerFunc {
 		_ = tmplError.ExecuteTemplate(w, "page", errorVars{
 			SiriusURL: siriusURL,
 			Code:      http.StatusNotFound,
-			Error: "Not Found",
+			Error:     "Not Found",
 		})
 	}
 }
