@@ -10,3 +10,5 @@ cypress/videos
 
 # IDEs
 .idea
+
+.DS_Store
