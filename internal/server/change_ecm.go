@@ -24,6 +24,7 @@ type changeECMHubVars struct {
 	Errors         sirius.ValidationErrors
 	Success        bool
 	SuccessMessage string
+	ErrorMessage   string
 	DefaultPaTeam  int
 }
 
@@ -61,6 +62,8 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				Success:        hasSuccess,
 				SuccessMessage: SuccessMessage,
 			}
+
+			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
