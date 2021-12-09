@@ -1,6 +1,7 @@
 {{ template "page" . }}
 
 {{ define "main" }}
+{{ template "deputy-hub" . }}
     <div class="main">
         {{ template "error-summary" .Errors }}
 
@@ -57,7 +58,7 @@
                             </button>
 
                             <a
-                                class="govuk-link"
+                                class="govuk-link data-emc-cancel"
                                 href="{{ prefix (printf "/deputy/%d" .DeputyDetails.ID) }}">
                                 Cancel
                             </a>

@@ -31,7 +31,7 @@ describe("Change ECM", () => {
     });
 
     it("directs me back to dashboard page if I press cancel", () => {
-        cy.get(".govuk-link").should("contain", "Cancel").click();
+        cy.get(".data-emc-cancel").should("contain", "Cancel").click();
         cy.url().should("not.include", "/change-ecm");
         cy.get("h1").should("contain", "Dashboard");
     });
