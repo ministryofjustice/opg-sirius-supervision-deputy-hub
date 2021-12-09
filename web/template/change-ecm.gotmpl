@@ -1,7 +1,7 @@
 {{ template "page" . }}
 
 {{ define "main" }}
-{{ template "deputy-hub" . }}
+    {{ template "deputy-hub" . }}
     <div class="main">
         {{ template "error-summary" .Errors }}
 
@@ -32,7 +32,6 @@
                                 {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
                             {{ end }}
                         </p>
-
                         <label class="govuk-label" for="select-ecm">
                             Enter an Executive Case Manager name
                         </label>
@@ -42,9 +41,8 @@
                             <select id="select-ecm" name="select-ecm">
                                 <option value=""></option>
                                 {{ range .EcmTeamDetails }}
-                                    <option value="{{ .ID }}">
-                                        {{ .DisplayName }}
-                                    </option>
+                                    <!-- prettier-ignore -->
+                                    <option value="{{ .ID }}">{{ .DisplayName }}</option>
                                 {{ end }}
                             </select>
                         </div>
