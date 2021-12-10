@@ -1,3 +1,4 @@
+export DOCKER_BUILDKIT=1
 all: lint test build-all scan pa11y lighthouse cypress down
 
 lint:
