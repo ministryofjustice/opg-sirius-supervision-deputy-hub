@@ -2,6 +2,7 @@ version: "3.6"
 
 services:
   deputy-hub:
+    image: sirius-deputy-hub:latest
     build:
       context: ..
       dockerfile: ./docker/sirius-deputy-hub/Dockerfile
@@ -12,6 +13,7 @@ services:
       PREFIX: /supervision/deputies/public-authority
 
   json-server:
+    image: deputy-hub-json-server:latest
     build:
       context: ..
       dockerfile: ./docker/json-server/Dockerfile
@@ -19,6 +21,7 @@ services:
       - '3000:3000'
 
   puppeteer:
+    image: deputy-hub-puppeter:latest
     build: ./puppeteer
     depends_on:
       - deputy-hub
@@ -29,9 +32,12 @@ services:
       - LHCI_GITHUB_APP_TOKEN
 
   cypress:
+    image: deputy-hub-cypress:latest
     build:
       context: ..
       dockerfile: ./docker/cypress/Dockerfile
+    volumes:
+      - ../test-results:/test-results
     command: ["--headless", "-b", "chrome"]
     depends_on:
       - deputy-hub
