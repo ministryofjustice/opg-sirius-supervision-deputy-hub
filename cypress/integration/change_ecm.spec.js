@@ -33,7 +33,7 @@ describe("Change ECM", () => {
     it("directs me back to dashboard page if I press cancel", () => {
         cy.get(".data-emc-cancel").should("contain", "Cancel").click();
         cy.url().should("not.include", "/change-ecm");
-        cy.get("h1").should("contain", "Dashboard");
+        cy.get("h1").should("contain", "Deputy details");
     });
 
     it("allows me to fill in and submit the ecm form", () => {
@@ -42,7 +42,7 @@ describe("Change ECM", () => {
         cy.get("#select-ecm").type("S");
         cy.contains("#select-ecm__listbox", "Jon Snow").click();
         cy.get("form").submit();
-        cy.get("h1").should("contain", "Dashboard");
+        cy.get("h1").should("contain", "Deputy details");
         cy.get(".moj-banner--success").should("contain", "Ecm changed to");
     });
 
@@ -58,14 +58,14 @@ describe("Change ECM", () => {
     });
 });
 
-describe("Change ECM links to Dashboard", () => {
+describe("Change ECM links to deputy details", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
         cy.visit("/supervision/deputies/public-authority/deputy/1");
     });
 
-    it("has a link from the dashboard page", () => {
+    it("has a link from the deputy details page", () => {
         cy.get(".moj-button-menu__wrapper > .govuk-button")
             .should("contain", "Change ECM")
             .click();

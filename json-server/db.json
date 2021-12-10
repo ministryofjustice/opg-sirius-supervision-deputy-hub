@@ -1387,7 +1387,7 @@
             }
         },
         {
-            "id": "dashboard",
+            "id": "deputy details",
             "validation_errors": {
                 "": {
                     "": "An executive case manager has not been assigned."
