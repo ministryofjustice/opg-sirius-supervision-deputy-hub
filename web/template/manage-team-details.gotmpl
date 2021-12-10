@@ -1,5 +1,6 @@
 {{ template "page" . }}
 {{ define "main" }}
+    {{ template "deputy-hub" . }}
     {{ if .Success }}
         {{ template "success-banner" " You have successfully edited your details." }}
     {{ end }}
