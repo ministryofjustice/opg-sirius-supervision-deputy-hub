@@ -6,7 +6,7 @@ describe("Navigation bar", () => {
     });
 
     const expected = [
-        ["Dashboard", "/supervision/deputies/public-authority/deputy/1"],
+        ["Deputy details", "/supervision/deputies/public-authority/deputy/1"],
         ["Clients", "/supervision/deputies/public-authority/deputy/1/clients"],
         [
             "Timeline",
