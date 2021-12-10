@@ -46,6 +46,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
+          check_name: "Unit Test Results"
           files: test-results/*.xml
 
   lint:
@@ -84,6 +85,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
+          check_name: "Cypress Test Results"
           files: test-results/*.xml
 
   build:
