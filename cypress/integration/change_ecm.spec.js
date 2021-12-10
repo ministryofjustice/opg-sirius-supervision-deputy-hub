@@ -30,7 +30,7 @@ describe("Change ECM", () => {
         cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
     });
 
-    it("directs me back to dashboard page if I press cancel", () => {
+    it("directs me back to deputy details page if I press cancel", () => {
         cy.get(".data-emc-cancel").should("contain", "Cancel").click();
         cy.url().should("not.include", "/change-ecm");
         cy.get("h1").should("contain", "Deputy details");
