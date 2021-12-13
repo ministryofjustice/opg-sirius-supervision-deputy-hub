@@ -36,7 +36,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router := mux.NewRouter()
 	router.Handle("/deputy/{id}",
 		wrap(
-			renderTemplateForDeputyHub(client, defaultPATeam, templates["dashboard.gotmpl"])))
+			renderTemplateForDeputyHub(client, defaultPATeam, templates["deputy-details.gotmpl"])))
 
 	router.Handle("/deputy/{id}/clients",
 		wrap(

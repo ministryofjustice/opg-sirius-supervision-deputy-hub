@@ -1,4 +1,4 @@
-describe("Dashboard tab", () => {
+describe("Deputy details tab", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
@@ -6,7 +6,7 @@ describe("Dashboard tab", () => {
     });
 
     it("has headers for different sections", () => {
-        cy.get("h1").should("contain", "Dashboard");
+        cy.get("h1").should("contain", "Deputy details");
         cy.get("h2").should("contain", "Team details");
     });
 
