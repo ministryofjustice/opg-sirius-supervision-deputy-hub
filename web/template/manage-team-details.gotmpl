@@ -1,9 +1,9 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "deputy-hub" . }}
     {{ if .Success }}
         {{ template "success-banner" " You have successfully edited your details." }}
     {{ end }}
+    {{ template "deputy-hub" . }}
     {{ template "error-summary" .Errors }}
     <main role="main" class="govuk-main-wrapper">
         <div class="govuk-grid-row govuk-!-margin-top-5">
