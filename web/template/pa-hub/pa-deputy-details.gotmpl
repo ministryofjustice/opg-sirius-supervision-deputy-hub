@@ -1,24 +1,24 @@
-{{ template "page" . }}
-{{ define "main" }}
+{{ define "pa-deputy-details" }}
+    {{ template "deputy-hub" . }}
     {{ if .Success }}
         {{ template "success-banner" . }}
     {{ end }}
-    {{ template "deputy-hub" . }}
     {{ template "navigation" . }}
+
 
     <header>
         <h1
-            class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+                class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
             Deputy details
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
-                    href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary "
-                    data-module="govuk-button">
+                        href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}"
+                        role="button"
+                        draggable="false"
+                        class="govuk-button moj-button-menu__item govuk-button--secondary "
+                        data-module="govuk-button">
                     Change ECM
                 </a>
             </div>
@@ -63,19 +63,13 @@
                 </div>
             </dl>
             <a
-                href="{{ prefix (printf "/deputy/%d/manage-team-details" .DeputyDetails.ID) }}"
-                role="button"
-                draggable="false"
-                class="govuk-button govuk-button--secondary"
-                data-module="govuk-button">
+                    href="{{ prefix (printf "/deputy/%d/manage-team-details" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button govuk-button--secondary"
+                    data-module="govuk-button">
                 Manage team details
             </a>
         </div>
     </div>
-    {{if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ template "pa-deputy-details" . }}
-    {{end}}
-    {{if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-        {{ template "pro-deputy-details" . }}
-    {{end}}
 {{ end }}
