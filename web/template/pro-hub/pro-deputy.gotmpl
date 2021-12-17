@@ -1,0 +1,32 @@
+{{ define "pro-deputy" }}
+    <a href="javascript: history.go(-1)" class="govuk-back-link">Back</a>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            {{ if eq .DeputyDetails.DeputySubType.SubType "PERSON" }}
+                <h2
+                    class="govuk-heading-m govuk-!-margin-bottom-0 hook_header_deputy_name">
+                    {{ printf "%v %v" .DeputyDetails.DeputyFirstName .DeputyDetails.DeputySurname }}
+                </h2>
+            {{ else }}
+                <h2
+                    class="govuk-heading-m govuk-!-margin-bottom-0 hook_header_organisation_name">
+                    {{ .DeputyDetails.OrganisationName }}
+                </h2>
+            {{ end }}
+{{/*            <span*/}}
+{{/*                class="govuk-caption-m  govuk-!-margin-bottom-0 hook_header_firm_name"> Firm:*/}}
+{{/*                  <a class="moj-header__navigation-link" href="{{ firmhub (printf "/supervision/deputies/firm/%d" .DeputyDetails.Firm.FirmId) }}">*/}}
+{{/*                  {{ printf "%v" .DeputyDetails.Firm.FirmName }}</a>*/}}
+{{/*            </span>*/}}
+
+            <span
+                class="govuk-caption-m  govuk-!-margin-bottom-0  hook_header_deputy_number">
+                {{ printf "Deputy Number: %v" .DeputyDetails.DeputyNumber }}
+            </span>
+            <span
+                class="govuk-caption-m  govuk-!-margin-bottom-2  hook_header_ecm">
+                {{ printf "Executive Case Manager: %v" .DeputyDetails.ExecutiveCaseManager.EcmName }}
+            </span>
+        </div>
+    </div>
+{{ end }}

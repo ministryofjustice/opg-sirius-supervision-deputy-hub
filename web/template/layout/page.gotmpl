@@ -1,64 +1,77 @@
 {{ define "page" }}
     <!DOCTYPE html>
     <html lang="en" class="govuk-template app-html-class">
-        <head>
-            <meta charset="utf-8" />
-            <title>OPG Sirius Deputy Hub - Sirius</title>
-            <meta
+    <head>
+        <meta charset="utf-8"/>
+        <title>
+            {{if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                OPG Sirius Deputy Hub - Sirius
+            {{end}}
+            {{if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                OPG Sirius Professional Deputy Hub - Sirius
+            {{end}}
+        </title>
+        <meta
                 name="viewport"
-                content="width=device-width, initial-scale=1, viewport-fit=cover" />
-            <meta name="api-base-uri" content="{{ sirius "" }}" />
-            <meta name="theme-color" content="blue" />
+                content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+        <meta name="api-base-uri" content="{{ sirius "" }}"/>
+        <meta name="theme-color" content="blue"/>
 
-            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-            <link
+        <link
                 rel="shortcut icon"
                 sizes="16x16 32x32 48x48"
                 href="{{ prefix "/assets/images/favicon.ico" }}"
-                type="image/x-icon" />
-            <link
+                type="image/x-icon"/>
+        <link
                 rel="mask-icon"
                 href="{{ prefix "/assets/images/govuk-mask-icon.svg" }}"
-                color="blue" />
-            <link
+                color="blue"/>
+        <link
                 rel="apple-touch-icon"
                 sizes="180x180"
-                href="{{ prefix "/assets/images/govuk-apple-touch-icon-180x180.png" }}" />
-            <link
+                href="{{ prefix "/assets/images/govuk-apple-touch-icon-180x180.png" }}"/>
+        <link
                 rel="apple-touch-icon"
                 sizes="167x167"
-                href="{{ prefix "/assets/images/govuk-apple-touch-icon-167x167.png" }}" />
-            <link
+                href="{{ prefix "/assets/images/govuk-apple-touch-icon-167x167.png" }}"/>
+        <link
                 rel="apple-touch-icon"
                 sizes="152x152"
-                href="{{ prefix "/assets/images/govuk-apple-touch-icon-152x152.png" }}" />
-            <link
+                href="{{ prefix "/assets/images/govuk-apple-touch-icon-152x152.png" }}"/>
+        <link
                 rel="apple-touch-icon"
                 href="{{ prefix "/assets/images/govuk-apple-touch-icon.png" }}
-                " />
+                "/>
 
-            <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet" />
-        </head>
+        <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet"/>
+    </head>
 
-        <body class="govuk-template__body sirius-pahub">
-        <script>
-            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-        </script>
+    <body
+            {{if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                class="govuk-template__body sirius-pahub"
+            {{end}}
+            {{if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                class="govuk-template__body sirius-prohub"
+            {{end}}>
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
 
-       {{ if .Errors }}
+    {{ if .Errors }}
         {{ template "error-header" . }}
-      {{ else }}
+    {{ else }}
         {{ template "header" . }}
-      {{ end }}
+    {{ end }}
 
-      <div class="govuk-width-container">
-        <main class="govuk-main-wrapper app-main-class"  role="main">
-          {{ block "main" . }}{{ end }}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper app-main-class" role="main">
+            {{ block "main" . }}{{ end }}
         </main>
-      </div>
-      {{ template "footer" . }}
-      <script src="{{ prefix "/javascript/all.js" }}"></script>
-        </body>
+    </div>
+    {{ template "footer" . }}
+    <script src="{{ prefix "/javascript/all.js" }}"></script>
+    </body>
     </html>
 {{ end }}
