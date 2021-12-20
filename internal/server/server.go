@@ -24,13 +24,15 @@ type Client interface {
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
 	ChangeECMInformation
+	FirmInformation
+	DeputyContactDetailsInformation
 }
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
+func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, firmHubURL, webDir string, defaultPATeam int) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
@@ -61,6 +63,18 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/deputy/{id}/change-ecm",
 		wrap(
 			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
+
+	router.Handle("/deputy/{id}/change-firm",
+		wrap(
+			renderTemplateForChangeFirm(client, defaultPATeam, templates["change-firm.gotmpl"])))
+
+	router.Handle("/deputy/{id}/add-firm",
+		wrap(
+			renderTemplateForAddFirm(client, defaultPATeam, templates["add-firm.gotmpl"])))
+
+	router.Handle("/deputy/{id}/manage-deputy-contact-details",
+		wrap(
+			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 

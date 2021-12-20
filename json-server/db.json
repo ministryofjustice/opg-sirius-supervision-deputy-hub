@@ -1512,6 +1512,77 @@
                     "": "An executive case manager has not been assigned."
                 }
             }
+        },
+        {
+            "id": "firm",
+            "validation_errors": {
+                "firmName": {
+                    "isEmpty": ""
+                },
+                "addressLine1": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine2": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine3": {
+                    "stringLengthTooLong": ""
+                },
+                "town": {
+                    "stringLengthTooLong": ""
+                },
+                "county": {
+                    "stringLengthTooLong": ""
+                },
+                "postcode": {
+                    "stringLengthTooLong": ""
+                },
+                "phoneNumber": {
+                    "stringLengthTooLong": ""
+                },
+                "email": {
+                    "stringLengthTooLong": ""
+                }
+            }
+        },
+        {
+            "id": "contact-details",
+            "validation_errors": {
+                "firstname": {
+                    "isEmpty": ""
+                },
+                "surname": {
+                    "isEmpty": ""
+                },
+                "addressLine1": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine2": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine3": {
+                    "stringLengthTooLong": ""
+                },
+                "town": {
+                    "stringLengthTooLong": ""
+                },
+                "county": {
+                    "stringLengthTooLong": ""
+                },
+                "postcode": {
+                    "stringLengthTooLong": ""
+                },
+                "workPhoneNumber": {
+                    "stringLengthTooLong": ""
+                },
+                "email": {
+                    "stringLengthTooLong": ""
+                }
+            }
+        },
+        {
+            "id": "internal-server-error",
+            "message": "test message"
         }
     ],
     "successes": [
@@ -1522,6 +1593,10 @@
             "displayName": "Jon Snow",
             "deleted": false,
             "email": "jonsnow@opgtest.com"
+        },
+        {
+            "id": "firm",
+            "firmId": 2
         }
     ],
     "teams": [
