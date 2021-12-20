@@ -1,0 +1,184 @@
+{{ template "page" . }}
+{{ define "main" }}
+{{ template "pro-deputy" . }}
+    {{ template "error-summary" .Errors }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+            Create new firm
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="add-firm-form" class="" method="post">
+                <input
+                    type="hidden"
+                    name="xsrfToken"
+                    value="{{ .XSRFToken }}" />
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="deputy">Firm name</label>
+                    <input
+                        class="govuk-input"
+                        id="f-firmName"
+                        name="name"
+                        type="text"
+                        value="" />
+                </div>
+                <fieldset class="govuk-fieldset">
+                    <legend
+                        class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                        Address
+                    </legend>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="address-line-1">
+                            Building and street
+                            <span class="govuk-visually-hidden">
+                                line 1 of 3
+                            </span>
+                        </label>
+                        <input
+                            class="govuk-input"
+                            id="f-addressLine1"
+                            name="address-line-1"
+                            type="text"
+                            autocomplete="address-line1"
+                            value="" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="address-line-2">
+                            <span class="govuk-visually-hidden">
+                                Building and street line 2 of 3
+                            </span>
+                        </label>
+                        <input
+                            class="govuk-input"
+                            id="f-address-line-2"
+                            name="address-line-2"
+                            type="text"
+                            autocomplete="address-line2"
+                            value="" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="address-line-3">
+                            <span class="govuk-visually-hidden"
+                                >Building and street line 3 of 3
+                            </span>
+                        </label>
+                        <input
+                            class="govuk-input"
+                            id="f-address-line-3"
+                            name="address-line-3"
+                            type="text"
+                            autocomplete="address-line3" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <label
+                            class="govuk-label govuk-!-width-two-thirds"
+                            for="town">
+                            Town or city
+                        </label>
+                        <input
+                            class="govuk-input"
+                            id="f-town"
+                            name="town"
+                            type="text"
+                            value="" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <label
+                            class="govuk-label govuk-!-width-two-thirds"
+                            for="county">
+                            County
+                        </label>
+                        <input
+                            class="govuk-input"
+                            id="f-county"
+                            name="county"
+                            type="text"
+                            value="" />
+                    </div>
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="postcode">
+                            Postcode
+                        </label>
+                        <input
+                            class="govuk-input govuk-input--width-10"
+                            id="f-postcode"
+                            name="postcode"
+                            type="text"
+                            value="" />
+                    </div>
+                </fieldset>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend">
+                            Update deputy contact details with the firm address
+                        </legend>
+                        <div class="govuk-radios--inline">
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="update-deputy"
+                                    name="update-deputy"
+                                    type="radio"
+                                    value="yes" />
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="update-deputy">
+                                    Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="update-deputy-2"
+                                    name="update-deputy"
+                                    type="radio"
+                                    value="no" />
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="update-deputy-2">
+                                    No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="telephone">
+                        Telephone number
+                    </label>
+                    <input
+                        class="govuk-input"
+                        id="f-telephone"
+                        name="telephone"
+                        type="text"
+                        value="" />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="email">
+                        Email address
+                    </label>
+                    <input
+                        class="govuk-input"
+                        id="f-email"
+                        name="email"
+                        type="text"
+                        value="" />
+                </div>
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save team details
+                    </button>
+                    <a
+                        class="govuk-link"
+                        href="{{ prefix (printf "/deputy/%d/change-firm" .DeputyId) }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{{ end }}
