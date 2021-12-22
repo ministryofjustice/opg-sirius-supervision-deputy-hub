@@ -4,10 +4,11 @@
         <head>
             <meta charset="utf-8" />
             <title>
-                {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                {{ if .Error }}
+                    Page not found
+                {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
                     OPG Sirius Deputy Hub - Sirius
-                {{ end }}
-                {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
                     OPG Sirius Professional Deputy Hub - Sirius
                 {{ end }}
             </title>
@@ -49,17 +50,18 @@
         </head>
 
         <body
-            {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+            {{ if .Error }}
                 class="govuk-template__body sirius-pahub"
-            {{ end }}
-            {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+            {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
                 class="govuk-template__body sirius-prohub"
+            {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                class="govuk-template__body sirius-pahub"
             {{ end }}>
     <script>
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
-    {{ if .Errors }}
+    {{ if .Error }}
         {{ template "error-header" . }}
     {{ else }}
         {{ template "header" . }}
