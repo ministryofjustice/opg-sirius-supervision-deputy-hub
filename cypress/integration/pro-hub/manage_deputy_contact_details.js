@@ -6,7 +6,7 @@ describe("Manage Deputy Contact Details", () => {
 
     describe("Navigation", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/public-authority/deputy/4");
+            cy.visit("/supervision/deputies/public-authority/deputy/3");
         });
 
         it("should navigate to the 'Manage deputy contact details' page", () => {
@@ -18,7 +18,7 @@ describe("Manage Deputy Contact Details", () => {
     describe("Form functionality", () => {
         beforeEach(() => {
             cy.visit(
-                "/supervision/deputies/public-authority/deputy/4/manage-deputy-contact-details"
+                "/supervision/deputies/public-authority/deputy/3/manage-deputy-contact-details"
             );
         });
 
@@ -62,7 +62,9 @@ describe("Manage Deputy Contact Details", () => {
             cy.get("form").submit();
 
             cy.contains(".govuk-heading-l", "Deputy details");
-            cy.contains("[data-cy=success-banner]", "Deputy details updated");
+            cy.get(
+                "body > div > main > div.moj-banner.moj-banner--success > div"
+            ).should("contain", "Deputy details updated");
         });
 
         it("should show validation errors", () => {

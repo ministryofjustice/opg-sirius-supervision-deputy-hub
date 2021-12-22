@@ -54,6 +54,12 @@ func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess
 	assert.Equal(t, SuccessMessage, "Team details updated")
 }
 
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyContactDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=deputyDetails", "Jon Snow")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Deputy details updated")
+}
+
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
 	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=otherMessage", "Jon Snow")
 	assert.Equal(t, false, Success)

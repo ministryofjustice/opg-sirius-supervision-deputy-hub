@@ -5,5 +5,7 @@
     "/timeline/:personId": "/timeline",
     "/deputy/:personId/notes": "/notes",
     "/users/current": "/users",
-    "/deputies/:deputyId/ecm": "/ecm"
+    "/deputies/:deputyId/ecm": "/ecm",
+    "/deputies/:id/contact-details": "/deputies/:id",
+    "/firm": "/addFirm"
 }
