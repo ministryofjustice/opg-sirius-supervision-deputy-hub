@@ -69,4 +69,84 @@
     font-size: 1rem;
     line-height: 1.25;
   }
+
+    table {
+      .govuk-table__cell--checkboxes {
+        width: 1%;
+        white-space: nowrap;
+        label {
+          padding: 0;
+        }
+      }
+
+      td.govuk-table__cell {
+        &.nowrap {
+          white-space: nowrap;
+        }
+        &.capitalise {
+          text-transform: capitalize;
+        }
+
+        span {
+          display: block;
+
+          &.moj-badge,
+          &.name {
+            display: inline-block;
+            margin-right: 10px;
+          }
+
+          &.job_title,
+          &.name {
+            white-space: nowrap;
+          }
+
+          &.name {
+            font-weight: 600;
+          }
+
+          &.secondary {
+            color: #505a5f;
+            font-size: 16px;
+            font-size: 1rem;
+            line-height: 1.25;
+          }
+          &.sentence-case::first-letter {
+            text-transform: capitalize;
+          }
+        }
+      }
+      td.overdue span {
+        border-left: 5px solid #d4351c;
+        padding-left: 5px;
+        font-weight: bold;
+      }
+
+      a.govuk-button {
+        margin-bottom: 0;
+        margin-right: 10px;
+      }
+
+      span.rem_warning {
+        background: url("/public/images/flag.svg") no-repeat 3px 3px;
+        padding-left: 20px;
+        font-weight: bold;
+        color: #d4351c;
+        font-size: 16px;
+        font-size: 1rem;
+      }
+
+      span.rag {
+        font-weight: bold;
+        &.green {
+          color: #28a197 !important;
+        }
+        &.amber {
+          color: #f47738 !important;
+        }
+        &.red {
+          color: #d4351c !important;
+        }
+      }
+    }
 }

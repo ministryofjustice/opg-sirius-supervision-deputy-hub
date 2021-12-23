@@ -7,5 +7,6 @@
     "/users/current": "/users",
     "/deputies/:deputyId/ecm": "/ecm",
     "/deputies/:id/contact-details": "/deputies/:id",
-    "/firm": "/addFirm"
+    "/firm": "/addFirm",
+    "/deputies/:id/firm": "/deputies/:id"
 }

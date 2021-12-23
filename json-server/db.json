@@ -1649,5 +1649,19 @@
             "deleted": false,
             "email": "jonsnow@opgtest.com"
         }
+    ],
+    "addFirm": [
+        {
+            "id": 2,
+            "firmName": "name",
+            "addressLine1": "address-line-1",
+            "addressLine2": "address-line-2",
+            "addressLine3": "address-line-3",
+            "town": "town",
+            "county": "county",
+            "postcode": "postcode",
+            "phoneNumber": "telephone",
+            "email": "email"
+        }
     ]
 }
