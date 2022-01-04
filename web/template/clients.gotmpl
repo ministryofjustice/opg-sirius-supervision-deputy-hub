@@ -1,6 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "deputy-hub" . }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ template "deputy-hub" . }}
+    {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy" . }}
+    {{ end }}
     {{ template "navigation" . }}
     <div class="main">
         <header>

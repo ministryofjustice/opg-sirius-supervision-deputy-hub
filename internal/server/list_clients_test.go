@@ -25,7 +25,7 @@ func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, de
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

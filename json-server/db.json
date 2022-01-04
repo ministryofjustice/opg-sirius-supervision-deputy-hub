@@ -186,6 +186,125 @@
             "deputyNumber": 23,
             "organisationName": "Second Test Organisation",
             "OrganisationTeamOrDepartmentName": "Not PA Team"
+        },
+        {
+            "id": 3,
+            "uId": "7000-0000-2530",
+            "normalizedUid": 700000002530,
+            "errorMessages": [],
+            "researchOptOut": false,
+            "workPhoneNumber": {
+                "id": 95,
+                "phoneNumber": "",
+                "type": "Work",
+                "default": false
+            },
+            "homePhoneNumber": {
+                "id": 96,
+                "phoneNumber": "",
+                "type": "Home",
+                "default": false
+            },
+            "executiveCaseManager": {
+                "id": 223,
+                "displayName": "displayName"
+            },
+            "firm": {
+                "firmName": "This is the Firm Name"
+            },
+            "email": "email@something.com",
+            "dob": "",
+            "dateOfDeath": "",
+            "salutation": "",
+            "firstname": "firstname",
+            "surname": "surname",
+            "deputyNumber": 1000,
+            "otherNames": "",
+            "addressLine1": "addressLine1",
+            "addressLine2": "addressLine2",
+            "addressLine3": "addressLine3",
+            "town": "town",
+            "county": "county",
+            "postcode": "postcode",
+            "country": "country",
+            "isAirmailRequired": false,
+            "phoneNumber": "1111111",
+            "phoneNumbers": [
+                {
+                    "id": 95,
+                    "phoneNumber": "22222222",
+                    "type": "Work",
+                    "default": false
+                },
+                {
+                    "id": 96,
+                    "phoneNumber": "333333",
+                    "type": "Home",
+                    "default": false
+                }
+            ],
+            "reference": [],
+            "correspondenceByPost": false,
+            "correspondenceByPhone": false,
+            "correspondenceByEmail": false,
+            "correspondenceByWelsh": false,
+            "createdDate": "03/09/2021",
+            "updatedDate": "2021-09-03T12:13:38+00:00",
+            "personType": "Deputy",
+            "specialCorrespondenceRequirements": {
+                "audioTape": false,
+                "largePrint": false,
+                "hearingImpaired": false,
+                "spellingOfNameRequiresCare": false
+            },
+            "canDelete": false,
+            "deputyStatus": "Active",
+            "orders": [[]],
+            "previousNames": "",
+            "mobileNumber": "",
+            "eveningNumber": "",
+            "newsletter": false,
+            "deputyType": {
+                "handle": "PRO",
+                "label": "Professional"
+            },
+            "deputySubType": {
+                "handle": "PERSON",
+                "label": "Person"
+            },
+            "deputyCasrecId": 10000000,
+            "organisationName": ""
+        },
+        {
+            "id": 4,
+            "executiveCaseManager": {
+                "id": 223,
+                "displayName": "displayName"
+            },
+            "firm": {
+                "firmName": "This is the Firm Name"
+            },
+            "email": "email@something.com",
+            "firstname": "",
+            "surname": "",
+            "organisationName": "Organisation Ltd",
+            "deputyNumber": 1000,
+            "addressLine1": "addressLine1",
+            "addressLine2": "addressLine2",
+            "addressLine3": "addressLine3",
+            "town": "town",
+            "county": "county",
+            "postcode": "postcode",
+            "phoneNumber": "1111111",
+            "deputyCasrecId": 10000000,
+            "deputyType": {
+                "handle": "PRO",
+                "label": "Professional"
+            },
+            "deputySubType": {
+                "handle": "ORGANISATION",
+                "label": "Organisation"
+            }
         }
     ],
     "clients": {
@@ -1393,6 +1512,77 @@
                     "": "An executive case manager has not been assigned."
                 }
             }
+        },
+        {
+            "id": "firm",
+            "validation_errors": {
+                "firmName": {
+                    "isEmpty": ""
+                },
+                "addressLine1": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine2": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine3": {
+                    "stringLengthTooLong": ""
+                },
+                "town": {
+                    "stringLengthTooLong": ""
+                },
+                "county": {
+                    "stringLengthTooLong": ""
+                },
+                "postcode": {
+                    "stringLengthTooLong": ""
+                },
+                "phoneNumber": {
+                    "stringLengthTooLong": ""
+                },
+                "email": {
+                    "stringLengthTooLong": ""
+                }
+            }
+        },
+        {
+            "id": "contact-details",
+            "validation_errors": {
+                "firstname": {
+                    "isEmpty": ""
+                },
+                "surname": {
+                    "isEmpty": ""
+                },
+                "addressLine1": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine2": {
+                    "stringLengthTooLong": ""
+                },
+                "addressLine3": {
+                    "stringLengthTooLong": ""
+                },
+                "town": {
+                    "stringLengthTooLong": ""
+                },
+                "county": {
+                    "stringLengthTooLong": ""
+                },
+                "postcode": {
+                    "stringLengthTooLong": ""
+                },
+                "workPhoneNumber": {
+                    "stringLengthTooLong": ""
+                },
+                "email": {
+                    "stringLengthTooLong": ""
+                }
+            }
+        },
+        {
+            "id": "internal-server-error",
+            "message": "test message"
         }
     ],
     "successes": [
@@ -1403,6 +1593,10 @@
             "displayName": "Jon Snow",
             "deleted": false,
             "email": "jonsnow@opgtest.com"
+        },
+        {
+            "id": "firm",
+            "firmId": 2
         }
     ],
     "teams": [
@@ -1454,6 +1648,20 @@
             "displayName": "Jon Snow",
             "deleted": false,
             "email": "jonsnow@opgtest.com"
+        }
+    ],
+    "addFirm": [
+        {
+            "id": 2,
+            "firmName": "name",
+            "addressLine1": "address-line-1",
+            "addressLine2": "address-line-2",
+            "addressLine3": "address-line-3",
+            "town": "town",
+            "county": "county",
+            "postcode": "postcode",
+            "phoneNumber": "telephone",
+            "email": "email"
         }
     ]
 }
