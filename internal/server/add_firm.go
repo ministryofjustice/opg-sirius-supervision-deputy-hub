@@ -72,8 +72,6 @@ func renderTemplateForAddFirm(client FirmInformation, defaultPATeam int, tmpl Te
 					Errors:    verr.Errors,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
-			} else if err != nil {
-				return err
 			}
 
 			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, firmId)
