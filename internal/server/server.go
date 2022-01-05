@@ -23,19 +23,20 @@ type Client interface {
 	DeputyHubEventInformation
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
+	ChangeECMInformation
 }
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam string) http.Handler {
+func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
-	router.Handle("/deputy/{id}/",
+	router.Handle("/deputy/{id}",
 		wrap(
-			renderTemplateForDeputyHub(client, defaultPATeam, templates["dashboard.gotmpl"])))
+			renderTemplateForDeputyHub(client, defaultPATeam, templates["deputy-details.gotmpl"])))
 
 	router.Handle("/deputy/{id}/clients",
 		wrap(
@@ -55,14 +56,20 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/deputy/{id}/manage-team-details",
 		wrap(
-			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
+			renderTemplateForEditDeputyHub(client, defaultPATeam, templates["manage-team-details.gotmpl"])))
+
+	router.Handle("/deputy/{id}/change-ecm",
+		wrap(
+			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 
-	static := http.FileServer(http.Dir(webDir + "/static"))
+	static := staticFileHandler(webDir)
 	router.PathPrefix("/assets/").Handler(static)
 	router.PathPrefix("/javascript/").Handler(static)
 	router.PathPrefix("/stylesheets/").Handler(static)
+
+	router.NotFoundHandler = notFoundHandler(templates["error.gotmpl"], siriusPublicURL)
 
 	return http.StripPrefix(prefix, router)
 }
@@ -98,6 +105,7 @@ type errorVars struct {
 	Path      string
 	Code      int
 	Error     string
+	Errors    string
 }
 
 type ErrorHandlerClient interface {
@@ -152,6 +160,16 @@ func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, 
 	}
 }
 
+func notFoundHandler(tmplError Template, siriusURL string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		_ = tmplError.ExecuteTemplate(w, "page", errorVars{
+			SiriusURL: siriusURL,
+			Code:      http.StatusNotFound,
+			Error:     "Not Found",
+		})
+	}
+}
+
 func getContext(r *http.Request) sirius.Context {
 	token := ""
 
@@ -168,4 +186,12 @@ func getContext(r *http.Request) sirius.Context {
 		Cookies:   r.Cookies(),
 		XSRFToken: token,
 	}
+}
+
+func staticFileHandler(webDir string) http.Handler {
+	h := http.FileServer(http.Dir(webDir + "/static"))
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "must-revalidate")
+		h.ServeHTTP(w, r)
+	})
 }

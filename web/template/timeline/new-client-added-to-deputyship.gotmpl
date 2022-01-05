@@ -1,26 +1,25 @@
 {{ define "new-client-added-to-deputyship" }}
     <div class="moj-timeline__item">
         <div class="moj-timeline__header">
-          <h2 class="moj-timeline__title">
-            New client added to deputyship
-          </h2>
-          <p class="moj-timeline__byline">by {{ .User.UserDisplayName }} ({{.User.UserPhoneNumber}})</p>
+            <h2 class="moj-timeline__title">New client added to deputyship</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
         </div>
 
         <p class="moj-timeline__date">
-          <time>{{ .Timestamp }}</time>
+            <time>{{ .Timestamp }}</time>
         </p>
 
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
-                <li> Order number: {{ .Event.OrderNumber }}</li>
-                <li>Sirius ID: {{.Event.SiriusId}} </li>
-                <li>Order type: {{.Event.OrderType}} </li>
+                <li>Order number: {{ .Event.OrderNumber }}</li>
+                <li>Sirius ID: {{ .Event.SiriusId }}</li>
+                <li>Order type: {{ .Event.OrderType }}</li>
                 {{ range .Event.Client }}
-                    <li>Client: {{.ClientName}} </li>
+                    <li>Client: {{ .ClientName }}</li>
                 {{ end }}
             </ul>
         </div>
     </div>
-
 {{ end }}

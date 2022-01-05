@@ -5,6 +5,7 @@ $govuk-assets-path: "/supervision/deputies/public-authority/assets/";
 
 @import "node_modules/govuk-frontend/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
+@import "accessible-autocomplete";
 @import "./scss/pa-hub";
 
 .moj-header__container {
@@ -12,9 +13,5 @@ $govuk-assets-path: "/supervision/deputies/public-authority/assets/";
 }
 
 .moj-timeline__item {
-    max-width: 60em;
-}
-
-.govuk-form-group {
-    max-width: 40em;
+  max-width: 60em;
 }

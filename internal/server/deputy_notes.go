@@ -2,15 +2,16 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubNotesInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
@@ -45,7 +46,7 @@ func hasSuccessInUrl(url string, prefix string) bool {
 	return urlTrim == "?success=true"
 }
 
-func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -55,7 +56,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
@@ -75,10 +76,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				SuccessMessage: "Note added",
 			}
 
-			if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-				vars.ErrorMessage = "An executive case manager has not been assigned. "
-			}
-
+			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -93,7 +91,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
@@ -113,9 +111,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 					DeputyDetails: deputyDetails,
 				}
 
-				if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-					vars.ErrorMessage = "An executive case manager has not been assigned. "
-				}
+				vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)

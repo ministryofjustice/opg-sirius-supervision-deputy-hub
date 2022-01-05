@@ -5,10 +5,11 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 type DeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
 type deputyHubVars struct {
@@ -22,7 +23,7 @@ type deputyHubVars struct {
 	SuccessMessage string
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam string, tmpl Template) Handler {
+func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -31,25 +32,41 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam strin
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 		if err != nil {
 			return err
 		}
 
-		hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/")
-
 		vars := deputyHubVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
-			DeputyDetails:  deputyDetails,
-			Success:        hasSuccess,
-			SuccessMessage: "Team details updated",
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyDetails: deputyDetails,
 		}
 
-		if vars.DeputyDetails.OrganisationTeamOrDepartmentName == defaultPATeam {
-			vars.ErrorMessage = "An executive case manager has not been assigned. "
-		}
+		vars.Success, vars.SuccessMessage = createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
+		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
+}
+
+func createSuccessAndSuccessMessageForVars(url string, EcmName string) (bool, string) {
+	splitStringByQuestion := strings.Split(url, "?")
+	if len(splitStringByQuestion) > 1 {
+		splitString := strings.Split(splitStringByQuestion[1], "=")
+
+		if splitString[1] == "ecm" {
+			return true, "Ecm changed to " + EcmName
+		} else if splitString[1] == "teamDetails" {
+			return true, "Team details updated"
+		}
+	}
+	return false, ""
+}
+
+func checkForDefaultEcmId(EcmId, defaultPaTeam int) string {
+	if EcmId == defaultPaTeam {
+		return "An executive case manager has not been assigned. "
+	}
+	return ""
 }

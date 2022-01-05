@@ -1,0 +1,15 @@
+{{ define "pa-deputy-allocated" }}
+    <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">
+                {{ printf "Executive Case Manager changed to %v by" .Event.ExecutiveCaseManager }}
+            </h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+    </div>
+{{ end }}

@@ -24,4 +24,8 @@ This will reroute to `/errors/notes` and return the data stored in the `errors` 
 
 ---
 
+### Success Rerouter
+
+This is the same as above, except to handle successful requests that are hard to fit into the JSON model. Follow the same pattern as the error rerouter but use the `success-route` and put the data in the `successes` object.
+
 Please read the very helpful readme on the [json-server GitHub](https://github.com/typicode/json-serve) for more information.
