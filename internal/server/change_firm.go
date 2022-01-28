@@ -36,7 +36,7 @@ func renderTemplateForChangeFirm(client DeputyHubInformation, defaultPATeam int,
 			newFirm := r.PostFormValue("select-firm")
 
 			if newFirm == "new-firm" {
-				return Redirect(fmt.Sprintf("/deputy/%d/add-firm", deputyId))
+				return Redirect(fmt.Sprintf("/%d/add-firm", deputyId))
 			}
 
 			vars := deputyHubVars{

@@ -7,7 +7,7 @@ describe("Change Firm", () => {
     describe("Changing a firm", () => {
         beforeEach(() => {
             cy.visit(
-                "/supervision/deputies/public-authority/deputy/3/change-firm"
+                "/supervision/deputies/public-authority/3/change-firm"
             );
         });
 
@@ -29,7 +29,7 @@ describe("Change Firm", () => {
                 .click();
             cy.url().should(
                 "contain",
-                "/supervision/deputies/public-authority/deputy/3/add-firm"
+                "/supervision/deputies/public-authority/3/add-firm"
             );
         });
 
@@ -37,7 +37,7 @@ describe("Change Firm", () => {
             cy.get(".govuk-link").should("contain", "Cancel").click();
             cy.url().should(
                 "contain",
-                "/supervision/deputies/public-authority/deputy/3"
+                "/supervision/deputies/public-authority/3"
             );
         });
     });

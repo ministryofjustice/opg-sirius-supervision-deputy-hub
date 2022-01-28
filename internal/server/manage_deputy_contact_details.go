@@ -77,7 +77,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/deputy/%d?success=deputyDetails", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

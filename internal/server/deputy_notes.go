@@ -64,7 +64,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/notes")
+			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId)+"/notes")
 
 			vars := deputyHubNotesVars{
 				Path:           r.URL.Path,
@@ -118,7 +118,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
+			return Redirect(fmt.Sprintf("/%d/notes?success=true", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

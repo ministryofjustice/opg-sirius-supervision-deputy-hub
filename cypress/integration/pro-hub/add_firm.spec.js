@@ -7,7 +7,7 @@ describe("Firm", () => {
     describe("Adding a firm", () => {
         beforeEach(() => {
             cy.visit(
-                "/supervision/deputies/public-authority/deputy/3/add-firm"
+                "/supervision/deputies/public-authority/3/add-firm"
             );
         });
 

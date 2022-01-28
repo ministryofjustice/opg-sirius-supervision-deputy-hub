@@ -79,7 +79,7 @@ func renderTemplateForAddFirm(client FirmInformation, defaultPATeam int, tmpl Te
 				return assignDeputyToFirmErr
 			}
 
-			return Redirect(fmt.Sprintf("/deputy/%d", deputyId))
+			return Redirect(fmt.Sprintf("/%d", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

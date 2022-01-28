@@ -43,31 +43,31 @@ func TestNavigateToDeputyHub(t *testing.T) {
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=ecm", "Jon Snow")
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=ecm", "Jon Snow")
 	assert.Equal(t, true, Success)
 	assert.Equal(t, SuccessMessage, "Ecm changed to Jon Snow")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=teamDetails", "Jon Snow")
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=teamDetails", "Jon Snow")
 	assert.Equal(t, true, Success)
 	assert.Equal(t, SuccessMessage, "Team details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyContactDetailsSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=deputyDetails", "Jon Snow")
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow")
 	assert.Equal(t, true, Success)
 	assert.Equal(t, SuccessMessage, "Deputy details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=otherMessage", "Jon Snow")
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=otherMessage", "Jon Snow")
 	assert.Equal(t, false, Success)
 	assert.Equal(t, SuccessMessage, "")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/", "Jon Snow")
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/", "Jon Snow")
 	assert.Equal(t, false, Success)
 	assert.Equal(t, SuccessMessage, "")
 }

@@ -2,7 +2,7 @@ describe("Timeline", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline");
+        cy.visit("/supervision/deputies/public-authority/1/timeline");
     });
 
     it("has a header called timeline", () => {
