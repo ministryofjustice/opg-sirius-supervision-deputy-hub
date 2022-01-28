@@ -14,14 +14,14 @@ type addNoteRequest struct {
 	NoteType string `json:"noteType"`
 }
 
-func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) error {
-
+func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int, deputyType string) error {
+	var noteType = getNoteType(deputyType)
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addNoteRequest{
 		Title:    title,
 		Note:     note,
 		UserId:   userId,
-		NoteType: "PA_DEPUTY_NOTE_CREATED",
+		NoteType: noteType,
 	})
 	if err != nil {
 		return err
@@ -57,4 +57,12 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int) 
 	}
 
 	return nil
+}
+
+func getNoteType(deputyType string) string {
+	if deputyType == "PRO" {
+		return "PRO_DEPUTY_NOTE_CREATED"
+	} else {
+		return "PA_DEPUTY_NOTE_CREATED"
+	}
 }

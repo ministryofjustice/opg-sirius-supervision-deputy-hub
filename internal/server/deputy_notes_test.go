@@ -36,7 +36,7 @@ func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deput
 	return m.deputyNotesData, m.err
 }
 
-func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note string, deputyId, usedId int) error {
+func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note string, deputyId, usedId int, deputyType string) error {
 	m.count += 1
 	m.lastCtx = ctx
 
