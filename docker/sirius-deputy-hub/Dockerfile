@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine as base
+FROM golang:1.17.5-alpine as base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
@@ -49,7 +49,7 @@ COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:3.14
+FROM alpine:3.15.0
 
 WORKDIR /go/bin
 
