@@ -9,5 +9,5 @@ services:
     environment:
       SIRIUS_URL: http://docker.for.mac.localhost:8080
       SIRIUS_PUBLIC_URL: http://localhost:8080
-      PREFIX: /supervision/deputies/public-authority
+      PREFIX: /deputies
       FIRM_HUB_URL: http://localhost:8887
