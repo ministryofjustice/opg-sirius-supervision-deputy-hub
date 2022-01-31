@@ -3,7 +3,7 @@ describe("Clients tab", () => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
         cy.visit(
-            "/deputies/1/clients?sort=surname:asc"
+            "/supervision/deputies/1/clients?sort=surname:asc"
         );
     });
 

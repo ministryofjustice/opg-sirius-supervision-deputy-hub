@@ -3,7 +3,7 @@ describe("Edit deputy tab", () => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
         cy.visit(
-            "/deputies/1/manage-team-details"
+            "/supervision/deputies/1/manage-team-details"
         );
     });
 

@@ -2,7 +2,7 @@ describe("Deputy Hub", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/deputies/1");
+        cy.visit("/supervision/deputies/1");
     });
 
     describe("Header", () => {

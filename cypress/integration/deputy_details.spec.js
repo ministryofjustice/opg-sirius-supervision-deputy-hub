@@ -2,7 +2,7 @@ describe("Deputy details tab", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/deputies/1");
+        cy.visit("/supervision/deputies/1");
     });
 
     it("has headers for different sections", () => {

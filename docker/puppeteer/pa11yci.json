@@ -17,6 +17,6 @@
         ]
     },
     "urls": [
-        "http://deputy-hub:8888/deputies/1"
+        "http://deputy-hub:8888/supervision/deputies/1"
     ]
   }

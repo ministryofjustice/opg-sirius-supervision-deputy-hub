@@ -6,7 +6,7 @@ describe("Manage Deputy Contact Details", () => {
 
     describe("Navigation", () => {
         beforeEach(() => {
-            cy.visit("/deputies/3");
+            cy.visit("/supervision/deputies/3");
         });
 
         it("should navigate to the 'Manage deputy contact details' page", () => {
@@ -18,7 +18,7 @@ describe("Manage Deputy Contact Details", () => {
     describe("Form functionality", () => {
         beforeEach(() => {
             cy.visit(
-                "/deputies/3/manage-deputy-contact-details"
+                "/supervision/deputies/3/manage-deputy-contact-details"
             );
         });
 
@@ -144,7 +144,7 @@ describe("Manage Deputy Contact Details", () => {
 
     it("should show 'Deputy name' field when deputy is organisation", () => {
         cy.visit(
-            "/deputies/4/manage-deputy-contact-details"
+            "/supervision/deputies/4/manage-deputy-contact-details"
         );
 
         cy.get("input[name=organisation-name]").should(

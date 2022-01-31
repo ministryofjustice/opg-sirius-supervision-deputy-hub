@@ -6,7 +6,7 @@ describe("Notes", () => {
 
     describe("Notes timeline", () => {
         beforeEach(() => {
-            cy.visit("/deputies/1/notes");
+            cy.visit("/supervision/deputies/1/notes");
         });
 
         it("has a header called notes", () => {
@@ -17,7 +17,7 @@ describe("Notes", () => {
             cy.get(".govuk-button").should("contain", "Add a note").click();
             cy.url().should(
                 "contain",
-                "/deputies/1/notes/add-note"
+                "/supervision/deputies/1/notes/add-note"
             );
         });
     });
@@ -25,7 +25,7 @@ describe("Notes", () => {
     describe("Adding a note", () => {
         beforeEach(() => {
             cy.visit(
-                "/deputies/1/notes/add-note"
+                "/supervision/deputies/1/notes/add-note"
             );
         });
 
@@ -61,7 +61,7 @@ describe("Notes", () => {
                 cy.get("#add-note-form").submit();
                 cy.url().should(
                     "contain",
-                    "/deputies/1/notes"
+                    "/supervision/deputies/1/notes"
                 );
                 cy.get(
                     "body > div > main > div.moj-banner.moj-banner--success > div"
@@ -74,7 +74,7 @@ describe("Notes", () => {
                 cy.get("#add-note-form").submit();
                 cy.url().should(
                     "contain",
-                    "/deputies/1/notes"
+                    "/supervision/deputies/1/notes"
                 );
                 cy.get(
                     ":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title"
@@ -92,7 +92,7 @@ describe("Notes", () => {
             cy.get(".main > header").should("contain", "Notes");
             cy.url().should(
                 "contain",
-                "/deputies/1/notes"
+                "/supervision/deputies/1/notes"
             );
         });
 
