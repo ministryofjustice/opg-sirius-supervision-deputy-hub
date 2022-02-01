@@ -96,7 +96,7 @@ func TestPostAddNote(t *testing.T) {
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(returnedError, Redirect("/deputy/123/notes?success=true"))
+	assert.Equal(returnedError, Redirect("/123/notes?success=true"))
 }
 
 func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {

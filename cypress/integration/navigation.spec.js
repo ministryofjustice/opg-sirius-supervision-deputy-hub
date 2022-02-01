@@ -2,17 +2,17 @@ describe("Navigation bar", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1");
+        cy.visit("/supervision/deputies/1");
     });
 
     const expected = [
-        ["Deputy details", "/supervision/deputies/public-authority/deputy/1"],
-        ["Clients", "/supervision/deputies/public-authority/deputy/1/clients"],
+        ["Deputy details", "/supervision/deputies/1"],
+        ["Clients", "/supervision/deputies/1/clients"],
         [
             "Timeline",
-            "/supervision/deputies/public-authority/deputy/1/timeline",
+            "/supervision/deputies/1/timeline",
         ],
-        ["Notes", "/supervision/deputies/public-authority/deputy/1/notes"],
+        ["Notes", "/supervision/deputies/1/notes"],
     ];
 
     it("has titles and working nav links for all tabs in the correct order", () => {

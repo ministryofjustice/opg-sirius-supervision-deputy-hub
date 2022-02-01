@@ -14,7 +14,7 @@
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
-                    href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}"
+                    href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary "
@@ -63,7 +63,7 @@
                 </div>
             </dl>
             <a
-                href="{{ prefix (printf "/deputy/%d/manage-team-details" .DeputyDetails.ID) }}"
+                href="{{ prefix (printf "/%d/manage-team-details" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
                 class="govuk-button govuk-button--secondary"

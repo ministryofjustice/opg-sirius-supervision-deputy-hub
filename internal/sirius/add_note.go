@@ -27,7 +27,7 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int, 
 		return err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputy/%d/notes", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/%d/notes", deputyId), &body)
 
 	if err != nil {
 		return err

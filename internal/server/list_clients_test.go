@@ -52,7 +52,7 @@ func TestNavigateToClientTab(t *testing.T) {
 }
 
 func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients?sort=crec:desc"
+	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients?sort=crec:desc"
 	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
 	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
 
@@ -62,7 +62,7 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients"
+	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients"
 	expectedResponseColumnBeingSorted, sortOrder := "", ""
 	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
 

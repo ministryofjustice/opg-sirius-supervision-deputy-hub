@@ -71,7 +71,7 @@ func TestPostManageDeputyDetails(t *testing.T) {
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(redirect, Redirect("/deputy/123?success=deputyDetails"))
+	assert.Equal(redirect, Redirect("/123?success=deputyDetails"))
 }
 
 func TestErrorManageDeputyDetailsMessageWhenStringLengthTooLong(t *testing.T) {

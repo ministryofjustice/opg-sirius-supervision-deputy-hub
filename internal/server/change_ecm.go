@@ -48,7 +48,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				return err
 			}
 
-			hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId))
+			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId))
 			if hasSuccess {
 				SuccessMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
 			}
@@ -109,7 +109,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			return Redirect(fmt.Sprintf("/deputy/%d?success=ecm", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=ecm", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
