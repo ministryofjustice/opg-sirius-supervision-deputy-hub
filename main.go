@@ -15,6 +15,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/logging"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 )
 
 func main() {
@@ -26,6 +27,7 @@ func main() {
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
 	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
+	firmHubURL := getEnv("FIRM_HUB_URL", "")
 
 	layouts, _ := template.
 		New("").
@@ -48,6 +50,10 @@ func main() {
 			"sirius": func(s string) string {
 				return siriusPublicURL + s
 			},
+			"firmhub": func(s string) string {
+				return firmHubURL + s
+			},
+			"translate": util.Translate,
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 
@@ -71,7 +77,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    ":" + port,
-		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, webDir, defaultPATeam),
+		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, firmHubURL, webDir, defaultPATeam),
 	}
 
 	go func() {

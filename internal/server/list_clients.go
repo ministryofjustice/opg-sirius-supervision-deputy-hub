@@ -10,7 +10,7 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
@@ -41,7 +41,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 
 		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
 
-		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, columnBeingSorted, sortOrder)
+		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}

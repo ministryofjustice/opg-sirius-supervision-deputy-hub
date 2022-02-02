@@ -2,7 +2,7 @@ describe("Change ECM", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1/change-ecm");
+        cy.visit("/supervision/deputies/1/change-ecm");
     });
 
     it("has headers for different sections", () => {
@@ -18,7 +18,7 @@ describe("Change ECM", () => {
     });
 
     it("shows ecm if is set", () => {
-        cy.visit("/supervision/deputies/public-authority/deputy/2/change-ecm");
+        cy.visit("/supervision/deputies/2/change-ecm");
         cy.get(".govuk-body").should("contain", "Current ECM:");
         cy.get(".govuk-body").should("contain", "LayTeam1 User2");
     });
@@ -37,7 +37,7 @@ describe("Change ECM", () => {
     });
 
     it("allows me to fill in and submit the ecm form", () => {
-        cy.visit("/supervision/deputies/public-authority/deputy/1/change-ecm");
+        cy.visit("/supervision/deputies/1/change-ecm");
         cy.setCookie("success-route", "ecm");
         cy.get("#select-ecm").type("S");
         cy.contains("#select-ecm__listbox", "Jon Snow").click();
@@ -62,7 +62,7 @@ describe("Change ECM links to deputy details", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1");
+        cy.visit("/supervision/deputies/1");
     });
 
     it("has a link from the deputy details page", () => {
@@ -82,7 +82,7 @@ describe("Change ECM links to deputy details", () => {
     });
 
     it("does not display warning when ecm set", () => {
-        cy.visit("/supervision/deputies/public-authority/deputy/2");
+        cy.visit("/supervision/deputies/2");
         cy.get(".govuk-\\!-margin-bottom-2").should(
             "contain",
             "LayTeam1 User2"
@@ -95,7 +95,7 @@ describe("Timelink links to Change ECM page", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline");
+        cy.visit("/supervision/deputies/1/timeline");
     });
 
     it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {

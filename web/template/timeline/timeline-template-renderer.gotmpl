@@ -11,4 +11,7 @@
     {{ if eq .EventType "DeputyAllocated" }}
         {{ template "pa-deputy-allocated" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyContactDetailsChanged" }}
+        {{ template  "deputy-contact-details-changed" . }}
+    {{ end }}
 {{ end }}
