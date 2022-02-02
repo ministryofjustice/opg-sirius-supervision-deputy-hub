@@ -24,43 +24,57 @@ type Client interface {
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
 	ChangeECMInformation
+	FirmInformation
+	DeputyContactDetailsInformation
 }
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
+func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, firmHubURL, webDir string, defaultPATeam int) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
-	router.Handle("/deputy/{id}",
+	router.Handle("/{id}",
 		wrap(
 			renderTemplateForDeputyHub(client, defaultPATeam, templates["deputy-details.gotmpl"])))
 
-	router.Handle("/deputy/{id}/clients",
+	router.Handle("/{id}/clients",
 		wrap(
 			renderTemplateForClientTab(client, defaultPATeam, templates["clients.gotmpl"])))
 
-	router.Handle("/deputy/{id}/timeline",
+	router.Handle("/{id}/timeline",
 		wrap(
 			renderTemplateForDeputyHubEvents(client, defaultPATeam, templates["timeline.gotmpl"])))
 
-	router.Handle("/deputy/{id}/notes",
+	router.Handle("/{id}/notes",
 		wrap(
 			renderTemplateForDeputyHubNotes(client, defaultPATeam, templates["notes.gotmpl"])))
 
-	router.Handle("/deputy/{id}/notes/add-note",
+	router.Handle("/{id}/notes/add-note",
 		wrap(
 			renderTemplateForDeputyHubNotes(client, defaultPATeam, templates["add-notes.gotmpl"])))
 
-	router.Handle("/deputy/{id}/manage-team-details",
+	router.Handle("/{id}/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, defaultPATeam, templates["manage-team-details.gotmpl"])))
 
-	router.Handle("/deputy/{id}/change-ecm",
+	router.Handle("/{id}/change-ecm",
 		wrap(
 			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
+
+	router.Handle("/{id}/change-firm",
+		wrap(
+			renderTemplateForChangeFirm(client, defaultPATeam, templates["change-firm.gotmpl"])))
+
+	router.Handle("/{id}/add-firm",
+		wrap(
+			renderTemplateForAddFirm(client, defaultPATeam, templates["add-firm.gotmpl"])))
+
+	router.Handle("/{id}/manage-deputy-contact-details",
+		wrap(
+			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
 
 	router.Handle("/health-check", healthCheck())
 

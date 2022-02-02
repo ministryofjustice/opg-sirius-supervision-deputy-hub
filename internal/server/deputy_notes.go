@@ -2,18 +2,17 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubNotesInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
-	AddNote(ctx sirius.Context, title, note string, deputyId, userId int) error
+	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 }
 
@@ -65,7 +64,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			hasSuccess := hasSuccessInUrl(r.URL.String(), "/deputy/"+strconv.Itoa(deputyId)+"/notes")
+			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId)+"/notes")
 
 			vars := deputyHubNotesVars{
 				Path:           r.URL.Path,
@@ -96,7 +95,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			err = client.AddNote(ctx, title, note, deputyId, userId.ID)
+			err = client.AddNote(ctx, title, note, deputyId, userId.ID, deputyDetails.DeputyType.Handle)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 
@@ -119,7 +118,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/deputy/%d/notes?success=true", deputyId))
+			return Redirect(fmt.Sprintf("/%d/notes?success=true", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

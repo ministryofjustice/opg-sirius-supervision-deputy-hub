@@ -1,0 +1,93 @@
+{{ define "pro-deputy-details" }}
+    {{ template "pro-deputy" . }}
+    {{ if .Success }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "navigation" . }}
+
+
+    <header class="title-and-buttons-inline">
+        <h1
+            class="govuk-heading-l govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+            Deputy details
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                    href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
+                    data-module="govuk-button">
+                    Change firm
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m  govuk-!-margin-top-5">
+                Deputy contact details
+            </h2>
+            <dl id="team-details" class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Name</dt>
+                    <dd class="govuk-summary-list__value hook_deputy_name">
+                        {{ if eq .DeputyDetails.DeputySubType.SubType "PERSON" }}
+                            {{ printf "%v %v" .DeputyDetails.DeputyFirstName .DeputyDetails.DeputySurname }}
+                        {{ else }}
+                            {{ .DeputyDetails.OrganisationName }}
+                        {{ end }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Firm</dt>
+                    <dd class="govuk-summary-list__value hook_deputy_firm_name">
+                        {{ if ne .DeputyDetails.Firm.FirmName "" }}
+                            {{ .DeputyDetails.Firm.FirmName }}
+                        {{ end }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Postal address</dt>
+                    <dd class="govuk-summary-list__value hook_deputy_address">
+                        {{ if ne .DeputyDetails.Firm.FirmName "" }}
+                            {{ .DeputyDetails.Firm.FirmName }}
+                        {{ end }}
+                        {{ .DeputyDetails.AddressLine1 }} <br />
+                        {{ .DeputyDetails.AddressLine2 }} <br />
+                        {{ .DeputyDetails.AddressLine3 }} <br />
+                        {{ .DeputyDetails.Town }} <br />
+                        {{ .DeputyDetails.County }} <br />
+                        {{ .DeputyDetails.Postcode }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Telephone</dt>
+                    <dd
+                        class="govuk-summary-list__value hook_deputy_phone_number">
+                        {{ .DeputyDetails.PhoneNumber }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Email</dt>
+                    <dd class="govuk-summary-list__value hook_deputy_email">
+                        <a href="mailto:{{ .DeputyDetails.Email }}">
+                            {{ .DeputyDetails.Email }}
+                        </a>
+                    </dd>
+                </div>
+            </dl>
+            <a
+                href="{{ prefix (printf "/%d/manage-deputy-contact-details" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button govuk-button--secondary"
+                data-module="govuk-button"
+                data-cy="manage-deputy-contact-details-btn">
+                Manage deputy contact details
+            </a>
+        </div>
+    </div>
+{{ end }}

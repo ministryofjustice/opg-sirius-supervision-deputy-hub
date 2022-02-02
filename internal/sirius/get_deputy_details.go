@@ -15,10 +15,27 @@ type ExecutiveCaseManagerOutgoing struct {
 	EcmId int `json:"ecmId"`
 }
 
+type DeputyType struct {
+	Handle string `json:"handle"`
+	Label  string `json:"label"`
+}
+
+type Firm struct {
+	FirmName string `json:"firmName"`
+	FirmId   int    `json:"id"`
+}
+
+type DeputySubType struct {
+	SubType string `json:"handle"`
+}
+
 type DeputyDetails struct {
 	ID                               int                  `json:"id"`
+	DeputyFirstName                  string               `json:"firstname"`
+	DeputySurname                    string               `json:"surname"`
 	DeputyCasrecId                   int                  `json:"deputyCasrecId"`
 	DeputyNumber                     int                  `json:"deputyNumber"`
+	DeputySubType                    DeputySubType        `json:"deputySubType"`
 	OrganisationName                 string               `json:"organisationName"`
 	OrganisationTeamOrDepartmentName string               `json:"organisationTeamOrDepartmentName"`
 	Email                            string               `json:"email"`
@@ -30,6 +47,8 @@ type DeputyDetails struct {
 	County                           string               `json:"county"`
 	Postcode                         string               `json:"postcode"`
 	ExecutiveCaseManager             ExecutiveCaseManager `json:"executiveCaseManager"`
+	DeputyType                       DeputyType           `json:"deputyType"`
+	Firm                             Firm                 `json:"firm"`
 }
 
 func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) (DeputyDetails, error) {

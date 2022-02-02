@@ -3,7 +3,15 @@
     <html lang="en" class="govuk-template app-html-class">
         <head>
             <meta charset="utf-8" />
-            <title>OPG Sirius Deputy Hub - Sirius</title>
+            <title>
+                {{ if .Error }}
+                    Page not found
+                {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                    OPG Sirius Deputy Hub - Sirius
+                {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                    OPG Sirius Professional Deputy Hub - Sirius
+                {{ end }}
+            </title>
             <meta
                 name="viewport"
                 content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -41,24 +49,31 @@
             <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet" />
         </head>
 
-        <body class="govuk-template__body sirius-pahub">
-        <script>
-            document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-        </script>
+        <body
+            {{ if .Error }}
+                class="govuk-template__body sirius-pahub"
+            {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                class="govuk-template__body sirius-prohub"
+            {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                class="govuk-template__body sirius-pahub"
+            {{ end }}>
+    <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
 
-       {{ if .Errors }}
+    {{ if .Error }}
         {{ template "error-header" . }}
-      {{ else }}
+    {{ else }}
         {{ template "header" . }}
-      {{ end }}
+    {{ end }}
 
-      <div class="govuk-width-container">
-        <main class="govuk-main-wrapper app-main-class"  role="main">
-          {{ block "main" . }}{{ end }}
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper app-main-class" role="main">
+            {{ block "main" . }}{{ end }}
         </main>
-      </div>
-      {{ template "footer" . }}
-      <script src="{{ prefix "/javascript/all.js" }}"></script>
+    </div>
+    {{ template "footer" . }}
+    <script src="{{ prefix "/javascript/all.js" }}"></script>
         </body>
     </html>
 {{ end }}
