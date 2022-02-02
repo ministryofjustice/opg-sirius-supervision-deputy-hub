@@ -12,6 +12,13 @@
                 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
                 Clients
             </h1>
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                    <a onclick="downloadClientList({{.DeputyDetails.ID}})" target="_blank" rel="noopener" download="" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                        Download client list
+                    </a>
+                </div>
+            </div>
         </header>
         <table id="pa-clients-3" class="govuk-table sortable">
             <thead class="govuk-table__head">

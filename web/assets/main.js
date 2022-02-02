@@ -13,3 +13,23 @@ if (document.querySelector("#select-ecm")) {
         defaultValue: "",
     });
 }
+
+export function downloadClientList(deputyId) {
+    const baseUrl = document.querySelector('[name=api-base-uri]').getAttribute('content')
+    console.log("baseUrl");
+    console.log(baseUrl);
+    console.log(baseUrl);
+    console.log("deputyId");
+    console.log(deputyId);
+    fetch(`${baseUrl}/api/v1/deputies/${deputyId}/clients-list`, {
+        method: "GET",
+        credentials: 'include',
+        headers: {
+            "Content-type": "application/csv",
+            "OPG-Bypass-Membrane": 1,
+        }
+    })
+    .then((response) => {
+        return response.json();
+    })
+}
