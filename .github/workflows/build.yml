@@ -109,7 +109,7 @@ jobs:
 
       - name: Build Container
         run: |
-          make build
+          docker-compose -f docker/docker-compose.ci.yml build deputy-hub
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
