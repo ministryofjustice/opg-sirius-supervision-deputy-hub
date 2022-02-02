@@ -2,6 +2,7 @@ version: "3.6"
 
 services:
   deputy-hub:
+    image: sirius-deputy-hub:latest
     build:
       context: ..
       dockerfile: ./docker/sirius-deputy-hub/Dockerfile
