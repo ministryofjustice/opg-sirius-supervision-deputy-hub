@@ -36,6 +36,8 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
 
 	router := mux.NewRouter()
+	router.Handle("/health-check", healthCheck())
+
 	router.Handle("/{id}",
 		wrap(
 			renderTemplateForDeputyHub(client, defaultPATeam, templates["deputy-details.gotmpl"])))
@@ -75,8 +77,6 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/{id}/manage-deputy-contact-details",
 		wrap(
 			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
-
-	router.Handle("/health-check", healthCheck())
 
 	static := staticFileHandler(webDir)
 	router.PathPrefix("/assets/").Handler(static)
