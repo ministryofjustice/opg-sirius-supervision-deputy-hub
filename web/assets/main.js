@@ -14,13 +14,8 @@ if (document.querySelector("#select-ecm")) {
     });
 }
 
-export function downloadClientList(deputyId) {
+window.download = deputyId => {
     const baseUrl = document.querySelector('[name=api-base-uri]').getAttribute('content')
-    console.log("baseUrl");
-    console.log(baseUrl);
-    console.log(baseUrl);
-    console.log("deputyId");
-    console.log(deputyId);
     fetch(`${baseUrl}/api/v1/deputies/${deputyId}/clients-list`, {
         method: "GET",
         credentials: 'include',
