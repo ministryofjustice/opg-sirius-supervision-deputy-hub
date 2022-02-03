@@ -1,0 +1,9 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ template "manage-pa-important-information" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "manage-pro-important-information" . }}
+    {{ end }}
+{{ end }}

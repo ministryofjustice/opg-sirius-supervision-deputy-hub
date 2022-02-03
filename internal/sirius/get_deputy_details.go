@@ -29,6 +29,20 @@ type DeputySubType struct {
 	SubType string `json:"handle"`
 }
 
+type deputyImportantInformation struct {
+	Id         int `json:"id"`
+	Complaints struct {
+		Handle string `json:"handle"`
+		Label  string `json:"label"`
+	} `json:"complaints"`
+	PanelDeputy          bool `json:"panelDeputy"`
+	AnnualBillingInvoice struct {
+		Handle string `json:"handle"`
+		Label  string `json:"label"`
+	} `json:"annualBillingInvoice"`
+	OtherImportantInformation string `json:"otherImportantInformation"`
+}
+
 type DeputyDetails struct {
 	ID                               int                  `json:"id"`
 	DeputyFirstName                  string               `json:"firstname"`
@@ -36,6 +50,7 @@ type DeputyDetails struct {
 	DeputyCasrecId                   int                  `json:"deputyCasrecId"`
 	DeputyNumber                     int                  `json:"deputyNumber"`
 	DeputySubType                    DeputySubType        `json:"deputySubType"`
+	DeputyImportantInformation       deputyImportantInformation `json:"deputyImportantInformation"`
 	OrganisationName                 string               `json:"organisationName"`
 	OrganisationTeamOrDepartmentName string               `json:"organisationTeamOrDepartmentName"`
 	Email                            string               `json:"email"`

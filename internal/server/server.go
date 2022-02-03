@@ -26,6 +26,7 @@ type Client interface {
 	ChangeECMInformation
 	FirmInformation
 	DeputyContactDetailsInformation
+	ManageProDeputyImportantInformation
 }
 
 type Template interface {
@@ -77,6 +78,10 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/{id}/manage-deputy-contact-details",
 		wrap(
 			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
+
+	router.Handle("/deputy/{id}/manage-important-information",
+		wrap(
+			renderTemplateForImportantInformation(client, defaultPATeam, templates["manage-important-information.gotmpl"])))
 
 	static := staticFileHandler(webDir)
 	router.PathPrefix("/assets/").Handler(static)
