@@ -83,9 +83,6 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				}
 
 				err = client.UpdateProImportantInformation(ctx, deputyId, importantInfoForm)
-				if err != nil {
-					return err
-				}
 
 			//} else if () {
 			//	importantInfoForm := sirius.ImportantPaInformationDetails{

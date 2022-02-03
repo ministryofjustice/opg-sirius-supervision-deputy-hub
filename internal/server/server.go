@@ -79,7 +79,7 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 		wrap(
 			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
 
-	router.Handle("/deputy/{id}/manage-important-information",
+	router.Handle("/{id}/manage-important-information",
 		wrap(
 			renderTemplateForImportantInformation(client, defaultPATeam, templates["manage-important-information.gotmpl"])))
 

@@ -1,6 +1,5 @@
 {{ define "manage-pro-important-information" }}
     {{ template "pro-deputy" . }}
-    {{ template "error-summary" .Errors }}
 
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
@@ -120,7 +119,7 @@
 
                <a
                    class="govuk-link"
-                   href="{{ prefix (printf "/deputy/%d" .DeputyDetails.ID) }}">
+                   href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
                    Cancel
                </a>
 

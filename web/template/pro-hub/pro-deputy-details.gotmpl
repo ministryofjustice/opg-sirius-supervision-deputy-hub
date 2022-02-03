@@ -1,8 +1,8 @@
 {{ define "pro-deputy-details" }}
-    {{ template "pro-deputy" . }}
     {{ if .Success }}
         {{ template "success-banner" . }}
     {{ end }}
+    {{ template "pro-deputy" . }}
     {{ template "navigation" . }}
 
 
@@ -130,7 +130,7 @@
               </div>
             </dl>
 
-            <a href="{{ prefix (printf "/deputy/%d/manage-important-information" .DeputyDetails.ID) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
+            <a href="{{ prefix (printf "/%d/manage-important-information" .DeputyDetails.ID) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
               Manage important information
             </a>
         </div>
