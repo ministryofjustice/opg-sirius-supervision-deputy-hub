@@ -61,6 +61,8 @@ func createSuccessAndSuccessMessageForVars(url string, EcmName string) (bool, st
 			return true, "Team details updated"
 		} else if splitString[1] == "deputyDetails" {
 			return true, "Deputy details updated"
+		} else if splitString[1] == "importantInformation" {
+			return true, "Important information updated"
 		}
 	}
 	return false, ""

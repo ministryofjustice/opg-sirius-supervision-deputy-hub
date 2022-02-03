@@ -13,6 +13,12 @@ var mappings = map[string]string{
 	"FIELD.postcode":     "Postcode",
 	"FIELD.county":       "County",
 	"FIELD.country":      "Country",
+	"FIELD.annualBillingInvoice":      "Annual billing invoice",
+	"FIELD.panelDeputy":               "Panel deputy",
+	"FIELD.complaints":                "Complaints",
+	"FIELD.otherImportantInformation": "Other important information",
+	"VALUE.true":                      "Yes",
+	"VALUE.false":                     "No",
 }
 
 func Translate(prefix string, s string) string {
