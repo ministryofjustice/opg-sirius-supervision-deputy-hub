@@ -1,7 +1,5 @@
-{{ template "page" . }}
-{{ define "main" }}
+{{ define "manage-pa-important-information" }}
     {{ template "error-summary" .Errors }}
-    {{ template "pa-deputy" . }}
 
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
@@ -29,7 +27,7 @@
                          Monthly spreadsheet
                        </legend>
                        <div class="govuk-radios">
-                        {{$currentSpreadsheetValue:=.PaDeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
+                        {{$currentSpreadsheetValue:=.DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
                          {{ range .ComplaintTypes }}
                            <div class="govuk-radios__item">
                                <input class="govuk-radios__input" id="monthly-spreadsheet-{{.Label}}" name="monthly-spreadsheet" type="radio" value="{{.Label}}" {{if eq $currentSpreadsheetValue .Label}} checked="true"{{end}}{{if eq $currentSpreadsheetValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
@@ -47,7 +45,7 @@
                         Independent visitor charges
                       </legend>
                       <div class="govuk-radios">
-                       {{$currentVisitorChargesValue:=.PaDeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
+                       {{$currentVisitorChargesValue:=.DeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
                         {{ range .ComplaintTypes }}
                           <div class="govuk-radios__item">
                               <input class="govuk-radios__input" id="independent-visitor-charges-{{.Label}}" name="independent-visitor-charges" type="radio" value="{{.Label}}" {{if eq $currentVisitorChargesValue .Label}} checked="true"{{end}}{{if eq $currentVisitorChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
@@ -65,7 +63,7 @@
                         Bank charges
                       </legend>
                       <div class="govuk-radios">
-                       {{$currentBankChargesValue:=.PaDeputyDetails.DeputyImportantInformation.BankCharges.Label}}
+                       {{$currentBankChargesValue:=.DeputyDetails.DeputyImportantInformation.BankCharges.Label}}
                         {{ range .ComplaintTypes }}
                           <div class="govuk-radios__item">
                               <input class="govuk-radios__input" id="bank-charges-{{.Label}}" name="bank-charges" type="radio" value="{{.Label}}" {{if eq $currentBankChargesValue .Label}} checked="true"{{end}}{{if eq $currentBankChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
@@ -76,9 +74,26 @@
                         {{end}}
                       </div>
                     </fieldset>
+                 </div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend">
+                      APAD
+                    </legend>
+                  <div class="govuk-radios">
+                   {{$currentAPADValue:=.DeputyDetails.DeputyImportantInformation.APAD.Label}}
+                    {{ range .ComplaintTypes }}
+                      <div class="govuk-radios__item">
+                          <input class="govuk-radios__input" id="apad-{{.Label}}" name="apad" type="radio" value="{{.Label}}" {{if eq $currentAPADValue .Label}} checked="true"{{end}}{{if eq $currentAPADValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                          <label class="govuk-label govuk-radios__label" for="apad-{{.Label}}">
+                            {{.Label}}
+                          </label>
+                        </div>
+                    {{end}}
                   </div>
-
-
+                </fieldset>
+              </div>
+                <h1> Add report system in here </h1>
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">

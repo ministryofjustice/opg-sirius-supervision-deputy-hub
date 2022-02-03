@@ -39,15 +39,15 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return err
 		}
 
-		annualBillingInvoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(ctx)
-		if err != nil {
-			return err
-		}
-
-		complaintTypes, err := client.GetDeputyComplaintTypes(ctx)
-		if err != nil {
-			return err
-		}
+		//annualBillingInvoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(ctx)
+		//if err != nil {
+		//	return err
+		//}
+		//
+		//complaintTypes, err := client.GetDeputyComplaintTypes(ctx)
+		//if err != nil {
+		//	return err
+		//}
 
 		switch r.Method {
 		case http.MethodGet:
@@ -57,8 +57,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				XSRFToken:                 ctx.XSRFToken,
 				DeputyId:                  deputyId,
 				DeputyDetails:          	deputyDetails,
-				AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-				ComplaintTypes:            complaintTypes,
+				//AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
+				//ComplaintTypes:            complaintTypes,
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -113,8 +113,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 					DeputyId:                  deputyId,
 					DeputyDetails:          	deputyDetails,
 					Errors:                    verr.Errors,
-					AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-					ComplaintTypes:            complaintTypes,
+					//AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
+					//ComplaintTypes:            complaintTypes,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {

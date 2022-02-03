@@ -1,5 +1,4 @@
-{{ template "page" . }}
-{{ define "main" }}
+{{ define "manage-pro-important-information" }}
     {{ template "error-summary" .Errors }}
     {{ template "pro-deputy" . }}
 
@@ -29,7 +28,7 @@
                       Complaints
                     </legend>
                     <div class="govuk-radios">
-                     {{$currentComplaintsValue:=.ProDeputyDetails.DeputyImportantInformation.Complaints.Label}}
+                     {{$currentComplaintsValue:=.DeputyDetails.DeputyImportantInformation.Complaints.Label}}
                       {{ range .ComplaintTypes }}
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="complaints-{{.Label}}" name="complaints" type="radio" value="{{.Label}}" {{if eq $currentComplaintsValue .Label}} checked="true"{{end}}{{if eq $currentComplaintsValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
