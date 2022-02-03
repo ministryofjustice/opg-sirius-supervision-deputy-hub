@@ -16,10 +16,10 @@ type ManageProDeputyImportantInformation interface {
 	GetDeputyComplaintTypes(ctx sirius.Context) ([]sirius.DeputyComplaintTypes, error)
 }
 
-type manageProDeputyImportantInformationVars struct {
+type manageDeputyImportantInformationVars struct {
 	Path                      string
 	XSRFToken                 string
-	ProDeputyDetails          sirius.DeputyDetails
+	DeputyDetails          	sirius.DeputyDetails
 	Error                     string
 	Errors                    sirius.ValidationErrors
 	DeputyId                  int
@@ -34,7 +34,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		proDeputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 		if err != nil {
 			return err
 		}
@@ -52,46 +52,66 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		switch r.Method {
 		case http.MethodGet:
 
-			vars := manageProDeputyImportantInformationVars{
+			vars := manageDeputyImportantInformationVars{
 				Path:                      r.URL.Path,
 				XSRFToken:                 ctx.XSRFToken,
 				DeputyId:                  deputyId,
-				ProDeputyDetails:          proDeputyDetails,
+				DeputyDetails:          	deputyDetails,
 				AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
 				ComplaintTypes:            complaintTypes,
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			var panelDeputyBool bool
+			//alter based on deputy type calling different sirius files based on that
 
-			if r.PostFormValue("panel-deputy") != "" {
-				panelDeputyBool, err = strconv.ParseBool(r.PostFormValue("panel-deputy"))
+			//if () {
+				var panelDeputyBool bool
+
+				if r.PostFormValue("panel-deputy") != "" {
+					panelDeputyBool, err = strconv.ParseBool(r.PostFormValue("panel-deputy"))
+					if err != nil {
+						return err
+					}
+				}
+
+				importantInfoForm := sirius.ImportantProInformationDetails{
+					Complaints:                r.PostFormValue("complaints"),
+					PanelDeputy:               panelDeputyBool,
+					AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
+					OtherImportantInformation: r.PostFormValue("other-info-note"),
+				}
+
+				err = client.UpdateProImportantInformation(ctx, deputyId, importantInfoForm)
 				if err != nil {
 					return err
 				}
-			}
 
-			if err != nil {
-				return err
-			}
-			importantInfoForm := sirius.ImportantProInformationDetails{
-				Complaints:                r.PostFormValue("complaints"),
-				PanelDeputy:               panelDeputyBool,
-				AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
-				OtherImportantInformation: r.PostFormValue("other-info-note"),
-			}
-
-			err = client.UpdateProImportantInformation(ctx, deputyId, importantInfoForm)
+			//} else if () {
+			//	importantInfoForm := sirius.ImportantPaInformationDetails{
+			//		MonthlySpreadsheet:        "",
+			//		IndependentVisitorCharges: "",
+			//		BankCharges:               "",
+			//		APAD:                      "",
+			//		ReportSystem:              "",
+			//		AnnualBillingInvoice:      "",
+			//		OtherImportantInformation: "",
+			//	}
+			//
+			//	err = client.UpdatePaImportantInformation(ctx, deputyId, importantInfoForm)
+			//	if err != nil {
+			//		return err
+			//	}
+			//}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)
 
-				vars := manageProDeputyImportantInformationVars{
+				vars := manageDeputyImportantInformationVars{
 					Path:                      r.URL.Path,
 					XSRFToken:                 ctx.XSRFToken,
 					DeputyId:                  deputyId,
-					ProDeputyDetails:          proDeputyDetails,
+					DeputyDetails:          	deputyDetails,
 					Errors:                    verr.Errors,
 					AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
 					ComplaintTypes:            complaintTypes,

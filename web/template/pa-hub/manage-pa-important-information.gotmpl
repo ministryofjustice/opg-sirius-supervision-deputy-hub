@@ -23,54 +23,68 @@
                       name="xsrfToken"
                       value="{{ .XSRFToken }}" />
 
-                <div class="govuk-form-group">
-                  <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                      Complaints
-                    </legend>
-                    <div class="govuk-radios">
-                     {{$currentComplaintsValue:=.ProDeputyDetails.DeputyImportantInformation.Complaints.Label}}
-                      {{ range .ComplaintTypes }}
-                        <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="complaints-{{.Label}}" name="complaints" type="radio" value="{{.Label}}" {{if eq $currentComplaintsValue .Label}} checked="true"{{end}}{{if eq $currentComplaintsValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
-                            <label class="govuk-label govuk-radios__label" for="complaints-{{.Label}}">
-                              {{.Label}}
-                            </label>
-                          </div>
-                      {{end}}
-                    </div>
-                  </fieldset>
-                </div>
-
-                <div class="govuk-form-group">
-                  <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                        Panel deputy
-                    </legend>
-                    <div class="govuk-radios">
-                      <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="panel-deputy-yes" name="panel-deputy" type="radio" value="true" {{if eq .ProDeputyDetails.DeputyImportantInformation.PanelDeputy true}} checked="true"{{end}}>
-                        <label class="govuk-label govuk-radios__label" for="panel-deputy-yes">
-                          Yes
-                        </label>
+                  <div class="govuk-form-group">
+                     <fieldset class="govuk-fieldset">
+                       <legend class="govuk-fieldset__legend">
+                         Monthly spreadsheet
+                       </legend>
+                       <div class="govuk-radios">
+                        {{$currentSpreadsheetValue:=.PaDeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
+                         {{ range .ComplaintTypes }}
+                           <div class="govuk-radios__item">
+                               <input class="govuk-radios__input" id="monthly-spreadsheet-{{.Label}}" name="monthly-spreadsheet" type="radio" value="{{.Label}}" {{if eq $currentSpreadsheetValue .Label}} checked="true"{{end}}{{if eq $currentSpreadsheetValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                               <label class="govuk-label govuk-radios__label" for="monthly-spreadsheet-{{.Label}}">
+                                 {{.Label}}
+                               </label>
+                             </div>
+                         {{end}}
+                       </div>
+                     </fieldset>
+                   </div>
+                  <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                      <legend class="govuk-fieldset__legend">
+                        Independent visitor charges
+                      </legend>
+                      <div class="govuk-radios">
+                       {{$currentVisitorChargesValue:=.PaDeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
+                        {{ range .ComplaintTypes }}
+                          <div class="govuk-radios__item">
+                              <input class="govuk-radios__input" id="independent-visitor-charges-{{.Label}}" name="independent-visitor-charges" type="radio" value="{{.Label}}" {{if eq $currentVisitorChargesValue .Label}} checked="true"{{end}}{{if eq $currentVisitorChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                              <label class="govuk-label govuk-radios__label" for="independent-visitor-charges-{{.Label}}">
+                                {{.Label}}
+                              </label>
+                            </div>
+                        {{end}}
                       </div>
-                      <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="panel-deputy-no" name="panel-deputy" type="radio" value="false" {{if eq .ProDeputyDetails.DeputyImportantInformation.PanelDeputy false}} checked="true"{{end}}>
-                        <label class="govuk-label govuk-radios__label" for="panel-deputy-no">
-                          No
-                        </label>
+                    </fieldset>
+                  </div>
+                 <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                      <legend class="govuk-fieldset__legend">
+                        Bank charges
+                      </legend>
+                      <div class="govuk-radios">
+                       {{$currentBankChargesValue:=.PaDeputyDetails.DeputyImportantInformation.BankCharges.Label}}
+                        {{ range .ComplaintTypes }}
+                          <div class="govuk-radios__item">
+                              <input class="govuk-radios__input" id="bank-charges-{{.Label}}" name="bank-charges" type="radio" value="{{.Label}}" {{if eq $currentBankChargesValue .Label}} checked="true"{{end}}{{if eq $currentBankChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                              <label class="govuk-label govuk-radios__label" for="bank-charges-{{.Label}}">
+                                {{.Label}}
+                              </label>
+                            </div>
+                        {{end}}
                       </div>
-                    </div>
+                    </fieldset>
+                  </div>
 
-                  </fieldset>
-                </div>
 
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">
                       Annual billing preference
                     </legend>
-                    {{$currentAnnualBillingInvoiceLabel:=.ProDeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label}}
+                    {{$currentAnnualBillingInvoiceLabel:=.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label}}
                     <div class="govuk-radios">
                         {{ range .AnnualBillingInvoiceTypes }}
                             <div class="govuk-radios__item">
@@ -99,7 +113,7 @@
                             name="other-info-note"
                             rows="5"
                             aria-describedby="other-important-information"
-                            >{{.ProDeputyDetails.DeputyImportantInformation.OtherImportantInformation}}</textarea>
+                            >{{.DeputyDetails.DeputyImportantInformation.OtherImportantInformation}}</textarea>
                         {{/* prettier-ignore-end */}}
                         <div
                             id="other-info-note-info"
@@ -121,7 +135,7 @@
 
                <a
                    class="govuk-link"
-                   href="{{ prefix (printf "/deputy/%d" .ProDeputyDetails.ID) }}">
+                   href="{{ prefix (printf "/deputy/%d" .DeputyDetails.ID) }}">
                    Cancel
                </a>
 

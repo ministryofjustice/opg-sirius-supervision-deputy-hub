@@ -8,8 +8,11 @@ import (
 )
 
 type ImportantPaInformationDetails struct {
-	Complaints                string `json:"complaints"`
-	PanelDeputy               bool   `json:"panelDeputy"`
+	MonthlySpreadsheet string `json:"monthlySpreadsheet"`
+	IndependentVisitorCharges string `json:"independentVisitorCharges"`
+	BankCharges string `json:"bankCharges"`
+	APAD string `json:"apad"`
+	ReportSystem string `json:"reportSystem"`
 	AnnualBillingInvoice      string `json:"annualBillingInvoice"`
 	OtherImportantInformation string `json:"otherImportantInformation"`
 }

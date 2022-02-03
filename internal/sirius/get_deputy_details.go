@@ -29,17 +29,20 @@ type DeputySubType struct {
 	SubType string `json:"handle"`
 }
 
+type handleLabel struct {
+	Handle string `json:"handle"`
+	Label  string `json:"label"`
+}
 type deputyImportantInformation struct {
 	Id         int `json:"id"`
-	Complaints struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
-	} `json:"complaints"`
+	AnnualBillingInvoice handleLabel `json:"annualBillingInvoice"`
+	APAD handleLabel `json:"apad"`
+	BankCharges handleLabel `json:"bankCharges"`
+	Complaints handleLabel `json:"complaints"`
+	IndependentVisitorCharges handleLabel `json:"independentVisitorCharges"`
+	MonthlySpreadsheet handleLabel `json:"monthlySpreadsheet"`
 	PanelDeputy          bool `json:"panelDeputy"`
-	AnnualBillingInvoice struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
-	} `json:"annualBillingInvoice"`
+	ReportSystem handleLabel `json:"reportSystem"`
 	OtherImportantInformation string `json:"otherImportantInformation"`
 }
 
