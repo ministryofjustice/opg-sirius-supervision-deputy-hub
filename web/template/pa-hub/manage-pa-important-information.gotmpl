@@ -28,7 +28,7 @@
                        </legend>
                        <div class="govuk-radios">
                         {{$currentSpreadsheetValue:=.DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
-                         {{ range .ComplaintTypes }}
+                         {{ range .DeputyBooleanTypes }}
                            <div class="govuk-radios__item">
                                <input class="govuk-radios__input" id="monthly-spreadsheet-{{.Label}}" name="monthly-spreadsheet" type="radio" value="{{.Label}}" {{if eq $currentSpreadsheetValue .Label}} checked="true"{{end}}{{if eq $currentSpreadsheetValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                                <label class="govuk-label govuk-radios__label" for="monthly-spreadsheet-{{.Label}}">
@@ -46,7 +46,7 @@
                       </legend>
                       <div class="govuk-radios">
                        {{$currentVisitorChargesValue:=.DeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
-                        {{ range .ComplaintTypes }}
+                        {{ range .DeputyBooleanTypes }}
                           <div class="govuk-radios__item">
                               <input class="govuk-radios__input" id="independent-visitor-charges-{{.Label}}" name="independent-visitor-charges" type="radio" value="{{.Label}}" {{if eq $currentVisitorChargesValue .Label}} checked="true"{{end}}{{if eq $currentVisitorChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                               <label class="govuk-label govuk-radios__label" for="independent-visitor-charges-{{.Label}}">
@@ -64,7 +64,7 @@
                       </legend>
                       <div class="govuk-radios">
                        {{$currentBankChargesValue:=.DeputyDetails.DeputyImportantInformation.BankCharges.Label}}
-                        {{ range .ComplaintTypes }}
+                        {{ range .DeputyBooleanTypes }}
                           <div class="govuk-radios__item">
                               <input class="govuk-radios__input" id="bank-charges-{{.Label}}" name="bank-charges" type="radio" value="{{.Label}}" {{if eq $currentBankChargesValue .Label}} checked="true"{{end}}{{if eq $currentBankChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                               <label class="govuk-label govuk-radios__label" for="bank-charges-{{.Label}}">
@@ -82,7 +82,7 @@
                     </legend>
                   <div class="govuk-radios">
                    {{$currentAPADValue:=.DeputyDetails.DeputyImportantInformation.APAD.Label}}
-                    {{ range .ComplaintTypes }}
+                    {{ range .DeputyBooleanTypes }}
                       <div class="govuk-radios__item">
                           <input class="govuk-radios__input" id="apad-{{.Label}}" name="apad" type="radio" value="{{.Label}}" {{if eq $currentAPADValue .Label}} checked="true"{{end}}{{if eq $currentAPADValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                           <label class="govuk-label govuk-radios__label" for="apad-{{.Label}}">

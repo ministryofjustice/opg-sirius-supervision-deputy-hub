@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-type DeputyComplaintTypes struct {
+type DeputyBooleanTypes struct {
 	Handle string `json:"handle"`
 	Label  string `json:"label"`
 }
 
-func (c *Client) GetDeputyComplaintTypes(ctx Context) ([]DeputyComplaintTypes, error) {
-	var v []DeputyComplaintTypes
+func (c *Client) GetDeputyBooleanTypes(ctx Context) ([]DeputyBooleanTypes, error) {
+	var v []DeputyBooleanTypes
 
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/complaints", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/deputyBooleanTypes", nil)
 	if err != nil {
 		return v, err
 	}

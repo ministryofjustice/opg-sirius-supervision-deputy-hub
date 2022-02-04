@@ -17,7 +17,7 @@ type mockManageDeputyImportantInformation struct {
 	deputyData                sirius.DeputyDetails
 	updateErr                 error
 	annualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	complaintTypes            []sirius.DeputyComplaintTypes
+	complaintTypes            []sirius.DeputyBooleanTypes
 }
 
 func (m *mockManageDeputyImportantInformation) GetDeputyDetails(ctx sirius.Context, _ int, _ int) (sirius.DeputyDetails, error) {
@@ -34,7 +34,7 @@ func (m *mockManageDeputyImportantInformation) GetDeputyAnnualInvoiceBillingType
 	return m.annualBillingInvoiceTypes, m.err
 }
 
-func (m *mockManageDeputyImportantInformation) GetDeputyComplaintTypes(ctx sirius.Context) ([]sirius.DeputyComplaintTypes, error) {
+func (m *mockManageDeputyImportantInformation) GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -93,7 +93,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(Redirect("/deputy/123?success=importantInformation"), redirect)
+	assert.Equal(Redirect("/123?success=importantInformation"), redirect)
 }
 
 //func TestErrorManageImportantInformationMessageWhenIsEmpty(t *testing.T) {

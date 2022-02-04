@@ -9,5 +9,5 @@
     "/deputies/:id/contact-details": "/deputies/:id",
     "/firm": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
-    "/reference-data/complaints": "/complaints"
+    "/reference-data/deputyBooleanType": "/deputyBooleanType"
 }

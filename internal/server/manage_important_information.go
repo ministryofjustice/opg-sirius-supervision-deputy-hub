@@ -13,7 +13,7 @@ type ManageProDeputyImportantInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	UpdateProImportantInformation(sirius.Context, int, sirius.ImportantProInformationDetails) error
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
-	GetDeputyComplaintTypes(ctx sirius.Context) ([]sirius.DeputyComplaintTypes, error)
+	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
 }
 
 type manageDeputyImportantInformationVars struct {
@@ -24,7 +24,7 @@ type manageDeputyImportantInformationVars struct {
 	Errors                    sirius.ValidationErrors
 	DeputyId                  int
 	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	ComplaintTypes            []sirius.DeputyComplaintTypes
+	DeputyBooleanTypes            []sirius.DeputyBooleanTypes
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
@@ -44,7 +44,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return err
 		}
 
-		complaintTypes, err := client.GetDeputyComplaintTypes(ctx)
+		deputyBooleanTypes, err := client.GetDeputyBooleanTypes(ctx)
 		if err != nil {
 			return err
 		}
@@ -58,7 +58,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				DeputyId:                  deputyId,
 				DeputyDetails:          	deputyDetails,
 				AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-				ComplaintTypes:            complaintTypes,
+				DeputyBooleanTypes:            deputyBooleanTypes,
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -76,6 +76,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				}
 
 				importantInfoForm := sirius.ImportantProInformationDetails{
+					DeputyType: "Pro",
 					Complaints:                r.PostFormValue("complaints"),
 					PanelDeputy:               panelDeputyBool,
 					AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
@@ -86,19 +87,17 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 
 			//} else if () {
 			//	importantInfoForm := sirius.ImportantPaInformationDetails{
-			//		MonthlySpreadsheet:        "",
-			//		IndependentVisitorCharges: "",
-			//		BankCharges:               "",
-			//		APAD:                      "",
-			//		ReportSystem:              "",
-			//		AnnualBillingInvoice:      "",
-			//		OtherImportantInformation: "",
+			//		DeputyType: "Pro",
+			//		MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
+			//		IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),
+			//		BankCharges:               r.PostFormValue("bank-charges"),
+			//		APAD:                      r.PostFormValue("apad"),
+			//		ReportSystem:              r.PostFormValue("report-system"),
+			//		AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
+			//		OtherImportantInformation: r.PostFormValue("other-info-note"),
 			//	}
 			//
 			//	err = client.UpdatePaImportantInformation(ctx, deputyId, importantInfoForm)
-			//	if err != nil {
-			//		return err
-			//	}
 			//}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
@@ -111,7 +110,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 					DeputyDetails:          	deputyDetails,
 					Errors:                    verr.Errors,
 					AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-					ComplaintTypes:            complaintTypes,
+					DeputyBooleanTypes:            deputyBooleanTypes,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
