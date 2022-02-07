@@ -101,6 +101,35 @@
                 "handle": "PA",
                 "label": "Public Authority"
             },
+            "deputyImportantInformation": {
+                "id": 21,
+                "monthlySpreadsheet": {
+                    "handle": "NO",
+                    "label": "No"
+                },
+                "independentVisitorCharges": {
+                    "handle": "UNKNOWN",
+                    "label": "Unknown"
+                },
+                "bankCharges": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "apad": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "reportSystemType": {
+                    "handle": "CASHFAC",
+                    "handle": "CASHFAC",
+                    "label": "CASHFAC"
+                },
+                "annualBillingInvoice": {
+                    "handle": "SCHEDULE AND INVOICE",
+                    "label": "Schedule and Invoice"
+                },
+                "otherImportantInformation": "some info for the pa deputy"
+            },
             "deputyCasrecId": 10000000,
             "deputyNumber": 11,
             "organisationName": "Test Organisation"
@@ -1620,7 +1649,7 @@
             "firmId": 2
         },
         {
-            "id": "importantInformation",
+            "id": "proImportantInformation",
             "complaints": {
                 "handle": "NO",
                 "label": "No"
@@ -1631,6 +1660,9 @@
                 "label": "Invoice"
             },
             "otherImportantInformation": "kate"
+        },
+        {
+            "id": "paImportantInformation"
         }
     ],
     "teams": [
@@ -1716,7 +1748,7 @@
             "label": "Unknown"
         }
     ],
-    "complaints": [
+    "deputyBooleanType": [
         {
             "handle": "YES",
             "label": "Yes"
@@ -1724,6 +1756,36 @@
         {
             "handle": "NO",
             "label": "No"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "deputyReportSystem": [
+        {
+            "handle": "CASREC",
+            "label": "Casrec"
+        },
+        {
+            "handle": "SOFTBOX",
+            "label": "Softbox"
+        },
+        {
+            "handle": "CONTROCC",
+            "label": "Controcc"
+        },
+        {
+            "handle": "CASHFAC",
+            "label": "CASHFAC"
+        },
+        {
+            "handle": "OPGDIGITAL",
+            "label": "OPG Digital"
+        },
+        {
+            "handle": "OPGPAPER",
+            "label": "OPG Paper"
         },
         {
             "handle": "UNKNOWN",
