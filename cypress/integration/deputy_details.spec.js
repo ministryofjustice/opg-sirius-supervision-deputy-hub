@@ -10,20 +10,15 @@ describe("Deputy details tab", () => {
         cy.get("h2").should("contain", "Team details");
     });
 
-    const expected = [
-        ["Deputy name", "Test Organisation"],
-        ["Telephone", "0115 876 5574"],
-        ["Email", "deputyship@essexcounty.gov.uk"],
-        ["Postal address", "Deputyship Team"],
-    ];
-
     it("has rows in tables with accurate keys and values", () => {
-        cy.get(".govuk-summary-list")
-            .children()
-            .each(($el, index) => {
-                cy.wrap($el).should("contain", expected[index][0]);
-                cy.wrap($el).should("contain", expected[index][1]);
-            });
+        cy.get("#team-details > :nth-child(1) > .govuk-summary-list__key").should("contain", "Deputy name");
+        cy.get("#team-details > :nth-child(1) > .govuk-summary-list__value").should("contain", "Test Organisation");
+        cy.get("#team-details > :nth-child(2) > .govuk-summary-list__key").should("contain", "Telephone");
+        cy.get("#team-details > :nth-child(2) > .govuk-summary-list__value").should("contain", "0115 876 5574");
+        cy.get("#team-details > :nth-child(3) > .govuk-summary-list__key").should("contain", "Email");
+        cy.get("#team-details > :nth-child(3) > .govuk-summary-list__value").should("contain", "deputyship@essexcounty.gov.uk");
+        cy.get("#team-details > :nth-child(4) > .govuk-summary-list__key").should("contain", "Postal address");
+        cy.get("#team-details > :nth-child(4) > .govuk-summary-list__value").should("contain", "Deputyship Team");
     });
 
     it("has a href link for email addresses", () => {

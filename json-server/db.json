@@ -101,6 +101,35 @@
                 "handle": "PA",
                 "label": "Public Authority"
             },
+            "deputyImportantInformation": {
+                "id": 21,
+                "monthlySpreadsheet": {
+                    "handle": "NO",
+                    "label": "No"
+                },
+                "independentVisitorCharges": {
+                    "handle": "UNKNOWN",
+                    "label": "Unknown"
+                },
+                "bankCharges": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "apad": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "reportSystemType": {
+                    "handle": "CASHFAC",
+                    "handle": "CASHFAC",
+                    "label": "CASHFAC"
+                },
+                "annualBillingInvoice": {
+                    "handle": "SCHEDULE AND INVOICE",
+                    "label": "Schedule and Invoice"
+                },
+                "otherImportantInformation": "some info for the pa deputy"
+            },
             "deputyCasrecId": 10000000,
             "deputyNumber": 11,
             "organisationName": "Test Organisation"
@@ -211,6 +240,19 @@
             },
             "firm": {
                 "firmName": "This is the Firm Name"
+            },
+            "deputyImportantInformation": {
+                "id": 2,
+                "complaints": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "panelDeputy": true,
+                "annualBillingInvoice": {
+                    "handle": "SCHEDULE",
+                    "label": "Schedule"
+                },
+                "otherImportantInformation": "Some important information is here"
             },
             "email": "email@something.com",
             "dob": "",
@@ -1583,6 +1625,14 @@
         {
             "id": "internal-server-error",
             "message": "test message"
+        },
+        {
+            "id": "importantInformation",
+            "validation_errors": {
+                "otherImportantInformation": {
+                    "stringLengthTooLong": "The other important information must be 1000 characters or fewer"
+                }
+            }
         }
     ],
     "successes": [
@@ -1597,6 +1647,22 @@
         {
             "id": "firm",
             "firmId": 2
+        },
+        {
+            "id": "proImportantInformation",
+            "complaints": {
+                "handle": "NO",
+                "label": "No"
+            },
+            "panelDeputy": false,
+            "annualBillingInvoice": {
+                "handle": "INVOICE",
+                "label": "Invoice"
+            },
+            "otherImportantInformation": "kate"
+        },
+        {
+            "id": "paImportantInformation"
         }
     ],
     "teams": [
@@ -1662,6 +1728,68 @@
             "postcode": "postcode",
             "phoneNumber": "telephone",
             "email": "email"
+        }
+    ],
+    "annualBillingInvoice": [
+        {
+            "handle": "INVOICE",
+            "label": "Invoice"
+        },
+        {
+            "handle": "SCHEDULE",
+            "label": "Schedule"
+        },
+        {
+            "handle": "SCHEDULE AND INVOICE",
+            "label": "Schedule and Invoice"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "deputyBooleanType": [
+        {
+            "handle": "YES",
+            "label": "Yes"
+        },
+        {
+            "handle": "NO",
+            "label": "No"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "deputyReportSystem": [
+        {
+            "handle": "CASREC",
+            "label": "Casrec"
+        },
+        {
+            "handle": "SOFTBOX",
+            "label": "Softbox"
+        },
+        {
+            "handle": "CONTROCC",
+            "label": "Controcc"
+        },
+        {
+            "handle": "CASHFAC",
+            "label": "CASHFAC"
+        },
+        {
+            "handle": "OPGDIGITAL",
+            "label": "OPG Digital"
+        },
+        {
+            "handle": "OPGPAPER",
+            "label": "OPG Paper"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
         }
     ]
 }

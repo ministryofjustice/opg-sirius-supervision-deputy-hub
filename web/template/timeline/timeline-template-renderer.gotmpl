@@ -14,4 +14,7 @@
     {{ if eq .EventType "DeputyContactDetailsChanged" }}
         {{ template  "deputy-contact-details-changed" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyInformationUpdated" }}
+        {{ template  "deputy-information-updated" . }}
+    {{ end }}
 {{ end }}
