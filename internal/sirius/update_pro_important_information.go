@@ -8,7 +8,7 @@ import (
 )
 
 type ImportantProInformationDetails struct {
-	DeputyType string `json:"deputyType"`
+	DeputyType                string `json:"deputyType"`
 	Complaints                string `json:"complaints"`
 	PanelDeputy               bool   `json:"panelDeputy"`
 	AnnualBillingInvoice      string `json:"annualBillingInvoice"`

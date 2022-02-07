@@ -8,12 +8,12 @@ import (
 )
 
 type ImportantPaInformationDetails struct {
-	DeputyType string `json:"deputyType"`
-	MonthlySpreadsheet string `json:"monthlySpreadsheet"`
+	DeputyType                string `json:"deputyType"`
+	MonthlySpreadsheet        string `json:"monthlySpreadsheet"`
 	IndependentVisitorCharges string `json:"independentVisitorCharges"`
-	BankCharges string `json:"bankCharges"`
-	APAD string `json:"apad"`
-	ReportSystem string `json:"reportSystem"`
+	BankCharges               string `json:"bankCharges"`
+	APAD                      string `json:"apad"`
+	ReportSystem              string `json:"reportSystem"`
 	AnnualBillingInvoice      string `json:"annualBillingInvoice"`
 	OtherImportantInformation string `json:"otherImportantInformation"`
 }
