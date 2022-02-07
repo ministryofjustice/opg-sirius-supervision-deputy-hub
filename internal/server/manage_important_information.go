@@ -14,6 +14,7 @@ type ManageProDeputyImportantInformation interface {
 	UpdateProImportantInformation(sirius.Context, int, sirius.ImportantProInformationDetails) error
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
+	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
 }
 
 type manageDeputyImportantInformationVars struct {
@@ -25,6 +26,7 @@ type manageDeputyImportantInformationVars struct {
 	DeputyId                  int
 	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
 	DeputyBooleanTypes            []sirius.DeputyBooleanTypes
+	DeputyReportSystemTypes []sirius.DeputyReportSystemTypes
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
@@ -49,6 +51,11 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return err
 		}
 
+		deputyReportSystemTypes, err := client.GetDeputyReportSystemTypes(ctx)
+		if err != nil {
+			return err
+		}
+
 		switch r.Method {
 		case http.MethodGet:
 
@@ -59,6 +66,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				DeputyDetails:          	deputyDetails,
 				AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
 				DeputyBooleanTypes:            deputyBooleanTypes,
+				DeputyReportSystemTypes: 	deputyReportSystemTypes,
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -111,6 +119,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 					Errors:                    verr.Errors,
 					AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
 					DeputyBooleanTypes:            deputyBooleanTypes,
+					DeputyReportSystemTypes: 	deputyReportSystemTypes,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {

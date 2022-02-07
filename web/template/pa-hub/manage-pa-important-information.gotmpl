@@ -93,7 +93,24 @@
                   </div>
                 </fieldset>
               </div>
-                <h1> Add report system in here </h1>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend">
+                      Report system
+                    </legend>
+                  <div class="govuk-radios">
+                   {{$currentReportSystemValue:=.DeputyDetails.DeputyImportantInformation.ReportSystem.Label}}
+                    {{ range .DeputyBooleanTypes }}
+                      <div class="govuk-radios__item">
+                          <input class="govuk-radios__input" id="report-system-{{.Label}}" name="report-system" type="radio" value="{{.Label}}" {{if eq $currentReportSystemValue .Label}} checked="true"{{end}}{{if eq $currentReportSystemValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                          <label class="govuk-label govuk-radios__label" for="report-system-{{.Label}}">
+                            {{.Label}}
+                          </label>
+                        </div>
+                    {{end}}
+                  </div>
+                </fieldset>
+              </div>
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">
@@ -150,7 +167,7 @@
 
                <a
                    class="govuk-link"
-                   href="{{ prefix (printf "/deputy/%d" .DeputyDetails.ID) }}">
+                   href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
                    Cancel
                </a>
 

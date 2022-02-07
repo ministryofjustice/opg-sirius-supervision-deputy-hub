@@ -28,7 +28,7 @@
                     </legend>
                     <div class="govuk-radios">
                      {{$currentComplaintsValue:=.DeputyDetails.DeputyImportantInformation.Complaints.Label}}
-                      {{ range .ComplaintTypes }}
+                      {{ range .DeputyBooleanTypes }}
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="complaints-{{.Label}}" name="complaints" type="radio" value="{{.Label}}" {{if eq $currentComplaintsValue .Label}} checked="true"{{end}}{{if eq $currentComplaintsValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                             <label class="govuk-label govuk-radios__label" for="complaints-{{.Label}}">

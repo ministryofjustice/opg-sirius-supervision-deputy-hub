@@ -17,7 +17,8 @@ type mockManageDeputyImportantInformation struct {
 	deputyData                sirius.DeputyDetails
 	updateErr                 error
 	annualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	complaintTypes            []sirius.DeputyBooleanTypes
+	deputyBooleanTypes            []sirius.DeputyBooleanTypes
+	deputyReportSystemTypes []sirius.DeputyReportSystemTypes
 }
 
 func (m *mockManageDeputyImportantInformation) GetDeputyDetails(ctx sirius.Context, _ int, _ int) (sirius.DeputyDetails, error) {
@@ -38,7 +39,15 @@ func (m *mockManageDeputyImportantInformation) GetDeputyBooleanTypes(ctx sirius.
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.complaintTypes, m.err
+	return m.deputyBooleanTypes, m.err
+}
+
+
+func (m *mockManageDeputyImportantInformation) GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.deputyReportSystemTypes, m.err
 }
 
 func (m *mockManageDeputyImportantInformation) UpdateProImportantInformation(ctx sirius.Context, _ int, _ sirius.ImportantProInformationDetails) error {
@@ -54,6 +63,7 @@ func (m *mockManageDeputyImportantInformation) UpdatePaImportantInformation(ctx 
 
 	return m.updateErr
 }
+
 
 func TestGetManageImportantInformation(t *testing.T) {
 	assert := assert.New(t)

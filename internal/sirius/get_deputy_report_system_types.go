@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-type DeputyBooleanTypes struct {
+type DeputyReportSystemTypes struct {
 	Handle string `json:"handle"`
 	Label  string `json:"label"`
 }
 
-func (c *Client) GetDeputyBooleanTypes(ctx Context) ([]DeputyBooleanTypes, error) {
-	var v []DeputyBooleanTypes
+func (c *Client) GetDeputyReportSystemTypes(ctx Context) ([]DeputyReportSystemTypes, error) {
+	var v []DeputyReportSystemTypes
 
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/deputyBooleanType", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/deputyReportSystem", nil)
 	if err != nil {
 		return v, err
 	}
