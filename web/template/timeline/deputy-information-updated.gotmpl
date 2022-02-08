@@ -1,0 +1,20 @@
+{{ define "deputy-information-updated" }}
+    <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">Deputy's important information updated</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+                {{ range .Event.Changes }}
+                    <li>{{ printf "%v: %v" (translate "FIELD" .FieldName) (translate "VALUE" .NewValue ) }}</li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}
