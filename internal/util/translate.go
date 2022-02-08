@@ -22,9 +22,9 @@ var mappings = map[string]string{
 	"FIELD.monthlySpreadsheet":        "Monthly spreadsheet",
 	"FIELD.complaints":                "Complaints",
 	"FIELD.otherImportantInformation": "Other important information",
-	"VALUE.true":                      "Yes",
-	"VALUE.false":                     "No",
-	"VALUE.unknown":                   "Unknown",
+	"VALUE.YES":                      	"Yes",
+	"VALUE.NO":                     	"No",
+	"VALUE.UNKNOWN":                   	"Unknown",
 }
 
 func Translate(prefix string, s string) string {

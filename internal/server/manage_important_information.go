@@ -72,9 +72,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			//alter based on deputy type calling different sirius files based on that
 
-			if r.PostFormValue("complaints") != "" {
+			if deputyDetails.DeputyType.Handle == "PRO" {
 				var panelDeputyBool bool
 
 				if r.PostFormValue("panel-deputy") != "" {
@@ -85,7 +84,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				}
 
 				importantInfoForm := sirius.ImportantProInformationDetails{
-					DeputyType:                "Pro",
+					DeputyType:                deputyDetails.DeputyType.Handle,
 					Complaints:                r.PostFormValue("complaints"),
 					PanelDeputy:               panelDeputyBool,
 					AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
@@ -94,19 +93,12 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 
 				err = client.UpdateProImportantInformation(ctx, deputyId, importantInfoForm)
 
-			} else if r.PostFormValue("monthly-spreadsheet") != "" {
+			} else if deputyDetails.DeputyType.Handle == "PA" {
 
-				reportSystemType := ""
-				if r.PostFormValue("report-system") == "OPG Digital" {
-					reportSystemType = "OPGDigital"
-				} else if r.PostFormValue("report-system") == "OPG Paper" {
-					reportSystemType = "OPGPaper"
-				} else {
-					reportSystemType = r.PostFormValue("report-system")
-				}
+				reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
 
 				importantInfoForm := sirius.ImportantPaInformationDetails{
-					DeputyType:                "Pa",
+					DeputyType:                deputyDetails.DeputyType.Handle,
 					MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
 					IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),
 					BankCharges:               r.PostFormValue("bank-charges"),
@@ -160,4 +152,14 @@ func renameUpdateAdditionalInformationValidationErrorMessages(siriusError sirius
 		}
 	}
 	return errorCollection
+}
+
+func checkForReportSystemType(reportType string) string {
+	if reportType == "OPG Digital" {
+		return "OPGDigital"
+	} else if reportType == "OPG Paper" {
+		return "OPGPaper"
+	} else {
+		return reportType
+	}
 }

@@ -104,49 +104,29 @@ func TestPostManageImportantInformation(t *testing.T) {
 	assert.Equal(Redirect("/123?success=importantInformation"), redirect)
 }
 
-//func TestErrorManageImportantInformationMessageWhenIsEmpty(t *testing.T) {
-//	assert := assert.New(t)
-//	defaultPATeam := 23
-//	client := &mockManageDeputyImportantInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"otherImportantInformation": {
-//			"stringLengthTooLong": "What sirius gives us",
-//		},
-//	}
-//
-//	client.updateErr = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//
-//	expectedValidationErrors := sirius.ValidationErrors{
-//		"otherImportantInformation": {
-//			"stringLengthTooLong": "The other important information must be 1000 characters or fewer",
-//		},
-//	}
-//
-//	assert.Equal(4, client.count)
-//
-//	assert.Equal(manageDeputyImportantInformationVars{
-//		Path:     "/123",
-//		DeputyId: 123,
-//		Errors:   expectedValidationErrors,
-//	}, template.lastVars)
-//
-//	assert.Equal(returnedError, expectedValidationErrors)
-//}
+func TestCheckForReportSystemType(t *testing.T) {
+	assert := assert.New(t)
+	assert.Equal(checkForReportSystemType("OPG Digital"), "OPGDigital")
+	assert.Equal(checkForReportSystemType("OPG Paper"), "OPGPaper")
+	assert.Equal(checkForReportSystemType("Other type"), "Other type")
+}
+
+
+func TestRenameUpdateAdditionalInformationValidationErrorMessages(t *testing.T) {
+	assert := assert.New(t)
+
+	validationErrors := sirius.ValidationErrors{
+		"otherImportantInformation": {
+			"stringLengthTooLong": "What sirius gives us",
+		},
+	}
+
+	expectedValidationErrors := sirius.ValidationErrors{
+		"otherImportantInformation": {
+			"stringLengthTooLong": "The other important information must be 1000 characters or fewer",
+		},
+	}
+
+	returnedError := renameUpdateAdditionalInformationValidationErrorMessages(validationErrors)
+	assert.Equal(returnedError, expectedValidationErrors)
+}

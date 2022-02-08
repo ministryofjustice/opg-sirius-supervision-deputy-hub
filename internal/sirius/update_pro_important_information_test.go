@@ -43,7 +43,7 @@ func TestUpdateProImportantInformation(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
+func TestUpdateProImportantInformationReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -67,7 +67,7 @@ func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestUpdateImportantInformationReturnsUnauthorisedClientError(t *testing.T) {
+func TestUpdateProImportantInformationReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
