@@ -11,8 +11,7 @@ import (
 
 type ManageProDeputyImportantInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
-	UpdateProImportantInformation(sirius.Context, int, sirius.ImportantProInformationDetails) error
-	UpdatePaImportantInformation(sirius.Context, int, sirius.ImportantPaInformationDetails) error
+	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
 	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
@@ -73,43 +72,30 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 
 		case http.MethodPost:
 
-			if deputyDetails.DeputyType.Handle == "PRO" {
-				var panelDeputyBool bool
+			var panelDeputyBool bool
 
-				if r.PostFormValue("panel-deputy") != "" {
-					panelDeputyBool, err = strconv.ParseBool(r.PostFormValue("panel-deputy"))
-					if err != nil {
-						return err
-					}
+			if r.PostFormValue("panel-deputy") != "" {
+				panelDeputyBool, err = strconv.ParseBool(r.PostFormValue("panel-deputy"))
+				if err != nil {
+					return err
 				}
-
-				importantInfoForm := sirius.ImportantProInformationDetails{
-					DeputyType:                deputyDetails.DeputyType.Handle,
-					Complaints:                r.PostFormValue("complaints"),
-					PanelDeputy:               panelDeputyBool,
-					AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
-					OtherImportantInformation: r.PostFormValue("other-info-note"),
-				}
-
-				err = client.UpdateProImportantInformation(ctx, deputyId, importantInfoForm)
-
-			} else if deputyDetails.DeputyType.Handle == "PA" {
-
-				reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
-
-				importantInfoForm := sirius.ImportantPaInformationDetails{
-					DeputyType:                deputyDetails.DeputyType.Handle,
-					MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
-					IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),
-					BankCharges:               r.PostFormValue("bank-charges"),
-					APAD:                      r.PostFormValue("apad"),
-					ReportSystem:              reportSystemType,
-					AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
-					OtherImportantInformation: r.PostFormValue("other-info-note"),
-				}
-
-				err = client.UpdatePaImportantInformation(ctx, deputyId, importantInfoForm)
 			}
+			reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
+
+			importantInfoForm := sirius.ImportantInformationDetails{
+				DeputyType:                deputyDetails.DeputyType.Handle,
+				Complaints:                r.PostFormValue("complaints"),
+				PanelDeputy:               panelDeputyBool,
+				AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
+				OtherImportantInformation: r.PostFormValue("other-info-note"),
+				MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
+				IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),
+				BankCharges:               r.PostFormValue("bank-charges"),
+				APAD:                      r.PostFormValue("apad"),
+				ReportSystem:              reportSystemType,
+			}
+
+			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				verr.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)

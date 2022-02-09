@@ -19,12 +19,15 @@ var mappings = map[string]string{
 	"FIELD.bankCharges":               "Bank charges",
 	"FIELD.apad":                      "APAD",
 	"FIELD.reportSystemType":          "Report system",
+	"FIELD.reportSystem":              "Report system",
 	"FIELD.monthlySpreadsheet":        "Monthly spreadsheet",
 	"FIELD.complaints":                "Complaints",
 	"FIELD.otherImportantInformation": "Other important information",
-	"VALUE.YES":                      	"Yes",
-	"VALUE.NO":                     	"No",
-	"VALUE.UNKNOWN":                   	"Unknown",
+	"VALUE.YES":                       "Yes",
+	"VALUE.NO":                        "No",
+	"VALUE.true":                      "Yes",
+	"VALUE.false":                     "No",
+	"VALUE.UNKNOWN":                   "Unknown",
 }
 
 func Translate(prefix string, s string) string {

@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpdatePaImportantInformation(t *testing.T) {
+func TestUpdateImportantInformationForPaInfo(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -54,7 +54,7 @@ func TestUpdatePaImportantInformation(t *testing.T) {
 		}, nil
 	}
 
-	formData := ImportantPaInformationDetails{
+	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
 		MonthlySpreadsheet:        "No",
 		IndependentVisitorCharges: "No",
@@ -65,11 +65,49 @@ func TestUpdatePaImportantInformation(t *testing.T) {
 		OtherImportantInformation: "important info",
 	}
 
-	err := client.UpdatePaImportantInformation(getContext(nil), ID, formData)
+	err := client.UpdateImportantInformation(getContext(nil), ID, formData)
 	assert.Nil(t, err)
 }
 
-func TestUpdatePaImportantInformationReturnsNewStatusError(t *testing.T) {
+func TestUpdateImportantInformationForProData(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `{
+		"id": 3,
+		"complaints": {
+			"handle": "NO",
+			"label": "No"
+		},
+		"panelDeputy": true,
+		"annualBillingInvoice": {
+			"handle": "SCHEDULE AND INVOICE",
+			"label": "Schedule and Invoice"
+		},
+		"otherImportantInformation": "important info"
+	}`
+
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	formData := ImportantInformationDetails{
+		PanelDeputy:               true,
+		Complaints:                "No",
+		AnnualBillingInvoice:      "Schedule and Invoice",
+		OtherImportantInformation: "important info",
+	}
+
+	err := client.UpdateImportantInformation(getContext(nil), ID, formData)
+	assert.Nil(t, err)
+}
+
+func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -77,7 +115,7 @@ func TestUpdatePaImportantInformationReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	formData := ImportantPaInformationDetails{
+	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
 		MonthlySpreadsheet:        "No",
 		IndependentVisitorCharges: "No",
@@ -88,7 +126,7 @@ func TestUpdatePaImportantInformationReturnsNewStatusError(t *testing.T) {
 		OtherImportantInformation: "important info",
 	}
 
-	err := client.UpdatePaImportantInformation(getContext(nil), ID, formData)
+	err := client.UpdateImportantInformation(getContext(nil), ID, formData)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -97,7 +135,7 @@ func TestUpdatePaImportantInformationReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestUpdatePaImportantInformationReturnsUnauthorisedClientError(t *testing.T) {
+func TestUpdateImportantInformationReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -105,7 +143,7 @@ func TestUpdatePaImportantInformationReturnsUnauthorisedClientError(t *testing.T
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	formData := ImportantPaInformationDetails{
+	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
 		MonthlySpreadsheet:        "No",
 		IndependentVisitorCharges: "No",
@@ -116,7 +154,7 @@ func TestUpdatePaImportantInformationReturnsUnauthorisedClientError(t *testing.T
 		OtherImportantInformation: "important info",
 	}
 
-	err := client.UpdatePaImportantInformation(getContext(nil), ID, formData)
+	err := client.UpdateImportantInformation(getContext(nil), ID, formData)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type ImportantPaInformationDetails struct {
+type ImportantInformationDetails struct {
 	DeputyType                string `json:"deputyType"`
 	MonthlySpreadsheet        string `json:"monthlySpreadsheet"`
 	IndependentVisitorCharges string `json:"independentVisitorCharges"`
@@ -16,9 +16,11 @@ type ImportantPaInformationDetails struct {
 	ReportSystem              string `json:"reportSystem"`
 	AnnualBillingInvoice      string `json:"annualBillingInvoice"`
 	OtherImportantInformation string `json:"otherImportantInformation"`
+	Complaints                string `json:"complaints"`
+	PanelDeputy               bool   `json:"panelDeputy"`
 }
 
-func (c *Client) UpdatePaImportantInformation(ctx Context, deputyId int, importantInfoForm ImportantPaInformationDetails) error {
+func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, importantInfoForm ImportantInformationDetails) error {
 
 	var body bytes.Buffer
 

@@ -49,14 +49,7 @@ func (m *mockManageDeputyImportantInformation) GetDeputyReportSystemTypes(ctx si
 	return m.deputyReportSystemTypes, m.err
 }
 
-func (m *mockManageDeputyImportantInformation) UpdateProImportantInformation(ctx sirius.Context, _ int, _ sirius.ImportantProInformationDetails) error {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.updateErr
-}
-
-func (m *mockManageDeputyImportantInformation) UpdatePaImportantInformation(ctx sirius.Context, _ int, _ sirius.ImportantPaInformationDetails) error {
+func (m *mockManageDeputyImportantInformation) UpdateImportantInformation(ctx sirius.Context, _ int, _ sirius.ImportantInformationDetails) error {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -110,7 +103,6 @@ func TestCheckForReportSystemType(t *testing.T) {
 	assert.Equal(checkForReportSystemType("OPG Paper"), "OPGPaper")
 	assert.Equal(checkForReportSystemType("Other type"), "Other type")
 }
-
 
 func TestRenameUpdateAdditionalInformationValidationErrorMessages(t *testing.T) {
 	assert := assert.New(t)
