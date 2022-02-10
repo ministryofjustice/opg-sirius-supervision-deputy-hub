@@ -1764,8 +1764,8 @@
     ],
     "deputyReportSystem": [
         {
-            "handle": "CASREC",
-            "label": "Casrec"
+            "handle": "CASPAR",
+            "label": "Caspar"
         },
         {
             "handle": "SOFTBOX",
