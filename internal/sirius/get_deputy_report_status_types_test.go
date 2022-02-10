@@ -16,8 +16,8 @@ func TestGetDeputyReportSystemTypes(t *testing.T) {
 
 	json := `[
 		{
-			"handle": "CASREC",
-			"label": "Casrec"
+			"handle": "CASPAR",
+			"label": "Caspar"
 		},
 		{
 			"handle": "SOFTBOX",
@@ -56,8 +56,8 @@ func TestGetDeputyReportSystemTypes(t *testing.T) {
 
 	expectedResponse := []DeputyReportSystemTypes{
 		{
-			"CASREC",
-			"Casrec",
+			"CASPAR",
+			"Caspar",
 		},
 		{
 			"SOFTBOX",
