@@ -98,5 +98,14 @@ describe("Notes", () => {
                 cy.get("li:last").should("contain", "Enter a note");
             });
         });
+
+        it("displays an error if the request fails with a 500 error", () => {
+            cy.setCookie("fail-route", "500-example");
+            cy.get("#add-note-form").submit();
+            cy.get(".govuk-error-summary__title").should(
+                "contain",
+                "There is a problem"
+            );
+        });
     });
 });
