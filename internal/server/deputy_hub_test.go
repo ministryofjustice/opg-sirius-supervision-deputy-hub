@@ -79,3 +79,15 @@ func TestCheckForDefaultEcmIdReturnsMessageIfTrue(t *testing.T) {
 func TestCheckForDefaultEcmIdReturnsNullIfFalse(t *testing.T) {
 	assert.Equal(t, "", checkForDefaultEcmId(25, 23))
 }
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Deputy details updated")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageAddFirmSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=newFirm", "Jon Snow")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Firm added")
+}
