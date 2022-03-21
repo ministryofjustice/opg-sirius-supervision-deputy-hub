@@ -11,8 +11,10 @@
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
-               <li> New firm: {{ range .Event.Changes }}{{.NewValue}} {{end}} <br></li>
-               <li> Old firm: {{ range .Event.Changes }}{{.OldValue}} {{end}} </li>
+               <li>New firm: {{ range .Event.Changes }}{{.NewValue}} {{if eq .FieldName "firm"}} - {{end}}{{end}}<br></li>
+               {{if eq .IsNewEvent false }}
+                  <li>Old firm: {{ range .Event.Changes }}{{.OldValue}} {{if eq .FieldName "firm"}} - {{end}}{{end}}</li>
+               {{end}}
             </ul>
         </div>
     </div>
