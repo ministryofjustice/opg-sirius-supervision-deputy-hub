@@ -2,6 +2,9 @@
     {{ if .Success }}
         {{ template "success-banner" . }}
     {{ end }}
+    {{ if ne .ErrorMessage "" }}
+      {{ template "error-banner" . }}
+    {{ end }}
     {{ template "pa-deputy-header" . }}
     {{ template "navigation" . }}
 
