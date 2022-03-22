@@ -3,8 +3,13 @@
     {{ if .Success }}
         {{ template "success-banner" " You have successfully edited your details." }}
     {{ end }}
-    {{ template "deputy-hub" . }}
     {{ template "error-summary" .Errors }}
+   {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
     <main role="main" class="govuk-main-wrapper">
         <div class="govuk-grid-row govuk-!-margin-top-5">
             <div class="govuk-grid-column-full">

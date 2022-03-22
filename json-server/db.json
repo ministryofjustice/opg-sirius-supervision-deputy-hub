@@ -1791,5 +1791,28 @@
             "handle": "UNKNOWN",
             "label": "Unknown"
         }
+    ],
+    "firms": [
+        {
+            "FirmName": "name",
+            "AddressLine1": "address-line-1",
+            "AddressLine2": "address-line-2",
+            "AddressLine3": "address-line-3",
+            "Town": "town",
+            "County": "county",
+            "Postcode": "postcode",
+            "PhoneNumber": "telephone",
+            "Email": "email"
+        },
+        {
+            "Id": 2,
+            "FirmName": "Nice Firm Corp",
+            "FirmNumber": 1000001
+        },
+        {
+            "Id": 3,
+            "FirmName": "Great Firm Corp",
+            "FirmNumber": 1000002
+        }
     ]
 }

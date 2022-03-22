@@ -21,7 +21,7 @@ describe("Manage important Information", () => {
 
         it("shows a cancel button which returns me to the dashboard", () => {
             cy.visit("/supervision/deputies/3/manage-important-information");
-            cy.get(".govuk-link").should("contain", "Cancel").click();
+            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click();
             cy.url().should(
                 "not.contain",
                 "/supervision/deputies/3/manage-important-information"

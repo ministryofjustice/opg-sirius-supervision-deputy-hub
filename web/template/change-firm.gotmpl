@@ -1,9 +1,13 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .Errors }}
-        {{ template "error-summary" .Errors }}
+    {{ template "error-summary" .Errors }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ template "pa-deputy-header" . }}
     {{ end }}
-    {{ template "pro-deputy" . }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    {{ template "navigation" . }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
@@ -83,7 +87,7 @@
                                 data-module="govuk-button">
                                 Save and continue
                             </button>
-                            <a class="govuk-link" href="{{ prefix (printf "/deputy/%d" .DeputyDetails.ID) }}">
+                            <a class="govuk-link" href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
                             Cancel
                             </a>
                         </div>
