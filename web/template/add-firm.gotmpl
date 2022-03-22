@@ -1,7 +1,16 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "pro-deputy" . }}
     {{ template "error-summary" .Errors }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+          {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Create new firm

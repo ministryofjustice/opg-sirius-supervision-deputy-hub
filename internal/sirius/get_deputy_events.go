@@ -48,6 +48,7 @@ type DeputyEvent struct {
 	EventType       string `json:"eventType"`
 	User            User   `json:"user"`
 	Event           Event  `json:"event"`
+	IsNewEvent bool
 }
 
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
@@ -90,12 +91,25 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
 			Event:           s.Event,
+			IsNewEvent: calculateIfNewEvent(s.Event.Changes),
 		}
 
 		list = append(list, event)
 	}
 	sortTimeLineNewestOneFirst(list)
 	return list
+}
+
+func calculateIfNewEvent(changes []Changes) bool {
+	var answer bool
+	for _, s := range changes {
+		if s.OldValue != "" {
+			answer = false
+		} else {
+			answer = true
+		}
+	}
+	return answer
 }
 
 func reformatEventType(s string) string {

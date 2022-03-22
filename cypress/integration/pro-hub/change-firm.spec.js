@@ -34,7 +34,7 @@ describe("Change Firm", () => {
         });
 
         it("has a cancel button that can redirect to deputy details page", () => {
-            cy.get(".govuk-link").should("contain", "Cancel").click();
+            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click();
             cy.url().should(
                 "contain",
                 "/supervision/deputies/3"
