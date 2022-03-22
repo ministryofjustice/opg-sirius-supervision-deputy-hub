@@ -2,7 +2,7 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-pro-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
@@ -41,7 +41,7 @@ func TestGetFirmsReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []Firm{
+	expectedResponse := []FirmForList{
 		{
 			Id:         1,
 			FirmName:   "new firm 1",
@@ -75,7 +75,7 @@ func TestGetFirmsReturnsNewStatusError(t *testing.T) {
 
 	firms, err := client.GetFirms(getContext(nil))
 
-	assert.Equal(t, []Firm(nil), firms)
+	assert.Equal(t, []FirmForList(nil), firms)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/firms",
@@ -94,5 +94,5 @@ func TestGetFirmsReturnsUnauthorisedClientError(t *testing.T) {
 	firms, err := client.GetFirms(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []Firm(nil), firms)
+	assert.Equal(t, []FirmForList(nil), firms)
 }

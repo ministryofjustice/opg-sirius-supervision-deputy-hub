@@ -54,6 +54,7 @@ type DeputyDetails struct {
 	DeputyCasrecId                   int                        `json:"deputyCasrecId"`
 	DeputyNumber                     int                        `json:"deputyNumber"`
 	DeputySubType                    DeputySubType              `json:"deputySubType"`
+	DeputyStatus                     string                     `json:"deputyStatus"`
 	DeputyImportantInformation       deputyImportantInformation `json:"deputyImportantInformation"`
 	OrganisationName                 string                     `json:"organisationName"`
 	OrganisationTeamOrDepartmentName string                     `json:"organisationTeamOrDepartmentName"`
@@ -95,7 +96,7 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) 
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	if v.ExecutiveCaseManager.EcmId == 0 {
+	if v.DeputyType.Handle == "PA" && v.ExecutiveCaseManager.EcmId == 0 {
 		v.ExecutiveCaseManager.EcmId = defaultPATeam
 		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
 	}

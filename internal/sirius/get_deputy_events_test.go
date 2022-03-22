@@ -623,3 +623,31 @@ func TestFormatDateAndTime(t *testing.T) {
 	expectedResponse := "18/10/2020 10:11:08"
 	assert.Equal(t, expectedResponse, formatDateAndTime(unsortedData))
 }
+
+func TestCalculateIfNewEvent(t *testing.T) {
+	assert.Equal(t, true, calculateIfNewEvent(
+		[]Changes{
+			{
+				FieldName: "firm",
+				NewValue:  "new firm name",
+			},
+			{
+				FieldName: "firmNumber",
+				NewValue:  "1000028",
+			},
+		}))
+	assert.Equal(t, false, calculateIfNewEvent(
+		[]Changes{
+			{
+				FieldName: "firm",
+				NewValue:  "a new firm name",
+				OldValue: "old firm name",
+			},
+			{
+				FieldName: "firmNumber",
+				NewValue:  "1000028",
+				OldValue: "1000021",
+			},
+		}))
+}
+

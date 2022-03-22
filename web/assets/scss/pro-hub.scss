@@ -136,6 +136,11 @@
       font-size: 1rem;
     }
 
+     &.moj-badge, &.name {
+         display: inline-block;
+         margin-right: 10px;
+      }
+
     span.rag {
       font-weight: bold;
       &.green {

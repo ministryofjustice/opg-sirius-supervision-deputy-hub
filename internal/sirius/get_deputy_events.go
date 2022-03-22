@@ -35,21 +35,6 @@ type Changes struct {
 	NewValue  string `json:"newValue"`
 }
 
-//type T struct {
-//	Class   string `json:"class"`
-//	Payload struct {
-//		PersonType string `json:"personType"`
-//		PersonId   string `json:"personId"`
-//		PersonUid  string `json:"personUid"`
-//		PersonName string `json:"personName"`
-//		Changes    []struct {
-//			FieldName string `json:"fieldName"`
-//			NewValue  string `json:"newValue"`
-//			Type      string `json:"type"`
-//		} `json:"changes"`
-//	} `json:"payload"`
-//}
-
 type ClientPerson struct {
 	ClientName     string `json:"personName"`
 	ClientId       string `json:"personId"`
