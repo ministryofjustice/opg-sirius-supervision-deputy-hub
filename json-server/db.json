@@ -1416,6 +1416,72 @@
             }
         },
         {
+            "id": 388,
+            "hash": "AS",
+            "timestamp": "2022-03-22 15:57:11",
+            "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
+            "user": {
+                "id": 51,
+                "phoneNumber": "12345678",
+                "displayName": "case manager",
+                "email": "case.manager@opgtest.com"
+            },
+            "event": {
+                "personType": "Deputy",
+                "personId": "3",
+                "personUid": "7000-0000-2530",
+                "personName": "pro dept",
+                "personCourtRef": null,
+                "changes": [
+                    {
+                        "fieldName": "firm",
+                        "oldValue": "new firm",
+                        "newValue": "another firm",
+                        "type": "string"
+                    },
+                    {
+                        "fieldName": "firmNumber",
+                        "oldValue": "1000000",
+                        "newValue": "1000001",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 387,
+            "hash": "AR",
+            "timestamp": "2022-03-22 15:56:53",
+            "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
+            "user": {
+                "id": 51,
+                "phoneNumber": "12345678",
+                "displayName": "case manager",
+                "email": "case.manager@opgtest.com"
+            },
+            "event": {
+                "personType": "Deputy",
+                "personId": "3",
+                "personUid": "7000-0000-2530",
+                "personName": "pro dept",
+                "personCourtRef": null,
+                "changes": [
+                    {
+                        "fieldName": "firm",
+                        "oldValue": null,
+                        "newValue": "new firm",
+                        "type": "string"
+                    },
+                    {
+                        "fieldName": "firmNumber",
+                        "oldValue": null,
+                        "newValue": "1000000",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
             "id": 402,
             "hash": "AY",
             "timestamp": "2021-11-24 14:01:59",
@@ -1556,6 +1622,14 @@
             }
         },
         {
+            "id": "allocateToFirm",
+            "validation_errors": {
+                "firmId": {
+                    "notGreaterThanInclusive": "The input is not greater than or equal to '1'"
+                }
+            }
+        },
+        {
             "id": "firm",
             "validation_errors": {
                 "firmName": {
@@ -1646,6 +1720,11 @@
         },
         {
             "id": "firm",
+            "firmId": 2
+        },
+        {
+            "id": "allocateToFirm",
+            "deputyId": 76,
             "firmId": 2
         },
         {

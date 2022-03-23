@@ -48,19 +48,20 @@ describe("Pro Deputy Hub", () => {
     });
 
     describe("Pro deputy details", () => {
-        it("the page should contain the deputy name", () => {
+        it("the page should contain the deputy name and status", () => {
             cy.get(".hook_header_deputy_name").should(
                 "contain",
                 "firstname surname"
             );
+            cy.get(".moj-badge").should("exist");
         });
 
-        // it("the page should contain the firm", () => {
-        //     cy.get(".hook_header_firm_name").should(
-        //         "contain",
-        //         "This is the Firm Name"
-        //     );
-        // });
+        it("the page should contain the firm", () => {
+            cy.get(".hook_header_firm_name > .govuk-link").should(
+                "contain",
+                "This is the Firm Name"
+            );
+        });
 
         it("the page should contain the deputy number", () => {
             cy.get(".hook_header_deputy_number").should(

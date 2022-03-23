@@ -9,7 +9,7 @@
         {{ template "pa-deputy-changed" . }}
     {{ end }}
     {{ if eq .EventType "DeputyAllocated" }}
-        {{ template "pa-deputy-allocated" . }}
+        {{ template "pa-deputy-allocated-to-ecm" . }}
     {{ end }}
     {{ if eq .EventType "DeputyContactDetailsChanged" }}
         {{ template  "deputy-contact-details-changed" . }}
