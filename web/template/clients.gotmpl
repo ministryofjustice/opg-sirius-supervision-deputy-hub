@@ -1,9 +1,13 @@
 {{ template "page" . }}
 {{ define "main" }}
+    {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ template "deputy-hub" . }}
+        {{ if ne .ErrorMessage "" }}
+           {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
     {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-        {{ template "pro-deputy" . }}
+        {{ template "pro-deputy-header" . }}
     {{ end }}
     {{ template "navigation" . }}
     <div class="main">
