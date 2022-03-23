@@ -1,14 +1,16 @@
 {
     "/api/v1/*": "/$1",
-    "/deputies/pa/:personId/clients": "/clients",
-    "/deputies/pro/:personId/clients": "/clients",
-    "/timeline/:personId": "/timeline",
-    "/:personId/notes": "/notes",
-    "/users/current": "/users",
+    "/deputy/:personId/notes": "/notes",
+    "/deputies/:deputyId/contact-details": "/deputies/:deputyId",
     "/deputies/:deputyId/ecm": "/ecm",
-    "/deputies/:id/contact-details": "/deputies/:id",
-    "/firm": "/addFirm",
+    "/deputies/:deputyId/firm": "/allocateToFirm",
+    "/deputies/pa/:deputyId/clients": "/clients",
+    "/deputies/pro/:deputyId/clients": "/clients",
+    "/firms": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
+    "/reference-data/complaints": "/complaints",
     "/reference-data/deputyBooleanType": "/deputyBooleanType",
-    "/reference-data/deputyReportSystem": "/deputyReportSystem"
+    "/reference-data/deputyReportSystem": "/deputyReportSystem",
+    "/timeline/:personId": "/timeline",
+    "/users/current": "/users"
 }

@@ -38,7 +38,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			return err
 		}
 
-		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
+		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.Firm.FirmName, deputyDetails.ExecutiveCaseManager.EcmName)
 
 		vars := deputyHubVars{
 			Path:           r.URL.Path,
@@ -54,7 +54,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 	}
 }
 
-func createSuccessAndSuccessMessageForVars(url string, ecmName string) (bool, string) {
+func createSuccessAndSuccessMessageForVars(url string, firmName string, ecmName string) (bool, string) {
 	splitStringByQuestion := strings.Split(url, "?")
 	if len(splitStringByQuestion) > 1 {
 		splitString := strings.Split(splitStringByQuestion[1], "=")
@@ -64,6 +64,8 @@ func createSuccessAndSuccessMessageForVars(url string, ecmName string) (bool, st
 			return true, "Deputy details updated"
 		case "ecm":
 			return true, "Ecm changed to " + ecmName
+		case "firm":
+			return true, "Firm changed to " + firmName
 		case "importantInformation":
 			return true, "Important information updated"
 		case "newFirm":

@@ -24,6 +24,7 @@ type Client interface {
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
 	ChangeECMInformation
+	ChangeDeputyFirmInformation
 	FirmInformation
 	DeputyContactDetailsInformation
 	ManageProDeputyImportantInformation
