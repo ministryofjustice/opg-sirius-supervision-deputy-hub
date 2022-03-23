@@ -48,7 +48,7 @@ type DeputyEvent struct {
 	EventType       string `json:"eventType"`
 	User            User   `json:"user"`
 	Event           Event  `json:"event"`
-	IsNewEvent bool
+	IsNewEvent      bool
 }
 
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
@@ -91,7 +91,7 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
 			Event:           s.Event,
-			IsNewEvent: calculateIfNewEvent(s.Event.Changes),
+			IsNewEvent:      calculateIfNewEvent(s.Event.Changes),
 		}
 
 		list = append(list, event)

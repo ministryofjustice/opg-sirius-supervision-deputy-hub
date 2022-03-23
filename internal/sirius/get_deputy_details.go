@@ -21,8 +21,8 @@ type DeputyType struct {
 }
 
 type Firm struct {
-	FirmName string `json:"firmName"`
-	FirmId   int    `json:"id"`
+	FirmName   string `json:"firmName"`
+	FirmId     int    `json:"id"`
 	FirmNumber int    `json:"firmNumber"`
 }
 

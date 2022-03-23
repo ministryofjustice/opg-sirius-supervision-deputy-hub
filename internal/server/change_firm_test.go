@@ -14,8 +14,7 @@ type mockDeputyChangeFirmInformation struct {
 	lastCtx    sirius.Context
 	err        error
 	deputyData sirius.DeputyDetails
-	firmData []sirius.FirmForList
-
+	firmData   []sirius.FirmForList
 }
 
 func (m *mockDeputyChangeFirmInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {

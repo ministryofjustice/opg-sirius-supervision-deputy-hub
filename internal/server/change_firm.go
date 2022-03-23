@@ -15,14 +15,14 @@ type DeputyChangeFirmInformation interface {
 }
 
 type changeFirmVars struct {
-	Path             string
-	XSRFToken        string
-	DeputyDetails sirius.DeputyDetails
-	FirmDetails      []sirius.FirmForList
-	Error            string
-	Errors           sirius.ValidationErrors
-	Success          bool
-	SuccessMessage   string
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
+	FirmDetails    []sirius.FirmForList
+	Error          string
+	Errors         sirius.ValidationErrors
+	Success        bool
+	SuccessMessage string
 }
 
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATeam int, tmpl Template) Handler {
@@ -53,7 +53,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATe
 				Path:          r.URL.Path,
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
-				FirmDetails:      firmDetails,
+				FirmDetails:   firmDetails,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
@@ -117,4 +117,3 @@ func renameChangeFirmValidationErrorMessages(siriusError sirius.ValidationErrors
 	}
 	return errorCollection
 }
-

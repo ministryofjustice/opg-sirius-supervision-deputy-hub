@@ -641,13 +641,12 @@ func TestCalculateIfNewEvent(t *testing.T) {
 			{
 				FieldName: "firm",
 				NewValue:  "a new firm name",
-				OldValue: "old firm name",
+				OldValue:  "old firm name",
 			},
 			{
 				FieldName: "firmNumber",
 				NewValue:  "1000028",
-				OldValue: "1000021",
+				OldValue:  "1000021",
 			},
 		}))
 }
-
