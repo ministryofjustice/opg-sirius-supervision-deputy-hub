@@ -2,7 +2,7 @@
     {{ if .Success }}
         {{ template "success-banner" . }}
     {{ end }}
-    {{ template "pro-deputy" . }}
+    {{ template "pro-deputy-header" . }}
     {{ template "navigation" . }}
 
 
@@ -45,7 +45,11 @@
                     <dt class="govuk-summary-list__key">Firm</dt>
                     <dd class="govuk-summary-list__value hook_deputy_firm_name">
                         {{ if ne .DeputyDetails.Firm.FirmName "" }}
-                            {{ .DeputyDetails.Firm.FirmName }}
+                            <a
+                                class="govuk-link"
+                                href="{{ firmhub (printf "/%d" .DeputyDetails.Firm.FirmId) }}">
+                                {{ printf "%v" .DeputyDetails.Firm.FirmName }}</a
+                            >
                         {{ end }}
                     </dd>
                 </div>

@@ -27,6 +27,7 @@ type Client interface {
 	FirmInformation
 	DeputyContactDetailsInformation
 	ManageProDeputyImportantInformation
+	DeputyChangeFirmInformation
 }
 
 type Template interface {
