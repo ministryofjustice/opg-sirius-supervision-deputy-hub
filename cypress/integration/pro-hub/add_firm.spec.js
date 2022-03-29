@@ -78,6 +78,7 @@ describe("Firm", () => {
             cy.setCookie("success-route", "firm");
             cy.get("#f-firmName").type("The Firm Name");
             cy.get("#add-firm-form").submit();
+            cy.get(".moj-banner").should("contain", "Firm added");
             cy.get(".govuk-heading-l").should("contain", "Deputy details");
         });
     });

@@ -1,11 +1,12 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubInformation interface {
@@ -37,30 +38,40 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			return err
 		}
 
+		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName, deputyDetails.Firm.FirmName)
+
 		vars := deputyHubVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
+			Path:           r.URL.Path,
+			XSRFToken:      ctx.XSRFToken,
+			DeputyDetails:  deputyDetails,
+			Success:        hasSuccess,
+			SuccessMessage: successMessage,
 		}
 
-		vars.Success, vars.SuccessMessage = createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName)
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
 
-func createSuccessAndSuccessMessageForVars(url string, EcmName string) (bool, string) {
+func createSuccessAndSuccessMessageForVars(url string, ecmName string, firmName string) (bool, string) {
 	splitStringByQuestion := strings.Split(url, "?")
 	if len(splitStringByQuestion) > 1 {
 		splitString := strings.Split(splitStringByQuestion[1], "=")
 
-		if splitString[1] == "ecm" {
-			return true, "Ecm changed to " + EcmName
-		} else if splitString[1] == "teamDetails" {
-			return true, "Team details updated"
-		} else if splitString[1] == "deputyDetails" {
+		switch splitString[1] {
+		case "deputyDetails":
 			return true, "Deputy details updated"
+		case "ecm":
+			return true, "Ecm changed to " + ecmName
+		case "importantInformation":
+			return true, "Important information updated"
+		case "newFirm":
+			return true, "Firm added"
+		case "firm":
+			return true, "Firm changed to " + firmName
+		case "teamDetails":
+			return true, "Team details updated"
 		}
 	}
 	return false, ""
