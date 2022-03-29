@@ -10,4 +10,4 @@ services:
       SIRIUS_URL: http://docker.for.mac.localhost:8080
       SIRIUS_PUBLIC_URL: http://localhost:8080
       PREFIX: /supervision/deputies
-      FIRM_HUB_URL: http://localhost:8887
+      FIRM_HUB_URL: http://localhost:8887/supervision/deputies/firm
