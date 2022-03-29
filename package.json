@@ -30,5 +30,8 @@
         "test-server": "cd internal/server && go test",
         "cypress": "cypress open",
         "fmt": "prettier --write ."
+    },
+    "resolutions": {
+        "colors": "1.4.0"
     }
 }
