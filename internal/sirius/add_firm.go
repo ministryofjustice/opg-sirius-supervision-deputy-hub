@@ -27,7 +27,7 @@ func (c *Client) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, erro
 		return 0, err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPost, "/api/v1/firm", &body)
+	req, err := c.newRequest(ctx, http.MethodPost, "/api/v1/firms", &body)
 	if err != nil {
 		return 0, err
 	}

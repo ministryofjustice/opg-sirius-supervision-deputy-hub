@@ -101,6 +101,35 @@
                 "handle": "PA",
                 "label": "Public Authority"
             },
+            "deputyImportantInformation": {
+                "id": 21,
+                "monthlySpreadsheet": {
+                    "handle": "NO",
+                    "label": "No"
+                },
+                "independentVisitorCharges": {
+                    "handle": "UNKNOWN",
+                    "label": "Unknown"
+                },
+                "bankCharges": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "apad": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "reportSystemType": {
+                    "handle": "CASHFAC",
+                    "handle": "CASHFAC",
+                    "label": "CASHFAC"
+                },
+                "annualBillingInvoice": {
+                    "handle": "SCHEDULE AND INVOICE",
+                    "label": "Schedule and Invoice"
+                },
+                "otherImportantInformation": "some info for the pa deputy"
+            },
             "deputyCasrecId": 10000000,
             "deputyNumber": 11,
             "organisationName": "Test Organisation"
@@ -211,6 +240,19 @@
             },
             "firm": {
                 "firmName": "This is the Firm Name"
+            },
+            "deputyImportantInformation": {
+                "id": 2,
+                "complaints": {
+                    "handle": "YES",
+                    "label": "Yes"
+                },
+                "panelDeputy": true,
+                "annualBillingInvoice": {
+                    "handle": "SCHEDULE",
+                    "label": "Schedule"
+                },
+                "otherImportantInformation": "Some important information is here"
             },
             "email": "email@something.com",
             "dob": "",
@@ -1374,6 +1416,72 @@
             }
         },
         {
+            "id": 388,
+            "hash": "AS",
+            "timestamp": "2022-03-22 15:57:11",
+            "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
+            "user": {
+                "id": 51,
+                "phoneNumber": "12345678",
+                "displayName": "case manager",
+                "email": "case.manager@opgtest.com"
+            },
+            "event": {
+                "personType": "Deputy",
+                "personId": "3",
+                "personUid": "7000-0000-2530",
+                "personName": "pro dept",
+                "personCourtRef": null,
+                "changes": [
+                    {
+                        "fieldName": "firm",
+                        "oldValue": "new firm",
+                        "newValue": "another firm",
+                        "type": "string"
+                    },
+                    {
+                        "fieldName": "firmNumber",
+                        "oldValue": "1000000",
+                        "newValue": "1000001",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 387,
+            "hash": "AR",
+            "timestamp": "2022-03-22 15:56:53",
+            "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
+            "user": {
+                "id": 51,
+                "phoneNumber": "12345678",
+                "displayName": "case manager",
+                "email": "case.manager@opgtest.com"
+            },
+            "event": {
+                "personType": "Deputy",
+                "personId": "3",
+                "personUid": "7000-0000-2530",
+                "personName": "pro dept",
+                "personCourtRef": null,
+                "changes": [
+                    {
+                        "fieldName": "firm",
+                        "oldValue": null,
+                        "newValue": "new firm",
+                        "type": "string"
+                    },
+                    {
+                        "fieldName": "firmNumber",
+                        "oldValue": null,
+                        "newValue": "1000000",
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        {
             "id": 402,
             "hash": "AY",
             "timestamp": "2021-11-24 14:01:59",
@@ -1514,6 +1622,14 @@
             }
         },
         {
+            "id": "allocateToFirm",
+            "validation_errors": {
+                "firmId": {
+                    "notGreaterThanInclusive": "The input is not greater than or equal to '1'"
+                }
+            }
+        },
+        {
             "id": "firm",
             "validation_errors": {
                 "firmName": {
@@ -1583,6 +1699,14 @@
         {
             "id": "internal-server-error",
             "message": "test message"
+        },
+        {
+            "id": "importantInformation",
+            "validation_errors": {
+                "otherImportantInformation": {
+                    "stringLengthTooLong": "The other important information must be 1000 characters or fewer"
+                }
+            }
         }
     ],
     "successes": [
@@ -1597,6 +1721,27 @@
         {
             "id": "firm",
             "firmId": 2
+        },
+        {
+            "id": "allocateToFirm",
+            "deputyId": 76,
+            "firmId": 2
+        },
+        {
+            "id": "proImportantInformation",
+            "complaints": {
+                "handle": "NO",
+                "label": "No"
+            },
+            "panelDeputy": false,
+            "annualBillingInvoice": {
+                "handle": "INVOICE",
+                "label": "Invoice"
+            },
+            "otherImportantInformation": "kate"
+        },
+        {
+            "id": "paImportantInformation"
         }
     ],
     "teams": [
@@ -1662,6 +1807,91 @@
             "postcode": "postcode",
             "phoneNumber": "telephone",
             "email": "email"
+        }
+    ],
+    "annualBillingInvoice": [
+        {
+            "handle": "INVOICE",
+            "label": "Invoice"
+        },
+        {
+            "handle": "SCHEDULE",
+            "label": "Schedule"
+        },
+        {
+            "handle": "SCHEDULE AND INVOICE",
+            "label": "Schedule and Invoice"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "deputyBooleanType": [
+        {
+            "handle": "YES",
+            "label": "Yes"
+        },
+        {
+            "handle": "NO",
+            "label": "No"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "deputyReportSystem": [
+        {
+            "handle": "CASPAR",
+            "label": "Caspar"
+        },
+        {
+            "handle": "SOFTBOX",
+            "label": "Softbox"
+        },
+        {
+            "handle": "CONTROCC",
+            "label": "Controcc"
+        },
+        {
+            "handle": "CASHFAC",
+            "label": "CASHFAC"
+        },
+        {
+            "handle": "OPGDIGITAL",
+            "label": "OPG Digital"
+        },
+        {
+            "handle": "OPGPAPER",
+            "label": "OPG Paper"
+        },
+        {
+            "handle": "UNKNOWN",
+            "label": "Unknown"
+        }
+    ],
+    "firms": [
+        {
+            "FirmName": "name",
+            "AddressLine1": "address-line-1",
+            "AddressLine2": "address-line-2",
+            "AddressLine3": "address-line-3",
+            "Town": "town",
+            "County": "county",
+            "Postcode": "postcode",
+            "PhoneNumber": "telephone",
+            "Email": "email"
+        },
+        {
+            "Id": 2,
+            "FirmName": "Nice Firm Corp",
+            "FirmNumber": 1000001
+        },
+        {
+            "Id": 3,
+            "FirmName": "Great Firm Corp",
+            "FirmNumber": 1000002
         }
     ]
 }
