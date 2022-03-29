@@ -8,7 +8,7 @@ describe("Timeline", () => {
     it("has a header called timeline", () => {
         cy.get(".main > header").should("contain", "Timeline");
     });
-
+    
     it("contains appropriate test data for a timeline event", () => {
         cy.get(".moj-timeline__title").should(
             "contain",

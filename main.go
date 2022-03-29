@@ -27,7 +27,7 @@ func main() {
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
 	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
-	firmHubURL := getEnv("FIRM_HUB_URL", "")
+	firmHubURL := getEnv("FIRM_HUB_URL", "/supervision/deputies/firm")
 
 	layouts, _ := template.
 		New("").

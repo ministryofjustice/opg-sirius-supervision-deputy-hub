@@ -2,51 +2,118 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
-func renderTemplateForChangeFirm(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
+type DeputyChangeFirmInformation interface {
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
+	GetFirms(sirius.Context) ([]sirius.FirmForList, error)
+	AssignDeputyToFirm(sirius.Context, int, int) error
+}
+
+type changeFirmVars struct {
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
+	FirmDetails    []sirius.FirmForList
+	Error          string
+	Errors         sirius.ValidationErrors
+	Success        bool
+	SuccessMessage string
+}
+
+func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
+		if err != nil {
+			return err
+		}
+
+		firmDetails, err := client.GetFirms(ctx)
+		if err != nil {
+			return err
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 
 			if err != nil {
 				return err
 			}
 
-			vars := deputyHubVars{
+			vars := changeFirmVars{
 				Path:          r.URL.Path,
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
+				FirmDetails:   firmDetails,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+			var vars changeFirmVars
 			newFirm := r.PostFormValue("select-firm")
+			AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
 
 			if newFirm == "new-firm" {
 				return Redirect(fmt.Sprintf("/%d/add-firm", deputyId))
 			}
 
-			vars := deputyHubVars{
-				Path:      r.URL.Path,
-				XSRFToken: ctx.XSRFToken,
+			AssignToFirmId := 0
+			if AssignToExistingFirmStringIdValue != "" {
+				AssignToFirmId, err = strconv.Atoi(AssignToExistingFirmStringIdValue)
+				if err != nil {
+					return err
+				}
 			}
 
-			return tmpl.ExecuteTemplate(w, "page", vars)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
+
+			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
+
+				verr.Errors = renameChangeFirmValidationErrorMessages(verr.Errors)
+
+				vars = changeFirmVars{
+					Path:      r.URL.Path,
+					XSRFToken: ctx.XSRFToken,
+					Errors:    verr.Errors,
+				}
+
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			} else if err != nil {
+				return err
+			}
+			return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))
+
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
+}
+
+func renameChangeFirmValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
+	errorCollection := sirius.ValidationErrors{}
+
+	for fieldName, value := range siriusError {
+		for errorType, errorMessage := range value {
+			err := make(map[string]string)
+
+			if fieldName == "firmId" && errorType == "notGreaterThanInclusive" {
+				err[errorType] = "Enter a firm name or number"
+				errorCollection["existing-firm"] = err
+			} else {
+				err[errorType] = errorMessage
+				errorCollection[fieldName] = err
+			}
+		}
+	}
+	return errorCollection
 }

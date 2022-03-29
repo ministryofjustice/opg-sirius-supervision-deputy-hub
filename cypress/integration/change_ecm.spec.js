@@ -99,22 +99,22 @@ describe("Timelink links to Change ECM page", () => {
     });
 
     it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
-        cy.get(":nth-child(2) > .moj-timeline__header").should(
+        cy.get(":nth-child(4) > .moj-timeline__header").should(
             "contain",
             "Executive Case Manager set to Public Authority deputy team"
         );
         cy.get(
-            ":nth-child(2) > .moj-timeline__header > .moj-timeline__byline"
+            ":nth-child(4) > .moj-timeline__header > .moj-timeline__byline"
         ).should("contain", "by Lay Team 1 - (Supervision");
     });
 
     it("has a timeline event for when an ecm is allocated", () => {
-        cy.get(":nth-child(1) > .moj-timeline__header").should(
+        cy.get(":nth-child(3) > .moj-timeline__header").should(
             "contain",
             "Executive Case Manager changed to PATeam1 User1"
         );
         cy.get(
-            ":nth-child(1) > .moj-timeline__header > .moj-timeline__byline"
+            ":nth-child(3) > .moj-timeline__header > .moj-timeline__byline"
         ).should("contain", "by case manager (12345678)");
     });
 });
