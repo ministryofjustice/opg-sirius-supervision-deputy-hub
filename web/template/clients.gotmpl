@@ -1,6 +1,14 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "deputy-hub" . }}
+    {{ template "error-summary" .Errors }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+           {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
     {{ template "navigation" . }}
     <div class="main">
         <header>
@@ -8,6 +16,13 @@
                 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
                 Clients
             </h1>
+            <div class="moj-button-menu">
+                <div class="moj-button-menu__wrapper">
+                    <a href="{{sirius ""}}/api/v1/deputies/{{.DeputyDetails.ID}}/clients-list?OPG-Bypass-Membrane=1" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                        Download client list
+                    </a>
+                </div>
+            </div>
         </header>
         <table id="pa-clients-3" class="govuk-table sortable">
             <thead class="govuk-table__head">
@@ -20,7 +35,7 @@
                             aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
                                 Client
                             </button>
                         </th>
@@ -32,7 +47,7 @@
                             aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">
                                 Client
                             </button>
                         </th>
@@ -44,7 +59,7 @@
                             aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
                                 Client
                             </button>
                         </th>
@@ -65,7 +80,7 @@
                             aria-sort="none">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
                                 Report due
                             </button>
                         </th>
@@ -77,7 +92,7 @@
                             aria-sort="ascending">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">
                                 Report due
                             </button>
                         </th>
@@ -89,7 +104,7 @@
                             aria-sort="descending">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
                                 Report due
                             </button>
                         </th>
@@ -102,7 +117,7 @@
                             aria-sort="none">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
                                 Risk
                             </button>
                         </th>
@@ -114,7 +129,7 @@
                             aria-sort="ascending">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">
                                 Risk
                             </button>
                         </th>
@@ -126,7 +141,7 @@
                             aria-sort="descending">
                             <button
                                 type="button"
-                                onclick="window.location.href={{ prefix (printf "/deputy/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
+                                onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
                                 Risk
                             </button>
                         </th>

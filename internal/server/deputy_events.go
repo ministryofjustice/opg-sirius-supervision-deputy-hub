@@ -37,7 +37,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 			return err
 		}
 		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
-
 		if err != nil {
 			return err
 		}

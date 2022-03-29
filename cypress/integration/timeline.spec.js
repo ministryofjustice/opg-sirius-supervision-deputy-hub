@@ -2,13 +2,13 @@ describe("Timeline", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/public-authority/deputy/1/timeline");
+        cy.visit("/supervision/deputies/1/timeline");
     });
 
     it("has a header called timeline", () => {
         cy.get(".main > header").should("contain", "Timeline");
     });
-
+    
     it("contains appropriate test data for a timeline event", () => {
         cy.get(".moj-timeline__title").should(
             "contain",

@@ -110,7 +110,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		},
 	}
 
-	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
 
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
@@ -124,7 +124,7 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
 
 	expectedResponse := DeputyClientDetails(nil)
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
@@ -143,7 +143,7 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "", "")
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	expectedResponse := DeputyClientDetails(nil)
 
