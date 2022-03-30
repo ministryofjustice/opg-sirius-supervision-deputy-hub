@@ -18,7 +18,7 @@
             <span class="moj-banner__assistive">Warning</span>
             <ul class="govuk-list govuk-!-margin-top-0 govuk-!-margin-bottom-0">
                 <!-- prettier-ignore -->
-                <li>{{ .ErrorMessage }}<a class="govuk-link" href="{{ prefix (printf "/deputy/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a></li>
+                <li>{{ .ErrorMessage }}<a class="govuk-link" href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a></li>
             </ul>
         </div>
     </div>

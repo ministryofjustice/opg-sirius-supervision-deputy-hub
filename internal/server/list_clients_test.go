@@ -25,7 +25,7 @@ func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, de
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -52,7 +52,7 @@ func TestNavigateToClientTab(t *testing.T) {
 }
 
 func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients?sort=crec:desc"
+	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients?sort=crec:desc"
 	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
 	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
 
@@ -62,7 +62,7 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/public-authority/deputy/78/clients"
+	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients"
 	expectedResponseColumnBeingSorted, sortOrder := "", ""
 	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
 

@@ -40,7 +40,14 @@ jobs:
 
       - name: Run Tests
         run: |
-          gotestsum --junitfile /tmp/test-results/unit-tests.xml -- ./... -coverprofile=/tmp/test-coverage.txt
+          curl -sSL "https://github.com/gotestyourself/gotestsum/releases/download/v1.6.4/gotestsum_1.6.4_darwin_amd64.tar.gz" | tar -xz -C /usr/local/bin gotestsum
+          gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          check_name: "Unit Test Results"
+          files: test-results/*.xml
 
   lint:
     name: GO lint
@@ -109,10 +116,20 @@ jobs:
 
       - name: Build Container
         run: |
-          docker build --tag sirius/sirius-deputy-hub:latest -f docker/sirius-deputy-hub/Dockerfile .
-      - name: Scan
-        run: |
-          docker run --rm  -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy sirius/sirius-deputy-hub:latest
+          docker-compose -f docker/docker-compose.ci.yml build deputy-hub
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: sirius-deputy-hub:latest
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'test-results/trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'test-results/trivy-results.sarif'
 
       - name: Bump version
         id: bump_version
@@ -146,9 +163,10 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           DEPUTY_HUB_ECR_REPOSITORY: sirius/sirius-deputy-hub
         run: |
-          docker tag sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:latest
-          docker tag sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
+            docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:latest
+            docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
             # We want all of the tags pushed
             docker push --all-tags $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY
           else
