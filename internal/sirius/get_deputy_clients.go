@@ -99,8 +99,9 @@ type AriaSorting struct {
 	CRECAriaSort      string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/pa/%d/clients", deputyId), nil)
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients", strings.ToLower(deputyType), deputyId), nil)
+
 	if err != nil {
 		return nil, AriaSorting{}, err
 	}
@@ -147,7 +148,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, columnBeingSorted s
 				LatestCompletedVisit: latestCompletedVisit{
 					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					(t.LatestCompletedVisit.VisitUrgency.Label),
+					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}

@@ -3,7 +3,16 @@
     {{ if .Success }}
         {{ template "success-banner" . }}
     {{ end }}
-    {{ template "deputy-hub" . }}
+    {{ template "error-summary" .Errors }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+           {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
     {{ template "navigation" . }}
     <div class="main">
         <header>
@@ -15,7 +24,7 @@
                 <div class="moj-button-menu__wrapper">
                     <a
                         class="govuk-button moj-button-menu__item govuk-button--secondary"
-                        href="{{ prefix (printf "/deputy/%d/notes/add-note" .DeputyDetails.ID) }}"
+                        href="{{ prefix (printf "/%d/notes/add-note" .DeputyDetails.ID) }}"
                         role="button"
                         draggable="false"
                         data-module="govuk-button">

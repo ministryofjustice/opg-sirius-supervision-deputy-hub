@@ -78,7 +78,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATe
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/deputy/%d?success=teamDetails", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=teamDetails", deputyId))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

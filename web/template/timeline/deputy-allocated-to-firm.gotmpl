@@ -1,0 +1,21 @@
+{{ define "deputy-allocated-to-firm" }}
+    <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">Deputy firm updated</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+               <li>New firm: {{ range .Event.Changes }}{{.NewValue}} {{if eq .FieldName "firm"}} - {{end}}{{end}}<br></li>
+               {{if eq .IsNewEvent false }}
+                  <li>Old firm: {{ range .Event.Changes }}{{.OldValue}} {{if eq .FieldName "firm"}} - {{end}}{{end}}</li>
+               {{end}}
+            </ul>
+        </div>
+    </div>
+{{ end }}

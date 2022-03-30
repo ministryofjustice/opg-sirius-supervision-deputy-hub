@@ -1,0 +1,144 @@
+{{ define "pa-deputy-details" }}
+    {{ if .Success }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ if ne .ErrorMessage "" }}
+      {{ template "error-banner" . }}
+    {{ end }}
+    {{ template "pa-deputy-header" . }}
+    {{ template "navigation" . }}
+
+
+    <header>
+        <h1
+            class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+            Deputy details
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                    href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
+                    data-module="govuk-button">
+                    Change ECM
+                </a>
+            </div>
+        </div>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m  govuk-!-margin-top-5">Team details</h2>
+            <dl id="team-details" class="govuk-summary-list">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Deputy name</dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ .DeputyDetails.OrganisationName }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Telephone</dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ .DeputyDetails.PhoneNumber }}
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Email</dt>
+                    <dd class="govuk-summary-list__value">
+                        <a href="mailto:{{ .DeputyDetails.Email }}">
+                            {{ .DeputyDetails.Email }}
+                        </a>
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">Postal address</dt>
+                    <dd class="govuk-summary-list__value">
+                        {{ .DeputyDetails.OrganisationTeamOrDepartmentName }}
+                        <br />
+                        {{ .DeputyDetails.AddressLine1 }} <br />
+                        {{ .DeputyDetails.AddressLine2 }} <br />
+                        {{ .DeputyDetails.AddressLine3 }} <br />
+                        {{ .DeputyDetails.Town }} <br />
+                        {{ .DeputyDetails.County }} <br />
+                        {{ .DeputyDetails.Postcode }}
+                    </dd>
+                </div>
+            </dl>
+            <a
+                href="{{ prefix (printf "/%d/manage-team-details" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button govuk-button--secondary"
+                data-module="govuk-button">
+                Manage team details
+            </a>
+        </div>
+        <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m govuk-!-margin-top-5">Important information</h2>
+
+            <dl class="govuk-summary-list">
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  Monthly spreadsheet
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{.DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  Independent visitor charges
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    {{.DeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
+                </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Bank charges
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                      {{.DeputyDetails.DeputyImportantInformation.BankCharges.Label}}
+                  </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    APAD
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    {{.DeputyDetails.DeputyImportantInformation.APAD.Label}}
+                  </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Report system
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                     {{.DeputyDetails.DeputyImportantInformation.ReportSystem.Label}}
+                  </dd>
+              </div>
+              <div class="govuk-summary-list__row">
+                  <dt class="govuk-summary-list__key">
+                    Annual billing preference
+                  </dt>
+                  <dd class="govuk-summary-list__value">
+                    {{.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label}}
+                  </dd>
+                </div>
+              <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                  Other important information
+                </dt>
+                <dd class="govuk-summary-list__value">
+                  <p>{{.DeputyDetails.DeputyImportantInformation.OtherImportantInformation}}</p>
+                </dd>
+              </div>
+            </dl>
+
+            <a href="{{ prefix (printf "/%d/manage-important-information" .DeputyDetails.ID) }}" role="button" draggable="false" class="govuk-button govuk-button--secondary">
+              Manage important information
+            </a>
+        </div>
+    </div>
+{{ end }}
