@@ -13,6 +13,7 @@ services:
       PREFIX: /supervision/deputies
 
   json-server:
+    image: deputy-hub-json-server:latest
     build:
       context: ..
       dockerfile: ./docker/json-server/Dockerfile
@@ -20,6 +21,7 @@ services:
       - '3000:3000'
 
   puppeteer:
+    image: deputy-hub-puppeter:latest
     build: ./puppeteer
     depends_on:
       - deputy-hub
@@ -30,9 +32,12 @@ services:
       - LHCI_GITHUB_APP_TOKEN
 
   cypress:
+    image: deputy-hub-cypress:latest
     build:
       context: ..
       dockerfile: ./docker/cypress/Dockerfile
+    volumes:
+      - ../test-results:/test-results
     command: ["--headless", "-b", "chrome"]
     volumes:
       - ../cypress/screenshots:/root/cypress/screenshots:rw,delegated

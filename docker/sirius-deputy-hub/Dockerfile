@@ -57,8 +57,9 @@ RUN apk --update --no-cache add \
     ca-certificates \
     && rm -rf /var/cache/apk/*
 RUN apk --no-cache add tzdata
+RUN addgroup -S app && adduser -S -g app app
 
-COPY --from=build-env /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
-COPY --from=build-env /app/web/template web/template
-COPY --from=asset-env /app/web/static web/static
-ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"] 
+COPY --from=build-env --chown=app:app /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
+COPY --from=build-env --chown=app:app /app/web/template web/template
+COPY --from=asset-env --chown=app:app /app/web/static web/static
+ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"]
