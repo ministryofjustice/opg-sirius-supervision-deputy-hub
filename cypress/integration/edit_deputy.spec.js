@@ -2,9 +2,7 @@ describe("Edit deputy tab", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit(
-            "/supervision/deputies/1/manage-team-details"
-        );
+        cy.visit("/supervision/deputies/1/manage-team-details");
     });
 
     it("the success banner shows on success", () => {
