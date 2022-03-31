@@ -1,7 +1,14 @@
 {
     "/api/v1/*": "/$1",
-    "/deputy/:personId/clients": "/clients",
+    "/deputies/pa/:personId/clients": "/clients",
+    "/deputies/pro/:personId/clients": "/clients",
     "/timeline/:personId": "/timeline",
-    "/deputy/:personId/notes": "/notes",
-    "/users/current": "/users"
+    "/:personId/notes": "/notes",
+    "/users/current": "/users",
+    "/deputies/:deputyId/ecm": "/ecm",
+    "/deputies/:id/contact-details": "/deputies/:id",
+    "/firm": "/addFirm",
+    "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
+    "/reference-data/deputyBooleanType": "/deputyBooleanType",
+    "/reference-data/deputyReportSystem": "/deputyReportSystem"
 }

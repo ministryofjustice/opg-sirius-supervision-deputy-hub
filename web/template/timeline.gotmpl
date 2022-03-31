@@ -1,19 +1,31 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "deputy-hub" . }}
-     {{ template "navigation" . }}
+    {{ template "error-summary" .Errors }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+           {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    {{ template "navigation" . }}
     <div class="main">
-      <header>
-        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Timeline</h1>
-      </header>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <div class="moj-timeline">
-            {{ range .DeputyEvents }}
-               {{ template "timeline-template-renderer" . }}
-             {{ end }}
+        <header>
+            <h1
+                class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                Timeline
+            </h1>
+        </header>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <div class="moj-timeline">
+                    {{ range .DeputyEvents }}
+                        {{ template "timeline-template-renderer" . }}
+                    {{ end }}
+                </div>
             </div>
         </div>
-      </div>
-  </div>
+    </div>
 {{ end }}

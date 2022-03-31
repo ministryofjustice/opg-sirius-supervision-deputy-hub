@@ -1,7 +1,7 @@
 module.exports = {
     ci: {
       collect: {
-        url: ['http://deputy-hub:8888/supervision/deputies/public-authority/deputy/1/'],
+        url: ['http://deputy-hub:8888/supervision/deputies/1'],
         settings: {
           extraHeaders: JSON.stringify({Cookie: 'XSRF-TOKEN=abcde; Other=other'}),
           chromeFlags: "--disable-gpu --no-sandbox",

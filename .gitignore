@@ -1,7 +1,12 @@
 node_modules
 package-lock.json
+test-results/*.xml
+test-results/*.txt
 tmp/
 web/static
+
+# Cypress cli run artifact folders
+cypress/logs
 cypress/screenshots
 cypress/videos
 
@@ -10,3 +15,5 @@ cypress/videos
 
 # IDEs
 .idea
+
+.DS_Store

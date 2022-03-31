@@ -1,20 +1,34 @@
 $govuk-include-default-font-face: false;
 $govuk-moj-table-background-color: #e7f2fb;
-$moj-assets-path: "/supervision/deputies/public-authority/assets/";
-$govuk-assets-path: "/supervision/deputies/public-authority/assets/";
+$moj-assets-path: "/supervision/deputies/assets/";
+$govuk-assets-path: "/supervision/deputies/assets/";
 
 @import "node_modules/govuk-frontend/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
+@import "accessible-autocomplete";
 @import "./scss/pa-hub";
+@import "./scss/pro-hub";
 
 .moj-header__container {
   max-width: 98%;
 }
 
 .moj-timeline__item {
-    max-width: 60em;
+  max-width: 60em;
 }
 
 .govuk-form-group {
-    max-width: 40em;
+  max-width: 40em;
+}
+
+.title-and-buttons-inline {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em 0 0.5em;
+  border-bottom: 1px solid #b1b4b6;
+  margin-bottom: 2em;
+}
+
+.hide {
+display: none;
 }

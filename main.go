@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -14,6 +15,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/logging"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 )
 
 func main() {
@@ -24,7 +26,8 @@ func main() {
 	siriusURL := getEnv("SIRIUS_URL", "http://localhost:8080")
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
-	defaultPATeam := getEnv("DEFAULT_PA_TEAM", `PA Team 1 - (Supervision)`)
+	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
+	firmHubURL := getEnv("FIRM_HUB_URL", "/supervision/deputies/firm")
 
 	layouts, _ := template.
 		New("").
@@ -47,6 +50,10 @@ func main() {
 			"sirius": func(s string) string {
 				return siriusPublicURL + s
 			},
+			"firmhub": func(s string) string {
+				return firmHubURL + s
+			},
+			"translate": util.Translate,
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 
@@ -62,9 +69,15 @@ func main() {
 		logger.Fatal(err)
 	}
 
+	defaultPATeam, err := strconv.Atoi(DefaultPaTeam)
+	if err != nil {
+		logger.Print("Error converting DEFAULT_PA_TEAM to int")
+
+	}
+
 	server := &http.Server{
 		Addr:    ":" + port,
-		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, webDir, defaultPATeam),
+		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, firmHubURL, webDir, defaultPATeam),
 	}
 
 	go func() {

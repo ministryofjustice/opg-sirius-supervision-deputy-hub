@@ -2,15 +2,16 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestDeputyDetailsReturned(t *testing.T) {
+func TestDeputyDetailsReturnedPA(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -25,7 +26,11 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		"addressLine3": "19 Market Rd",
 		"town": "Chelmsford",
 		"county": "Essex",
-		"postcode": "CM1 1GG"
+		"postcode": "CM1 1GG",
+		"deputyType": {
+			"handle": "PA",
+			"label": "Public Authority"
+		}
     }`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
@@ -39,6 +44,8 @@ func TestDeputyDetailsReturned(t *testing.T) {
 
 	expectedResponse := DeputyDetails{
 		ID:               1,
+		DeputyFirstName:  "",
+		DeputySurname:    "",
 		DeputyCasrecId:   10000000,
 		OrganisationName: "Test Organisation",
 		Email:            "deputyship@essexcounty.gov.uk",
@@ -49,9 +56,81 @@ func TestDeputyDetailsReturned(t *testing.T) {
 		Town:             "Chelmsford",
 		County:           "Essex",
 		Postcode:         "CM1 1GG",
+		ExecutiveCaseManager: ExecutiveCaseManager{
+			EcmId:   23,
+			EcmName: "Public Authority Deputy Team",
+		},
+		DeputyType: DeputyType{
+			Handle: "PA",
+			Label:  "Public Authority",
+		},
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+
+	assert.Equal(t, expectedResponse, deputyDetails)
+	assert.Equal(t, nil, err)
+}
+
+func TestDeputyDetailsReturnedPro(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `    {
+		"id": 76,
+		"firstname": "firstname",
+		"surname": "surname",
+		"deputyNumber": 1000,
+		"organisationName": "organisationName",
+		"executiveCaseManager": {
+			"id": 223,
+   		"displayName": "displayName"
+		},
+		"firm": {
+			"firmName": "This is the Firm Name"
+		},
+		"deputyType": {
+			"handle": "PRO",
+			"label": "Professional"
+		},
+		"deputySubType": {
+			"handle": "PERSON",
+			"label": "Person"
+		}
+   }`
+
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := DeputyDetails{
+		ID:               76,
+		DeputyFirstName:  "firstname",
+		DeputySurname:    "surname",
+		DeputyNumber:     1000,
+		OrganisationName: "organisationName",
+		ExecutiveCaseManager: ExecutiveCaseManager{
+			EcmId:   223,
+			EcmName: "displayName",
+		},
+		Firm: Firm{
+			FirmName: "This is the Firm Name",
+		},
+		DeputyType: DeputyType{
+			Handle: "PRO",
+			Label:  "Professional",
+		},
+		DeputySubType: DeputySubType{
+			SubType: "PERSON",
+		},
+	}
+
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -65,7 +144,7 @@ func TestGetDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,
@@ -89,7 +168,7 @@ func TestGetDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,

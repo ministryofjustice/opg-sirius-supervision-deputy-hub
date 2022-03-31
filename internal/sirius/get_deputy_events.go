@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sort"
 	"strings"
+	"time"
 )
 
 type DeputyEventCollection []DeputyEvent
@@ -17,14 +18,15 @@ type User struct {
 }
 
 type Event struct {
-	OrderType        string         `json:"orderType"`
-	SiriusId         string         `json:"orderUid"`
-	OrderNumber      string         `json:"orderCourtRef"`
-	DeputyID         string         `json:"personId"`
-	DeputyName       string         `json:"personName"`
-	OrganisationName string         `json:"organisationName"`
-	Changes          []Changes      `json:"changes"`
-	Client           []ClientPerson `json:"additionalPersons"`
+	OrderType            string         `json:"orderType"`
+	SiriusId             string         `json:"orderUid"`
+	OrderNumber          string         `json:"orderCourtRef"`
+	DeputyID             string         `json:"personId"`
+	DeputyName           string         `json:"personName"`
+	OrganisationName     string         `json:"organisationName"`
+	ExecutiveCaseManager string         `json:"executiveCaseManager"`
+	Changes              []Changes      `json:"changes"`
+	Client               []ClientPerson `json:"additionalPersons"`
 }
 
 type Changes struct {
@@ -46,6 +48,7 @@ type DeputyEvent struct {
 	EventType       string `json:"eventType"`
 	User            User   `json:"user"`
 	Event           Event  `json:"event"`
+	IsNewEvent      bool
 }
 
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
@@ -73,43 +76,60 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollecti
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	DeputyEvents := EditDeputyEvents(v)
+	DeputyEvents := editDeputyEvents(v)
 
 	return DeputyEvents, err
 
 }
 
-func EditDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
+func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       ReformatTimestamp(s),
-			EventType:       ReformatEventType(s),
+			Timestamp:       formatDateAndTime(s.Timestamp),
+			EventType:       reformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
 			Event:           s.Event,
+			IsNewEvent:      calculateIfNewEvent(s.Event.Changes),
 		}
 
 		list = append(list, event)
 	}
-	SortTimeLineNewestOneFirst(list)
+	sortTimeLineNewestOneFirst(list)
 	return list
 }
 
-func ReformatTimestamp(s DeputyEvent) string {
-	return s.Timestamp
+func calculateIfNewEvent(changes []Changes) bool {
+	var answer bool
+	for _, s := range changes {
+		if s.OldValue != "" {
+			answer = false
+		} else {
+			answer = true
+		}
+	}
+	return answer
 }
 
-func ReformatEventType(s DeputyEvent) string {
-	eventTypeArray := strings.Split(s.EventType, "\\")
+func reformatEventType(s string) string {
+	eventTypeArray := strings.Split(s, "\\")
 	eventTypeArrayLength := len(eventTypeArray)
 	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
 	return eventTypeName
 }
 
-func SortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
+func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
 	sort.Slice(v, func(i, j int) bool {
-		return v[i].Timestamp > v[j].Timestamp
+		changeToTimeTypeI, _ := time.Parse("02/01/2006 15:04:05", v[i].Timestamp)
+		changeToTimeTypeJ, _ := time.Parse("02/01/2006 15:04:05", v[j].Timestamp)
+		return changeToTimeTypeJ.Before(changeToTimeTypeI)
 	})
 	return v
+}
+
+func formatDateAndTime(dateString string) string {
+	stringTodateTime, _ := time.Parse("2006-01-02 15:04:05", dateString)
+	dateTime := stringTodateTime.Format("02/01/2006 15:04:05")
+	return dateTime
 }

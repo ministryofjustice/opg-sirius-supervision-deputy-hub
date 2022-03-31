@@ -16,7 +16,7 @@ type mockDeputyHubInformation struct {
 	deputyData sirius.DeputyDetails
 }
 
-func (m *mockDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -28,7 +28,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 	client := &mockDeputyHubInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
@@ -40,4 +40,60 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=ecm", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Ecm changed to Jon Snow")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=teamDetails", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Team details updated")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyContactDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Deputy details updated")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=otherMessage", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, false, Success)
+	assert.Equal(t, SuccessMessage, "")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, false, Success)
+	assert.Equal(t, SuccessMessage, "")
+}
+
+func TestCheckForDefaultEcmIdReturnsMessageIfTrue(t *testing.T) {
+	assert.Equal(t, "An executive case manager has not been assigned. ", checkForDefaultEcmId(23, 23))
+}
+
+func TestCheckForDefaultEcmIdReturnsNullIfFalse(t *testing.T) {
+	assert.Equal(t, "", checkForDefaultEcmId(25, 23))
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyDetailsSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Deputy details updated")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageUseExistingFirmSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=firm", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Firm changed to defaultPATeam")
+}
+
+func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageAddFirmSuccess(t *testing.T) {
+	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=newFirm", "Jon Snow", "defaultPATeam")
+	assert.Equal(t, true, Success)
+	assert.Equal(t, SuccessMessage, "Firm added")
 }

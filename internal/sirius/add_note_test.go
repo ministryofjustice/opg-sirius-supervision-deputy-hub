@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestAddNote(t *testing.T) {
+func TestAddNotePa(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -38,8 +38,17 @@ func TestAddNote(t *testing.T) {
 		}, nil
 	}
 
-	err := client.AddNote(getContext(nil), "fake note title", "fake note text", 76, 51)
+	err := client.AddNote(getContext(nil), "fake note title", "fake note text", 76, 51, "PA")
 	assert.Nil(t, err)
+}
+
+func TestGetNoteType(t *testing.T) {
+	expectedResponsePro := "PRO_DEPUTY_NOTE_CREATED"
+	expectedResponsePA := "PA_DEPUTY_NOTE_CREATED"
+
+	assert.Equal(t, expectedResponsePro, getNoteType("PRO"))
+	assert.Equal(t, expectedResponsePA, getNoteType("PA"))
+
 }
 
 func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
@@ -50,7 +59,7 @@ func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51)
+	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51, "PA")
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -67,7 +76,7 @@ func TestAddDeputyNotesReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51)
+	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51, "PA")
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

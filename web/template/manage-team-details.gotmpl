@@ -1,96 +1,180 @@
 {{ template "page" . }}
-    {{ define "main" }}
-     {{ if .Success }}
+{{ define "main" }}
+    {{ if .Success }}
         {{ template "success-banner" " You have successfully edited your details." }}
-     {{ end }}
+    {{ end }}
     {{ template "error-summary" .Errors }}
+   {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+           {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
     <main role="main" class="govuk-main-wrapper">
-      <div class="govuk-grid-row govuk-!-margin-top-5">
-        <div class="govuk-grid-column-full">
-          <header>
-          <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">Manage team details</h1>
-          </header>
-            <div class="govuk-grid-row">
-                <form class="govuk-grid-column-one-third" method="post">
-                    <div class="govuk-form-group">
-                        <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
-                        <label class="govuk-label" for="deputy-name">
-                             Deputy name (required)
-                        </label>
-                        <input class="govuk-input" id="f-deputy-name" name="deputy-name" type="text" value="{{ .DeputyDetails.OrganisationName }}">
-                    </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="telephone">
-                            Telephone number
-                        </label>
-                        <input class="govuk-input" id="f-telephone" name="telephone" type="text" value="{{ .DeputyDetails.PhoneNumber }}">
-                    </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="email">
-                            Email address
-                        </label>
-                        <input class="govuk-input" id="f-email" name="email" type="text" value="{{ .DeputyDetails.Email }}">
-                    </div>
-                    <fieldset class="govuk-fieldset">
-                            <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        <div class="govuk-grid-row govuk-!-margin-top-5">
+            <div class="govuk-grid-column-full">
+                <header>
+                    <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+                        Manage team details
+                    </h1>
+                </header>
+                <div class="govuk-grid-row">
+                    <form class="govuk-grid-column-one-half" method="post">
+                        <div class="govuk-form-group">
+                            <input
+                                type="hidden"
+                                name="xsrfToken"
+                                value="{{ .XSRFToken }}" />
+                            <label class="govuk-label" for="deputy-name">
+                                Deputy name (required)
+                            </label>
+                            <input
+                                class="govuk-input"
+                                id="f-deputy-name"
+                                name="deputy-name"
+                                type="text"
+                                value="{{ .DeputyDetails.OrganisationName }}" />
+                        </div>
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="telephone">
+                                Telephone number
+                            </label>
+                            <input
+                                class="govuk-input"
+                                id="f-telephone"
+                                name="telephone"
+                                type="text"
+                                value="{{ .DeputyDetails.PhoneNumber }}" />
+                        </div>
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="email">
+                                Email address
+                            </label>
+                            <input
+                                class="govuk-input"
+                                id="f-email"
+                                name="email"
+                                type="text"
+                                value="{{ .DeputyDetails.Email }}" />
+                        </div>
+                        <fieldset class="govuk-fieldset">
+                            <legend
+                                class="govuk-fieldset__legend govuk-fieldset__legend--m">
                                 Address
                             </legend>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="team">
-                                Team or department name
-                            </label>
-                            <input class="govuk-input" id="f-team" name="organisationTeamOrDepartmentName" type="text" value="{{ .DeputyDetails.OrganisationTeamOrDepartmentName}}">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="team">
+                                    Team or department name
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-team"
+                                    name="organisationTeamOrDepartmentName"
+                                    type="text"
+                                    value="{{ .DeputyDetails.OrganisationTeamOrDepartmentName }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="team">
+                                    Building and street
+                                </label>
+                                <label class="govuk-label" for="address-line-1">
+                                    <span class="govuk-visually-hidden">
+                                        line 1 of 3
+                                    </span>
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-address-line-1"
+                                    name="address-line-1"
+                                    type="text"
+                                    autocomplete="address-line1"
+                                    value="{{ .DeputyDetails.AddressLine1 }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="address-line-2">
+                                    <span class="govuk-visually-hidden">
+                                        Building and street line 2 of 3
+                                    </span>
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-address-line-2"
+                                    name="address-line-2"
+                                    type="text"
+                                    autocomplete="address-line2"
+                                    value="{{ .DeputyDetails.AddressLine2 }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="address-line-3">
+                                    <span class="govuk-visually-hidden">
+                                        Building and street line 3 of 3
+                                    </span>
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-address-line-3"
+                                    name="address-line-3"
+                                    type="text"
+                                    autocomplete="address-line3"
+                                    value="{{ .DeputyDetails.AddressLine3 }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label
+                                    class="govuk-label govuk-!-width-two-thirds"
+                                    for="town">
+                                    Town or city
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-town"
+                                    name="town"
+                                    type="text"
+                                    value="{{ .DeputyDetails.Town }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label
+                                    class="govuk-label govuk-!-width-two-thirds"
+                                    for="county">
+                                    County
+                                </label>
+                                <input
+                                    class="govuk-input"
+                                    id="f-county"
+                                    name="county"
+                                    type="text"
+                                    value="{{ .DeputyDetails.County }}" />
+                            </div>
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="postcode">
+                                    Postcode
+                                </label>
+                                <input
+                                    class="govuk-input govuk-input--width-10"
+                                    id="f-postcode"
+                                    name="postcode"
+                                    type="text"
+                                    value="{{ .DeputyDetails.Postcode }}" />
+                            </div>
+                        </fieldset>
+                        <div class="govuk-button-group govuk-!-margin-top-7">
+                            <button
+                                type="submit"
+                                class="govuk-button"
+                                data-module="govuk-button">
+                                Save team details
+                            </button>
+                            <a
+                                class="govuk-link"
+                                href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
+                                Cancel
+                            </a>
                         </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="team">
-                                Building and street
-                            </label>
-                            <label class="govuk-label" for="address-line-1">
-                                <span class="govuk-visually-hidden">line 1 of 3</span>
-                            </label>
-                            <input class="govuk-input" id="f-address-line-1" name="address-line-1" type="text" autocomplete="address-line1" value="{{ .DeputyDetails.AddressLine1 }}">
-                        </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="address-line-2">
-                               <span class="govuk-visually-hidden">Building and street line 2 of 3</span>
-                            </label>
-                            <input class="govuk-input" id="f-address-line-2" name="address-line-2" type="text" autocomplete="address-line2" value="{{ .DeputyDetails.AddressLine2 }}">
-                        </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="address-line-3">
-                                <span class="govuk-visually-hidden">Building and street line 3 of 3</span>
-                            </label>
-                            <input class="govuk-input" id="f-address-line-3" name="address-line-3" type="text" autocomplete="address-line3" value="{{ .DeputyDetails.AddressLine3 }}">
-                        </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label govuk-!-width-two-thirds" for="town">
-                                Town or city
-                            </label>
-                            <input class="govuk-input" id="f-town" name="town" type="text" value="{{ .DeputyDetails.Town }}">
-                        </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label govuk-!-width-two-thirds" for="county">
-                                County
-                            </label>
-                            <input class="govuk-input" id="f-county" name="county" type="text" value="{{ .DeputyDetails.County }}">
-                        </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="postcode">
-                                Postcode
-                            </label>
-                            <input class="govuk-input govuk-input--width-10" id="f-postcode" name="postcode" type="text" value="{{ .DeputyDetails.Postcode }}">
-                        </div>
-                    </fieldset>
-                  <div class="govuk-button-group govuk-!-margin-top-7">
-                      <button type="submit" class="govuk-button" data-module="govuk-button">
-                             Save team details
-                      </button>
-                      <a class="govuk-link" href="{{ prefix (printf "/deputy/%d/" .DeputyDetails.ID) }}">Cancel</a>
-                  </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-     </div>
     </main>
 {{ end }}
-

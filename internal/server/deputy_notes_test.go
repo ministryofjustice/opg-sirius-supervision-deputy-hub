@@ -1,11 +1,12 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/gorilla/mux"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +22,7 @@ type mockDeputyHubNotesInformation struct {
 	userDetailsData sirius.UserDetails
 }
 
-func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, deputyId int) (sirius.DeputyDetails, error) {
+func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -35,7 +36,7 @@ func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deput
 	return m.deputyNotesData, m.err
 }
 
-func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note string, deputyId, usedId int) error {
+func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note string, deputyId, usedId int, deputyType string) error {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -54,7 +55,7 @@ func TestGetNotes(t *testing.T) {
 
 	client := &mockDeputyHubNotesInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
@@ -73,7 +74,7 @@ func TestGetNotes(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(deputyHubNotesVars{
-		Path:      "/path",
+		Path:           "/path",
 		SuccessMessage: "Note added",
 	}, template.lastVars)
 }
@@ -81,7 +82,7 @@ func TestGetNotes(t *testing.T) {
 func TestPostAddNote(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockDeputyHubNotesInformation{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -89,13 +90,13 @@ func TestPostAddNote(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, nil)(sirius.PermissionSet{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(returnedError, Redirect("/deputy/123/notes?success=true"))
+	assert.Equal(returnedError, Redirect("/123/notes?success=true"))
 }
 
 func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
@@ -115,7 +116,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -123,7 +124,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
 	})
@@ -144,8 +145,8 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:    "/123",
-		Errors:  expectedValidationErrors,
+		Path:   "/123",
+		Errors: expectedValidationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -168,7 +169,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := "PA"
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -176,7 +177,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter();
+	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
 	})
@@ -197,8 +198,8 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:    "/123",
-		Errors:  expectedValidationErrors,
+		Path:   "/123",
+		Errors: expectedValidationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)

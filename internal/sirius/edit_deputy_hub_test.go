@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
-    "net/http/httptest"
+	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestEditDeputyDetails(t *testing.T) {
@@ -38,18 +39,18 @@ func TestEditDeputyDetails(t *testing.T) {
 	}
 
 	editDeputyDetailForm := DeputyDetails{
-                                ID:                               32,
-                                OrganisationName:                 "deputy-name",
-                                OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
-                                Email:                            "email",
-                                PhoneNumber:                      "telephone",
-                                AddressLine1:                     "address-line-1",
-                                AddressLine2:                     "address-line-2",
-                                AddressLine3:                     "address-line-3",
-                                Town:                             "town",
-                                County:                           "county",
-                                Postcode:                         "postcode",
-    			            }
+		ID:                               32,
+		OrganisationName:                 "deputy-name",
+		OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
+		Email:                            "email",
+		PhoneNumber:                      "telephone",
+		AddressLine1:                     "address-line-1",
+		AddressLine2:                     "address-line-2",
+		AddressLine3:                     "address-line-3",
+		Town:                             "town",
+		County:                           "county",
+		Postcode:                         "postcode",
+	}
 
 	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 	assert.Nil(t, err)
@@ -63,19 +64,19 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-    editDeputyDetailForm := DeputyDetails{
-                                ID:                               32,
-                                OrganisationName:                 "deputy-name",
-                                OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
-                                Email:                            "email",
-                                PhoneNumber:                      "telephone",
-                                AddressLine1:                     "address-line-1",
-                                AddressLine2:                     "address-line-2",
-                                AddressLine3:                     "address-line-3",
-                                Town:                             "town",
-                                County:                           "county",
-                                Postcode:                         "postcode",
-                            }
+	editDeputyDetailForm := DeputyDetails{
+		ID:                               32,
+		OrganisationName:                 "deputy-name",
+		OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
+		Email:                            "email",
+		PhoneNumber:                      "telephone",
+		AddressLine1:                     "address-line-1",
+		AddressLine2:                     "address-line-2",
+		AddressLine3:                     "address-line-3",
+		Town:                             "town",
+		County:                           "county",
+		Postcode:                         "postcode",
+	}
 
 	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 
@@ -95,18 +96,18 @@ func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
 	editDeputyDetailForm := DeputyDetails{
-                                    ID:                               32,
-                                    OrganisationName:                 "deputy-name",
-                                    OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
-                                    Email:                            "email",
-                                    PhoneNumber:                      "telephone",
-                                    AddressLine1:                     "address-line-1",
-                                    AddressLine2:                     "address-line-2",
-                                    AddressLine3:                     "address-line-3",
-                                    Town:                             "town",
-                                    County:                           "county",
-                                    Postcode:                         "postcode",
-                                }
+		ID:                               32,
+		OrganisationName:                 "deputy-name",
+		OrganisationTeamOrDepartmentName: "organisationTeamOrDepartmentName",
+		Email:                            "email",
+		PhoneNumber:                      "telephone",
+		AddressLine1:                     "address-line-1",
+		AddressLine2:                     "address-line-2",
+		AddressLine3:                     "address-line-3",
+		Town:                             "town",
+		County:                           "county",
+		Postcode:                         "postcode",
+	}
 
 	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
 

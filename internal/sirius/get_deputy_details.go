@@ -6,23 +6,72 @@ import (
 	"net/http"
 )
 
-type DeputyDetails struct {
-	ID               int    `json:"id"`
-	DeputyCasrecId   int    `json:"deputyCasrecId"`
-	DeputyNumber     int     `json:"deputyNumber"`
-	OrganisationName string `json:"organisationName"`
-	OrganisationTeamOrDepartmentName string `json:"organisationTeamOrDepartmentName"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	AddressLine1     string `json:"addressLine1"`
-	AddressLine2     string `json:"addressLine2"`
-	AddressLine3     string `json:"addressLine3"`
-	Town             string `json:"town"`
-	County           string `json:"county"`
-	Postcode         string `json:"postcode"`
+type ExecutiveCaseManager struct {
+	EcmId   int    `json:"id"`
+	EcmName string `json:"displayName"`
 }
 
-func (c *Client) GetDeputyDetails(ctx Context, deputyId int) (DeputyDetails, error) {
+type ExecutiveCaseManagerOutgoing struct {
+	EcmId int `json:"ecmId"`
+}
+
+type DeputyType struct {
+	Handle string `json:"handle"`
+	Label  string `json:"label"`
+}
+
+type Firm struct {
+	FirmName   string `json:"firmName"`
+	FirmId     int    `json:"id"`
+	FirmNumber int    `json:"firmNumber"`
+}
+
+type DeputySubType struct {
+	SubType string `json:"handle"`
+}
+
+type handleLabel struct {
+	Handle string `json:"handle"`
+	Label  string `json:"label"`
+}
+type deputyImportantInformation struct {
+	Id                        int         `json:"id"`
+	AnnualBillingInvoice      handleLabel `json:"annualBillingInvoice"`
+	APAD                      handleLabel `json:"apad"`
+	BankCharges               handleLabel `json:"bankCharges"`
+	Complaints                handleLabel `json:"complaints"`
+	IndependentVisitorCharges handleLabel `json:"independentVisitorCharges"`
+	MonthlySpreadsheet        handleLabel `json:"monthlySpreadsheet"`
+	PanelDeputy               bool        `json:"panelDeputy"`
+	ReportSystem              handleLabel `json:"reportSystemType"`
+	OtherImportantInformation string      `json:"otherImportantInformation"`
+}
+
+type DeputyDetails struct {
+	ID                               int                        `json:"id"`
+	DeputyFirstName                  string                     `json:"firstname"`
+	DeputySurname                    string                     `json:"surname"`
+	DeputyCasrecId                   int                        `json:"deputyCasrecId"`
+	DeputyNumber                     int                        `json:"deputyNumber"`
+	DeputySubType                    DeputySubType              `json:"deputySubType"`
+	DeputyStatus                     string                     `json:"deputyStatus"`
+	DeputyImportantInformation       deputyImportantInformation `json:"deputyImportantInformation"`
+	OrganisationName                 string                     `json:"organisationName"`
+	OrganisationTeamOrDepartmentName string                     `json:"organisationTeamOrDepartmentName"`
+	Email                            string                     `json:"email"`
+	PhoneNumber                      string                     `json:"phoneNumber"`
+	AddressLine1                     string                     `json:"addressLine1"`
+	AddressLine2                     string                     `json:"addressLine2"`
+	AddressLine3                     string                     `json:"addressLine3"`
+	Town                             string                     `json:"town"`
+	County                           string                     `json:"county"`
+	Postcode                         string                     `json:"postcode"`
+	ExecutiveCaseManager             ExecutiveCaseManager       `json:"executiveCaseManager"`
+	DeputyType                       DeputyType                 `json:"deputyType"`
+	Firm                             Firm                       `json:"firm"`
+}
+
+func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)
@@ -46,5 +95,11 @@ func (c *Client) GetDeputyDetails(ctx Context, deputyId int) (DeputyDetails, err
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
+
+	if v.DeputyType.Handle == "PA" && v.ExecutiveCaseManager.EcmId == 0 {
+		v.ExecutiveCaseManager.EcmId = defaultPATeam
+		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
+	}
+
 	return v, err
 }

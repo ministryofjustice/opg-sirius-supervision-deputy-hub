@@ -13,7 +13,7 @@ type apiOrder struct {
 	OrderStatus struct {
 		Label string `json:"label"`
 	}
-	LatestSupervisionLevel *struct {
+	LatestSupervisionLevel struct {
 		SupervisionLevel struct {
 			Label string `json:"label"`
 		}
@@ -22,6 +22,37 @@ type apiOrder struct {
 }
 
 type apiOrders []apiOrder
+
+type apiReport struct {
+	DueDate        string `json:"dueDate"`
+	RevisedDueDate string `json:"revisedDueDate"`
+	Status         struct {
+		Label string `json:"label"`
+	} `json:"status"`
+}
+
+type reportReturned struct {
+	DueDate        string
+	RevisedDueDate string
+	StatusLabel    string
+}
+
+type apiLatestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs struct {
+		Label string `json:"label"`
+	} `json:"visitReportMarkedAs"`
+	VisitUrgency struct {
+		Label string `json:"label"`
+	} `json:"visitUrgency"`
+}
+
+type latestCompletedVisit struct {
+	VisitCompletedDate  string
+	VisitReportMarkedAs string
+	VisitUrgency        string
+	RagRatingLowerCase  string
+}
 
 type apiClients struct {
 	Clients []struct {
@@ -33,7 +64,9 @@ type apiClients struct {
 		ClientAccommodation struct {
 			Label string `json:"label"`
 		}
-		Orders apiOrders
+		Orders               apiOrders               `json:"orders"`
+		OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
+		LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
 	} `json:"persons"`
 }
 
@@ -46,44 +79,55 @@ type Order struct {
 type Orders []Order
 
 type DeputyClient struct {
-	ClientId          int
-	Firstname         string
-	Surname           string
-	CourtRef          string
-	RiskScore         int
-	AccommodationType string
-	OrderStatus       string
-	SupervisionLevel  string
+	ClientId             int
+	Firstname            string
+	Surname              string
+	CourtRef             string
+	RiskScore            int
+	AccommodationType    string
+	OrderStatus          string
+	SupervisionLevel     string
+	OldestReport         reportReturned
+	LatestCompletedVisit latestCompletedVisit
 }
 
 type DeputyClientDetails []DeputyClient
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetails, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/clients", deputyId), nil)
+type AriaSorting struct {
+	SurnameAriaSort   string
+	ReportDueAriaSort string
+	CRECAriaSort      string
+}
+
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients", strings.ToLower(deputyType), deputyId), nil)
+
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, ErrUnauthorized
+		return nil, AriaSorting{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, newStatusError(resp)
+		return nil, AriaSorting{}, newStatusError(resp)
 	}
 
 	var v apiClients
 	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, err
+		return nil, AriaSorting{}, err
 	}
 
 	var clients DeputyClientDetails
+
 	for _, t := range v.Clients {
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
@@ -96,16 +140,42 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int) (DeputyClientDetail
 				AccommodationType: t.ClientAccommodation.Label,
 				OrderStatus:       getOrderStatus(orders),
 				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
+				OldestReport: reportReturned{
+					t.OldestReport.DueDate,
+					t.OldestReport.RevisedDueDate,
+					t.OldestReport.Status.Label,
+				},
+				LatestCompletedVisit: latestCompletedVisit{
+					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
+					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
+					t.LatestCompletedVisit.VisitUrgency.Label,
+					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+				},
 			}
+
 			clients = append(clients, client)
 		}
 	}
-	alphabeticalSort(clients)
-	return clients, err
+
+	var aria AriaSorting
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+
+	switch columnBeingSorted {
+	case "sort=reportdue":
+		reportDueScoreSort(clients, sortOrder)
+	case "sort=crec":
+		crecScoreSort(clients, sortOrder)
+	default:
+		alphabeticalSort(clients, sortOrder)
+	}
+
+	return clients, aria, err
 }
 
 /*
-  getOrderStatus returns the status of the oldest active order for a client.
+	GetOrderStatus returns the status of the oldest active order for a client.
   If there isn’t one, the status of the oldest order is returned.
 */
 func getOrderStatus(orders Orders) string {
@@ -133,10 +203,10 @@ func restructureOrders(apiOrders apiOrders) Orders {
 
 	for i, t := range apiOrders {
 		// reformatting order date to yyyy-dd-mm
-		reformattedDate := reformatOrderDate(t.OrderDate)
+		reformattedDate := formatDate(t.OrderDate)
 
 		var supervisionLevel string
-		if t.LatestSupervisionLevel != nil {
+		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
 			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
 		} else {
 			supervisionLevel = ""
@@ -153,11 +223,9 @@ func restructureOrders(apiOrders apiOrders) Orders {
 	return updatedOrders
 }
 
-func reformatOrderDate(orderDate string) time.Time {
-	dashDateString := strings.Replace(orderDate, "/", "-", 2)
-	reformattedDate := fmt.Sprintf("%s%s%s%s%s", dashDateString[6:], "-", dashDateString[3:5], "-", dashDateString[:2])
-	date, _ := time.Parse("2006-01-02", reformattedDate)
-	return date
+func formatDate(dateString string) time.Time {
+	dateTime, _ := time.Parse("02/01/2006", dateString)
+	return dateTime
 }
 
 func removeOpenStatusOrders(orders Orders) Orders {
@@ -173,14 +241,74 @@ func removeOpenStatusOrders(orders Orders) Orders {
 	return updatedOrders
 }
 
-func alphabeticalSort(clients DeputyClientDetails) {
+func alphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	if len(clients) > 1 {
 		sort.Slice(clients, func(i, j int) bool {
-			if strings.EqualFold(clients[i].Firstname, clients[j].Firstname) {
-				return strings.ToLower(clients[i].Surname) < strings.ToLower(clients[j].Surname)
+			if sortOrder == "asc" {
+				return clients[i].Surname < clients[j].Surname
 			} else {
-				return strings.ToLower(clients[i].Firstname) < strings.ToLower(clients[j].Firstname)
+				return clients[i].Surname > clients[j].Surname
 			}
 		})
 	}
+	return clients
+}
+
+func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+	sort.Slice(clients, func(i, j int) bool {
+		if sortOrder == "asc" {
+			return clients[i].RiskScore < clients[j].RiskScore
+		} else {
+			return clients[i].RiskScore > clients[j].RiskScore
+		}
+	})
+	return clients
+}
+
+func setDueDateForSort(dueDate, revisedDueDate string) string {
+	if revisedDueDate != "" {
+		return revisedDueDate
+	} else if dueDate != "" {
+		return dueDate
+	} else {
+		return "12/12/9999"
+	}
+}
+
+func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+	sort.Slice(clients, func(i, j int) bool {
+		x := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
+		y := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
+		dateTimeI := formatDate(x)
+		dateTimeJ := formatDate(y)
+
+		if sortOrder == "asc" {
+			return dateTimeI.Before(dateTimeJ)
+		} else {
+			return dateTimeJ.Before(dateTimeI)
+		}
+	})
+	return clients
+}
+
+func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
+	if functionCalling == columnBeingSorted {
+		if sortOrder == "asc" {
+			return "ascending"
+		} else if sortOrder == "desc" {
+			return "descending"
+		}
+		return "none"
+	} else {
+		return "none"
+	}
+
+}
+
+func reformatCompletedDate(unformattedDate string) string {
+	if len(unformattedDate) > 1 {
+		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
+		return date.Format("02/01/2006")
+	}
+	return ""
 }

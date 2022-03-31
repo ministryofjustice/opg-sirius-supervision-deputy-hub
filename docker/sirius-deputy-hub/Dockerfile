@@ -1,4 +1,4 @@
-FROM golang:1.16-alpine as base
+FROM golang:1.17.5-alpine as base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
@@ -11,21 +11,9 @@ RUN apk update \
     git \
     && update-ca-certificates
 
-### Development with hot reload and debugger
-FROM base AS dev
-WORKDIR /app
-
-RUN go get -u github.com/cosmtrek/air && go install github.com/go-delve/delve/cmd/dlv@latest
-EXPOSE 8080
-EXPOSE 2345
-
-ENTRYPOINT ["air"]
-
 FROM node:14.17.5-alpine3.14 as asset-env
 
 WORKDIR /app
-
-RUN mkdir -p web/static
 
 COPY web/assets web/assets
 COPY webpack.config.js .
@@ -34,6 +22,19 @@ COPY yarn.lock .
 
 RUN yarn install
 RUN yarn build
+
+### Development with hot reload and debugger
+FROM base AS dev
+
+WORKDIR /app
+
+COPY --from=asset-env /app/web/static web/static
+
+RUN go get -u github.com/cosmtrek/air && go install github.com/go-delve/delve/cmd/dlv@latest
+EXPOSE 8080
+EXPOSE 2345
+
+ENTRYPOINT ["air"]
 
 FROM base as build-env
 
@@ -48,7 +49,7 @@ COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:3.14
+FROM alpine:3.15.0
 
 WORKDIR /go/bin
 
