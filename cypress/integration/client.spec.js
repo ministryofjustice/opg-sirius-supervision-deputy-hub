@@ -2,9 +2,7 @@ describe("Clients tab", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit(
-            "/supervision/deputies/1/clients?sort=surname:asc"
-        );
+        cy.visit("/supervision/deputies/1/clients?sort=surname:asc");
     });
 
     it("has a tab header", () => {

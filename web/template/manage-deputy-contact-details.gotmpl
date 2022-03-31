@@ -3,14 +3,15 @@
     {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ if ne .ErrorMessage "" }}
-           {{ template "error-banner" . }}
+            {{ template "error-banner" . }}
         {{ end }}
         {{ template "pa-deputy-header" . }}
 
-        {{ end }}
-        {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-            {{ template "pro-deputy-header" . }}
-        {{ end }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+
 
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">

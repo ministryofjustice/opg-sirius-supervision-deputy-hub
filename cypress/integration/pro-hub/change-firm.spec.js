@@ -6,9 +6,7 @@ describe("Change Firm", () => {
 
     describe("Changing a firm", () => {
         beforeEach(() => {
-            cy.visit(
-                "/supervision/deputies/3/change-firm"
-            );
+            cy.visit("/supervision/deputies/3/change-firm");
         });
 
         it("shows title for page", () => {
@@ -27,26 +25,20 @@ describe("Change Firm", () => {
             cy.get(".govuk-button")
                 .should("contain", "Save and continue")
                 .click();
-            cy.url().should(
-                "contain",
-                "/supervision/deputies/3/add-firm"
-            );
+            cy.url().should("contain", "/supervision/deputies/3/add-firm");
         });
 
         it("has a cancel button that can redirect to deputy details page", () => {
-            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click();
-            cy.url().should(
-                "contain",
-                "/supervision/deputies/3"
-            );
+            cy.get(".govuk-button-group > .govuk-link")
+                .should("contain", "Cancel")
+                .click();
+            cy.url().should("contain", "/supervision/deputies/3");
         });
     });
 
     describe("Changing a firm to use existing firm", () => {
         beforeEach(() => {
-            cy.visit(
-                "/supervision/deputies/3/change-firm"
-            );
+            cy.visit("/supervision/deputies/3/change-firm");
         });
 
         it("has a dropdown with the existing firm options", () => {
@@ -98,14 +90,19 @@ describe("Change Firm", () => {
         it("will show a validation error if no options available", () => {
             cy.setCookie("fail-route", "allocateToFirm");
             cy.get("#f-existing-firm").click();
-            cy.get("#select-existing-firm").click().type("Unknown option for firm name");
+            cy.get("#select-existing-firm")
+                .click()
+                .type("Unknown option for firm name");
             cy.get("#existing-firm-or-new-firm-form").submit();
             cy.get(".govuk-error-summary__title").should(
                 "contain",
                 "There is a problem"
             );
             cy.get(".govuk-error-summary__list").within(() => {
-                cy.get("li:first").should("contain", "Enter a firm name or number");
+                cy.get("li:first").should(
+                    "contain",
+                    "Enter a firm name or number"
+                );
             });
         });
 
@@ -118,27 +115,39 @@ describe("Change Firm", () => {
                 "There is a problem"
             );
             cy.get(".govuk-error-summary__list").within(() => {
-                cy.get("li:first").should("contain", "Enter a firm name or number");
+                cy.get("li:first").should(
+                    "contain",
+                    "Enter a firm name or number"
+                );
             });
         });
     });
 
     describe("Change Firm timeline event", () => {
         beforeEach(() => {
-            cy.visit(
-                "/supervision/deputies/3/timeline"
-            );
+            cy.visit("/supervision/deputies/3/timeline");
         });
 
         it("has a timeline event for when the firm is changed", () => {
-            cy.get(".moj-timeline > :nth-child(2)").should("contain", "Deputy firm updated");
-            cy.get(":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(1)").should("contain", "New firm:");
-            cy.get(":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(2)").should("contain", "Old firm:");
+            cy.get(".moj-timeline > :nth-child(2)").should(
+                "contain",
+                "Deputy firm updated"
+            );
+            cy.get(
+                ":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(1)"
+            ).should("contain", "New firm:");
+            cy.get(
+                ":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(2)"
+            ).should("contain", "Old firm:");
         });
 
         it("does not show the firm on timeline event if its the first firm set", () => {
-            cy.get(":nth-child(2) > .moj-timeline__description > .govuk-list > li").should("contain", "New firm:");
-            cy.get(":nth-child(2) > .moj-timeline__description > .govuk-list > :nth-child(2)").should("not.exist");
+            cy.get(
+                ":nth-child(2) > .moj-timeline__description > .govuk-list > li"
+            ).should("contain", "New firm:");
+            cy.get(
+                ":nth-child(2) > .moj-timeline__description > .govuk-list > :nth-child(2)"
+            ).should("not.exist");
         });
     });
 });
