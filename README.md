@@ -60,8 +60,6 @@ Only thing to note is that if there are any changers locally to a gotmpl file yo
 Then the above commands to pull in the latest code to test against.<br>
 You will not have to re-build anything tho if you change the code in a spec file only.
 
-`yarn && yarn cypress `
-
 ### Run the unit/functional tests
 
 test sirius files: `yarn test-sirius`
