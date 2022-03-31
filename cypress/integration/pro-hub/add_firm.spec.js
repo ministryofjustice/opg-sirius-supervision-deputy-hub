@@ -6,9 +6,7 @@ describe("Firm", () => {
 
     describe("Adding a firm", () => {
         beforeEach(() => {
-            cy.visit(
-                "/supervision/deputies/3/add-firm"
-            );
+            cy.visit("/supervision/deputies/3/add-firm");
         });
 
         it("shows error message when submitting invalid data", () => {
