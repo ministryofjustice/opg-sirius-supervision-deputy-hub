@@ -48,6 +48,18 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 
 `yarn && yarn cypress `
 
+## Run Cypress tests for M1 chipset
+
+`yarn cypress-for-m1-build` <br>
+`yarn cypress-for-m1-up` <br>
+`yarn cypress-headless` This command will run all the cypress tests <br>
+`yarn cypress-headless --spec "cyrpess/integration/A_FILE_NAME.spec.js` will only run the tests in that file
+
+Only thing to note is that if there are any changers locally to a gotmpl file you will need to run<br>
+`cypress-build-down`<br>
+Then the above commands to pull in the latest code to test against.<br>
+You will not have to re-build anything tho if you change the code in a spec file only.
+
 ### Run the unit/functional tests
 
 test sirius files: `yarn test-sirius`
