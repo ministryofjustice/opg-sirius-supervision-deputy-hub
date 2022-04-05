@@ -1067,10 +1067,10 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.3.tgz#90420f9f9c6d3987f176a19a7d8e764271a2f55d"
   integrity sha512-Fxt+AfXgjMoin2maPIYzFZnQjAXjAL0PHscM5pRTtatFqB+vZxAM9tLp2Optnuw3QOQC40jTNeGYFOMvyf7v9g==
 
-"@ministryofjustice/frontend@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@ministryofjustice/frontend/-/frontend-0.2.5.tgz#d161cf65a9da4655e097b323a4df13bdfaa58bbf"
-  integrity sha512-hcqlQV2vB1uWi/spJ7VZUcMvbqZBlLyq+/buRH6+r9F97Z7+/lRmvNXDj7ktnXqcaUDVhEZlCXyALGaT9T3USw==
+"@ministryofjustice/frontend@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@ministryofjustice/frontend/-/frontend-1.0.1.tgz#c0f9cc3e2f10dbeaff90fe40439cd37a63de53cf"
+  integrity sha512-YpPxyo72z5Zx0igRmtTmLPM+z0LgR3WNODZBAss9ZSafGg2xXXRnyK1a3tBZhjEUIlWH7atn/1DXFQN6v2gk1A==
   dependencies:
     moment "^2.27.0"
 
