@@ -66,9 +66,7 @@ describe("Change ECM links to deputy details", () => {
     });
 
     it("has a link from the deputy details page", () => {
-        cy.get(".moj-button-menu__wrapper > .govuk-button")
-            .should("contain", "Change ECM")
-            .click();
+        cy.get("#change-ecm").should("contain", "Change ECM").click();
         cy.url().should("include", "/change-ecm");
         cy.get("h1").should("contain", "Change Executive Case Manager");
     });

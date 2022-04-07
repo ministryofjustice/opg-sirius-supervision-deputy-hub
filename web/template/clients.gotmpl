@@ -3,7 +3,7 @@
     {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ if ne .ErrorMessage "" }}
-           {{ template "error-banner" . }}
+            {{ template "error-banner" . }}
         {{ end }}
         {{ template "pa-deputy-header" . }}
     {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
@@ -18,7 +18,12 @@
             </h1>
             <div class="moj-button-menu">
                 <div class="moj-button-menu__wrapper">
-                    <a href="{{sirius ""}}/api/v1/deputies/{{.DeputyDetails.ID}}/clients-list?OPG-Bypass-Membrane=1" role="button" draggable="false" class="govuk-button moj-button-menu__item govuk-button--secondary " data-module="govuk-button">
+                    <a
+                        href="{{ sirius "" }}/api/v1/deputies/{{ .DeputyDetails.ID }}/clients-list?OPG-Bypass-Membrane=1"
+                        role="button"
+                        draggable="false"
+                        class="govuk-button moj-button-menu__item govuk-button--secondary "
+                        data-module="govuk-button">
                         Download client list
                     </a>
                 </div>

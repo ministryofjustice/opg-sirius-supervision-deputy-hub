@@ -4,9 +4,9 @@
         {{ template "success-banner" " You have successfully edited your details." }}
     {{ end }}
     {{ template "error-summary" .Errors }}
-   {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ if ne .ErrorMessage "" }}
-           {{ template "error-banner" . }}
+            {{ template "error-banner" . }}
         {{ end }}
         {{ template "pa-deputy-header" . }}
     {{ end }}

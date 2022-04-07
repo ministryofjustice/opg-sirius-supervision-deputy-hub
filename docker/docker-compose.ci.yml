@@ -6,7 +6,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/sirius-deputy-hub/Dockerfile
-    ports: ["8888:1234"]
+    ports: ["8888:8888"]
     environment:
       PORT: 8888
       SIRIUS_URL: http://json-server:3000
@@ -30,6 +30,7 @@ services:
       - LHCI_GITHUB_APP_TOKEN
 
   cypress:
+    platform: linux/amd64
     build:
       context: ..
       dockerfile: ./docker/cypress/Dockerfile
