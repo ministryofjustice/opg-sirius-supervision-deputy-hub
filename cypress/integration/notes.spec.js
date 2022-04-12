@@ -24,9 +24,7 @@ describe("Notes", () => {
 
     describe("Adding a note", () => {
         beforeEach(() => {
-            cy.visit(
-                "/supervision/deputies/1/notes/add-note"
-            );
+            cy.visit("/supervision/deputies/1/notes/add-note");
         });
 
         describe("Successfully adding a note", () => {
@@ -59,10 +57,7 @@ describe("Notes", () => {
                 cy.get("#title").type("title");
                 cy.get("#note").type("note");
                 cy.get("#add-note-form").submit();
-                cy.url().should(
-                    "contain",
-                    "/supervision/deputies/1/notes"
-                );
+                cy.url().should("contain", "/supervision/deputies/1/notes");
                 cy.get(
                     "body > div > main > div.moj-banner.moj-banner--success > div"
                 ).should("contain", "Note added");
@@ -72,10 +67,7 @@ describe("Notes", () => {
                 cy.get("#title").type("New note title");
                 cy.get("#note").type("Note text entered");
                 cy.get("#add-note-form").submit();
-                cy.url().should(
-                    "contain",
-                    "/supervision/deputies/1/notes"
-                );
+                cy.url().should("contain", "/supervision/deputies/1/notes");
                 cy.get(
                     ":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title"
                 ).should("contain", "New note title");
@@ -90,10 +82,7 @@ describe("Notes", () => {
                 .should("contain", "Cancel")
                 .click();
             cy.get(".main > header").should("contain", "Notes");
-            cy.url().should(
-                "contain",
-                "/supervision/deputies/1/notes"
-            );
+            cy.url().should("contain", "/supervision/deputies/1/notes");
         });
 
         it("shows error message when submitting invalid data", () => {
