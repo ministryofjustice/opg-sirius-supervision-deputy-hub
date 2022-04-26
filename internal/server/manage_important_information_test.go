@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -93,37 +94,80 @@ func TestGetManageImportantInformation(t *testing.T) {
 }
 
 func TestPostManageImportantInformation(t *testing.T) {
-	assert := assert.New(t)
-	defaultPATeam := 23
-
-	updateForm := sirius.ImportantInformationDetails{
-		DeputyType: "x",
+	testCases := map[string]struct {
+		deputyDetails               sirius.DeputyDetails
+		form                        url.Values
+		importantInformationDetails sirius.ImportantInformationDetails
+	}{
+		"default": {
+			deputyDetails: sirius.DeputyDetails{
+				DeputyType: sirius.DeputyType{Handle: "x"},
+			},
+			form: url.Values{},
+			importantInformationDetails: sirius.ImportantInformationDetails{
+				DeputyType:           "x",
+				AnnualBillingInvoice: "Unknown",
+			},
+		},
+		"previous value": {
+			deputyDetails: sirius.DeputyDetails{
+				DeputyType: sirius.DeputyType{Handle: "x"},
+				DeputyImportantInformation: sirius.DeputyImportantInformation{
+					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
+				},
+			},
+			form: url.Values{},
+			importantInformationDetails: sirius.ImportantInformationDetails{
+				DeputyType:           "x",
+				AnnualBillingInvoice: "last-value",
+			},
+		},
+		"form value": {
+			deputyDetails: sirius.DeputyDetails{
+				DeputyType: sirius.DeputyType{Handle: "x"},
+				DeputyImportantInformation: sirius.DeputyImportantInformation{
+					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
+				},
+			},
+			form: url.Values{"annual-billing": {"new-value"}},
+			importantInformationDetails: sirius.ImportantInformationDetails{
+				DeputyType:           "x",
+				AnnualBillingInvoice: "new-value",
+			},
+		},
 	}
 
-	client := &mockManageDeputyImportantInformation{}
-	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
-	client.On("GetDeputyDetails", mock.Anything, defaultPATeam, 123).Return(sirius.DeputyDetails{DeputyType: sirius.DeputyType{Handle: "x"}}, nil)
-	client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{}, nil)
-	client.On("GetDeputyBooleanTypes", mock.Anything).Return([]sirius.DeputyBooleanTypes{}, nil)
-	client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]sirius.DeputyReportSystemTypes{}, nil)
-	client.On("UpdateImportantInformation", mock.Anything, 123, updateForm).Return(nil)
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			assert := assert.New(t)
+			defaultPATeam := 23
 
-	template := &mockTemplates{}
+			client := &mockManageDeputyImportantInformation{}
+			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
+			client.On("GetDeputyDetails", mock.Anything, defaultPATeam, 123).Return(tc.deputyDetails, nil)
+			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{}, nil)
+			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]sirius.DeputyBooleanTypes{}, nil)
+			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]sirius.DeputyReportSystemTypes{}, nil)
+			client.On("UpdateImportantInformation", mock.Anything, 123, tc.importantInformationDetails).Return(nil)
 
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			template := &mockTemplates{}
 
-	var redirect error
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/123", strings.NewReader(tc.form.Encode()))
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
-	})
+			var redirect error
 
-	testHandler.ServeHTTP(w, r)
+			testHandler := mux.NewRouter()
+			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+			})
 
-	assert.Equal(Redirect("/123?success=importantInformation"), redirect)
+			testHandler.ServeHTTP(w, r)
+
+			assert.Equal(Redirect("/123?success=importantInformation"), redirect)
+		})
+	}
 }
 
 func TestCheckForReportSystemType(t *testing.T) {

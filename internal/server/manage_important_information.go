@@ -56,14 +56,12 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return nil
 		})
 
-		var deputyTypeHandle string
 		group.Go(func() error {
 			deputyDetails, err := client.GetDeputyDetails(ctx.With(groupCtx), defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}
 
-			deputyTypeHandle = deputyDetails.DeputyType.Handle
 			vars.DeputyDetails = deputyDetails
 			return nil
 		})
@@ -118,11 +116,19 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 			reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
 
+			annualBillingInvoice := r.PostFormValue("annual-billing")
+			if annualBillingInvoice == "" {
+				annualBillingInvoice = vars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label
+			}
+			if annualBillingInvoice == "" {
+				annualBillingInvoice = "Unknown"
+			}
+
 			importantInfoForm := sirius.ImportantInformationDetails{
-				DeputyType:                deputyTypeHandle,
+				DeputyType:                vars.DeputyDetails.DeputyType.Handle,
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
-				AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
+				AnnualBillingInvoice:      annualBillingInvoice,
 				OtherImportantInformation: r.PostFormValue("other-info-note"),
 				MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
 				IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),

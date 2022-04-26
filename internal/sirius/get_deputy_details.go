@@ -30,20 +30,21 @@ type DeputySubType struct {
 	SubType string `json:"handle"`
 }
 
-type handleLabel struct {
+type HandleLabel struct {
 	Handle string `json:"handle"`
 	Label  string `json:"label"`
 }
-type deputyImportantInformation struct {
+
+type DeputyImportantInformation struct {
 	Id                        int         `json:"id"`
-	AnnualBillingInvoice      handleLabel `json:"annualBillingInvoice"`
-	APAD                      handleLabel `json:"apad"`
-	BankCharges               handleLabel `json:"bankCharges"`
-	Complaints                handleLabel `json:"complaints"`
-	IndependentVisitorCharges handleLabel `json:"independentVisitorCharges"`
-	MonthlySpreadsheet        handleLabel `json:"monthlySpreadsheet"`
+	AnnualBillingInvoice      HandleLabel `json:"annualBillingInvoice"`
+	APAD                      HandleLabel `json:"apad"`
+	BankCharges               HandleLabel `json:"bankCharges"`
+	Complaints                HandleLabel `json:"complaints"`
+	IndependentVisitorCharges HandleLabel `json:"independentVisitorCharges"`
+	MonthlySpreadsheet        HandleLabel `json:"monthlySpreadsheet"`
 	PanelDeputy               bool        `json:"panelDeputy"`
-	ReportSystem              handleLabel `json:"reportSystemType"`
+	ReportSystem              HandleLabel `json:"reportSystemType"`
 	OtherImportantInformation string      `json:"otherImportantInformation"`
 }
 
@@ -55,7 +56,7 @@ type DeputyDetails struct {
 	DeputyNumber                     int                        `json:"deputyNumber"`
 	DeputySubType                    DeputySubType              `json:"deputySubType"`
 	DeputyStatus                     string                     `json:"deputyStatus"`
-	DeputyImportantInformation       deputyImportantInformation `json:"deputyImportantInformation"`
+	DeputyImportantInformation       DeputyImportantInformation `json:"deputyImportantInformation"`
 	OrganisationName                 string                     `json:"organisationName"`
 	OrganisationTeamOrDepartmentName string                     `json:"organisationTeamOrDepartmentName"`
 	Email                            string                     `json:"email"`
