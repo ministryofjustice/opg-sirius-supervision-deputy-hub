@@ -15,6 +15,7 @@ type ManageProDeputyImportantInformation interface {
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
 	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 }
 
 type manageDeputyImportantInformationVars struct {
@@ -27,14 +28,19 @@ type manageDeputyImportantInformationVars struct {
 	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
 	DeputyBooleanTypes        []sirius.DeputyBooleanTypes
 	DeputyReportSystemTypes   []sirius.DeputyReportSystemTypes
+	IsFinanceManager          bool
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
-
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
+
+		userDetails, err := client.GetUserDetails(ctx)
+		if err != nil {
+			return err
+		}
 
 		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 		if err != nil {
@@ -56,22 +62,22 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return err
 		}
 
+		vars := manageDeputyImportantInformationVars{
+			Path:                      r.URL.Path,
+			XSRFToken:                 ctx.XSRFToken,
+			DeputyId:                  deputyId,
+			DeputyDetails:             deputyDetails,
+			AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
+			DeputyBooleanTypes:        deputyBooleanTypes,
+			DeputyReportSystemTypes:   deputyReportSystemTypes,
+			IsFinanceManager:          userDetails.IsFinanceManager(),
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-
-			vars := manageDeputyImportantInformationVars{
-				Path:                      r.URL.Path,
-				XSRFToken:                 ctx.XSRFToken,
-				DeputyId:                  deputyId,
-				DeputyDetails:             deputyDetails,
-				AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-				DeputyBooleanTypes:        deputyBooleanTypes,
-				DeputyReportSystemTypes:   deputyReportSystemTypes,
-			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-
 			var panelDeputyBool bool
 
 			if r.PostFormValue("panel-deputy") != "" {
@@ -98,18 +104,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				verr.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)
+				vars.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)
 
-				vars := manageDeputyImportantInformationVars{
-					Path:                      r.URL.Path,
-					XSRFToken:                 ctx.XSRFToken,
-					DeputyId:                  deputyId,
-					DeputyDetails:             deputyDetails,
-					Errors:                    verr.Errors,
-					AnnualBillingInvoiceTypes: annualBillingInvoiceTypes,
-					DeputyBooleanTypes:        deputyBooleanTypes,
-					DeputyReportSystemTypes:   deputyReportSystemTypes,
-				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
 				return err

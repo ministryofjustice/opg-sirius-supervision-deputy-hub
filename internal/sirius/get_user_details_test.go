@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetUserDetailsReturned(t *testing.T) {
@@ -15,7 +16,8 @@ func TestGetUserDetailsReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `{
- 	"id": 68
+	"id": 68,
+	"roles": ["Finance Manager", "System Admin"]
 	}`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
@@ -28,7 +30,8 @@ func TestGetUserDetailsReturned(t *testing.T) {
 	}
 
 	expectedResponse := UserDetails{
-		ID: 68,
+		ID:    68,
+		Roles: []string{"Finance Manager", "System Admin"},
 	}
 
 	userDetails, err := client.GetUserDetails(getContext(nil))

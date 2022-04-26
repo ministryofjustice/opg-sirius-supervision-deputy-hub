@@ -1,13 +1,14 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockManageDeputyImportantInformation struct {
@@ -54,6 +55,10 @@ func (m *mockManageDeputyImportantInformation) UpdateImportantInformation(ctx si
 	m.lastCtx = ctx
 
 	return m.updateErr
+}
+
+func (m *mockManageDeputyImportantInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
+	return sirius.UserDetails{}, nil
 }
 
 func TestGetManageImportantInformation(t *testing.T) {
