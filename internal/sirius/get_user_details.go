@@ -6,7 +6,18 @@ import (
 )
 
 type UserDetails struct {
-	ID int `json:"id"`
+	ID    int      `json:"id"`
+	Roles []string `json:"roles"`
+}
+
+func (d UserDetails) IsFinanceManager() bool {
+	for _, role := range d.Roles {
+		if role == "Finance Manager" {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (c *Client) GetUserDetails(ctx Context) (UserDetails, error) {
