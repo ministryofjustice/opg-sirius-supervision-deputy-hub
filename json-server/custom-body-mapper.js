@@ -10,5 +10,17 @@ module.exports = (req, res, next) => {
             req.body = rest;
         }
     }
+
+    if (req.method === "GET" && req.url.includes("/users")) {
+        if (getUser(req) === "finance-user") {
+            req.url = `/financeUser`;
+        }
+    }
+
     next();
+};
+
+const getUser = (req) => {
+    return req.headers?.cookie?.match(/user=(?<user>[^;]+);/)
+        ?.groups.user;
 };
