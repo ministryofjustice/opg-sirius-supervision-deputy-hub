@@ -6,7 +6,9 @@ describe("Manage important Information", () => {
 
     describe("Navigation", () => {
         it("shows a manage important information button on the dashboard which takes me to the page", () => {
+            cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/3");
+
             cy.get(":nth-child(2) > .govuk-button")
                 .should("contain", "Manage important information")
                 .click();
@@ -21,6 +23,7 @@ describe("Manage important Information", () => {
         });
 
         it("shows a cancel button which returns me to the dashboard", () => {
+            cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/3/manage-important-information");
             cy.get(".govuk-button-group > .govuk-link")
                 .should("contain", "Cancel")
@@ -35,6 +38,7 @@ describe("Manage important Information", () => {
 
     describe("Manage Pro Deputy important information form", () => {
         beforeEach(() => {
+            cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/3/manage-important-information");
         });
 
@@ -87,10 +91,13 @@ describe("Manage important Information", () => {
 
     describe("Manage Pro Deputy default values", () => {
         beforeEach(() => {
+            cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/4/manage-important-information");
         });
 
         it("shows the default values when no important information exists", () => {
+            cy.get("body").should("contain", 'Annual billing preference');
+
             cy.get("#complaints-Unknown").should("be.checked");
             cy.get("#panel-deputy-no").should("be.checked");
             cy.get("#annual-billing-Unknown").should("be.checked");
@@ -98,12 +105,25 @@ describe("Manage important Information", () => {
         });
     });
 
+    describe("Manage Pro Deputy default values as non-Finance Manager", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/4/manage-important-information");
+        });
+
+        it("hides the annual billing selection", () => {
+            cy.get("body").should("not.contain", 'Annual billing preference');
+        });
+    });
+
     describe("Manage Pa Deputy important information form", () => {
         beforeEach(() => {
+            cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/1/manage-important-information");
         });
 
         it("autofills in existing data", () => {
+            cy.get("body").should("contain", 'Annual billing preference');
+
             cy.get("#monthly-spreadsheet-No").should("be.checked");
             cy.get("#independent-visitor-charges-Unknown").should("be.checked");
             cy.get("#bank-charges-Yes").should("be.checked");
@@ -153,6 +173,16 @@ describe("Manage important Information", () => {
                 "contain",
                 "The other important information must be 1000 characters or fewer"
             );
+        });
+    });
+
+    describe("Manage Pa Deputy important information form as non-Finance Manager", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/1/manage-important-information");
+        });
+
+        it("hides the annual billing selection", () => {
+            cy.get("body").should("not.contain", 'Annual billing preference');
         });
     });
 });

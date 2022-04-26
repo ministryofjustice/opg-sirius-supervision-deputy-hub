@@ -110,12 +110,14 @@
                   </div>
                 </fieldset>
               </div>
+
+              {{$currentAnnualBillingInvoiceLabel:=.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label}}
+              {{ if .IsFinanceManager }}
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">
                       Annual billing preference
                     </legend>
-                    {{$currentAnnualBillingInvoiceLabel:=.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label}}
                     <div class="govuk-radios">
                         {{ range .AnnualBillingInvoiceTypes }}
                             <div class="govuk-radios__item">
@@ -128,7 +130,13 @@
                     </div>
                   </fieldset>
                 </div>
-
+              {{ else }}
+                {{ if eq $currentAnnualBillingInvoiceLabel "" }}
+                    <input type="hidden" value="Unknown" name="annual-billing" />
+                {{ else }}
+                    <input type="hidden" value="{{$currentAnnualBillingInvoiceLabel}}" name="annual-billing" />
+                {{ end }}
+              {{ end }}
                 <div
                     class="govuk-character-count"
                     data-module="govuk-character-count"
@@ -183,4 +191,3 @@
   </div>
     </div>
 {{ end }}
-
