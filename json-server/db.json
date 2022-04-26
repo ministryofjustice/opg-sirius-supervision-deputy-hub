@@ -24,6 +24,20 @@
         "locked": false,
         "suspended": false
     },
+    "financeUser": {
+        "id": 51,
+        "name": "case",
+        "phoneNumber": "12345678",
+        "teams": [],
+        "displayName": "case manager",
+        "deleted": false,
+        "email": "case.manager@opgtest.com",
+        "firstname": "case",
+        "surname": "manager",
+        "roles": ["OPG User", "Case Manager", "Finance Manager"],
+        "locked": false,
+        "suspended": false
+    },
     "deputies": [
         {
             "id": 1,
