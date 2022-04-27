@@ -110,6 +110,8 @@
                   </div>
                 </fieldset>
               </div>
+
+              {{ if .IsFinanceManager }}
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">
@@ -128,7 +130,7 @@
                     </div>
                   </fieldset>
                 </div>
-
+              {{ end }}
                 <div
                     class="govuk-character-count"
                     data-module="govuk-character-count"
@@ -183,4 +185,3 @@
   </div>
     </div>
 {{ end }}
-
