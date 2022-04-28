@@ -12,6 +12,11 @@ describe("Pro Deputy Hub", () => {
         cy.url().should("include", "change-firm");
     });
 
+    it("lists active cases", () => {
+        cy.get("#overview").should("contain", "3");
+        cy.get("#overview").should("contain", "Active cases");
+    });
+
     describe("Deputy contact details", () => {
         it("shows all the deputy details", () => {
             cy.get(".hook_deputy_name").contains("firstname surname");
