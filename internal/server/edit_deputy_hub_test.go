@@ -12,10 +12,12 @@ import (
 )
 
 type mockEditDeputyHubInformation struct {
-	count      int
-	lastCtx    sirius.Context
-	err        error
-	deputyData sirius.DeputyDetails
+	count            int
+	lastCtx          sirius.Context
+	err              error
+	deputyData       sirius.DeputyDetails
+	deputyClientData sirius.DeputyClientDetails
+	ariaSorting      sirius.AriaSorting
 }
 
 func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
@@ -30,6 +32,13 @@ func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, dep
 	m.lastCtx = ctx
 
 	return m.err
+}
+
+func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.deputyClientData, m.ariaSorting, 0, m.err
 }
 
 func TestNavigateToEditDeputyHub(t *testing.T) {
