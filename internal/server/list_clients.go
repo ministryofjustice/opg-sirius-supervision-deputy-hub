@@ -23,7 +23,7 @@ type listClientsVars struct {
 	Error                string
 	ErrorMessage         string
 	Errors               sirius.ValidationErrors
-	ActiveClientCount int
+	ActiveClientCount    int
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam int, tmpl Template) Handler {
@@ -53,7 +53,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			DeputyClientsDetails: deputyClientsDetails,
 			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
-			ActiveClientCount: activeClientCount,
+			ActiveClientCount:    activeClientCount,
 		}
 
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)

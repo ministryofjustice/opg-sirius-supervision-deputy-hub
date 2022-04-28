@@ -25,11 +25,11 @@ func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, de
 	return m.deputyData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.ariaSorting, m.activeClientCount, m.err
+	return m.deputyClientData, m.ariaSorting, 0, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {

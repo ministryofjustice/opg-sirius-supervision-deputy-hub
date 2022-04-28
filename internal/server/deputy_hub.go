@@ -15,14 +15,14 @@ type DeputyHubInformation interface {
 }
 
 type deputyHubVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
-	Error          string
-	ErrorMessage   string
-	Errors         sirius.ValidationErrors
-	Success        bool
-	SuccessMessage string
+	Path              string
+	XSRFToken         string
+	DeputyDetails     sirius.DeputyDetails
+	Error             string
+	ErrorMessage      string
+	Errors            sirius.ValidationErrors
+	Success           bool
+	SuccessMessage    string
 	ActiveClientCount int
 }
 
@@ -40,15 +40,17 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			return err
 		}
 		_, _, clientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, "", "")
-
+		if err != nil {
+			return err
+		}
 		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName, deputyDetails.Firm.FirmName)
 
 		vars := deputyHubVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
-			DeputyDetails:  deputyDetails,
-			Success:        hasSuccess,
-			SuccessMessage: successMessage,
+			Path:              r.URL.Path,
+			XSRFToken:         ctx.XSRFToken,
+			DeputyDetails:     deputyDetails,
+			Success:           hasSuccess,
+			SuccessMessage:    successMessage,
 			ActiveClientCount: clientCount,
 		}
 
