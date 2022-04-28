@@ -10,7 +10,7 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
@@ -23,6 +23,7 @@ type listClientsVars struct {
 	Error                string
 	ErrorMessage         string
 	Errors               sirius.ValidationErrors
+	ActiveClientCount int
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam int, tmpl Template) Handler {
@@ -41,7 +42,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 
 		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
 
-		deputyClientsDetails, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		deputyClientsDetails, ariaSorting, activeClientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
@@ -52,6 +53,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			DeputyClientsDetails: deputyClientsDetails,
 			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
+			ActiveClientCount: activeClientCount,
 		}
 
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)

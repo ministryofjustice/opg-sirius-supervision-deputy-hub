@@ -29,7 +29,7 @@ func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, de
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.ariaSorting, m.err
+	return m.deputyClientData, m.ariaSorting, m.activeClientCount, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {

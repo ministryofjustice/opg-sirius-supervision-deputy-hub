@@ -11,6 +11,7 @@ import (
 
 type DeputyHubInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
+	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
 }
 
 type deputyHubVars struct {
@@ -22,6 +23,7 @@ type deputyHubVars struct {
 	Errors         sirius.ValidationErrors
 	Success        bool
 	SuccessMessage string
+	ActiveClientCount int
 }
 
 func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
@@ -37,6 +39,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		if err != nil {
 			return err
 		}
+		_, _, clientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, "", "")
 
 		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName, deputyDetails.Firm.FirmName)
 
@@ -46,6 +49,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			DeputyDetails:  deputyDetails,
 			Success:        hasSuccess,
 			SuccessMessage: successMessage,
+			ActiveClientCount: clientCount,
 		}
 
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)

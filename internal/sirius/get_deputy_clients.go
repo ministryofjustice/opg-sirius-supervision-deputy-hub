@@ -99,35 +99,35 @@ type AriaSorting struct {
 	CRECAriaSort      string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, error) {
+func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, int, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients", strings.ToLower(deputyType), deputyId), nil)
 
 	if err != nil {
-		return nil, AriaSorting{}, err
+		return nil, AriaSorting{}, 0, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, AriaSorting{}, err
+		return nil, AriaSorting{}, 0, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, AriaSorting{}, ErrUnauthorized
+		return nil, AriaSorting{}, 0, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, AriaSorting{}, newStatusError(resp)
+		return nil, AriaSorting{}, 0, newStatusError(resp)
 	}
 
 	var v apiClients
 	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, AriaSorting{}, err
+		return nil, AriaSorting{}, 0, err
 	}
 
 	var clients DeputyClientDetails
-
+	activeClientCount := 0
 	for _, t := range v.Clients {
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
@@ -152,7 +152,9 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, 
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
-
+			if client.OrderStatus == "Active" {
+				activeClientCount += 1
+			}
 			clients = append(clients, client)
 		}
 	}
@@ -171,7 +173,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, 
 		alphabeticalSort(clients, sortOrder)
 	}
 
-	return clients, aria, err
+	return clients, aria, activeClientCount, err
 }
 
 /*
