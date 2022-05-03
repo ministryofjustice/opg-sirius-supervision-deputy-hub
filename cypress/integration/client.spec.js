@@ -9,6 +9,12 @@ describe("Clients tab", () => {
         cy.get("h1").should("contain", "Clients");
     });
 
+    it("lists active cases", () => {
+        cy.get("#overview").should("contain", "3");
+        cy.get("#overview").should("contain", "Active cases");
+
+    });
+
     it("displays 7 column headings", () => {
         cy.get(".govuk-table__row").find("th").should("have.length", 7);
 

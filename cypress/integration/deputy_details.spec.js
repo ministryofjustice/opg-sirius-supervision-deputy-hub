@@ -22,6 +22,11 @@ describe("Deputy details tab", () => {
         cy.url().should("include", "change-ecm");
     });
 
+    it("lists active cases", () => {
+        cy.get("#overview").should("contain", "3");
+        cy.get("#overview").should("contain", "Active cases");
+    });
+
     describe("Deputy contact details", () => {
         it("has rows in tables with accurate keys and values", () => {
             cy.get(
@@ -65,7 +70,7 @@ describe("Deputy details tab", () => {
         });
 
         it("has a button which can take you to manage team details", () => {
-            cy.get(":nth-child(6) > :nth-child(1) > .govuk-button")
+            cy.get(".govuk-main-wrapper > :nth-child(7) > :nth-child(1) > .govuk-button")
                 .should("contain", "Manage team details")
                 .click();
             cy.url().should("include", "manage-team-details");
