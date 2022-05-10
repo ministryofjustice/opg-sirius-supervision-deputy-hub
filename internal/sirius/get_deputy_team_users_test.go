@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestGetPaDeputyTeamUsersReturned(t *testing.T) {
+func TestGetDeputyTeamUsersReturnedPa(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -54,13 +54,66 @@ func TestGetPaDeputyTeamUsersReturned(t *testing.T) {
 		},
 	}
 
-	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
+	deputyDetails := DeputyDetails{ID: 76, DeputyType: DeputyType{Handle: "PA", Label: "Public Authority"}, ExecutiveCaseManager: ExecutiveCaseManager{EcmId: 1}}
+	paDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, deputyDetails)
 
 	assert.Equal(t, expectedResponse, paDeputyTeam)
 	assert.Equal(t, nil, err)
 }
 
-func TestGetPaDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
+func TestGetDeputyTeamUsersReturnedPro(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `[{
+    "id": 23,
+    "name": "PA Team 1 - (Supervision)",
+    "phoneNumber": "0123456789",
+    "displayName": "PA Team 1 - (Supervision)",
+    "deleted": false,
+    "email": "PATeam1.team@opgtest.com",
+    "members": [
+        {
+            "id": 92,
+            "name": "PATeam1",
+            "phoneNumber": "12345678",
+            "displayName": "PATeam1 User1",
+            "deleted": false,
+            "email": "pa1@opgtest.com"
+        }
+    ],
+    "children": [],
+    "teamType": {
+        "handle": "PRO",
+        "label": "Professional"
+    }
+	}]`
+
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := []TeamMember{
+		{
+			ID:          92,
+			DisplayName: "PATeam1 User1",
+			CurrentEcm:  1,
+		},
+	}
+
+	deputyDetails := DeputyDetails{ID: 76, DeputyType: DeputyType{Handle: "PRO", Label: "Professional"}, ExecutiveCaseManager: ExecutiveCaseManager{EcmId: 1}}
+	proDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, deputyDetails)
+
+	assert.Equal(t, expectedResponse, proDeputyTeam)
+	assert.Equal(t, nil, err)
+}
+
+func TestGetDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -68,7 +121,7 @@ func TestGetPaDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
+	paDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, DeputyDetails{})
 
 	expectedResponse := []TeamMember([]TeamMember{})
 
@@ -80,7 +133,7 @@ func TestGetPaDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestGetPaDeputyTeamUsersReturnsUnauthorisedClientError(t *testing.T) {
+func TestGetDeputyTeamUsersReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -88,7 +141,7 @@ func TestGetPaDeputyTeamUsersReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	paDeputyTeam, err := client.GetPaDeputyTeamMembers(getContext(nil), 23)
+	paDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, DeputyDetails{})
 
 	expectedResponse := []TeamMember([]TeamMember{})
 

@@ -11,7 +11,7 @@ import (
 
 type ChangeECMInformation interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
-	GetPaDeputyTeamMembers(sirius.Context, int) ([]sirius.TeamMember, error)
+	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]sirius.TeamMember, error)
 	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
@@ -35,7 +35,12 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		ecmTeamDetails, err := client.GetPaDeputyTeamMembers(ctx, defaultPATeam)
+		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
+		if err != nil {
+			return err
+		}
+
+		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {
 			return err
 		}
@@ -43,11 +48,6 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 		switch r.Method {
 		case http.MethodGet:
 			var SuccessMessage string
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
-
 			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId))
 			if hasSuccess {
 				SuccessMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
@@ -68,7 +68,6 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}

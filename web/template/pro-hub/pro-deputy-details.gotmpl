@@ -21,6 +21,15 @@
                     data-module="govuk-button">
                     Change firm
                 </a>
+                <a
+                    href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
+                    data-module="govuk-button"
+                    id="change-ecm">
+                    Change ECM
+                </a>
             </div>
         </div>
     </header>
