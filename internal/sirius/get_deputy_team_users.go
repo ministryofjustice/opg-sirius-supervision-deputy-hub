@@ -74,7 +74,7 @@ func getTeamMembersByDeputyType(deputyDetails DeputyDetails, resp *http.Response
 			return []TeamMember{}
 		}
 
-		members := []TeamMember{}
+		var members []TeamMember
 
 		for _, k := range v {
 			for _, m := range k.Members {
@@ -99,6 +99,7 @@ func getTeamMembersByDeputyType(deputyDetails DeputyDetails, resp *http.Response
 			team.Members = append(team.Members, TeamMember{
 				ID:          m.ID,
 				DisplayName: m.DisplayName,
+				CurrentEcm:  deputyDetails.ExecutiveCaseManager.EcmId,
 			})
 		}
 

@@ -50,7 +50,7 @@
                                 <option value=""></option>
                                 {{ range .EcmTeamDetails }}
                                     <!-- prettier-ignore -->
-                                    value="{{ .ID }}" {{ if eq .CurrentEcm .ID }} selected="selected" {{ end }}>{{ .DisplayName }}
+                                    <option value="{{ .ID }}" {{ if eq .CurrentEcm .ID }} selected="selected" {{ end }}>{{ .DisplayName }}</option>
                                 {{ end }}
                             </select>
                         </div>
