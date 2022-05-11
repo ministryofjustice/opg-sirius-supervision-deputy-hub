@@ -66,28 +66,52 @@ func TestGetDeputyTeamUsersReturnedPro(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `[{
-    "id": 23,
-    "name": "PA Team 1 - (Supervision)",
-    "phoneNumber": "0123456789",
-    "displayName": "PA Team 1 - (Supervision)",
-    "deleted": false,
-    "email": "PATeam1.team@opgtest.com",
-    "members": [
-        {
-            "id": 92,
-            "name": "PATeam1",
-            "phoneNumber": "12345678",
-            "displayName": "PATeam1 User1",
-            "deleted": false,
-            "email": "pa1@opgtest.com"
-        }
-    ],
-    "children": [],
-    "teamType": {
-        "handle": "PRO",
-        "label": "Professional"
-    }
-	}]`
+		"id": 25,
+		"name": "Pro Team 1 - (Supervision)",
+		"phoneNumber": "0123456789",
+		"displayName": "Pro Team 1 - (Supervision)",
+		"deleted": false,
+		"email": "ProTeam1.team@opgtest.com",
+		"members": [
+			{
+				"id": 94,
+				"name": "PROTeam1",
+				"phoneNumber": "12345678",
+				"displayName": "ProTeam1 User1",
+				"deleted": false,
+				"email": "pro1@opgtest.com"
+			}
+		],
+		"children": [],
+		"teamType": {
+			"handle": "PRO",
+			"label": "Pro"
+    	}
+	},
+	{
+		"id": 26,
+		"name": "Pro Team 2 - (Supervision)",
+		"phoneNumber": "0123456789",
+		"displayName": "Pro Team 2 - (Supervision)",
+		"deleted": false,
+		"email": "ProTeam2.team@opgtest.com",
+		"members": [
+			{
+				"id": 95,
+				"name": "PROTeam2",
+				"phoneNumber": "12345678",
+				"displayName": "ProTeam2 User1",
+				"deleted": false,
+				"email": "pro2@opgtest.com"
+			}
+		],
+		"children": [],
+		"teamType": {
+			"handle": "PRO",
+			"label": "Pro"
+		}
+	}
+	]`
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -100,8 +124,13 @@ func TestGetDeputyTeamUsersReturnedPro(t *testing.T) {
 
 	expectedResponse := []TeamMember{
 		{
-			ID:          92,
-			DisplayName: "PATeam1 User1",
+			ID:          94,
+			DisplayName: "ProTeam1 User1",
+			CurrentEcm:  1,
+		},
+		{
+			ID:          95,
+			DisplayName: "ProTeam2 User1",
 			CurrentEcm:  1,
 		},
 	}
