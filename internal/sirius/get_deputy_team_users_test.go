@@ -51,6 +51,7 @@ func TestGetDeputyTeamUsersReturnedPa(t *testing.T) {
 		{
 			ID:          92,
 			DisplayName: "PATeam1 User1",
+			CurrentEcm:  1,
 		},
 	}
 
