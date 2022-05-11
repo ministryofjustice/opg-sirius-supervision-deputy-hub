@@ -6,10 +6,13 @@ describe("Pro Deputy Hub", () => {
     });
 
     it("has a button which can take you to change firm", () => {
-        cy.get(".moj-button-menu__wrapper > .govuk-button")
-            .should("contain", "Change firm")
-            .click();
+        cy.get("#change-firm").should("contain", "Change firm").click();
         cy.url().should("include", "change-firm");
+    });
+
+    it("has a button to take you to change ecm", () => {
+        cy.get("#change-ecm").should("contain", "Change ECM").click();
+        cy.url().should("include", "change-ecm");
     });
 
     it("lists active cases", () => {
