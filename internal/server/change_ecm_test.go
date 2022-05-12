@@ -30,7 +30,7 @@ func (m *mockChangeECMInformation) GetDeputyDetails(ctx sirius.Context, defaultP
 	return m.DeputyDetails, m.err
 }
 
-func (m *mockChangeECMInformation) GetPaDeputyTeamMembers(ctx sirius.Context, deputyId int) ([]sirius.TeamMember, error) {
+func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]sirius.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
