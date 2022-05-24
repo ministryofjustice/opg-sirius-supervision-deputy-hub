@@ -123,8 +123,7 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationError{
-		Errors: sirius.ValidationErrors{
+	expectedValidationErrors := sirius.ValidationErrors{
 			"firmName": {
 				"stringLengthTooLong": "The firm name must be 255 characters or fewer",
 			}, "phoneNumber": {
@@ -144,10 +143,14 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 			}, "postcode": {
 				"stringLengthTooLong": "The postcode must be 255 characters or fewer",
 			},
-		},
 	}
 
-	assert.Equal(expectedValidationErrors, returnedError)
+	assert.Equal(addFirmVars{
+		Path:   "/133",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
 }
 
 func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
@@ -180,13 +183,16 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationError{
-		Errors: sirius.ValidationErrors{
+	expectedValidationErrors := sirius.ValidationErrors{
 			"firmName": {
 				"isEmpty": "The firm name is required and can't be empty",
 			},
-		},
 	}
 
-	assert.Equal(expectedValidationErrors, returnedError)
+	assert.Equal(addFirmVars{
+		Path:   "/133",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
 }
