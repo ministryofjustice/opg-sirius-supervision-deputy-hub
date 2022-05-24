@@ -13,7 +13,6 @@ type mockDeputyHubClientInformation struct {
 	count            int
 	lastCtx          sirius.Context
 	err              error
-	deputyData       sirius.DeputyDetails
 	deputyClientData sirius.DeputyClientDetails
 	ariaSorting      sirius.AriaSorting
 }

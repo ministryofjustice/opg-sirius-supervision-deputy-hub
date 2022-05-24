@@ -14,8 +14,6 @@ import (
 type mockManageDeputyContactDetailsInformation struct {
 	count      int
 	lastCtx    sirius.Context
-	err        error
-	deputyData sirius.DeputyDetails
 	updateErr  error
 }
 

@@ -13,7 +13,6 @@ type mockDeputyHubTimelineInformation struct {
 	count        int
 	lastCtx      sirius.Context
 	err          error
-	deputyData   sirius.DeputyDetails
 	deputyEvents sirius.DeputyEventCollection
 }
 

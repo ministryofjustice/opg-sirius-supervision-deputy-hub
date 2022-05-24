@@ -13,7 +13,6 @@ type mockDeputyChangeFirmInformation struct {
 	count      int
 	lastCtx    sirius.Context
 	err        error
-	deputyData sirius.DeputyDetails
 	firmData   []sirius.FirmForList
 }
 

@@ -17,7 +17,6 @@ type mockDeputyHubNotesInformation struct {
 	lastCtx         sirius.Context
 	err             error
 	addNote         error
-	deputyData      sirius.DeputyDetails
 	deputyNotesData sirius.DeputyNoteCollection
 	userDetailsData sirius.UserDetails
 }

@@ -16,7 +16,6 @@ type mockFirmInformation struct {
 	lastCtx    sirius.Context
 	err        error
 	addFirm    int
-	deputyData sirius.DeputyDetails
 }
 
 func (m *mockFirmInformation) AddFirmDetails(ctx sirius.Context, deputyId sirius.FirmDetails) (int, error) {
