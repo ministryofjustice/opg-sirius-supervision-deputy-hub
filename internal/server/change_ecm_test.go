@@ -23,13 +23,6 @@ type mockChangeECMInformation struct {
 	DefaultPaTeam  int
 }
 
-func (m *mockChangeECMInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.DeputyDetails, m.err
-}
-
 func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]sirius.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
@@ -62,7 +55,7 @@ func TestGetChangeECM(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 	assert.Equal(getContext(r), client.lastCtx)
 
 	assert.Equal(1, template.count)

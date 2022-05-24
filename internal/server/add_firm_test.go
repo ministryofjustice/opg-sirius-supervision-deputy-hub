@@ -33,13 +33,6 @@ func (m *mockFirmInformation) AssignDeputyToFirm(ctx sirius.Context, deputyId in
 	return m.err
 }
 
-func (m *mockFirmInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func TestGetFirm(t *testing.T) {
 	assert := assert.New(t)
 
@@ -58,7 +51,7 @@ func TestGetFirm(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(1, client.count)
+	assert.Equal(0, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)

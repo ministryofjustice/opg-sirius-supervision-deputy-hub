@@ -22,13 +22,6 @@ type mockDeputyHubNotesInformation struct {
 	userDetailsData sirius.UserDetails
 }
 
-func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteCollection, error) {
 	m.count += 1
 	m.lastCtx = ctx
@@ -68,7 +61,7 @@ func TestGetNotes(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 	assert.Equal(getContext(r), client.lastCtx)
 
 	assert.Equal(1, template.count)
@@ -140,7 +133,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 		},
 	}
 
-	assert.Equal(3, client.count)
+	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -193,7 +186,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 		},
 	}
 
-	assert.Equal(3, client.count)
+	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)

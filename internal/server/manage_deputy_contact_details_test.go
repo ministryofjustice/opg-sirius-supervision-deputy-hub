@@ -19,13 +19,6 @@ type mockManageDeputyContactDetailsInformation struct {
 	updateErr  error
 }
 
-func (m *mockManageDeputyContactDetailsInformation) GetDeputyDetails(ctx sirius.Context, _ int, _ int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockManageDeputyContactDetailsInformation) UpdateDeputyContactDetails(ctx sirius.Context, _ int, _ sirius.DeputyContactDetails) error {
 	m.count += 1
 	m.lastCtx = ctx
@@ -160,7 +153,7 @@ func TestErrorManageDeputyDetailsMessageWhenStringLengthTooLong(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -221,7 +214,7 @@ func TestErrorManageDeputyDetailsMessageWhenIsEmpty(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)

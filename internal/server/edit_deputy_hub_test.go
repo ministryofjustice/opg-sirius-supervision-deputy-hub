@@ -20,13 +20,6 @@ type mockEditDeputyHubInformation struct {
 	ariaSorting      sirius.AriaSorting
 }
 
-func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
 	m.count += 1
 	m.lastCtx = ctx
@@ -131,7 +124,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -178,7 +171,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
