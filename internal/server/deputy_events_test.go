@@ -17,13 +17,6 @@ type mockDeputyHubTimelineInformation struct {
 	deputyEvents sirius.DeputyEventCollection
 }
 
-func (m *mockDeputyHubTimelineInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int) (sirius.DeputyEventCollection, error) {
 	m.count += 1
 	m.lastCtx = ctx

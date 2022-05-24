@@ -17,13 +17,6 @@ type mockDeputyChangeFirmInformation struct {
 	firmData   []sirius.FirmForList
 }
 
-func (m *mockDeputyChangeFirmInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockDeputyChangeFirmInformation) GetFirms(ctx sirius.Context) ([]sirius.FirmForList, error) {
 	m.count += 1
 	m.lastCtx = ctx

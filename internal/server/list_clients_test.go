@@ -18,13 +18,6 @@ type mockDeputyHubClientInformation struct {
 	ariaSorting      sirius.AriaSorting
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
 	m.count += 1
 	m.lastCtx = ctx
