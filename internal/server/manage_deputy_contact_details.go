@@ -10,7 +10,6 @@ import (
 )
 
 type DeputyContactDetailsInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	UpdateDeputyContactDetails(sirius.Context, int, sirius.DeputyContactDetails) error
 }
 
@@ -24,14 +23,11 @@ type manageDeputyContactDetailsVars struct {
 }
 
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, dd sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
+		deputyDetails := dd
 
 		switch r.Method {
 		case http.MethodGet:

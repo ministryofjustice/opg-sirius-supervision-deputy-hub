@@ -10,7 +10,6 @@ import (
 )
 
 type EditDeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	EditDeputyDetails(sirius.Context, sirius.DeputyDetails) error
 }
 
@@ -25,19 +24,15 @@ type editDeputyHubVars struct {
 }
 
 func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, dd sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
+		deputyDetails := dd
 
 		switch r.Method {
 		case http.MethodGet:
-
-			if err != nil {
-				return err
-			}
 
 			vars := editDeputyHubVars{
 				Path:          r.URL.Path,

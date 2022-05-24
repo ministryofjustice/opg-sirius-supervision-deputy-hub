@@ -75,7 +75,7 @@ func TestGetManageImportantInformation(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForImportantInformation(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -160,7 +160,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			testHandler := mux.NewRouter()
 			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 			})
 
 			testHandler.ServeHTTP(w, r)

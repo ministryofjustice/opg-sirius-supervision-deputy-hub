@@ -9,7 +9,6 @@ import (
 )
 
 type DeputyChangeFirmInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetFirms(sirius.Context) ([]sirius.FirmForList, error)
 	AssignDeputyToFirm(sirius.Context, int, int) error
 }
@@ -26,16 +25,13 @@ type changeFirmVars struct {
 }
 
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, dd sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
+		deputyDetails := dd
 
 		firmDetails, err := client.GetFirms(ctx)
 		if err != nil {

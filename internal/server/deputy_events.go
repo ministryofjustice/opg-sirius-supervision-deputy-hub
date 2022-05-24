@@ -9,7 +9,6 @@ import (
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
 }
 
@@ -24,7 +23,7 @@ type deputyHubEventVars struct {
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, dd sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
@@ -32,10 +31,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
+		deputyDetails := dd
 		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
 		if err != nil {
 			return err
