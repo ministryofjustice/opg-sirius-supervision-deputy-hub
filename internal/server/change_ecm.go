@@ -28,12 +28,11 @@ type changeECMHubVars struct {
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, dd sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails := dd
 
 		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {

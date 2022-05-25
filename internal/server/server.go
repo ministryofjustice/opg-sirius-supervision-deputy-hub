@@ -140,13 +140,15 @@ func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, 
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			myPermissions, err := client.MyPermissions(getContext(r))
 
-			routeVars := mux.Vars(r)
-			deputyId, _ := strconv.Atoi(routeVars["id"])
+			if err == nil {
+				routeVars := mux.Vars(r)
+				deputyId, _ := strconv.Atoi(routeVars["id"])
+				var deputyDetails sirius.DeputyDetails
+				deputyDetails, err = client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
 
-			deputyDetails, e := client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
-
-			if err == nil && e == nil {
-				err = next(myPermissions, deputyDetails, w, r)
+				if err == nil {
+					err = next(myPermissions, deputyDetails, w, r)
+				}
 			}
 
 			if err != nil {
