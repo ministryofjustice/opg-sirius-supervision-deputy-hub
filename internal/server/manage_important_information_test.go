@@ -17,12 +17,6 @@ type mockManageDeputyImportantInformation struct {
 	mock.Mock
 }
 
-func (m *mockManageDeputyImportantInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyID int) (sirius.DeputyDetails, error) {
-	args := m.Called(ctx, defaultPATeam, deputyID)
-
-	return args.Get(0).(sirius.DeputyDetails), args.Error(1)
-}
-
 func (m *mockManageDeputyImportantInformation) GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error) {
 	args := m.Called(ctx)
 
@@ -64,7 +58,6 @@ func TestGetManageImportantInformation(t *testing.T) {
 
 	client := &mockManageDeputyImportantInformation{}
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
-	client.On("GetDeputyDetails", mock.Anything, defaultPATeam, 0).Return(deputyDetails, nil)
 	client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return(invoiceTypes, nil)
 	client.On("GetDeputyBooleanTypes", mock.Anything).Return(booleanTypes, nil)
 	client.On("GetDeputyReportSystemTypes", mock.Anything).Return(reportTypes, nil)
@@ -75,7 +68,7 @@ func TestGetManageImportantInformation(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForImportantInformation(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{ID: 123}, w, r)
 
 	assert.Nil(err)
 
@@ -144,7 +137,6 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
-			client.On("GetDeputyDetails", mock.Anything, defaultPATeam, 123).Return(tc.deputyDetails, nil)
 			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{}, nil)
 			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]sirius.DeputyBooleanTypes{}, nil)
 			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]sirius.DeputyReportSystemTypes{}, nil)
@@ -160,7 +152,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			testHandler := mux.NewRouter()
 			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, tc.deputyDetails, w, r)
 			})
 
 			testHandler.ServeHTTP(w, r)

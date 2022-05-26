@@ -16,7 +16,6 @@ type mockFirmInformation struct {
 	lastCtx    sirius.Context
 	err        error
 	addFirm    int
-	deputyData sirius.DeputyDetails
 }
 
 func (m *mockFirmInformation) AddFirmDetails(ctx sirius.Context, deputyId sirius.FirmDetails) (int, error) {
@@ -33,13 +32,6 @@ func (m *mockFirmInformation) AssignDeputyToFirm(ctx sirius.Context, deputyId in
 	return m.err
 }
 
-func (m *mockFirmInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
-}
-
 func TestGetFirm(t *testing.T) {
 	assert := assert.New(t)
 
@@ -51,14 +43,14 @@ func TestGetFirm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddFirm(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(1, client.count)
+	assert.Equal(0, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -77,7 +69,7 @@ func TestPostAddFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, nil)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, defaultPATeam, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -125,13 +117,12 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationError{
-		Errors: sirius.ValidationErrors{
+	expectedValidationErrors := sirius.ValidationErrors{
 			"firmName": {
 				"stringLengthTooLong": "The firm name must be 255 characters or fewer",
 			}, "phoneNumber": {
@@ -151,10 +142,14 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 			}, "postcode": {
 				"stringLengthTooLong": "The postcode must be 255 characters or fewer",
 			},
-		},
 	}
 
-	assert.Equal(expectedValidationErrors, returnedError)
+	assert.Equal(addFirmVars{
+		Path:   "/133",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
 }
 
 func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
@@ -182,18 +177,21 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationError{
-		Errors: sirius.ValidationErrors{
+	expectedValidationErrors := sirius.ValidationErrors{
 			"firmName": {
 				"isEmpty": "The firm name is required and can't be empty",
 			},
-		},
 	}
 
-	assert.Equal(expectedValidationErrors, returnedError)
+	assert.Equal(addFirmVars{
+		Path:   "/133",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
 }

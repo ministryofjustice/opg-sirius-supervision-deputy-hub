@@ -11,7 +11,6 @@ import (
 )
 
 type ManageProDeputyImportantInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
@@ -33,7 +32,7 @@ type manageDeputyImportantInformationVars struct {
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
@@ -42,6 +41,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			Path:      r.URL.Path,
 			XSRFToken: ctx.XSRFToken,
 			DeputyId:  deputyId,
+			DeputyDetails: deputyDetails,
 		}
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)
@@ -53,16 +53,6 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 
 			vars.IsFinanceManager = userDetails.IsFinanceManager()
-			return nil
-		})
-
-		group.Go(func() error {
-			deputyDetails, err := client.GetDeputyDetails(ctx.With(groupCtx), defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
-
-			vars.DeputyDetails = deputyDetails
 			return nil
 		})
 

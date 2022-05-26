@@ -13,15 +13,7 @@ type mockDeputyHubTimelineInformation struct {
 	count        int
 	lastCtx      sirius.Context
 	err          error
-	deputyData   sirius.DeputyDetails
 	deputyEvents sirius.DeputyEventCollection
-}
-
-func (m *mockDeputyHubTimelineInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
 }
 
 func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int) (sirius.DeputyEventCollection, error) {
@@ -42,7 +34,7 @@ func TestNavigateToTimeline(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHubEvents(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
