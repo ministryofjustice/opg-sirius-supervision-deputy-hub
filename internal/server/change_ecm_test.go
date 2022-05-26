@@ -23,13 +23,6 @@ type mockChangeECMInformation struct {
 	DefaultPaTeam  int
 }
 
-func (m *mockChangeECMInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.DeputyDetails, m.err
-}
-
 func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]sirius.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
@@ -55,14 +48,14 @@ func TestGetChangeECM(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForChangeECM(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 	assert.Equal(getContext(r), client.lastCtx)
 
 	assert.Equal(1, template.count)
@@ -88,7 +81,7 @@ func TestPostChangeECM(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -121,7 +114,7 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

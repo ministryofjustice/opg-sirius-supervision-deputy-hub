@@ -10,7 +10,6 @@ import (
 )
 
 type DeputyHubNotesInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
@@ -46,7 +45,7 @@ func hasSuccessInUrl(url string, prefix string) bool {
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -55,10 +54,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
 			deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
 			if err != nil {
 				return err
@@ -86,11 +81,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 			)
 
 			userId, err := client.GetUserDetails(ctx)
-			if err != nil {
-				return err
-			}
-
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
 			if err != nil {
 				return err
 			}

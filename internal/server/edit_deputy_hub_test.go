@@ -15,16 +15,8 @@ type mockEditDeputyHubInformation struct {
 	count            int
 	lastCtx          sirius.Context
 	err              error
-	deputyData       sirius.DeputyDetails
 	deputyClientData sirius.DeputyClientDetails
 	ariaSorting      sirius.AriaSorting
-}
-
-func (m *mockEditDeputyHubInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
 }
 
 func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
@@ -52,7 +44,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -102,7 +94,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -131,7 +123,7 @@ func TestErrorEditDeputyMessageWhenStringLengthTooLong(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -167,7 +159,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, 23, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -178,7 +170,7 @@ func TestErrorEditDeputyMessageWhenIsEmpty(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
