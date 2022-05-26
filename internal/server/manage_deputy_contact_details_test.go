@@ -14,16 +14,7 @@ import (
 type mockManageDeputyContactDetailsInformation struct {
 	count      int
 	lastCtx    sirius.Context
-	err        error
-	deputyData sirius.DeputyDetails
 	updateErr  error
-}
-
-func (m *mockManageDeputyContactDetailsInformation) GetDeputyDetails(ctx sirius.Context, _ int, _ int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
 }
 
 func (m *mockManageDeputyContactDetailsInformation) UpdateDeputyContactDetails(ctx sirius.Context, _ int, _ sirius.DeputyContactDetails) error {
@@ -44,7 +35,7 @@ func TestGetManageDeputyDetails(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -67,7 +58,7 @@ func TestPostManageDeputyDetails(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		redirect = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -119,7 +110,7 @@ func TestErrorManageDeputyDetailsMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -160,7 +151,7 @@ func TestErrorManageDeputyDetailsMessageWhenStringLengthTooLong(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -204,7 +195,7 @@ func TestErrorManageDeputyDetailsMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForManageDeputyContactDetails(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -221,7 +212,7 @@ func TestErrorManageDeputyDetailsMessageWhenIsEmpty(t *testing.T) {
 		},
 	}
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
