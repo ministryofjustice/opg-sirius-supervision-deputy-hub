@@ -12,10 +12,10 @@ import (
 )
 
 type mockFirmInformation struct {
-	count      int
-	lastCtx    sirius.Context
-	err        error
-	addFirm    int
+	count   int
+	lastCtx sirius.Context
+	err     error
+	addFirm int
 }
 
 func (m *mockFirmInformation) AddFirmDetails(ctx sirius.Context, deputyId sirius.FirmDetails) (int, error) {
@@ -49,8 +49,6 @@ func TestGetFirm(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-
-	assert.Equal(0, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -123,25 +121,25 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
-			"firmName": {
-				"stringLengthTooLong": "The firm name must be 255 characters or fewer",
-			}, "phoneNumber": {
-				"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
-			}, "email": {
-				"stringLengthTooLong": "The email must be 255 characters or fewer",
-			}, "addressLine1": {
-				"stringLengthTooLong": "The building or street must be 255 characters or fewer",
-			}, "addressLine2": {
-				"stringLengthTooLong": "Address line 2 must be 255 characters or fewer",
-			}, "addressLine3": {
-				"stringLengthTooLong": "Address line 3 must be 255 characters or fewer",
-			}, "town": {
-				"stringLengthTooLong": "The town or city must be 255 characters or fewer",
-			}, "county": {
-				"stringLengthTooLong": "The county must be 255 characters or fewer",
-			}, "postcode": {
-				"stringLengthTooLong": "The postcode must be 255 characters or fewer",
-			},
+		"firmName": {
+			"stringLengthTooLong": "The firm name must be 255 characters or fewer",
+		}, "phoneNumber": {
+			"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
+		}, "email": {
+			"stringLengthTooLong": "The email must be 255 characters or fewer",
+		}, "addressLine1": {
+			"stringLengthTooLong": "The building or street must be 255 characters or fewer",
+		}, "addressLine2": {
+			"stringLengthTooLong": "Address line 2 must be 255 characters or fewer",
+		}, "addressLine3": {
+			"stringLengthTooLong": "Address line 3 must be 255 characters or fewer",
+		}, "town": {
+			"stringLengthTooLong": "The town or city must be 255 characters or fewer",
+		}, "county": {
+			"stringLengthTooLong": "The county must be 255 characters or fewer",
+		}, "postcode": {
+			"stringLengthTooLong": "The postcode must be 255 characters or fewer",
+		},
 	}
 
 	assert.Equal(addFirmVars{
@@ -183,9 +181,9 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
-			"firmName": {
-				"isEmpty": "The firm name is required and can't be empty",
-			},
+		"firmName": {
+			"isEmpty": "The firm name is required and can't be empty",
+		},
 	}
 
 	assert.Equal(addFirmVars{
