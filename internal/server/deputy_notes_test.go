@@ -123,22 +123,13 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationErrors{
-		"1-title": {
-			"stringLengthTooLong": "The title must be 255 characters or fewer",
-		},
-		"2-note": {
-			"stringLengthTooLong": "The note must be 1000 characters or fewer",
-		},
-	}
-
 	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		Path:   "/123",
-		Errors: expectedValidationErrors,
+		Errors: validationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -176,22 +167,13 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationErrors{
-		"1-title": {
-			"isEmpty": "Enter a title for the note",
-		},
-		"2-note": {
-			"isEmpty": "Enter a note",
-		},
-	}
-
 	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		Path:   "/123",
-		Errors: expectedValidationErrors,
+		Errors: validationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)

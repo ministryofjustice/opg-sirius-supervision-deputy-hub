@@ -53,7 +53,8 @@ func main() {
 			"firmhub": func(s string) string {
 				return firmHubURL + s
 			},
-			"translate": util.Translate,
+			"translate":     util.Translate,
+			"rename_errors": util.RenameErrors,
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 

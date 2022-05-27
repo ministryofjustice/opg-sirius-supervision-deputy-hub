@@ -74,29 +74,13 @@ func TestPostAddFirm(t *testing.T) {
 	assert.Equal(returnedError, Redirect("/123?success=newFirm"))
 }
 
-func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
+func TestAddFirmValidationErrors(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockFirmInformation{}
 
 	validationErrors := sirius.ValidationErrors{
 		"firmName": {
 			"stringLengthTooLong": "The firm name must be 255 characters or fewer",
-		}, "phoneNumber": {
-			"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
-		}, "email": {
-			"stringLengthTooLong": "The email must be 255 characters or fewer",
-		}, "addressLine1": {
-			"stringLengthTooLong": "The building or street must be 255 characters or fewer",
-		}, "addressLine2": {
-			"stringLengthTooLong": "Address line 2 must be 255 characters or fewer",
-		}, "addressLine3": {
-			"stringLengthTooLong": "Address line 3 must be 255 characters or fewer",
-		}, "town": {
-			"stringLengthTooLong": "The town or city must be 255 characters or fewer",
-		}, "county": {
-			"stringLengthTooLong": "The county must be 255 characters or fewer",
-		}, "postcode": {
-			"stringLengthTooLong": "The postcode must be 255 characters or fewer",
 		},
 	}
 
@@ -120,31 +104,9 @@ func TestErrorAddFirmMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationErrors{
-		"firmName": {
-			"stringLengthTooLong": "The firm name must be 255 characters or fewer",
-		}, "phoneNumber": {
-			"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
-		}, "email": {
-			"stringLengthTooLong": "The email must be 255 characters or fewer",
-		}, "addressLine1": {
-			"stringLengthTooLong": "The building or street must be 255 characters or fewer",
-		}, "addressLine2": {
-			"stringLengthTooLong": "Address line 2 must be 255 characters or fewer",
-		}, "addressLine3": {
-			"stringLengthTooLong": "Address line 3 must be 255 characters or fewer",
-		}, "town": {
-			"stringLengthTooLong": "The town or city must be 255 characters or fewer",
-		}, "county": {
-			"stringLengthTooLong": "The county must be 255 characters or fewer",
-		}, "postcode": {
-			"stringLengthTooLong": "The postcode must be 255 characters or fewer",
-		},
-	}
-
 	assert.Equal(addFirmVars{
 		Path:   "/133",
-		Errors: expectedValidationErrors,
+		Errors: validationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
