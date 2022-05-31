@@ -80,7 +80,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				vars.Errors = sirius.ValidationErrors{
 					"Change ECM": {"": "Select an executive case manager"},
 				}
-				EcmIdStringValue = "0"
+				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
 			EcmIdValue, err := strconv.Atoi(EcmIdStringValue)
@@ -92,12 +92,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 			err = client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
-			if len(vars.Errors) >= 1 {
-				return tmpl.ExecuteTemplate(w, "page", vars)
-			}
-
 			if verr, ok := err.(sirius.ValidationError); ok {
-				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
 				vars.Errors = verr.Errors
 
 				return tmpl.ExecuteTemplate(w, "page", vars)

@@ -38,9 +38,9 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := manageDeputyImportantInformationVars{
-			Path:      r.URL.Path,
-			XSRFToken: ctx.XSRFToken,
-			DeputyId:  deputyId,
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyId:      deputyId,
 			DeputyDetails: deputyDetails,
 		}
 
@@ -130,7 +130,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)
+				vars.Errors = verr.Errors
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
@@ -142,24 +142,6 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameUpdateAdditionalInformationValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-			if fieldName == "otherImportantInformation" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The other important information must be 1000 characters or fewer"
-				errorCollection["otherImportantInformation"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }
 
 func checkForReportSystemType(reportType string) string {

@@ -17,7 +17,6 @@ type Logger interface {
 	Request(*http.Request, error)
 }
 
-//this is the files in server which need a client
 type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
