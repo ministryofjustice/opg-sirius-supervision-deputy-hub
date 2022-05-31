@@ -88,9 +88,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 			err = client.AddNote(ctx, title, note, deputyId, userId.ID, deputyDetails.DeputyType.Handle)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-
-				verr.Errors = renameValidationErrorMessages(verr.Errors)
-
 				vars = addNoteVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
@@ -114,32 +111,4 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-
-			if fieldName == "name" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The title must be 255 characters or fewer"
-				errorCollection["1-title"] = err
-			} else if fieldName == "name" && errorType == "isEmpty" {
-				err[errorType] = "Enter a title for the note"
-				errorCollection["1-title"] = err
-			} else if fieldName == "description" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The note must be 1000 characters or fewer"
-				errorCollection["2-note"] = err
-			} else if fieldName == "description" && errorType == "isEmpty" {
-				err[errorType] = "Enter a note"
-				errorCollection["2-note"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }
