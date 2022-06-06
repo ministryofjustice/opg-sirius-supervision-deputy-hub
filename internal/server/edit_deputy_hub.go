@@ -61,8 +61,6 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATe
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
-
 				vars := editDeputyHubVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
@@ -78,53 +76,4 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATe
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameEditDeputyValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-
-			if fieldName == "organisationName" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The deputy name must be 255 characters or fewer"
-				errorCollection["organisationName"] = err
-			} else if fieldName == "organisationName" && errorType == "isEmpty" {
-				err[errorType] = "Enter a deputy name"
-				errorCollection["organisationName"] = err
-			} else if fieldName == "workPhoneNumber" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The telephone number must be 255 characters or fewer"
-				errorCollection["workPhoneNumber"] = err
-			} else if fieldName == "email" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The email number must be 255 characters or fewer"
-				errorCollection["email"] = err
-			} else if fieldName == "organisationTeamOrDepartmentName" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The team or department must be 255 characters or fewer"
-				errorCollection["organisationTeamOrDepartmentName"] = err
-			} else if fieldName == "addressLine1" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The building or street must be 255 characters or fewer"
-				errorCollection["addressLine1"] = err
-			} else if fieldName == "addressLine2" && errorType == "stringLengthTooLong" {
-				err[errorType] = "Address line 2 must be 255 characters or fewer"
-				errorCollection["addressLine2"] = err
-			} else if fieldName == "addressLine3" && errorType == "stringLengthTooLong" {
-				err[errorType] = "AddressLine 3 must be 255 characters or fewer"
-				errorCollection["addressLine3"] = err
-			} else if fieldName == "town" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The town or city must be 255 characters or fewer"
-				errorCollection["town"] = err
-			} else if fieldName == "county" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The county must be 255 characters or fewer"
-				errorCollection["county"] = err
-			} else if fieldName == "postcode" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The postcode must be 255 characters or fewer"
-				errorCollection["postcode"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }

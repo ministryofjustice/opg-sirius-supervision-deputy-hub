@@ -72,9 +72,6 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATe
 			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
-
-				verr.Errors = renameChangeFirmValidationErrorMessages(verr.Errors)
-
 				vars = changeFirmVars{
 					Path:      r.URL.Path,
 					XSRFToken: ctx.XSRFToken,
@@ -91,23 +88,4 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATe
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameChangeFirmValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-
-			if fieldName == "firmId" && errorType == "notGreaterThanInclusive" {
-				err[errorType] = "Enter a firm name or number"
-				errorCollection["existing-firm"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }
