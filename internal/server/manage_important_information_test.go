@@ -168,22 +168,3 @@ func TestCheckForReportSystemType(t *testing.T) {
 	assert.Equal(checkForReportSystemType("OPG Paper"), "OPGPaper")
 	assert.Equal(checkForReportSystemType("Other type"), "Other type")
 }
-
-func TestRenameUpdateAdditionalInformationValidationErrorMessages(t *testing.T) {
-	assert := assert.New(t)
-
-	validationErrors := sirius.ValidationErrors{
-		"otherImportantInformation": {
-			"stringLengthTooLong": "What sirius gives us",
-		},
-	}
-
-	expectedValidationErrors := sirius.ValidationErrors{
-		"otherImportantInformation": {
-			"stringLengthTooLong": "The other important information must be 1000 characters or fewer",
-		},
-	}
-
-	returnedError := renameUpdateAdditionalInformationValidationErrorMessages(validationErrors)
-	assert.Equal(returnedError, expectedValidationErrors)
-}
