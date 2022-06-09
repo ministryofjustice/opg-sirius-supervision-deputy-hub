@@ -10,7 +10,6 @@ import (
 )
 
 type DeputyHubNotesInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
@@ -46,7 +45,7 @@ func hasSuccessInUrl(url string, prefix string) bool {
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -55,10 +54,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
 			deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
 			if err != nil {
 				return err
@@ -90,17 +85,9 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
-
 			err = client.AddNote(ctx, title, note, deputyId, userId.ID, deputyDetails.DeputyType.Handle)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-
-				verr.Errors = renameValidationErrorMessages(verr.Errors)
-
 				vars = addNoteVars{
 					Path:          r.URL.Path,
 					XSRFToken:     ctx.XSRFToken,
@@ -124,32 +111,4 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-
-			if fieldName == "name" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The title must be 255 characters or fewer"
-				errorCollection["1-title"] = err
-			} else if fieldName == "name" && errorType == "isEmpty" {
-				err[errorType] = "Enter a title for the note"
-				errorCollection["1-title"] = err
-			} else if fieldName == "description" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The note must be 1000 characters or fewer"
-				errorCollection["2-note"] = err
-			} else if fieldName == "description" && errorType == "isEmpty" {
-				err[errorType] = "Enter a note"
-				errorCollection["2-note"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }

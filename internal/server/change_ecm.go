@@ -10,7 +10,6 @@ import (
 )
 
 type ChangeECMInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]sirius.TeamMember, error)
 	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
@@ -29,16 +28,11 @@ type changeECMHubVars struct {
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
 
 		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {
@@ -86,7 +80,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				vars.Errors = sirius.ValidationErrors{
 					"Change ECM": {"": "Select an executive case manager"},
 				}
-				EcmIdStringValue = "0"
+				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
 			EcmIdValue, err := strconv.Atoi(EcmIdStringValue)
@@ -98,12 +92,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 			err = client.ChangeECM(ctx, changeECMForm, deputyDetails)
 
-			if len(vars.Errors) >= 1 {
-				return tmpl.ExecuteTemplate(w, "page", vars)
-			}
-
 			if verr, ok := err.(sirius.ValidationError); ok {
-				verr.Errors = renameEditDeputyValidationErrorMessages(verr.Errors)
 				vars.Errors = verr.Errors
 
 				return tmpl.ExecuteTemplate(w, "page", vars)

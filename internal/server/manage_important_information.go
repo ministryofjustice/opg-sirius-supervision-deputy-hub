@@ -11,7 +11,6 @@ import (
 )
 
 type ManageProDeputyImportantInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
@@ -33,15 +32,16 @@ type manageDeputyImportantInformationVars struct {
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := manageDeputyImportantInformationVars{
-			Path:      r.URL.Path,
-			XSRFToken: ctx.XSRFToken,
-			DeputyId:  deputyId,
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyId:      deputyId,
+			DeputyDetails: deputyDetails,
 		}
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)
@@ -53,16 +53,6 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 
 			vars.IsFinanceManager = userDetails.IsFinanceManager()
-			return nil
-		})
-
-		group.Go(func() error {
-			deputyDetails, err := client.GetDeputyDetails(ctx.With(groupCtx), defaultPATeam, deputyId)
-			if err != nil {
-				return err
-			}
-
-			vars.DeputyDetails = deputyDetails
 			return nil
 		})
 
@@ -140,7 +130,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = renameUpdateAdditionalInformationValidationErrorMessages(verr.Errors)
+				vars.Errors = verr.Errors
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
@@ -152,24 +142,6 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameUpdateAdditionalInformationValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-			if fieldName == "otherImportantInformation" && errorType == "stringLengthTooLong" {
-				err[errorType] = "The other important information must be 1000 characters or fewer"
-				errorCollection["otherImportantInformation"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }
 
 func checkForReportSystemType(reportType string) string {

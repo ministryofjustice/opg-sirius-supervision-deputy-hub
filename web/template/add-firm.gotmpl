@@ -1,6 +1,6 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "error-summary" .Errors }}
+    {{ template "error-summary" (rename_errors .Errors) }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ if ne .ErrorMessage "" }}
             {{ template "error-banner" . }}

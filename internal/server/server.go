@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/securityheaders"
@@ -16,7 +17,6 @@ type Logger interface {
 	Request(*http.Request, error)
 }
 
-//this is the files in server which need a client
 type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
@@ -36,7 +36,7 @@ type Template interface {
 }
 
 func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
-	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL)
+	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam)
 
 	router := mux.NewRouter()
 	router.Handle("/health-check", healthCheck())
@@ -117,7 +117,7 @@ func (e StatusError) Code() int {
 	return int(e)
 }
 
-type Handler func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error
+type Handler func(perm sirius.PermissionSet, d sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error
 
 type errorVars struct {
 	Firstname string
@@ -131,15 +131,23 @@ type errorVars struct {
 
 type ErrorHandlerClient interface {
 	MyPermissions(sirius.Context) (sirius.PermissionSet, error)
+	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
-func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string) func(next Handler) http.Handler {
+func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			myPermissions, err := client.MyPermissions(getContext(r))
 
 			if err == nil {
-				err = next(myPermissions, w, r)
+				routeVars := mux.Vars(r)
+				deputyId, _ := strconv.Atoi(routeVars["id"])
+				var deputyDetails sirius.DeputyDetails
+				deputyDetails, err = client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
+
+				if err == nil {
+					err = next(myPermissions, deputyDetails, w, r)
+				}
 			}
 
 			if err != nil {
