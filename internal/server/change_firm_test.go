@@ -10,18 +10,10 @@ import (
 )
 
 type mockDeputyChangeFirmInformation struct {
-	count      int
-	lastCtx    sirius.Context
-	err        error
-	deputyData sirius.DeputyDetails
-	firmData   []sirius.FirmForList
-}
-
-func (m *mockDeputyChangeFirmInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
+	count    int
+	lastCtx  sirius.Context
+	err      error
+	firmData []sirius.FirmForList
 }
 
 func (m *mockDeputyChangeFirmInformation) GetFirms(ctx sirius.Context) ([]sirius.FirmForList, error) {
@@ -49,7 +41,7 @@ func TestNavigateToChangeFirm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForChangeFirm(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 

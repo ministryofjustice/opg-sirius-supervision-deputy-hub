@@ -7,11 +7,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"golang.org/x/sync/errgroup"
 )
 
 type DeputyHubInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 }
 
 type deputyHubVars struct {
@@ -24,10 +25,11 @@ type deputyHubVars struct {
 	Success           bool
 	SuccessMessage    string
 	ActiveClientCount int
+	IsFinanceManager  bool
 }
 
 func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
@@ -35,10 +37,6 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
 		_, _, clientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, "", "")
 		if err != nil {
 			return err
@@ -54,7 +52,22 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			ActiveClientCount: clientCount,
 		}
 
+		group, groupCtx := errgroup.WithContext(ctx.Context)
+		group.Go(func() error {
+			userDetails, err := client.GetUserDetails(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+
+			vars.IsFinanceManager = userDetails.IsFinanceManager()
+			return nil
+		})
+
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
+
+		if err := group.Wait(); err != nil {
+			return err
+		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

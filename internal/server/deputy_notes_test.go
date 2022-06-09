@@ -17,16 +17,8 @@ type mockDeputyHubNotesInformation struct {
 	lastCtx         sirius.Context
 	err             error
 	addNote         error
-	deputyData      sirius.DeputyDetails
 	deputyNotesData sirius.DeputyNoteCollection
 	userDetailsData sirius.UserDetails
-}
-
-func (m *mockDeputyHubNotesInformation) GetDeputyDetails(ctx sirius.Context, defaultPATeam int, deputyId int) (sirius.DeputyDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyData, m.err
 }
 
 func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteCollection, error) {
@@ -61,14 +53,14 @@ func TestGetNotes(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHubNotes(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, w, r)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 	assert.Equal(getContext(r), client.lastCtx)
 
 	assert.Equal(1, template.count)
@@ -92,7 +84,7 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, nil)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -126,27 +118,18 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationErrors{
-		"1-title": {
-			"stringLengthTooLong": "The title must be 255 characters or fewer",
-		},
-		"2-note": {
-			"stringLengthTooLong": "The note must be 1000 characters or fewer",
-		},
-	}
-
-	assert.Equal(3, client.count)
+	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		Path:   "/123",
-		Errors: expectedValidationErrors,
+		Errors: validationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -179,27 +162,18 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
-	expectedValidationErrors := sirius.ValidationErrors{
-		"1-title": {
-			"isEmpty": "Enter a title for the note",
-		},
-		"2-note": {
-			"isEmpty": "Enter a note",
-		},
-	}
-
-	assert.Equal(3, client.count)
+	assert.Equal(2, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		Path:   "/123",
-		Errors: expectedValidationErrors,
+		Errors: validationErrors,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)

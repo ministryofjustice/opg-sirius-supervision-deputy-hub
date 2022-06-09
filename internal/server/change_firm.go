@@ -9,7 +9,6 @@ import (
 )
 
 type DeputyChangeFirmInformation interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 	GetFirms(sirius.Context) ([]sirius.FirmForList, error)
 	AssignDeputyToFirm(sirius.Context, int, int) error
 }
@@ -26,16 +25,11 @@ type changeFirmVars struct {
 }
 
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATeam int, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, w http.ResponseWriter, r *http.Request) error {
+	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-
-		deputyDetails, err := client.GetDeputyDetails(ctx, defaultPATeam, deputyId)
-		if err != nil {
-			return err
-		}
 
 		firmDetails, err := client.GetFirms(ctx)
 		if err != nil {
@@ -78,9 +72,6 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATe
 			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
-
-				verr.Errors = renameChangeFirmValidationErrorMessages(verr.Errors)
-
 				vars = changeFirmVars{
 					Path:      r.URL.Path,
 					XSRFToken: ctx.XSRFToken,
@@ -97,23 +88,4 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATe
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func renameChangeFirmValidationErrorMessages(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
-	errorCollection := sirius.ValidationErrors{}
-
-	for fieldName, value := range siriusError {
-		for errorType, errorMessage := range value {
-			err := make(map[string]string)
-
-			if fieldName == "firmId" && errorType == "notGreaterThanInclusive" {
-				err[errorType] = "Enter a firm name or number"
-				errorCollection["existing-firm"] = err
-			} else {
-				err[errorType] = errorMessage
-				errorCollection[fieldName] = err
-			}
-		}
-	}
-	return errorCollection
 }
