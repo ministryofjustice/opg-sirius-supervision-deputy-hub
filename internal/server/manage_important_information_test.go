@@ -49,6 +49,7 @@ func (m *mockManageDeputyImportantInformation) GetUserDetails(ctx sirius.Context
 
 func TestGetManageImportantInformation(t *testing.T) {
 	assert := assert.New(t)
+	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
 	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "x", Label: "y"}}
@@ -132,6 +133,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			assert := assert.New(t)
+			defaultPATeam := 23
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
