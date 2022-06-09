@@ -1,0 +1,101 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+            {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    {{ template "navigation" . }}
+
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+            Assurance visits
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                     href="{{ sirius (printf "/api/v1/deputies/%d/add-assurance-visit?OPG-Bypass-Membrane=1"  .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    data-module="govuk-button">
+                    Add a visit
+                </a>
+            </div>
+        </div>
+    </header>
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <dl id="assurance-visit-details" class="govuk-summary-list">
+                     <div class="govuk-summary-list__row">
+                         <dt class="govuk-summary-list__key">Requested date</dt>
+                         <dd class="govuk-summary-list__value hook_requested_date">
+                            03/10/2021
+                         </dd>
+                     </div>
+                     <div class="govuk-summary-list__row">
+                         <dt class="govuk-summary-list__key">Requested by</dt>
+                         <dd class="govuk-summary-list__value hook_requested_by">
+                            placeholder
+                         </dd>
+                     </div>
+                     <div class="govuk-summary-list__row">
+                         <dt class="govuk-summary-list__key">Commissioned date</dt>
+                         <dd class="govuk-summary-list__value hook_commissioned_date">
+                            placeholder
+                         </dd>
+                     </div>
+                     <div class="govuk-summary-list__row">
+                         <dt class="govuk-summary-list__key">Visitor</dt>
+                         <dd class="govuk-summary-list__value hook_visitor">
+                            placeholder
+                         </dd>
+                     </div>
+                     <div class="govuk-summary-list__row">
+                         <dt class="govuk-summary-list__key">Report due date</dt>
+                         <dd class="govuk-summary-list__value hook_report_due_date">
+                            placeholder
+                         </dd>
+                     </div>
+                      <div class="govuk-summary-list__row">
+                          <dt class="govuk-summary-list__key">Report received date</dt>
+                          <dd class="govuk-summary-list__value hook_report_received_date">
+                            placeholder
+                          </dd>
+                      </div>
+                      <div class="govuk-summary-list__row">
+                          <dt class="govuk-summary-list__key">Outcome</dt>
+                          <dd class="govuk-summary-list__value hook_outcome">
+                            placeholder
+                          </dd>
+                      </div>
+                      <div class="govuk-summary-list__row">
+                          <dt class="govuk-summary-list__key">Report reviewed date</dt>
+                          <dd class="govuk-summary-list__value hook_report_reviewed_date">
+                            placeholder
+                          </dd>
+                      </div>
+                      <div class="govuk-summary-list__row">
+                          <dt class="govuk-summary-list__key">Reviewed by</dt>
+                          <dd class="govuk-summary-list__value hook_reviewed_by">
+                               placeholder
+                          </dd>
+                      </div>
+                      <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Report marked as</dt>
+                        <dd class="govuk-summary-list__value hook_report_marked_as">
+                            placeholder
+                        </dd>
+                      </div>
+                </dl>
+
+        </div>
+    </div>
+
+{{ end }}
