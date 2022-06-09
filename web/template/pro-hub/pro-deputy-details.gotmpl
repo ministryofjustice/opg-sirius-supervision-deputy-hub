@@ -13,6 +13,24 @@
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
+                {{ if .IsFinanceManager }}
+                <a
+                    href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
+                    data-module="govuk-button">
+                    Download schedule
+                </a>
+                {{ end }}
+                <a
+                    href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
+                    data-module="govuk-button">
+                    Download schedule
+                </a>
                 <a
                     href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}"
                     role="button"
