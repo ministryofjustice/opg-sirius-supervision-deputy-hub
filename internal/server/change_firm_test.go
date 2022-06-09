@@ -10,10 +10,10 @@ import (
 )
 
 type mockDeputyChangeFirmInformation struct {
-	count      int
-	lastCtx    sirius.Context
-	err        error
-	firmData   []sirius.FirmForList
+	count    int
+	lastCtx  sirius.Context
+	err      error
+	firmData []sirius.FirmForList
 }
 
 func (m *mockDeputyChangeFirmInformation) GetFirms(ctx sirius.Context) ([]sirius.FirmForList, error) {

@@ -15,6 +15,7 @@ type mockDeputyHubInformation struct {
 	err              error
 	deputyClientData sirius.DeputyClientDetails
 	ariaSorting      sirius.AriaSorting
+	userDetails      sirius.UserDetails
 }
 
 func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
@@ -22,6 +23,13 @@ func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId
 	m.lastCtx = ctx
 
 	return m.deputyClientData, m.ariaSorting, 0, m.err
+}
+
+func (m *mockDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.userDetails, m.err
 }
 
 func TestNavigateToDeputyHub(t *testing.T) {
