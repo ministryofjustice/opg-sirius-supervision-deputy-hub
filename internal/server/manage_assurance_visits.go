@@ -15,6 +15,8 @@ type ManageAssuranceVisitsVars struct {
 	DeputyDetails             sirius.DeputyDetails
 	Error                     string
 	Errors                    sirius.ValidationErrors
+	Success           bool
+	SuccessMessage    string
 }
 
 func renderTemplateForAssuranceVisits(tmpl Template) Handler {
@@ -22,11 +24,14 @@ func renderTemplateForAssuranceVisits(tmpl Template) Handler {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
+		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), "", "")
 
 		vars := ManageAssuranceVisitsVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
+			Success:           hasSuccess,
+			SuccessMessage:    successMessage,
 		}
 
 		switch r.Method {

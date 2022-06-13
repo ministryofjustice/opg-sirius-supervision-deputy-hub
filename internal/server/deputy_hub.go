@@ -73,6 +73,8 @@ func createSuccessAndSuccessMessageForVars(url string, ecmName string, firmName 
 			return true, "Firm changed to " + firmName
 		case "teamDetails":
 			return true, "Team details updated"
+		case "addAssuranceVisit":
+			return true, "Team details updated"
 		}
 	}
 	return false, ""

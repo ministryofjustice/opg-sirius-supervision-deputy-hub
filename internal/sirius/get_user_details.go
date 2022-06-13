@@ -8,6 +8,7 @@ import (
 type UserDetails struct {
 	ID    int      `json:"id"`
 	Roles []string `json:"roles"`
+	Username string `json:"displayName"`
 }
 
 func (d UserDetails) IsFinanceManager() bool {

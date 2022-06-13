@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -10,7 +11,7 @@ import (
 
 type AddAssuranceVisit interface {
 	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	AddAssuranceVisit(ctx sirius.Context, requestedDate string, userId int, deputyId int) error
+	AddAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error
 }
 
 type AddAssuranceVisitVars struct {
@@ -37,30 +38,34 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 		case http.MethodGet:
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
-			case http.MethodPost:
-				var requestedDate = r.PostFormValue("requested_date")
+		case http.MethodPost:
+			var requestedDate = r.PostFormValue("requested-date")
+			//fmt.Println("requested date is")
+			//fmt.Println(requestedDate)
 
-				userId, err := client.GetUserDetails(ctx)
-				if err != nil {
-					return err
+			user, err := client.GetUserDetails(ctx)
+			if err != nil {
+				return err
+			}
+
+			if verr, ok := err.(sirius.ValidationError); ok {
+				vars := AddAssuranceVisitVars{
+					Path:      r.URL.Path,
+					XSRFToken: ctx.XSRFToken,
+					Errors:    verr.Errors,
 				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
 
-				err = client.AddAssuranceVisit(ctx, requestedDate, userId.ID, deputyId)
+			addAssuranceVisitErr := client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
+			if addAssuranceVisitErr != nil {
+				return addAssuranceVisitErr
+			}
 
-				if verr, ok := err.(sirius.ValidationError); ok {
-					vars := AddAssuranceVisitVars{
-						Path:      r.URL.Path,
-						XSRFToken: ctx.XSRFToken,
-						Errors:    verr.Errors,
-					}
-					return tmpl.ExecuteTemplate(w, "page", vars)
-				}
-					return tmpl.ExecuteTemplate(w, "page", vars)
-
-
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
 
+}
