@@ -10,92 +10,49 @@
     {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
         {{ template "pro-deputy-header" . }}
     {{ end }}
-    {{ template "navigation" . }}
 
     <header>
-        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-            Assurance visits
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            Add assurance visit
         </h1>
-        <div class="moj-button-menu">
-            <div class="moj-button-menu__wrapper">
-                <a
-                     href="{{ sirius (printf "/api/v1/deputies/%d/add-assurance-visit?OPG-Bypass-Membrane=1"  .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary"
-                    data-module="govuk-button">
-                    Add a visit
-                </a>
-            </div>
-        </div>
     </header>
+
+    <form id="add-assurance-visit-form" method="post" autocomplete="off">
+      <input
+          type="hidden"
+          name="xsrfToken"
+          value="{{ .XSRFToken }}" />
 
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                <dl id="assurance-visit-details" class="govuk-summary-list">
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Requested date</dt>
-                         <dd class="govuk-summary-list__value hook_requested_date">
-                            03/10/2021
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Requested by</dt>
-                         <dd class="govuk-summary-list__value hook_requested_by">
-                            placeholder
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Commissioned date</dt>
-                         <dd class="govuk-summary-list__value hook_commissioned_date">
-                            placeholder
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Visitor</dt>
-                         <dd class="govuk-summary-list__value hook_visitor">
-                            placeholder
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Report due date</dt>
-                         <dd class="govuk-summary-list__value hook_report_due_date">
-                            placeholder
-                         </dd>
-                     </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Report received date</dt>
-                          <dd class="govuk-summary-list__value hook_report_received_date">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Outcome</dt>
-                          <dd class="govuk-summary-list__value hook_outcome">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Report reviewed date</dt>
-                          <dd class="govuk-summary-list__value hook_report_reviewed_date">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Reviewed by</dt>
-                          <dd class="govuk-summary-list__value hook_reviewed_by">
-                               placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Report marked as</dt>
-                        <dd class="govuk-summary-list__value hook_report_marked_as">
-                            placeholder
-                        </dd>
-                      </div>
-                </dl>
-
+                <label class="govuk-label" for="requested-date">
+                    Requested date
+                </label>
+                <input
+                    class="govuk-input govuk-input--width-10"
+                    id="requested-date"
+                    name="requested-date"
+                    type="date"
+                    style="text-transform:uppercase"
+                    />
+            </div>
         </div>
-    </div>
+
+        <div class="govuk-button-group govuk-!-margin-top-7">
+            <button
+                type="submit"
+                class="govuk-button"
+                data-module="govuk-button">
+                Save assurance visit
+            </button>
+
+           <a
+               class="govuk-link"
+               href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+               Cancel
+           </a>
+        </div>
+    </form>
+
 
 {{ end }}
