@@ -9,18 +9,18 @@ import (
 )
 
 type ManageAssuranceVisit interface {
-	GetAssuranceVisits(ctx sirius.Context, deputyId int) (sirius.AssuranceVisit, error)
+	GetAssuranceVisits(ctx sirius.Context, deputyId int) ([]sirius.AssuranceVisits, error)
 }
 
 type ManageAssuranceVisitsVars struct {
-	Path                      string
-	XSRFToken                 string
-	DeputyDetails             sirius.DeputyDetails
-	Error                     string
-	Errors                    sirius.ValidationErrors
-	Success           bool
-	SuccessMessage    string
-	AssuranceVisits sirius.AssuranceVisit
+	Path            string
+	XSRFToken       string
+	DeputyDetails   sirius.DeputyDetails
+	Error           string
+	Errors          sirius.ValidationErrors
+	Success         bool
+	SuccessMessage  string
+	AssuranceVisits []sirius.AssuranceVisits
 }
 
 func renderTemplateForAssuranceVisits(client ManageAssuranceVisit, tmpl Template) Handler {
@@ -31,11 +31,11 @@ func renderTemplateForAssuranceVisits(client ManageAssuranceVisit, tmpl Template
 		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), "", "")
 
 		vars := ManageAssuranceVisitsVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-			Success:           hasSuccess,
-			SuccessMessage:    successMessage,
+			Path:           r.URL.Path,
+			XSRFToken:      ctx.XSRFToken,
+			DeputyDetails:  deputyDetails,
+			Success:        hasSuccess,
+			SuccessMessage: successMessage,
 		}
 
 		switch r.Method {
@@ -50,4 +50,3 @@ func renderTemplateForAssuranceVisits(client ManageAssuranceVisit, tmpl Template
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
-
