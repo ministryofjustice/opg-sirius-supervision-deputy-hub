@@ -30,19 +30,20 @@
         </div>
     </header>
 
+    {{ range .AssuranceVisits }}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl id="assurance-visit-details" class="govuk-summary-list">
                      <div class="govuk-summary-list__row">
                          <dt class="govuk-summary-list__key">Requested date</dt>
                          <dd class="govuk-summary-list__value hook_requested_date">
-                            {{.AssuranceVisits}}
+                            {{ .RequestedDate }}
                          </dd>
                      </div>
                      <div class="govuk-summary-list__row">
                          <dt class="govuk-summary-list__key">Requested by</dt>
                          <dd class="govuk-summary-list__value hook_requested_by">
-                            placeholder
+                         {{ .RequestedBy.UserDisplayName }}
                          </dd>
                      </div>
                      <div class="govuk-summary-list__row">
@@ -94,9 +95,10 @@
                         </dd>
                       </div>
                 </dl>
-
+            </div>
         </div>
-    </div>
+        </br>
+    {{ end }}
 
 {{ end }}
 

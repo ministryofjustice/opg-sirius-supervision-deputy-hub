@@ -7,17 +7,17 @@ import (
 	"net/http"
 )
 
-type AssuranceVisit struct {
-	RequestedDate     string `json:"requestedDate"`
-	RequestedBy int `json:"requestedBy"`
+type CreateAssuranceVisit struct {
+	RequestedDate string `json:"requestedDate"`
+	RequestedBy   int    `json:"requestedBy"`
 }
 
 func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, deputyId int) error {
 	var body bytes.Buffer
 
-	err := json.NewEncoder(&body).Encode(AssuranceVisit{
-		RequestedDate:    requestedDate,
-		RequestedBy:     userId,
+	err := json.NewEncoder(&body).Encode(CreateAssuranceVisit{
+		RequestedDate: requestedDate,
+		RequestedBy:   userId,
 	})
 
 	if err != nil {
