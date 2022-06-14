@@ -1,13 +1,16 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
+
+type ManageAssuranceVisit interface {
+	GetAssuranceVisits(ctx sirius.Context, deputyId int) (sirius.AssuranceVisit, error)
+}
 
 type ManageAssuranceVisitsVars struct {
 	Path                      string
@@ -17,9 +20,10 @@ type ManageAssuranceVisitsVars struct {
 	Errors                    sirius.ValidationErrors
 	Success           bool
 	SuccessMessage    string
+	AssuranceVisits sirius.AssuranceVisit
 }
 
-func renderTemplateForAssuranceVisits(tmpl Template) Handler {
+func renderTemplateForAssuranceVisits(client ManageAssuranceVisit, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -36,9 +40,13 @@ func renderTemplateForAssuranceVisits(tmpl Template) Handler {
 
 		switch r.Method {
 		case http.MethodGet:
+			visits, err := client.GetAssuranceVisits(ctx, deputyId)
+			if err != nil {
+				return err
+			}
+			vars.AssuranceVisits = visits
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		}
-		fmt.Println(deputyId);
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

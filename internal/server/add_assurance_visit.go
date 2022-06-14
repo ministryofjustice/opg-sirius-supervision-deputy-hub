@@ -40,12 +40,14 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 
 		case http.MethodPost:
 			var requestedDate = r.PostFormValue("requested-date")
-			//fmt.Println("requested date is")
-			//fmt.Println(requestedDate)
-
 			user, err := client.GetUserDetails(ctx)
 			if err != nil {
 				return err
+			}
+
+			addAssuranceVisitErr := client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
+			if addAssuranceVisitErr != nil {
+				return addAssuranceVisitErr
 			}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
@@ -55,11 +57,6 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 					Errors:    verr.Errors,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
-			}
-
-			addAssuranceVisitErr := client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
-			if addAssuranceVisitErr != nil {
-				return addAssuranceVisitErr
 			}
 
 			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", deputyId))

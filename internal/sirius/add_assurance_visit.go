@@ -8,31 +8,23 @@ import (
 )
 
 type AssuranceVisit struct {
-	ID           int    `json:"id"`
-	RequestedDate     string `json:"requstedDate"`
+	RequestedDate     string `json:"requestedDate"`
 	RequestedBy int `json:"requestedBy"`
-	CommissionedDate string `json:"commissionedDate"`
-	Visitor string `json:"visitor"`
-	ReportDueDate         string `json:"reportDueDate"`
-	ReportReceivedDate       string `json:"reportReceivedDate"`
-	Outcome     string `json:"outcome"`
-	ReportReviewDate        string `json:"reportReviewDate"`
-	ReviewedBy  string `json:"reviewedBy"`
-	ReportMarkedAs  string `json:"reportMarkedAs"`
 }
 
 func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, deputyId int) error {
-	var k FirmDetails
 	var body bytes.Buffer
+
 	err := json.NewEncoder(&body).Encode(AssuranceVisit{
 		RequestedDate:    requestedDate,
 		RequestedBy:     userId,
 	})
+
 	if err != nil {
 		return err
 	}
-
 	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/assurance-visit", deputyId), &body)
+
 	if err != nil {
 		return err
 	}
@@ -65,6 +57,6 @@ func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, de
 		return newStatusError(resp)
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&k)
+	err = json.NewDecoder(resp.Body).Decode(&err)
 	return err
 }
