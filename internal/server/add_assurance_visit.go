@@ -40,6 +40,14 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 
 		case http.MethodPost:
 			var requestedDate = r.PostFormValue("requested-date")
+
+			if requestedDate == "" {
+				vars.Errors = sirius.ValidationErrors{
+					"requested-date": {"": "Enter a real date"},
+				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
 			user, err := client.GetUserDetails(ctx)
 			if err != nil {
 				return err
