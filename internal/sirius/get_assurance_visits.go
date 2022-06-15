@@ -29,7 +29,6 @@ func (c *Client) GetAssuranceVisits(ctx Context, deputyId int) ([]AssuranceVisit
 	if err != nil {
 		return k.AssuranceVisits, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
