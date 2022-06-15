@@ -1,0 +1,29 @@
+{{ define "assurance-visit-added" }}
+    <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">Assurance process created</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+
+                {{ range .Event.Changes }}
+                <li>
+                    {{ if eq .FieldName "requestedBy" }}
+                        Requested by:
+                    {{ end }}
+                    {{ if eq .FieldName "requestedDate" }}
+                        Requested date:
+                    {{ end }}
+                    {{ .NewValue }}
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}

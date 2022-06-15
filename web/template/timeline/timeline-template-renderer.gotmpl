@@ -20,4 +20,7 @@
     {{ if eq .EventType "DeputyAllocatedToFirm" }}
         {{ template "deputy-allocated-to-firm" . }}
     {{ end }}
+    {{ if eq .EventType "AssuranceVisitAdded" }}
+        {{ template "assurance-visit-added" . }}
+    {{ end }}
 {{ end }}
