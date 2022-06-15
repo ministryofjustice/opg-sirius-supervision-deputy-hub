@@ -31,32 +31,27 @@ func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, de
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.http.Do(req)
-
 	if err != nil {
 		return err
 	}
 
 	defer resp.Body.Close()
+
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}
 
-	statusOK := resp.StatusCode >= 200 && resp.StatusCode < 300
-
-	if !statusOK {
+	if resp.StatusCode != http.StatusCreated {
 		var v struct {
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
-			return ValidationError{
-				Errors: v.ValidationErrors,
-			}
+			return ValidationError{Errors: v.ValidationErrors}
 		}
 
 		return newStatusError(resp)
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&err)
-	return err
+	return nil
 }

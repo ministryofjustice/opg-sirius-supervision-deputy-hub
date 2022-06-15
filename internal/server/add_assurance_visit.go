@@ -15,11 +15,11 @@ type AddAssuranceVisit interface {
 }
 
 type AddAssuranceVisitVars struct {
-	Path                      string
-	XSRFToken                 string
-	DeputyDetails             sirius.DeputyDetails
-	Error                     string
-	Errors                    sirius.ValidationErrors
+	Path          string
+	XSRFToken     string
+	DeputyDetails sirius.DeputyDetails
+	Error         string
+	Errors        sirius.ValidationErrors
 }
 
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
@@ -45,10 +45,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return err
 			}
 
-			addAssuranceVisitErr := client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
-			if addAssuranceVisitErr != nil {
-				return addAssuranceVisitErr
-			}
+			err = client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := AddAssuranceVisitVars{
@@ -64,5 +61,4 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-
 }
