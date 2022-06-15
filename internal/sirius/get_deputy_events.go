@@ -27,6 +27,8 @@ type Event struct {
 	ExecutiveCaseManager string         `json:"executiveCaseManager"`
 	Changes              []Changes      `json:"changes"`
 	Client               []ClientPerson `json:"additionalPersons"`
+	RequestedBy string `json:"requestedBy"`
+	RequestedDate string `json:"requestedDate"`
 }
 
 type Changes struct {
