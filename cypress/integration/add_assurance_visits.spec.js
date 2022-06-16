@@ -14,7 +14,7 @@ describe("Add Assurance Visit", () => {
         });
     });
 
-    describe("Successfully submitting assurance visit form", () => {
+    describe("Successfully and errors submitting assurance visit form", () => {
         it("should allow me to submit the form", () => {
             cy.setCookie("success-route", "addAssuranceVisit");
             cy.get("#f-requested-date").type("2021-02-01");
@@ -22,5 +22,14 @@ describe("Add Assurance Visit", () => {
             cy.url().should("contain", "/supervision/deputies/3/assurance-visits");
             cy.get(".moj-banner").should("contain", "Assurance process updated");
         });
+    });
+
+    it("shows error message when submitting invalid data", () => {
+        cy.setCookie("fail-route", "addAssuranceVisit");
+        cy.get("#add-assurance-visit-form").submit();
+        cy.get(".govuk-error-summary__body").should(
+            "contain",
+            "Enter a real date"
+        );
     });
 });
