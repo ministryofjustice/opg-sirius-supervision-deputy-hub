@@ -154,7 +154,6 @@
         },
         "reportSystemType": {
           "handle": "CASHFAC",
-          "handle": "CASHFAC",
           "label": "CASHFAC"
         },
         "annualBillingInvoice": {
