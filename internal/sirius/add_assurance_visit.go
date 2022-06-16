@@ -36,7 +36,6 @@ func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, de
 	}
 
 	defer resp.Body.Close()
-
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}
