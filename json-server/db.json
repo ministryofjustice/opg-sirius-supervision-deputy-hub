@@ -1630,6 +1630,14 @@
   ],
   "errors": [
     {
+      "id": "addAssuranceVisit",
+      "validation_errors": {
+        "requested-date": {
+          "": "Enter a real date"
+        }
+      }
+    },
+    {
       "id": "notes",
       "validation_errors": {
         "name": {
