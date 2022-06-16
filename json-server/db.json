@@ -1758,8 +1758,7 @@
       "firmId": 2
     },
     {
-      "id": "addAssuranceVisit",
-      "requestedDate": "2021-02-01"
+      "id": "addAssuranceVisit"
     },
     {
       "id": "allocateToFirm",
