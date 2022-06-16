@@ -40,7 +40,7 @@ func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, de
 		return ErrUnauthorized
 	}
 
-	if resp.StatusCode != http.StatusCreated {
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		var v struct {
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
