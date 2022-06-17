@@ -18,6 +18,7 @@ type ManageAssuranceVisitsVars struct {
 	DeputyDetails   sirius.DeputyDetails
 	Error           string
 	Errors          sirius.ValidationErrors
+	ErrorMessage    string
 	Success         bool
 	SuccessMessage  string
 	AssuranceVisits []sirius.AssuranceVisits
