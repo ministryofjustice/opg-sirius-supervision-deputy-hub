@@ -7,10 +7,12 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"golang.org/x/sync/errgroup"
 )
 
 type DeputyHubInformation interface {
 	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 }
 
 type deputyHubVars struct {
@@ -23,6 +25,7 @@ type deputyHubVars struct {
 	Success           bool
 	SuccessMessage    string
 	ActiveClientCount int
+	IsFinanceManager  bool
 }
 
 func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
@@ -49,7 +52,22 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			ActiveClientCount: clientCount,
 		}
 
+		group, groupCtx := errgroup.WithContext(ctx.Context)
+		group.Go(func() error {
+			userDetails, err := client.GetUserDetails(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+
+			vars.IsFinanceManager = userDetails.IsFinanceManager()
+			return nil
+		})
+
 		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
+
+		if err := group.Wait(); err != nil {
+			return err
+		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
