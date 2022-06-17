@@ -38,13 +38,13 @@ func TestPostAssuranceVisit(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visit", strings.NewReader("{requestedDate:'2200/10/20', requestedBy:22}"))
+	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader("{requestedDate:'2200/10/20', requestedBy:22}"))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
 	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visit", func(w http.ResponseWriter, r *http.Request) {
+	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
