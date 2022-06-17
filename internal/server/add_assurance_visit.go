@@ -20,6 +20,7 @@ type AddAssuranceVisitVars struct {
 	DeputyDetails sirius.DeputyDetails
 	Error         string
 	Errors        sirius.ValidationErrors
+	ErrorMessage  string
 }
 
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
