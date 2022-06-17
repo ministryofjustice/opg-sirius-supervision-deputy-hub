@@ -67,7 +67,7 @@ func TestGetAssuranceVisitsReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, assuranceVisits)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/assurance-visit",
+		URL:    svr.URL + "/api/v1/deputies/76/assurance-visits",
 		Method: http.MethodGet,
 	}, err)
 }
