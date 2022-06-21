@@ -14,7 +14,7 @@ describe("Add Assurance Visit", () => {
         });
     });
 
-    describe("Successfully and errors submitting assurance visit form", () => {
+    describe("Success submitting assurance visit form", () => {
         it("should allow me to submit the form", () => {
             cy.setCookie("success-route", "addAssuranceVisit");
             cy.get("#f-requested-date").type("2021-02-01");
@@ -24,12 +24,14 @@ describe("Add Assurance Visit", () => {
         });
     });
 
-    it("shows error message when submitting invalid data", () => {
+    describe("Error submitting assurance visit form", () => {
+        it("shows error message when submitting invalid data", () => {
         cy.setCookie("fail-route", "addAssuranceVisit");
         cy.get("#add-assurance-visit-form").submit();
         cy.get(".govuk-error-summary__body").should(
             "contain",
             "Enter a real date"
-        );
+            );
+        });
     });
 });

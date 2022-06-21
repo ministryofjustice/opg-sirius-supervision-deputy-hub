@@ -49,7 +49,7 @@ func editAssuranceVisits(k []AssuranceVisits) []AssuranceVisits {
 	var list []AssuranceVisits
 	for _, s := range k {
 		event := AssuranceVisits{
-			RequestedDate: formatDateAndTime("2006-01-02T15:04:05+00:00", s.RequestedDate, "02/01/2006"),
+			RequestedDate: FormatDateAndTime("2006-01-02T15:04:05+00:00", s.RequestedDate, "02/01/2006"),
 			RequestedBy:   s.RequestedBy,
 		}
 
