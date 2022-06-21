@@ -618,12 +618,6 @@ func TestEditDeputyEvents(t *testing.T) {
 	assert.Equal(t, expectedResponse, editDeputyEvents(unsortedData))
 }
 
-func TestFormatDateAndTime(t *testing.T) {
-	unsortedData := "2020-10-18 10:11:08"
-	expectedResponse := "18/10/2020 10:11:08"
-	assert.Equal(t, expectedResponse, formatDateAndTime(unsortedData))
-}
-
 func TestCalculateIfNewEvent(t *testing.T) {
 	assert.Equal(t, true, calculateIfNewEvent(
 		[]Changes{
