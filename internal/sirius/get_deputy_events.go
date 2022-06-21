@@ -27,8 +27,8 @@ type Event struct {
 	ExecutiveCaseManager string         `json:"executiveCaseManager"`
 	Changes              []Changes      `json:"changes"`
 	Client               []ClientPerson `json:"additionalPersons"`
-	RequestedBy string `json:"requestedBy"`
-	RequestedDate string `json:"requestedDate"`
+	RequestedBy          string         `json:"requestedBy"`
+	RequestedDate        string         `json:"requestedDate"`
 }
 
 type Changes struct {
@@ -88,7 +88,7 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       formatDateAndTime("2006-01-02 15:04:05", s.Timestamp, "02/01/2006 15:04:05"),
+			Timestamp:       FormatDateAndTime("2006-01-02 15:04:05", s.Timestamp, "02/01/2006 15:04:05"),
 			EventType:       reformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
@@ -128,10 +128,4 @@ func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
 		return changeToTimeTypeJ.Before(changeToTimeTypeI)
 	})
 	return v
-}
-
-func formatDateAndTime(formatForDateTime string, dateString string, displayLayoutDateTime string) string {
-	stringTodateTime, _ := time.Parse(formatForDateTime, dateString)
-	dateTime := stringTodateTime.Format(displayLayoutDateTime)
-	return dateTime
 }
