@@ -1,0 +1,179 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+            {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            Manage assurance visit
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="manage-assurance-visit-form" method="post" autocomplete="off">
+                <input
+                    type="hidden"
+                    name="xsrfToken"
+                    value="{{ .XSRFToken }}"/>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="commissioned-date">
+                        Commissioned date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-commissioned-date"
+                        name="commissioned-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-due-date">
+                        Report due date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-due-date"
+                        name="report-due-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-received-date">
+                        Report received date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-received-date"
+                        name="report-received-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset
+                        class="govuk-fieldset"
+                        aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend">
+                            Outcome
+                        </legend>
+                        <div class="govuk-radios govuk-radios--conditional">
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="f-successful"
+                                    name="successful"
+                                    type="radio"
+                                    value="successful"/>
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="successful">
+                                    Successful
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="f-cancelled"
+                                    name="cancelled"
+                                    type="radio"
+                                    value="cancelled"/>
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="cancelled">
+                                    Cancelled
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-review-date">
+                        Report review date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-review-date"
+                        name="report-review-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset
+                        class="govuk-fieldset"
+                        aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend">
+                            Report marked as
+                        </legend>
+                        <div class="govuk-radios govuk-radios--conditional">
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="f-red"
+                                    name="red"
+                                    type="radio"
+                                    value="red"/>
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="red">
+                                    Red
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="f-amber"
+                                    name="amber"
+                                    type="radio"
+                                    value="amber"/>
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="amber">
+                                    Amber
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input
+                                    class="govuk-radios__input"
+                                    id="f-green"
+                                    name="green"
+                                    type="radio"
+                                    value="green"/>
+                                <label
+                                    class="govuk-label govuk-radios__label"
+                                    for="green">
+                                    Green
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save assurance visit
+                    </button>
+                    <a
+                        class="govuk-link"
+                        href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{{ end }}

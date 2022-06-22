@@ -41,6 +41,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 
 	expectedResponse := []AssuranceVisits{
 		{
+			ID:            3,
 			RequestedDate: "25/06/2022",
 			RequestedBy:   User{UserId: 53, UserDisplayName: "case manager"},
 		},

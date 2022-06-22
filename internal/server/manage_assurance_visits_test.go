@@ -3,41 +3,53 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
 
-type mockManageAssuranceVisit struct {
-	count     int
-	lastCtx   sirius.Context
-	assuranceVisits []sirius.AssuranceVisits
-	assuranceVisitsError error
+type mockManageAssuranceVisitInformation struct {
+	count       int
+	lastCtx     sirius.Context
+	err         error
+	userDetails sirius.UserDetails
 }
 
-func (m *mockManageAssuranceVisit) GetAssuranceVisits(ctx sirius.Context, deputyId int) ([]sirius.AssuranceVisits, error) {
+func (m *mockManageAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.assuranceVisits, m.assuranceVisitsError
+	return m.userDetails, m.err
 }
 
-func TestGetManageAssuranceVisits(t *testing.T) {
-	assert := assert.New(t)
+func (m *mockManageAssuranceVisitInformation) UpdateAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error {
+	m.count += 1
+	m.lastCtx = ctx
 
-	client := &mockManageAssuranceVisit{}
+	return m.err
+}
+
+func TestPostManageAssuranceVisit(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageAssuranceVisitInformation{}
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("GET", "", nil)
+	r, _ := http.NewRequest("POST", "/123/manage-assurance-visit", strings.NewReader("{requestedDate:'2022/10/20', requestedBy:22}"))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	handler := renderTemplateForAssuranceVisits(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	var returnedError error
 
-	assert.Nil(err)
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/manage-assurance-visit", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForManageAssuranceVisit(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	})
 
+	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+	assert.Nil(returnedError)
 }
-

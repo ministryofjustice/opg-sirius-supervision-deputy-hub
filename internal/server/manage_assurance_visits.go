@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -9,41 +10,67 @@ import (
 )
 
 type ManageAssuranceVisit interface {
-	GetAssuranceVisits(ctx sirius.Context, deputyId int) ([]sirius.AssuranceVisits, error)
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
+	UpdateAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error
 }
 
-type ManageAssuranceVisitsVars struct {
-	Path            string
-	XSRFToken       string
-	DeputyDetails   sirius.DeputyDetails
-	Error           string
-	Errors          sirius.ValidationErrors
-	ErrorMessage    string
-	Success         bool
-	SuccessMessage  string
-	AssuranceVisits []sirius.AssuranceVisits
+type ManageAssuranceVisitVars struct {
+	Path          string
+	XSRFToken     string
+	DeputyDetails sirius.DeputyDetails
+	Error         string
+	Errors        sirius.ValidationErrors
+	ErrorMessage  string
 }
 
-func renderTemplateForAssuranceVisits(client ManageAssuranceVisit, tmpl Template) Handler {
+func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), "", "")
 
-		vars := ManageAssuranceVisitsVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
-			DeputyDetails:  deputyDetails,
-			Success:        hasSuccess,
-			SuccessMessage: successMessage,
+		vars := ManageAssuranceVisitVars{
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyDetails: deputyDetails,
 		}
 
-		visits, err := client.GetAssuranceVisits(ctx, deputyId)
-		if err != nil {
-			return err
+		switch r.Method {
+		case http.MethodGet:
+			return tmpl.ExecuteTemplate(w, "page", vars)
+
+		case http.MethodPost:
+			var requestedDate = r.PostFormValue("requested-date")
+
+			if requestedDate == "" {
+				vars.Errors = sirius.ValidationErrors{
+					"commissioned-date":    {"": "Enter a real date"},
+					"report-due-date":      {"": "Enter a real date"},
+					"report-received-date": {"": "Enter a real date"},
+					"report-review-date":   {"": "Enter a real date"},
+				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			user, err := client.GetUserDetails(ctx)
+			if err != nil {
+				return err
+			}
+
+			err = client.UpdateAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
+
+			if verr, ok := err.(sirius.ValidationError); ok {
+				vars := ManageAssuranceVisitVars{
+					Path:      r.URL.Path,
+					XSRFToken: ctx.XSRFToken,
+					Errors:    verr.Errors,
+				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=manageAssuranceVisit", deputyId))
+		default:
+			return StatusError(http.StatusMethodNotAllowed)
 		}
-		vars.AssuranceVisits = visits
-		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
