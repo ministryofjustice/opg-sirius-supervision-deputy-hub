@@ -77,32 +77,21 @@
                             Outcome
                         </legend>
                         <div class="govuk-radios govuk-radios--conditional">
-                            <div class="govuk-radios__item">
-                                <input
-                                    class="govuk-radios__input"
-                                    id="f-successful"
-                                    name="successful"
-                                    type="radio"
-                                    value="successful"/>
-                                <label
-                                    class="govuk-label govuk-radios__label"
-                                    for="successful">
-                                    Successful
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input
-                                    class="govuk-radios__input"
-                                    id="f-cancelled"
-                                    name="cancelled"
-                                    type="radio"
-                                    value="cancelled"/>
-                                <label
-                                    class="govuk-label govuk-radios__label"
-                                    for="cancelled">
-                                    Cancelled
-                                </label>
-                            </div>
+                            {{ range .VisitOutcomeTypes }}
+                                <div class="govuk-radios__item">
+                                    <input
+                                        class="govuk-radios__input"
+                                        id="f-{{.Label}}"
+                                        name="{{.Label}}"
+                                        type="radio"
+                                        value="{{.Label}}"/>
+                                    <label
+                                        class="govuk-label govuk-radios__label"
+                                        for="{{.Label}}">
+                                        {{.Label}}
+                                    </label>
+                                </div>
+                            {{end}}
                         </div>
                     </fieldset>
                 </div>

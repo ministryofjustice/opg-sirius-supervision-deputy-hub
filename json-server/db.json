@@ -2013,5 +2013,33 @@
       "id": 7,
       "name": "John Smith"
     }
+  ],
+  "ragRating": [
+    {
+      "handle": "RED",
+      "label": "Red"
+    },
+    {
+      "handle": "AMBER",
+      "label": "Amber"
+    },
+    {
+      "handle": "GREEN",
+      "label": "Green"
+    }
+  ],
+  "visitOutcome": [
+    {
+      "handle": "SUCCESSFUL",
+      "label": "Successful"
+    },
+    {
+      "handle": "ABORTED",
+      "label": "Aborted"
+    },
+    {
+      "handle": "CANCELLED",
+      "label": "Cancelled"
+    }
   ]
 }

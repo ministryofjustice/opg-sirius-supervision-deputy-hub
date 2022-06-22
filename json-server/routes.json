@@ -11,5 +11,7 @@
     "/firm": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
     "/reference-data/deputyBooleanType": "/deputyBooleanType",
-    "/reference-data/deputyReportSystem": "/deputyReportSystem"
+    "/reference-data/deputyReportSystem": "/deputyReportSystem",
+    "/reference-data/visitOutcome": "/visitOutcome",
+    "/reference-data/ragRating": "/ragRating"
 }
