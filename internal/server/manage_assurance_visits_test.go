@@ -16,6 +16,7 @@ type mockManageAssuranceVisitInformation struct {
 	lastCtx     sirius.Context
 	err         error
 	userDetails sirius.UserDetails
+	visitors    sirius.Visitors
 }
 
 func (m *mockManageAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
@@ -30,6 +31,13 @@ func (m *mockManageAssuranceVisitInformation) UpdateAssuranceVisit(ctx sirius.Co
 	m.lastCtx = ctx
 
 	return m.err
+}
+
+func (m *mockManageAssuranceVisitInformation) GetVisitors(ctx sirius.Context) (sirius.Visitors, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.visitors, m.err
 }
 
 func TestPostManageAssuranceVisit(t *testing.T) {

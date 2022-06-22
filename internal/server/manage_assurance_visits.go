@@ -12,6 +12,7 @@ import (
 type ManageAssuranceVisit interface {
 	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 	UpdateAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error
+	GetVisitors(ctx sirius.Context) (sirius.Visitors, error)
 }
 
 type ManageAssuranceVisitVars struct {
@@ -21,6 +22,7 @@ type ManageAssuranceVisitVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	ErrorMessage  string
+	Visitors      sirius.Visitors
 }
 
 func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Template) Handler {
@@ -37,6 +39,12 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 
 		switch r.Method {
 		case http.MethodGet:
+			visitors, err := client.GetVisitors(ctx)
+			vars.Visitors = visitors
+			if err != nil {
+				return err
+			}
+
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
