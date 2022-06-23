@@ -38,66 +38,95 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl id="assurance-visit-details" class="govuk-summary-list">
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Requested date</dt>
-                         <dd class="govuk-summary-list__value hook_requested_date">
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Requested date</dt>
+                        <dd class="govuk-summary-list__value hook_requested_date">
                             {{ .RequestedDate }}
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Requested by</dt>
-                         <dd class="govuk-summary-list__value hook_requested_by">
-                         {{ .RequestedBy.UserDisplayName }}
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Commissioned date</dt>
-                         <dd class="govuk-summary-list__value hook_commissioned_date">
-                            placeholder
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Visitor</dt>
-                         <dd class="govuk-summary-list__value hook_visitor">
-                            placeholder
-                         </dd>
-                     </div>
-                     <div class="govuk-summary-list__row">
-                         <dt class="govuk-summary-list__key">Report due date</dt>
-                         <dd class="govuk-summary-list__value hook_report_due_date">
-                            placeholder
-                         </dd>
-                     </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Report received date</dt>
-                          <dd class="govuk-summary-list__value hook_report_received_date">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Outcome</dt>
-                          <dd class="govuk-summary-list__value hook_outcome">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Report reviewed date</dt>
-                          <dd class="govuk-summary-list__value hook_report_reviewed_date">
-                            placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                          <dt class="govuk-summary-list__key">Reviewed by</dt>
-                          <dd class="govuk-summary-list__value hook_reviewed_by">
-                               placeholder
-                          </dd>
-                      </div>
-                      <div class="govuk-summary-list__row">
-                        <dt class="govuk-summary-list__key">Report marked as</dt>
-                        <dd class="govuk-summary-list__value hook_report_marked_as">
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Requested by</dt>
+                        <dd class="govuk-summary-list__value hook_requested_by">
+                            {{ .RequestedBy.UserDisplayName }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Commissioned date</dt>
+                        <dd class="govuk-summary-list__value hook_commissioned_date">
+                            {{$nullDateValue:="01/01/0001"}}
+                            {{ if ne .CommissionedDate $nullDateValue}}
+                                {{ .CommissionedDate }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Visitor</dt>
+                        <dd class="govuk-summary-list__value hook_visitor">
+                            {{ if .VisitorAllocated }}
+                                {{ .VisitorAllocated }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Report due date</dt>
+                        <dd class="govuk-summary-list__value hook_report_due_date">
+                            {{ if ne .ReportDueDate $nullDateValue}}
+                                {{ .ReportDueDate }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Report received date</dt>
+                        <dd class="govuk-summary-list__value hook_report_received_date">
+                            {{ if ne .ReportReceivedDate $nullDateValue}}
+                                {{ .ReportReceivedDate }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Outcome</dt>
+                        <dd class="govuk-summary-list__value hook_outcome">
+                            {{ if .VisitOutcome.Label }}
+                                {{ .VisitOutcome.Label }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Report reviewed date</dt>
+                        <dd class="govuk-summary-list__value hook_report_reviewed_date">
+                            {{ if ne .ReportReviewDate $nullDateValue}}
+                                {{ .ReportReviewDate }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Reviewed by</dt>
+                        <dd class="govuk-summary-list__value hook_reviewed_by">
                             placeholder
                         </dd>
-                      </div>
+                    </div>
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key">Report marked as</dt>
+                        <dd class="govuk-summary-list__value hook_report_marked_as">
+                            {{ if .VisitReportMarkedAs }}
+                                {{ .VisitReportMarkedAs.Label }}
+                            {{ else }}
+                                -
+                            {{ end }}
+                        </dd>
+                    </div>
                 </dl>
             </div>
         </div>

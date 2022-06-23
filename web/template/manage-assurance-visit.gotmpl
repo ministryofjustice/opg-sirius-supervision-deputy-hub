@@ -23,6 +23,7 @@
                     name="xsrfToken"
                     value="{{ .XSRFToken }}"/>
                 <div class="govuk-form-group">
+                    {{$nullDateValue:="0001-01-01"}}
                     <label class="govuk-label" for="commissioned-date">
                         Commissioned date
                     </label>
@@ -32,16 +33,23 @@
                         name="commissioned-date"
                         type="date"
                         style="text-transform:uppercase"
+                        {{if eq .Visit.CommissionedDate $nullDateValue}}
+                            value=""
+                        {{else}}
+                            value="{{.Visit.CommissionedDate}}"
+                        {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="sort">
                         Select a visitor
                     </label>
-                    <select class="govuk-select" id="sort" name="sort">
+                    {{$currentVisitorAllocated:=.Visit.VisitorAllocated}}
+                    <select class="govuk-select" id="visitor-allocated" name="visitor-allocated">
                         <option value="select">-- Select visitor --</option>
                         {{ range .Visitors }}
-                            <option value="{{.Name}}">{{.Name}}</option>
+                            <option
+                                value="{{.Name}}" {{ if eq $currentVisitorAllocated .Name }} selected="selected" {{ end }}>{{.Name}}</option>
                         {{end}}
                     </select>
                 </div>
@@ -55,6 +63,11 @@
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"
+                        {{if eq .Visit.ReportDueDate $nullDateValue}}
+                            value=""
+                        {{else}}
+                            value="{{.Visit.ReportDueDate}}"
+                        {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -67,6 +80,11 @@
                         name="report-received-date"
                         type="date"
                         style="text-transform:uppercase"
+                        {{if eq .Visit.ReportReceivedDate $nullDateValue}}
+                            value=""
+                        {{else}}
+                            value="{{.Visit.ReportReceivedDate}}"
+                        {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -76,18 +94,14 @@
                         <legend class="govuk-fieldset__legend">
                             Outcome
                         </legend>
-                        <div class="govuk-radios govuk-radios--conditional">
+                        {{$currentVisitOutcomeLabel:=.Visit.VisitOutcome.Label}}
+                        <div class="govuk-radios">
                             {{ range .VisitOutcomeTypes }}
                                 <div class="govuk-radios__item">
-                                    <input
-                                        class="govuk-radios__input"
-                                        id="f-{{.Label}}"
-                                        name="{{.Label}}"
-                                        type="radio"
-                                        value="{{.Label}}"/>
-                                    <label
-                                        class="govuk-label govuk-radios__label"
-                                        for="{{.Label}}">
+                                    <input class="govuk-radios__input" id="visit-outcome-{{.Label}}"
+                                           name="visit-outcome" type="radio"
+                                           value="{{.Label}}" {{if ne $currentVisitOutcomeLabel "" }}{{if eq $currentVisitOutcomeLabel .Label}} checked="true"{{end}}{{end}}>
+                                    <label class="govuk-label govuk-radios__label" for="visit-outcome-{{.Label}}">
                                         {{.Label}}
                                     </label>
                                 </div>
@@ -106,6 +120,11 @@
                         name="report-review-date"
                         type="date"
                         style="text-transform:uppercase"
+                        {{if eq .Visit.ReportReviewDate $nullDateValue}}
+                            value=""
+                        {{else}}
+                            value="{{.Visit.ReportReviewDate}}"
+                        {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -115,46 +134,19 @@
                         <legend class="govuk-fieldset__legend">
                             Report marked as
                         </legend>
-                        <div class="govuk-radios govuk-radios--conditional">
-                            <div class="govuk-radios__item">
-                                <input
-                                    class="govuk-radios__input"
-                                    id="f-red"
-                                    name="red"
-                                    type="radio"
-                                    value="red"/>
-                                <label
-                                    class="govuk-label govuk-radios__label"
-                                    for="red">
-                                    Red
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input
-                                    class="govuk-radios__input"
-                                    id="f-amber"
-                                    name="amber"
-                                    type="radio"
-                                    value="amber"/>
-                                <label
-                                    class="govuk-label govuk-radios__label"
-                                    for="amber">
-                                    Amber
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input
-                                    class="govuk-radios__input"
-                                    id="f-green"
-                                    name="green"
-                                    type="radio"
-                                    value="green"/>
-                                <label
-                                    class="govuk-label govuk-radios__label"
-                                    for="green">
-                                    Green
-                                </label>
-                            </div>
+                        {{$currentVisitReportMarkedAsLabel:=.Visit.VisitReportMarkedAs.Label}}
+                        <div class="govuk-radios">
+                            {{ range .VisitRagRatingTypes }}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="visit-report-marked-as-{{.Label}}"
+                                           name="visit-report-marked-as" type="radio"
+                                           value="{{.Label}}" {{if ne $currentVisitReportMarkedAsLabel "" }}{{if eq $currentVisitReportMarkedAsLabel .Label}} checked="true"{{end}}{{end}}>
+                                    <label class="govuk-label govuk-radios__label"
+                                           for="visit-report-marked-as-{{.Label}}">
+                                        {{.Label}}
+                                    </label>
+                                </div>
+                            {{end}}
                         </div>
                     </fieldset>
                 </div>

@@ -16,6 +16,7 @@ type ManageAssuranceVisit interface {
 	GetVisitors(ctx sirius.Context) (sirius.Visitors, error)
 	GetVisitRagRatingTypes(ctx sirius.Context) ([]sirius.VisitRagRatingTypes, error)
 	GetVisitOutcomeTypes(ctx sirius.Context) ([]sirius.VisitOutcomeTypes, error)
+	GetAssuranceVisitById(ctx sirius.Context, deputyId int, visitId int) (sirius.AssuranceVisit, error)
 }
 
 type ManageAssuranceVisitVars struct {
@@ -28,6 +29,7 @@ type ManageAssuranceVisitVars struct {
 	Visitors            sirius.Visitors
 	VisitRagRatingTypes []sirius.VisitRagRatingTypes
 	VisitOutcomeTypes   []sirius.VisitOutcomeTypes
+	Visit               sirius.AssuranceVisit
 }
 
 func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Template) Handler {
@@ -35,11 +37,18 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
+		visitId, _ := strconv.Atoi(routeVars["visitId"])
 
 		vars := ManageAssuranceVisitVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
+		}
+
+		visit, err := client.GetAssuranceVisitById(ctx, deputyId, visitId)
+		vars.Visit = visit
+		if err != nil {
+			return err
 		}
 
 		visitors, err := client.GetVisitors(ctx)

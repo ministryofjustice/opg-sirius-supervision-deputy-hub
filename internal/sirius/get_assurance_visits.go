@@ -7,10 +7,17 @@ import (
 )
 
 type AssuranceVisits struct {
-	RequestedDate string `json:"requestedDate"`
-	RequestedBy   User   `json:"requestedBy"`
-	VisitId       int    `json:"id"`
-	DeputyId      int
+	RequestedDate       string              `json:"requestedDate"`
+	RequestedBy         User                `json:"requestedBy"`
+	VisitId             int                 `json:"id"`
+	CommissionedDate    string              `json:"commissionedDate"`
+	ReportDueDate       string              `json:"reportDueDate"`
+	ReportReceivedDate  string              `json:"reportReceivedDate"`
+	VisitOutcome        VisitOutcomeTypes   `json:"assuranceVisitOutcome"`
+	ReportReviewDate    string              `json:"ReportReviewDate"`
+	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
+	VisitorAllocated    string              `json:"visitorAllocated"`
+	DeputyId            int
 }
 
 type AssuranceVisitsList struct {
@@ -51,10 +58,17 @@ func editAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits {
 	var list []AssuranceVisits
 	for _, s := range k {
 		event := AssuranceVisits{
-			RequestedDate: FormatDateAndTime("2006-01-02T15:04:05+00:00", s.RequestedDate, "02/01/2006"),
-			VisitId:       s.VisitId,
-			RequestedBy:   s.RequestedBy,
-			DeputyId:      deputyId,
+			RequestedDate:       FormatDateAndTime("2006-01-02T15:04:05+00:00", s.RequestedDate, "02/01/2006"),
+			VisitId:             s.VisitId,
+			RequestedBy:         s.RequestedBy,
+			DeputyId:            deputyId,
+			CommissionedDate:    FormatDateAndTime("2006-01-02T15:04:05+00:00", s.CommissionedDate, "02/01/2006"),
+			ReportDueDate:       FormatDateAndTime("2006-01-02T15:04:05+00:00", s.ReportDueDate, "02/01/2006"),
+			ReportReceivedDate:  FormatDateAndTime("2006-01-02T15:04:05+00:00", s.ReportReceivedDate, "02/01/2006"),
+			ReportReviewDate:    FormatDateAndTime("2006-01-02T15:04:05+00:00", s.ReportReviewDate, "02/01/2006"),
+			VisitOutcome:        s.VisitOutcome,
+			VisitReportMarkedAs: s.VisitReportMarkedAs,
+			VisitorAllocated:    s.VisitorAllocated,
 		}
 
 		list = append(list, event)
