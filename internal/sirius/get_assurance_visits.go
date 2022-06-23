@@ -17,6 +17,7 @@ type AssuranceVisits struct {
 	ReportReviewDate    string              `json:"ReportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
+	ReviewedBy          User                `json:"reviewedBy"`
 	DeputyId            int
 }
 
@@ -69,6 +70,7 @@ func editAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits {
 			VisitOutcome:        s.VisitOutcome,
 			VisitReportMarkedAs: s.VisitReportMarkedAs,
 			VisitorAllocated:    s.VisitorAllocated,
+			ReviewedBy:          s.ReviewedBy,
 		}
 
 		list = append(list, event)

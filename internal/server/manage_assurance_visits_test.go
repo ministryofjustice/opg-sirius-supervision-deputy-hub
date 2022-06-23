@@ -12,11 +12,14 @@ import (
 )
 
 type mockManageAssuranceVisitInformation struct {
-	count       int
-	lastCtx     sirius.Context
-	err         error
-	userDetails sirius.UserDetails
-	visitors    sirius.Visitors
+	count               int
+	lastCtx             sirius.Context
+	err                 error
+	userDetails         sirius.UserDetails
+	visitors            sirius.Visitors
+	VisitRagRatingTypes []sirius.VisitRagRatingTypes
+	VisitOutcomeTypes   []sirius.VisitOutcomeTypes
+	visit               sirius.AssuranceVisit
 }
 
 func (m *mockManageAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
@@ -38,6 +41,27 @@ func (m *mockManageAssuranceVisitInformation) GetVisitors(ctx sirius.Context) (s
 	m.lastCtx = ctx
 
 	return m.visitors, m.err
+}
+
+func (m *mockManageAssuranceVisitInformation) GetVisitRagRatingTypes(ctx sirius.Context) ([]sirius.VisitRagRatingTypes, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.VisitRagRatingTypes, m.err
+}
+
+func (m *mockManageAssuranceVisitInformation) GetVisitOutcomeTypes(ctx sirius.Context) ([]sirius.VisitOutcomeTypes, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.VisitOutcomeTypes, m.err
+}
+
+func (m *mockManageAssuranceVisitInformation) GetAssuranceVisitById(ctx sirius.Context, deputyId, visitId int) (sirius.AssuranceVisit, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.visit, m.err
 }
 
 func TestPostManageAssuranceVisit(t *testing.T) {

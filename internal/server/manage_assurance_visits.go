@@ -91,12 +91,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 			var requestedDate = r.PostFormValue("requested-date")
 
 			if requestedDate == "" {
-				vars.Errors = sirius.ValidationErrors{
-					"commissioned-date":    {"": "Enter a real date"},
-					"report-due-date":      {"": "Enter a real date"},
-					"report-received-date": {"": "Enter a real date"},
-					"report-review-date":   {"": "Enter a real date"},
-				}
+				vars.Errors = sirius.ValidationErrors{}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 

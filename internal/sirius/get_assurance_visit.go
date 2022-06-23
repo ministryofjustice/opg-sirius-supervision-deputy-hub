@@ -17,6 +17,7 @@ type AssuranceVisit struct {
 	ReportReviewDate    string              `json:"ReportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
+	ReviewedBy          User                `json:"reviewedBy"`
 }
 
 func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (AssuranceVisit, error) {
@@ -61,6 +62,7 @@ func editAssuranceVisit(v AssuranceVisit) AssuranceVisit {
 		VisitOutcome:        v.VisitOutcome,
 		VisitReportMarkedAs: v.VisitReportMarkedAs,
 		VisitorAllocated:    v.VisitorAllocated,
+		ReviewedBy:          v.ReviewedBy,
 	}
 
 	return updatedVisit

@@ -1967,7 +1967,8 @@
         "assuranceVisitOutcome": null,
         "reportReviewDate": null,
         "assuranceVisitReportMarkedAs": null,
-        "visitorAllocated": null
+        "visitorAllocated": null,
+        "reviewedBy": null
       },
       {
         "id": 33,
@@ -2002,7 +2003,23 @@
           "label": "Red",
           "deprecated": null
         },
-        "visitorAllocated": "Jane Janeson"
+        "visitorAllocated": "Jane Janeson",
+        "reviewedBy": {
+          "id": 53,
+          "name": "case",
+          "phoneNumber": "12345678",
+          "displayName": "case manager",
+          "deleted": false,
+          "email": "case.manager@opgtest.com",
+          "firstname": "case",
+          "surname": "manager",
+          "roles": [
+            "OPG User",
+            "Case Manager"
+          ],
+          "locked": false,
+          "suspended": false
+        }
       }
     ]
   },
@@ -2097,6 +2114,22 @@
       "label": "Amber",
       "deprecated": null
     },
-    "visitorAllocated": "Jane Janeson"
+    "visitorAllocated": "Jane Janeson",
+    "reviewedBy": {
+      "id": 53,
+      "name": "case",
+      "phoneNumber": "12345678",
+      "displayName": "case manager",
+      "deleted": false,
+      "email": "case.manager@opgtest.com",
+      "firstname": "case",
+      "surname": "manager",
+      "roles": [
+        "OPG User",
+        "Case Manager"
+      ],
+      "locked": false,
+      "suspended": false
+    }
   }
 }
