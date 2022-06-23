@@ -17,7 +17,7 @@
         "cypress-failed-log": "^2.9.5",
         "mini-css-extract-plugin": "^2.6.1",
         "prettier": "^2.6.2",
-        "prettier-plugin-go-template": "^0.0.11",
+        "prettier-plugin-go-template": "^0.0.13",
         "sass": "^1.52.3",
         "sass-loader": "^12.6.0",
         "webpack": "^5.71.0",
