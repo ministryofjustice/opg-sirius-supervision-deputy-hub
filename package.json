@@ -4,7 +4,7 @@
     "license": "MIT",
     "dependencies": {
         "@ministryofjustice/frontend": "^1.0.1",
-        "accessible-autocomplete": "^2.0.3",
+        "accessible-autocomplete": "^2.0.4",
         "govuk-frontend": "^4.0.1"
     },
     "devDependencies": {
