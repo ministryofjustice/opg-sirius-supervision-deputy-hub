@@ -21,11 +21,29 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 				{
 					"id":3,
 					"requestedDate":"2022-06-25T12:16:34+00:00",
-					"requestedBy":
-						{
+					"requestedBy": {
 							"id":53,
 							"displayName":"case manager"
-						}
+					},
+					"commissionedDate": "2022-01-01T00:00:00+00:00",
+					"reportDueDate": "2022-01-07T00:00:00+00:00",
+					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
+					"assuranceVisitOutcome": {
+					  "handle": "CANCELLED",
+					  "label": "Cancelled",
+					  "deprecated": null
+					},
+					"reportReviewDate": "2022-02-02T00:00:00+00:00",
+					"assuranceVisitReportMarkedAs": {
+					  "handle": "RED",
+					  "label": "Red",
+					  "deprecated": null
+					},
+					"visitorAllocated": "Jane Janeson",
+					"reviewedBy": {
+					  "id": 53,
+					  "displayName": "case manager"
+					}
 				}
 			]
 		}`
@@ -41,8 +59,18 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 
 	expectedResponse := []AssuranceVisits{
 		{
-			RequestedDate: "25/06/2022",
-			RequestedBy:   User{UserId: 53, UserDisplayName: "case manager"},
+			VisitId:             3,
+			RequestedDate:       "25/06/2022",
+			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			DeputyId:            1,
+			CommissionedDate:    "01/01/2022",
+			ReportDueDate:       "07/01/2022",
+			ReportReceivedDate:  "07/01/2022",
+			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
+			ReportReviewDate:    "02/02/2022",
+			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			VisitorAllocated:    "Jane Janeson",
+			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
 		},
 	}
 

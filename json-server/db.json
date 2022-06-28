@@ -1940,7 +1940,7 @@
       "FirmNumber": 1000002
     }
   ],
-  "assuranceVisit": {
+  "assuranceVisits": {
     "assuranceVisits": [
       {
         "id": 35,
@@ -1960,7 +1960,15 @@
           ],
           "locked": false,
           "suspended": false
-        }
+        },
+        "commissionedDate": null,
+        "reportDueDate": null,
+        "reportReceivedDate": null,
+        "assuranceVisitOutcome": null,
+        "reportReviewDate": null,
+        "assuranceVisitReportMarkedAs": null,
+        "visitorAllocated": null,
+        "reviewedBy": null
       },
       {
         "id": 33,
@@ -1980,8 +1988,129 @@
           ],
           "locked": false,
           "suspended": false
+        },
+        "commissionedDate": "2022-01-01T00:00:00+00:00",
+        "reportDueDate": "2022-01-07T00:00:00+00:00",
+        "reportReceivedDate": "2022-01-07T00:00:00+00:00",
+        "assuranceVisitOutcome": {
+          "handle": "CANCELLED",
+          "label": "Cancelled",
+          "deprecated": null
+        },
+        "reportReviewDate": "2022-02-02T00:00:00+00:00",
+        "assuranceVisitReportMarkedAs": {
+          "handle": "RED",
+          "label": "Red",
+          "deprecated": null
+        },
+        "visitorAllocated": "Jane Janeson",
+        "reviewedBy": {
+          "id": 53,
+          "name": "case",
+          "phoneNumber": "12345678",
+          "displayName": "case manager",
+          "deleted": false,
+          "email": "case.manager@opgtest.com",
+          "firstname": "case",
+          "surname": "manager",
+          "roles": [
+            "OPG User",
+            "Case Manager"
+          ],
+          "locked": false,
+          "suspended": false
         }
       }
     ]
+  },
+  "visitors": [
+    {
+      "id": 1,
+      "name": "John Johnson"
+    },
+    {
+      "id": 2,
+      "name": "Richard Richardson"
+    },
+    {
+      "id": 3,
+      "name": "Jack Jackson"
+    },
+    {
+      "id": 4,
+      "name": "Robert Robson"
+    },
+    {
+      "id": 5,
+      "name": "Jane Janeson"
+    },
+    {
+      "id": 6,
+      "name": "Jen Jenson"
+    },
+    {
+      "id": 7,
+      "name": "John Smith"
+    }
+  ],
+  "ragRating": [
+    {
+      "handle": "RED",
+      "label": "Red"
+    },
+    {
+      "handle": "AMBER",
+      "label": "Amber"
+    },
+    {
+      "handle": "GREEN",
+      "label": "Green"
+    }
+  ],
+  "visitOutcome": [
+    {
+      "handle": "SUCCESSFUL",
+      "label": "Successful"
+    },
+    {
+      "handle": "ABORTED",
+      "label": "Aborted"
+    },
+    {
+      "handle": "CANCELLED",
+      "label": "Cancelled"
+    }
+  ],
+  "assuranceVisit": {
+    "id": 35,
+    "requestedDate": "2022-06-30T13:48:10+00:00",
+    "requestedBy": {
+      "id": 53,
+      "name": "case",
+      "phoneNumber": "12345678",
+      "displayName": "case manager",
+      "deleted": false,
+      "email": "case.manager@opgtest.com",
+      "firstname": "case",
+      "surname": "manager",
+      "roles": [
+        "OPG User",
+        "Case Manager"
+      ],
+      "locked": false,
+      "suspended": false
+    },
+    "commissionedDate": null,
+    "reportDueDate": null,
+    "reportReceivedDate": null,
+    "assuranceVisitOutcome": null,
+    "reportReviewDate": null,
+    "assuranceVisitReportMarkedAs": {
+      "handle": "RED",
+      "label": "Red",
+      "deprecated": null
+    },
+    "visitorAllocated": null,
+    "reviewedBy": null
   }
 }

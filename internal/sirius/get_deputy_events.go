@@ -29,6 +29,14 @@ type Event struct {
 	Client               []ClientPerson `json:"additionalPersons"`
 	RequestedBy          string         `json:"requestedBy"`
 	RequestedDate        string         `json:"requestedDate"`
+	CommissionedDate     string         `json:"commissionedDate"`
+	ReportDueDate        string         `json:"reportDueDate"`
+	ReportReceivedDate   string         `json:"reportReceivedDate"`
+	VisitOutcome         string         `json:"assuranceVisitOutcome"`
+	ReportReviewDate     string         `json:"reportReviewDate"`
+	VisitReportMarkedAs  string         `json:"assuranceVisitReportMarkedAs"`
+	VisitorAllocated     string         `json:"visitorAllocated"`
+	ReviewedBy           string         `json:"reviewedBy"`
 }
 
 type Changes struct {
