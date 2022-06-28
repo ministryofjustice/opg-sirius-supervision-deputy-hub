@@ -49,7 +49,6 @@ func (m *mockManageDeputyImportantInformation) GetUserDetails(ctx sirius.Context
 
 func TestGetManageImportantInformation(t *testing.T) {
 	assert := assert.New(t)
-	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
 	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "x", Label: "y"}}
@@ -67,7 +66,7 @@ func TestGetManageImportantInformation(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForImportantInformation(client, defaultPATeam, template)
+	handler := renderTemplateForImportantInformation(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{ID: 123}, w, r)
 
 	assert.Nil(err)
@@ -133,7 +132,6 @@ func TestPostManageImportantInformation(t *testing.T) {
 	for name, tc := range testCases {
 		t.Run(name, func(t *testing.T) {
 			assert := assert.New(t)
-			defaultPATeam := 23
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
@@ -152,7 +150,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			testHandler := mux.NewRouter()
 			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				redirect = renderTemplateForImportantInformation(client, defaultPATeam, template)(sirius.PermissionSet{}, tc.deputyDetails, w, r)
+				redirect = renderTemplateForImportantInformation(client, template)(sirius.PermissionSet{}, tc.deputyDetails, w, r)
 			})
 
 			testHandler.ServeHTTP(w, r)

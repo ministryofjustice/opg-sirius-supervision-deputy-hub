@@ -1,0 +1,53 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+            {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            Add assurance visit
+        </h1>
+    </header>
+    <form id="add-assurance-visit-form" method="post" autocomplete="off">
+      <input
+          type="hidden"
+          name="xsrfToken"
+          value="{{ .XSRFToken }}" />
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <label class="govuk-label" for="requested-date">
+                    Requested date
+                </label>
+                <input
+                    class="govuk-input govuk-input--width-10"
+                    id="f-requested-date"
+                    name="requested-date"
+                    type="date"
+                    style="text-transform:uppercase"
+                    />
+            </div>
+        </div>
+        <div class="govuk-button-group govuk-!-margin-top-7">
+            <button
+                type="submit"
+                class="govuk-button"
+                data-module="govuk-button">
+                Save assurance visit
+            </button>
+           <a
+               class="govuk-link"
+               href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+               Cancel
+           </a>
+        </div>
+    </form>
+
+
+{{ end }}
