@@ -15,16 +15,24 @@ func TestUpdateAssuranceVisit(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(nil)))
+	json := `{
+		"commissionedDate": "2022-06-17"
+	}`
+
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
-			StatusCode: 201,
+			StatusCode: 200,
 			Body:       r,
 		}, nil
 	}
 
-	err := client.UpdateAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	formData := AssuranceVisitDetails{
+		CommissionedDate: "2022-06-17",
+	}
+
+	err := client.UpdateAssuranceVisit(getContext(nil), formData, 53, 76)
 	assert.Nil(t, err)
 }
 
@@ -36,12 +44,12 @@ func TestUpdateAssuranceVisitReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.UpdateAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	err := client.UpdateAssuranceVisit(getContext(nil), AssuranceVisitDetails{}, 53, 76)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/assurance-visit",
-		Method: http.MethodPost,
+		URL:    svr.URL + "/api/v1/deputies/53/assurance-visits/76",
+		Method: http.MethodPut,
 	}, err)
 }
 
@@ -53,7 +61,7 @@ func TestUpdateAssuranceVisitReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.UpdateAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	err := client.UpdateAssuranceVisit(getContext(nil), AssuranceVisitDetails{}, 53, 76)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }
