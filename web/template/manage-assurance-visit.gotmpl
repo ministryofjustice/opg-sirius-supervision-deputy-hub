@@ -33,11 +33,11 @@
                         name="commissioned-date"
                         type="date"
                         style="text-transform:uppercase"
-                        {{if eq .Visit.CommissionedDate $nullDateValue}}
-                            value=""
-                        {{else}}
-                            value="{{.Visit.CommissionedDate}}"
-                        {{end}}
+                            {{if eq .Visit.CommissionedDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.CommissionedDate}}"
+                            {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -46,7 +46,7 @@
                     </label>
                     {{$currentVisitorAllocated:=.Visit.VisitorAllocated}}
                     <select class="govuk-select" id="visitor-allocated" name="visitor-allocated">
-                        <option value="select">-- Select visitor --</option>
+                        <option value="">-- Select visitor --</option>
                         {{ range .Visitors }}
                             <option
                                 value="{{.Name}}" {{ if eq $currentVisitorAllocated .Name }} selected="selected" {{ end }}>{{.Name}}</option>
@@ -63,11 +63,11 @@
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"
-                        {{if eq .Visit.ReportDueDate $nullDateValue}}
-                            value=""
-                        {{else}}
-                            value="{{.Visit.ReportDueDate}}"
-                        {{end}}
+                            {{if eq .Visit.ReportDueDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportDueDate}}"
+                            {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -80,11 +80,11 @@
                         name="report-received-date"
                         type="date"
                         style="text-transform:uppercase"
-                        {{if eq .Visit.ReportReceivedDate $nullDateValue}}
-                            value=""
-                        {{else}}
-                            value="{{.Visit.ReportReceivedDate}}"
-                        {{end}}
+                            {{if eq .Visit.ReportReceivedDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportReceivedDate}}"
+                            {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">
@@ -97,14 +97,16 @@
                         {{$currentVisitOutcomeLabel:=.Visit.VisitOutcome.Label}}
                         <div class="govuk-radios">
                             {{ range .VisitOutcomeTypes }}
-                                <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="visit-outcome-{{.Label}}"
-                                           name="visit-outcome" type="radio"
-                                           value="{{.Label}}" {{if ne $currentVisitOutcomeLabel "" }}{{if eq $currentVisitOutcomeLabel .Label}} checked="true"{{end}}{{end}}>
-                                    <label class="govuk-label govuk-radios__label" for="visit-outcome-{{.Label}}">
-                                        {{.Label}}
-                                    </label>
-                                </div>
+                                {{ if ne .Label "Aborted" }}
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="visit-outcome-{{.Label}}"
+                                               name="visit-outcome" type="radio"
+                                               value="{{.Label}}" {{if ne $currentVisitOutcomeLabel "" }}{{if eq $currentVisitOutcomeLabel .Label}} checked="true"{{end}}{{end}}>
+                                        <label class="govuk-label govuk-radios__label" for="visit-outcome-{{.Label}}">
+                                            {{.Label}}
+                                        </label>
+                                    </div>
+                                {{end}}
                             {{end}}
                         </div>
                     </fieldset>
@@ -120,11 +122,11 @@
                         name="report-review-date"
                         type="date"
                         style="text-transform:uppercase"
-                        {{if eq .Visit.ReportReviewDate $nullDateValue}}
-                            value=""
-                        {{else}}
-                            value="{{.Visit.ReportReviewDate}}"
-                        {{end}}
+                            {{if eq .Visit.ReportReviewDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportReviewDate}}"
+                            {{end}}
                     />
                 </div>
                 <div class="govuk-form-group">

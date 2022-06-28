@@ -14,7 +14,7 @@ type AssuranceVisit struct {
 	ReportDueDate       string              `json:"reportDueDate"`
 	ReportReceivedDate  string              `json:"reportReceivedDate"`
 	VisitOutcome        VisitOutcomeTypes   `json:"assuranceVisitOutcome"`
-	ReportReviewDate    string              `json:"ReportReviewDate"`
+	ReportReviewDate    string              `json:"reportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
 	ReviewedBy          User                `json:"reviewedBy"`

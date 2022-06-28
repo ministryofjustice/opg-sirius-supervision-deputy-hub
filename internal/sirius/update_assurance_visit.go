@@ -8,22 +8,34 @@ import (
 )
 
 type AssuranceVisitDetails struct {
-	RequestedDate string `json:"requestedDate"`
-	RequestedBy   int    `json:"requestedBy"`
+	CommissionedDate    string `json:"commissionedDate"`
+	ReportDueDate       string `json:"reportDueDate"`
+	ReportReceivedDate  string `json:"reportReceivedDate"`
+	VisitOutcome        string `json:"assuranceVisitOutcome"`
+	ReportReviewDate    string `json:"reportReviewDate"`
+	VisitReportMarkedAs string `json:"assuranceVisitReportMarkedAs"`
+	VisitorAllocated    string `json:"visitorAllocated"`
+	ReviewedBy          int    `json:"reviewedBy"`
 }
 
-func (c *Client) UpdateAssuranceVisit(ctx Context, requestedDate string, userId, deputyId int) error {
+func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm AssuranceVisitDetails, deputyId, visitId int) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(AssuranceVisitDetails{
-		RequestedDate: requestedDate,
-		RequestedBy:   userId,
+		CommissionedDate:    manageAssuranceVisitForm.CommissionedDate,
+		ReportDueDate:       manageAssuranceVisitForm.ReportDueDate,
+		ReportReceivedDate:  manageAssuranceVisitForm.ReportReceivedDate,
+		VisitOutcome:        manageAssuranceVisitForm.VisitOutcome,
+		ReportReviewDate:    manageAssuranceVisitForm.ReportReviewDate,
+		VisitReportMarkedAs: manageAssuranceVisitForm.VisitReportMarkedAs,
+		VisitorAllocated:    manageAssuranceVisitForm.VisitorAllocated,
+		ReviewedBy:          manageAssuranceVisitForm.ReviewedBy,
 	})
 
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/assurance-visit", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/deputies/%d/assurance-visits/%d", deputyId, visitId), &body)
 
 	if err != nil {
 		return err
@@ -40,15 +52,7 @@ func (c *Client) UpdateAssuranceVisit(ctx Context, requestedDate string, userId,
 		return ErrUnauthorized
 	}
 
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		var v struct {
-			ValidationErrors ValidationErrors `json:"validation_errors"`
-		}
-
-		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
-			return ValidationError{Errors: v.ValidationErrors}
-		}
-
+	if resp.StatusCode != http.StatusOK {
 		return newStatusError(resp)
 	}
 

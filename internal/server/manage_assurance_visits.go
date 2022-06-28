@@ -12,7 +12,7 @@ import (
 
 type ManageAssuranceVisit interface {
 	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	UpdateAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error
+	UpdateAssuranceVisit(ctx sirius.Context, manageAssuranceVisitForm sirius.AssuranceVisitDetails, deputyId, visitId int) error
 	GetVisitors(ctx sirius.Context) (sirius.Visitors, error)
 	GetVisitRagRatingTypes(ctx sirius.Context) ([]sirius.VisitRagRatingTypes, error)
 	GetVisitOutcomeTypes(ctx sirius.Context) ([]sirius.VisitOutcomeTypes, error)
@@ -88,25 +88,39 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			var requestedDate = r.PostFormValue("requested-date")
-
-			if requestedDate == "" {
-				vars.Errors = sirius.ValidationErrors{}
-				return tmpl.ExecuteTemplate(w, "page", vars)
-			}
-
+			var err error
 			user, err := client.GetUserDetails(ctx)
 			if err != nil {
 				return err
 			}
 
-			err = client.UpdateAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
+			reportReviewDate := r.PostFormValue("report-review-date")
+			reviewedBy := 0
+			if reportReviewDate != "" {
+				reviewedBy = user.ID
+			}
+
+			manageAssuranceVisitForm := sirius.AssuranceVisitDetails{
+				CommissionedDate:    r.PostFormValue("commissioned-date"),
+				VisitorAllocated:    r.PostFormValue("visitor-allocated"),
+				ReportDueDate:       r.PostFormValue("report-due-date"),
+				ReportReceivedDate:  r.PostFormValue("report-received-date"),
+				VisitOutcome:        r.PostFormValue("visit-outcome"),
+				ReportReviewDate:    reportReviewDate,
+				VisitReportMarkedAs: r.PostFormValue("visit-report-marked-as"),
+				ReviewedBy:          reviewedBy,
+			}
+
+			err = client.UpdateAssuranceVisit(ctx, manageAssuranceVisitForm, deputyId, visitId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := ManageAssuranceVisitVars{
-					Path:      r.URL.Path,
-					XSRFToken: ctx.XSRFToken,
-					Errors:    verr.Errors,
+					Path:                r.URL.Path,
+					XSRFToken:           ctx.XSRFToken,
+					Errors:              verr.Errors,
+					VisitRagRatingTypes: vars.VisitRagRatingTypes,
+					VisitOutcomeTypes:   vars.VisitOutcomeTypes,
+					Visitors:            visitors,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
