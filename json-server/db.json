@@ -2082,40 +2082,9 @@
     }
   ],
   "assuranceVisit": {
-    "id": 1,
+    "id": 35,
     "requestedDate": "2022-06-30T13:48:10+00:00",
     "requestedBy": {
-      "id": 53,
-      "name": "nice",
-      "phoneNumber": "12345678",
-      "displayName": "nice user",
-      "deleted": false,
-      "email": "case.manager@opgtest.com",
-      "firstname": "nice",
-      "surname": "user",
-      "roles": [
-        "OPG User",
-        "Case Manager"
-      ],
-      "locked": false,
-      "suspended": false
-    },
-    "commissionedDate": "2022-01-01T00:00:00+00:00",
-    "reportDueDate": "2022-01-07T00:00:00+00:00",
-    "reportReceivedDate": "2022-01-07T00:00:00+00:00",
-    "assuranceVisitOutcome": {
-      "handle": "SUCCESSFUL",
-      "label": "Successful",
-      "deprecated": null
-    },
-    "reportReviewDate": "2022-02-02T00:00:00+00:00",
-    "assuranceVisitReportMarkedAs": {
-      "handle": "AMBER",
-      "label": "Amber",
-      "deprecated": null
-    },
-    "visitorAllocated": "Jane Janeson",
-    "reviewedBy": {
       "id": 53,
       "name": "case",
       "phoneNumber": "12345678",
@@ -2130,6 +2099,18 @@
       ],
       "locked": false,
       "suspended": false
-    }
+    },
+    "commissionedDate": null,
+    "reportDueDate": null,
+    "reportReceivedDate": null,
+    "assuranceVisitOutcome": null,
+    "reportReviewDate": null,
+    "assuranceVisitReportMarkedAs": {
+      "handle": "RED",
+      "label": "Red",
+      "deprecated": null
+    },
+    "visitorAllocated": null,
+    "reviewedBy": null
   }
 }
