@@ -31,7 +31,7 @@ type manageDeputyImportantInformationVars struct {
 	IsFinanceManager          bool
 }
 
-func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
