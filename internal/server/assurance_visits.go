@@ -39,15 +39,11 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			SuccessMessage: successMessage,
 		}
 
-		switch r.Method {
-		case http.MethodGet:
-			visits, err := client.GetAssuranceVisits(ctx, deputyId)
-			if err != nil {
-				return err
-			}
-			vars.AssuranceVisits = visits
-			return tmpl.ExecuteTemplate(w, "page", vars)
+		visits, err := client.GetAssuranceVisits(ctx, deputyId)
+		if err != nil {
+			return err
 		}
+		vars.AssuranceVisits = visits
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
