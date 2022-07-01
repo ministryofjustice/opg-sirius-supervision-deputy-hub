@@ -1,4 +1,4 @@
-describe("Manage Assurance Visits", () => {
+describe("Assurance Visits", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
@@ -23,9 +23,16 @@ describe("Manage Assurance Visits", () => {
 
 
     describe("Add a visit button", () => {
-        it("should display assurance visit main content", () => {
+        it("should route to add assurance visit form", () => {
             cy.get("#hook-add-a-visit").click();
             cy.url().should("contain", "/supervision/deputies/3/add-assurance-visit");
+        });
+    });
+
+    describe("Manage a visit button", () => {
+        it("should route to manage assurance visit form", () => {
+            cy.get("#hook-manage-a-visit").click();
+            cy.url().should("contain", "/supervision/deputies/3/manage-assurance-visit/35");
         });
     });
 });

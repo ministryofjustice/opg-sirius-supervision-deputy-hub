@@ -1,0 +1,173 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+        {{ if ne .ErrorMessage "" }}
+            {{ template "error-banner" . }}
+        {{ end }}
+        {{ template "pa-deputy-header" . }}
+    {{ end }}
+    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+        {{ template "pro-deputy-header" . }}
+    {{ end }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            Manage assurance visit
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="manage-assurance-visit-form" method="post" autocomplete="off">
+                <input
+                    type="hidden"
+                    name="xsrfToken"
+                    value="{{ .XSRFToken }}"/>
+                <div class="govuk-form-group">
+                    {{$nullDateValue:="0001-01-01"}}
+                    <label class="govuk-label" for="commissioned-date">
+                        Commissioned date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-commissioned-date"
+                        name="commissioned-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                            {{if eq .Visit.CommissionedDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.CommissionedDate}}"
+                            {{end}}
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="sort">
+                        Select a visitor
+                    </label>
+                    {{$currentVisitorAllocated:=.Visit.VisitorAllocated}}
+                    <select class="govuk-select" id="visitor-allocated" name="visitor-allocated">
+                        <option value="">-- Select visitor --</option>
+                        {{ range .Visitors }}
+                            <option
+                                value="{{.Name}}" {{ if eq $currentVisitorAllocated .Name }} selected="selected" {{ end }}>{{.Name}}</option>
+                        {{end}}
+                    </select>
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-due-date">
+                        Report due date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-due-date"
+                        name="report-due-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                            {{if eq .Visit.ReportDueDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportDueDate}}"
+                            {{end}}
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-received-date">
+                        Report received date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-received-date"
+                        name="report-received-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                            {{if eq .Visit.ReportReceivedDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportReceivedDate}}"
+                            {{end}}
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset
+                        class="govuk-fieldset"
+                        aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend">
+                            Outcome
+                        </legend>
+                        {{$currentVisitOutcomeLabel:=.Visit.VisitOutcome.Label}}
+                        <div class="govuk-radios">
+                            {{ range .VisitOutcomeTypes }}
+                                {{ if ne .Label "Aborted" }}
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="visit-outcome-{{.Label}}"
+                                               name="visit-outcome" type="radio"
+                                               value="{{.Label}}" {{if ne $currentVisitOutcomeLabel "" }}{{if eq $currentVisitOutcomeLabel .Label}} checked="true"{{end}}{{end}}>
+                                        <label class="govuk-label govuk-radios__label" for="visit-outcome-{{.Label}}">
+                                            {{.Label}}
+                                        </label>
+                                    </div>
+                                {{end}}
+                            {{end}}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="report-review-date">
+                        Report review date
+                    </label>
+                    <input
+                        class="govuk-input govuk-input--width-10"
+                        id="f-report-review-date"
+                        name="report-review-date"
+                        type="date"
+                        style="text-transform:uppercase"
+                            {{if eq .Visit.ReportReviewDate $nullDateValue}}
+                                value=""
+                            {{else}}
+                                value="{{.Visit.ReportReviewDate}}"
+                            {{end}}
+                    />
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset
+                        class="govuk-fieldset"
+                        aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend">
+                            Report marked as
+                        </legend>
+                        {{$currentVisitReportMarkedAsLabel:=.Visit.VisitReportMarkedAs.Label}}
+                        <div class="govuk-radios">
+                            {{ range .VisitRagRatingTypes }}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="visit-report-marked-as-{{.Label}}"
+                                           name="visit-report-marked-as" type="radio"
+                                           value="{{.Label}}" {{if ne $currentVisitReportMarkedAsLabel "" }}{{if eq $currentVisitReportMarkedAsLabel .Label}} checked="true"{{end}}{{end}}>
+                                    <label class="govuk-label govuk-radios__label"
+                                           for="visit-report-marked-as-{{.Label}}">
+                                        {{.Label}}
+                                    </label>
+                                </div>
+                            {{end}}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save assurance visit
+                    </button>
+                    <a
+                        class="govuk-link"
+                        href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{{ end }}

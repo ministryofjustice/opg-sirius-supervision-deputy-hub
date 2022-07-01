@@ -23,4 +23,7 @@
     {{ if eq .EventType "AssuranceVisitAdded" }}
         {{ template "assurance-visit-added" . }}
     {{ end }}
+    {{ if eq .EventType "AssuranceVisitUpdated" }}
+        {{ template "assurance-visit-updated" . }}
+    {{ end }}
 {{ end }}
