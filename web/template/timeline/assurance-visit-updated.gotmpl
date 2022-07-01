@@ -1,0 +1,40 @@
+{{ define "assurance-visit-updated" }}
+    <div class="moj-timeline__item">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">Assurance process updated</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+
+                {{ range .Event.Changes }}
+                <li>
+                    {{ if eq .FieldName "commissionedDate" }}
+                        Commissioned date:
+                    {{ else if eq .FieldName "reportDueDate" }}
+                        Report due date:
+                    {{ else if eq .FieldName "reportReceivedDate" }}
+                        Report received date:
+                    {{ else if eq .FieldName "assuranceVisitOutcome" }}
+                        Outcome:
+                    {{ else if eq .FieldName "reportReviewDate" }}
+                        Report review date:
+                    {{ else if eq .FieldName "assuranceVisitReportMarkedAs" }}
+                        Report marked as:
+                    {{ else if eq .FieldName "visitorAllocated" }}
+                        Visitor:
+                    {{ else if eq .FieldName "reviewedBy" }}
+                        Report reviewed by:
+                    {{ end }}
+                    {{ .NewValue }}
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}
