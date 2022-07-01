@@ -30,6 +30,7 @@ type Client interface {
 	ManageProDeputyImportantInformation
 	DeputyChangeFirmInformation
 	AddAssuranceVisit
+	AssuranceVisit
 	ManageAssuranceVisit
 }
 
@@ -94,6 +95,10 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 	router.Handle("/{id}/add-assurance-visit",
 		wrap(
 			renderTemplateForAddAssuranceVisit(client, templates["add-assurance-visit.gotmpl"])))
+
+	router.Handle("/{id}/manage-assurance-visit/{visitId}",
+		wrap(
+			renderTemplateForManageAssuranceVisit(client, templates["manage-assurance-visit.gotmpl"])))
 
 	static := staticFileHandler(webDir)
 	router.PathPrefix("/assets/").Handler(static)
