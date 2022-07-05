@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -52,32 +53,32 @@ func TestNavigateToDeputyHub(t *testing.T) {
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=ecm", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=ecm")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Ecm changed to Jon Snow")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=teamDetails", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=teamDetails")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Team details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyContactDetailsSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=deputyDetails")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Deputy details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=otherMessage", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, false, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=otherMessage")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, false, Success)
+	u, _ := url.Parse("http::deputyhub/76/")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "")
 }
 
@@ -90,19 +91,19 @@ func TestCheckForDefaultEcmIdReturnsNullIfFalse(t *testing.T) {
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyDetailsSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/76/?success=deputyDetails", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=deputyDetails")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Deputy details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageUseExistingFirmSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=firm", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/76/?success=firm")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Firm changed to defaultPATeam")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageAddFirmSuccess(t *testing.T) {
-	Success, SuccessMessage := createSuccessAndSuccessMessageForVars("/deputy/76/?success=newFirm", "Jon Snow", "defaultPATeam")
-	assert.Equal(t, true, Success)
+	u, _ := url.Parse("http::deputyhub/deputy/76/?success=newFirm")
+	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Firm added")
 }

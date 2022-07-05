@@ -21,7 +21,6 @@ type changeECMHubVars struct {
 	EcmTeamDetails []sirius.TeamMember
 	Error          string
 	Errors         sirius.ValidationErrors
-	Success        bool
 	SuccessMessage string
 	ErrorMessage   string
 	DefaultPaTeam  int
@@ -41,10 +40,9 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 		switch r.Method {
 		case http.MethodGet:
-			var SuccessMessage string
-			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId))
-			if hasSuccess {
-				SuccessMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
+			var successMessage string
+			if r.URL.Query().Get("success") == "true" {
+				successMessage = "new ecm is" + deputyDetails.ExecutiveCaseManager.EcmName
 			}
 
 			vars := changeECMHubVars{
@@ -53,8 +51,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				DeputyDetails:  deputyDetails,
 				DefaultPaTeam:  defaultPATeam,
 				EcmTeamDetails: ecmTeamDetails,
-				Success:        hasSuccess,
-				SuccessMessage: SuccessMessage,
+				SuccessMessage: successMessage,
 			}
 
 			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)

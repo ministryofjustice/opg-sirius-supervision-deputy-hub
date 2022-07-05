@@ -6,7 +6,6 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
-	"strings"
 )
 
 type DeputyHubNotesInformation interface {
@@ -23,7 +22,6 @@ type deputyHubNotesVars struct {
 	Error          string
 	Errors         sirius.ValidationErrors
 	ErrorMessage   string
-	Success        bool
 	SuccessMessage string
 }
 
@@ -32,16 +30,10 @@ type addNoteVars struct {
 	XSRFToken     string
 	Title         string
 	Note          string
-	Success       bool
 	Error         sirius.ValidationError
 	Errors        sirius.ValidationErrors
 	ErrorMessage  string
 	DeputyDetails sirius.DeputyDetails
-}
-
-func hasSuccessInUrl(url string, prefix string) bool {
-	urlTrim := strings.TrimPrefix(url, prefix)
-	return urlTrim == "?success=true"
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam int, tmpl Template) Handler {
@@ -59,15 +51,17 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				return err
 			}
 
-			hasSuccess := hasSuccessInUrl(r.URL.String(), "/"+strconv.Itoa(deputyId)+"/notes")
+			successMessage := ""
+			if r.URL.Query().Get("success") == "true" {
+				successMessage = "Note added"
+			}
 
 			vars := deputyHubNotesVars{
 				Path:           r.URL.Path,
 				XSRFToken:      ctx.XSRFToken,
 				DeputyDetails:  deputyDetails,
 				DeputyNotes:    deputyNotes,
-				Success:        hasSuccess,
-				SuccessMessage: "Note added",
+				SuccessMessage: successMessage,
 			}
 
 			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)

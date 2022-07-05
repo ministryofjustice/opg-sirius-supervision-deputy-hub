@@ -20,7 +20,6 @@ type editDeputyHubVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	ErrorMessage  string
-	Success       bool
 }
 
 func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam int, tmpl Template) Handler {

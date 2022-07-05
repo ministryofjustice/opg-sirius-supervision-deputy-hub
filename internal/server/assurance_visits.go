@@ -19,7 +19,6 @@ type AssuranceVisitsVars struct {
 	Error           string
 	Errors          sirius.ValidationErrors
 	ErrorMessage    string
-	Success         bool
 	SuccessMessage  string
 	AssuranceVisits []sirius.AssuranceVisits
 }
@@ -29,13 +28,21 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), "", "")
+
+		var successMessage string
+		switch r.URL.Query().Get("success") {
+		case "addAssuranceVisit":
+			successMessage = "Assurance process updated"
+		case "manageAssuranceVisit":
+			successMessage = "Assurance visit updated"
+		default:
+			successMessage = ""
+		}
 
 		vars := AssuranceVisitsVars{
 			Path:           r.URL.Path,
 			XSRFToken:      ctx.XSRFToken,
 			DeputyDetails:  deputyDetails,
-			Success:        hasSuccess,
 			SuccessMessage: successMessage,
 		}
 

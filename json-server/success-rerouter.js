@@ -1,6 +1,6 @@
 const getSuccessRoute = (req) => {
-    return req.headers?.cookie?.match(/success-route=(?<failRoute>\w+);/)
-        ?.groups.failRoute;
+    return req.headers?.cookie?.match(/success-route=(?<successRoute>\w+);/)
+        ?.groups.successRoute;
 };
 
 module.exports = (req, res, next) => {
