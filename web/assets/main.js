@@ -7,6 +7,8 @@ GOVUKFrontend.initAll();
 
 MojBannerAutoHide(document.querySelector(".app-main-class"));
 
+document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+
 if (document.querySelector("#select-ecm")) {
     accessibleAutocomplete.enhanceSelectElement({
         selectElement: document.querySelector("#select-ecm"),
@@ -31,4 +33,11 @@ function toggleChangeFirmAutoCompleteHideClass() {
     document
         .getElementById("change-firm-autocomplete")
         .classList.toggle("hide");
+}
+
+if (document.querySelector("#back-button")) {
+    document.getElementById("back-button").onclick = function (e) {
+        e.preventDefault()
+        history.back();
+    }
 }
