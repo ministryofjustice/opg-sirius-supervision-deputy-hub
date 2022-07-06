@@ -1,17 +1,12 @@
 package util
 
-var features = map[string][]string{
-	"dev":        {"assurance_visits"},
-	"production": {},
-}
-
-func FeatureFlag(env string) func(string) string {
-	return func(f string) string {
-		for _, v := range features[env] {
+func IsFeatureFlagged(features []string) func(string) bool {
+	return func(f string) bool {
+		for _, v := range features {
 			if v == f {
-				return ""
+				return true
 			}
 		}
-		return "hide"
+		return false
 	}
 }

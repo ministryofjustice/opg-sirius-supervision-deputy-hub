@@ -43,14 +43,19 @@
                             >Notes</a
                         >
                     </li>
-                    <li class="moj-sub-navigation__item {{ feature_flag "assurance_visits" }}">
+                    <li
+                        class="moj-sub-navigation__item
+                        {{ if not (feature_flagged "assurance_visits") }}
+                            hide
+                        {{ end }}">
                         <a
                             class="moj-sub-navigation__link"
                             {{ if eq .Path (printf "/%d/assurance-visits" .DeputyDetails.ID) }}
                                 aria-current="page"
                             {{ end }}
                             href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}"
-                            >Assurance visits</a>
+                            >Assurance visits</a
+                        >
                     </li>
                 </ul>
             </nav>
