@@ -1,6 +1,5 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ template "manage-pa-important-information" . }}
     {{ end }}
