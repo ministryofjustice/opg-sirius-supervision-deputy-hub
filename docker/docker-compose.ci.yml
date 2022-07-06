@@ -11,6 +11,7 @@ services:
       PORT: 8888
       SIRIUS_URL: http://json-server:3000
       PREFIX: /supervision/deputies
+      ENV: dev
 
   json-server:
     build:

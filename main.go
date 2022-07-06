@@ -28,6 +28,7 @@ func main() {
 	prefix := getEnv("PREFIX", "")
 	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
 	firmHubURL := getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm"
+	environment := getEnv("ENV", "production")
 
 	layouts, _ := template.
 		New("").
@@ -55,6 +56,7 @@ func main() {
 			},
 			"translate":     util.Translate,
 			"rename_errors": util.RenameErrors,
+			"feature_flag":  util.FeatureFlag(environment),
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 
