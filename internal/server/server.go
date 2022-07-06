@@ -46,27 +46,27 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/{id}",
 		wrap(
-			renderTemplateForDeputyHub(client, defaultPATeam, templates["deputy-details.gotmpl"])))
+			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
 
 	router.Handle("/{id}/clients",
 		wrap(
-			renderTemplateForClientTab(client, defaultPATeam, templates["clients.gotmpl"])))
+			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
 
 	router.Handle("/{id}/timeline",
 		wrap(
-			renderTemplateForDeputyHubEvents(client, defaultPATeam, templates["timeline.gotmpl"])))
+			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
 
 	router.Handle("/{id}/notes",
 		wrap(
-			renderTemplateForDeputyHubNotes(client, defaultPATeam, templates["notes.gotmpl"])))
+			renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
 
 	router.Handle("/{id}/notes/add-note",
 		wrap(
-			renderTemplateForDeputyHubNotes(client, defaultPATeam, templates["add-notes.gotmpl"])))
+			renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
 
 	router.Handle("/{id}/manage-team-details",
 		wrap(
-			renderTemplateForEditDeputyHub(client, defaultPATeam, templates["manage-team-details.gotmpl"])))
+			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
 
 	router.Handle("/{id}/change-ecm",
 		wrap(
@@ -74,15 +74,15 @@ func New(logger Logger, client Client, templates map[string]*template.Template, 
 
 	router.Handle("/{id}/change-firm",
 		wrap(
-			renderTemplateForChangeFirm(client, defaultPATeam, templates["change-firm.gotmpl"])))
+			renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
 
 	router.Handle("/{id}/add-firm",
 		wrap(
-			renderTemplateForAddFirm(client, defaultPATeam, templates["add-firm.gotmpl"])))
+			renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
 
 	router.Handle("/{id}/manage-deputy-contact-details",
 		wrap(
-			renderTemplateForManageDeputyContactDetails(client, defaultPATeam, templates["manage-deputy-contact-details.gotmpl"])))
+			renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
 
 	router.Handle("/{id}/manage-important-information",
 		wrap(

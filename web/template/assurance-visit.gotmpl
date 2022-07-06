@@ -5,9 +5,6 @@
     {{ end }}
     {{ template "error-summary" (rename_errors .Errors) }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ if ne .ErrorMessage "" }}
-            {{ template "error-banner" . }}
-        {{ end }}
         {{ template "pa-deputy-header" . }}
     {{ end }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}

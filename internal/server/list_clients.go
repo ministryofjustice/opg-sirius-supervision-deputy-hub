@@ -20,12 +20,11 @@ type listClientsVars struct {
 	DeputyClientsDetails sirius.DeputyClientDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
-	ErrorMessage         string
 	Errors               sirius.ValidationErrors
 	ActiveClientCount    int
 }
 
-func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -50,8 +49,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, defaultPATeam
 			AriaSorting:          ariaSorting,
 			ActiveClientCount:    activeClientCount,
 		}
-
-		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

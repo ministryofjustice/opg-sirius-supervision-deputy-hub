@@ -35,12 +35,11 @@ func TestNavigateToChangeFirm(t *testing.T) {
 
 	client := &mockDeputyChangeFirmInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForChangeFirm(client, defaultPATeam, template)
+	handler := renderTemplateForChangeFirm(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)

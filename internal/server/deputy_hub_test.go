@@ -38,12 +38,11 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 	client := &mockDeputyHubInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHub(client, defaultPATeam, template)
+	handler := renderTemplateForDeputyHub(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
@@ -80,14 +79,6 @@ func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T
 	u, _ := url.Parse("http::deputyhub/76/")
 	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "")
-}
-
-func TestCheckForDefaultEcmIdReturnsMessageIfTrue(t *testing.T) {
-	assert.Equal(t, "An executive case manager has not been assigned. ", checkForDefaultEcmId(23, 23))
-}
-
-func TestCheckForDefaultEcmIdReturnsNullIfFalse(t *testing.T) {
-	assert.Equal(t, "", checkForDefaultEcmId(25, 23))
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyDetailsSuccess(t *testing.T) {

@@ -61,8 +61,7 @@ func TestGetChangeECM(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(changeECMHubVars{
-		Path:          "/path",
-		DefaultPaTeam: 23,
+		Path: "/path",
 	}, template.lastVars)
 }
 

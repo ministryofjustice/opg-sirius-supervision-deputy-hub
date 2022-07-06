@@ -24,7 +24,7 @@ type changeFirmVars struct {
 	SuccessMessage string
 }
 
-func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)

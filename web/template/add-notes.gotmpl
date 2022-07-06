@@ -4,9 +4,6 @@
     <div class="main">
         {{ template "error-summary" .Errors }}
         {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-            {{ if ne .ErrorMessage "" }}
-                {{ template "error-banner" . }}
-            {{ end }}
             {{ template "pa-deputy-header" . }}
         {{ end }}
         {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
