@@ -73,3 +73,11 @@ Run all Go tests: `go test ./...`
 This project uses the standard Golang styleguide, and can be autoformatting by running `gofmt -s -w .`.
 
 To format .gotmpl files and other assets, we use Prettier, which can be run using `yarn fmt`.
+ 
+---
+
+## Feature Flagging
+
+Features can be flagged in the UI using the `feature_flagged` template function. Add the feature's name to the 
+comma-separated environment variable `FEATURES` for the environments you want it flagged for, and then call the
+function with your feature name in the template. You can then do what you want with it, e.g. apply the `hide` CSS class.
