@@ -4,22 +4,20 @@ describe("Notes", () => {
         cy.setCookie("XSRF-TOKEN", "abcde");
     });
 
-    describe("Notes timeline", () => {
-        beforeEach(() => {
-            cy.visit("/supervision/deputies/1/notes");
-        });
+    describe('Navigation', () => {
+       it("should navigate to and from the Notes pages", () => {
+           cy.visit("/supervision/deputies/1");
+           cy.get(".moj-sub-navigation__list").contains("Notes").click();
 
-        it("has a header called notes", () => {
-            cy.get(".main > header").should("contain", "Notes");
-        });
+           cy.url().should("include", "/supervision/deputies/1/notes");
+           cy.get(".main > header").contains("Notes");
 
-        it("has a button to add a note which directs me to the add note url", () => {
-            cy.get(".govuk-button").should("contain", "Add a note").click();
-            cy.url().should(
-                "contain",
-                "/supervision/deputies/1/notes/add-note"
-            );
-        });
+           cy.get(".govuk-button").contains("Add a note").click();
+           cy.url().should("include","/supervision/deputies/1/notes/add-note");
+
+           cy.get("#f-back-button").click();
+           cy.get(".main > header").contains("Notes");
+       })
     });
 
     describe("Adding a note", () => {
