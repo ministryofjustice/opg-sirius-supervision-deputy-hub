@@ -1,13 +1,12 @@
 package server
 
 import (
-	"net/http"
-	"strconv"
-	"strings"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
+	"net/http"
+	"net/url"
+	"strconv"
 )
 
 type DeputyHubInformation interface {
@@ -22,7 +21,6 @@ type deputyHubVars struct {
 	Error             string
 	ErrorMessage      string
 	Errors            sirius.ValidationErrors
-	Success           bool
 	SuccessMessage    string
 	ActiveClientCount int
 	IsFinanceManager  bool
@@ -41,13 +39,12 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 		if err != nil {
 			return err
 		}
-		hasSuccess, successMessage := createSuccessAndSuccessMessageForVars(r.URL.String(), deputyDetails.ExecutiveCaseManager.EcmName, deputyDetails.Firm.FirmName)
+		successMessage := getSuccessFromUrl(r.URL, deputyDetails.ExecutiveCaseManager.EcmName, deputyDetails.Firm.FirmName)
 
 		vars := deputyHubVars{
 			Path:              r.URL.Path,
 			XSRFToken:         ctx.XSRFToken,
 			DeputyDetails:     deputyDetails,
-			Success:           hasSuccess,
 			SuccessMessage:    successMessage,
 			ActiveClientCount: clientCount,
 		}
@@ -73,31 +70,23 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 	}
 }
 
-func createSuccessAndSuccessMessageForVars(url string, ecmName string, firmName string) (bool, string) {
-	splitStringByQuestion := strings.Split(url, "?")
-	if len(splitStringByQuestion) > 1 {
-		splitString := strings.Split(splitStringByQuestion[1], "=")
-
-		switch splitString[1] {
-		case "deputyDetails":
-			return true, "Deputy details updated"
-		case "ecm":
-			return true, "Ecm changed to " + ecmName
-		case "importantInformation":
-			return true, "Important information updated"
-		case "newFirm":
-			return true, "Firm added"
-		case "firm":
-			return true, "Firm changed to " + firmName
-		case "teamDetails":
-			return true, "Team details updated"
-		case "addAssuranceVisit":
-			return true, "Assurance process updated"
-		case "manageAssuranceVisit":
-			return true, "Assurance visit updated"
-		}
+func getSuccessFromUrl(url *url.URL, ecmName string, firmName string) string {
+	switch url.Query().Get("success") {
+	case "deputyDetails":
+		return "Deputy details updated"
+	case "ecm":
+		return "Ecm changed to " + ecmName
+	case "importantInformation":
+		return "Important information updated"
+	case "newFirm":
+		return "Firm added"
+	case "firm":
+		return "Firm changed to " + firmName
+	case "teamDetails":
+		return "Team details updated"
+	default:
+		return ""
 	}
-	return false, ""
 }
 
 func checkForDefaultEcmId(EcmId, defaultPaTeam int) string {

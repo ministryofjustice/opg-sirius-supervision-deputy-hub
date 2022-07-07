@@ -1,5 +1,5 @@
 {{ define "pa-deputy-details" }}
-    {{ if .Success }}
+    {{ if .SuccessMessage }}
         {{ template "success-banner" . }}
     {{ end }}
     {{ if ne .ErrorMessage "" }}

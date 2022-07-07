@@ -50,7 +50,7 @@ func TestGetNotes(t *testing.T) {
 	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("GET", "/path", nil)
+	r, _ := http.NewRequest("GET", "/path?success=true", nil)
 
 	handler := renderTemplateForDeputyHubNotes(client, defaultPATeam, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
