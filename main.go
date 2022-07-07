@@ -28,6 +28,7 @@ func main() {
 	prefix := getEnv("PREFIX", "")
 	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
 	firmHubURL := getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm"
+	features := strings.Split(getEnv("FEATURES", ""), ",")
 
 	layouts, _ := template.
 		New("").
@@ -53,8 +54,9 @@ func main() {
 			"firmhub": func(s string) string {
 				return firmHubURL + s
 			},
-			"translate":     util.Translate,
-			"rename_errors": util.RenameErrors,
+			"translate":       util.Translate,
+			"rename_errors":   util.RenameErrors,
+			"feature_flagged": util.IsFeatureFlagged(features),
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 
