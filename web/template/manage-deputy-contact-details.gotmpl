@@ -1,5 +1,7 @@
 {{ template "page" . }}
 {{ define "main" }}
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>

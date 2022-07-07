@@ -1,5 +1,8 @@
 {{ define "manage-pro-important-information" }}
-    <div class="govuk-grid-row govuk-!-margin-top-5">
+{{ template "pro-deputy-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
+
+<div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
           <header>

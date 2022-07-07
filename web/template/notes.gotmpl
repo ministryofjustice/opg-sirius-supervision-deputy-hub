@@ -1,8 +1,9 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .SuccessMessage }}
-        {{ template "success-banner" . }}
-    {{ end }}
+{{ if .SuccessMessage }}
+    {{ template "success-banner" . }}
+{{ end }}
+{{ template "content-header" . }}
 {{ template "navigation" . }}
     <header>
         <h1

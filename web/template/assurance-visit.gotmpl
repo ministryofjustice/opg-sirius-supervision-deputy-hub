@@ -1,10 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .SuccessMessage }}
-        {{ template "success-banner" . }}
-    {{ end }}
-    {{ template "navigation" . }}
-
+{{ if .SuccessMessage }}
+    {{ template "success-banner" . }}
+{{ end }}
+{{ template "content-header" . }}
+{{ template "navigation" . }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Assurance visits

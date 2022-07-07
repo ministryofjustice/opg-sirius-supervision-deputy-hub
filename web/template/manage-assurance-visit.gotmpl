@@ -1,5 +1,7 @@
 {{ template "page" . }}
 {{ define "main" }}
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
             Manage assurance visit

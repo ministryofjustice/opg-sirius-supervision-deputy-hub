@@ -1,4 +1,6 @@
 {{ define "manage-pa-important-information" }}
+{{ template "pa-deputy-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 

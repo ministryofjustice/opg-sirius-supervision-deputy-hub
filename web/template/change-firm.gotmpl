@@ -1,7 +1,9 @@
 {{ template "page" . }}
 {{ define "main" }}
+{{ template "content-header" . }}
 {{ template "navigation" . }}
-    <div class="govuk-grid-row govuk-!-margin-top-5">
+{{ template "error-summary" (rename_errors .Errors) }}
+<div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
             <header>

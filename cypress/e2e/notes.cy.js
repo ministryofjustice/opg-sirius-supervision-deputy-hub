@@ -10,13 +10,13 @@ describe("Notes", () => {
            cy.get(".moj-sub-navigation__list").contains("Notes").click();
 
            cy.url().should("include", "/supervision/deputies/1/notes");
-           cy.get(".main > header").contains("Notes");
+           cy.get(".govuk-heading-l").contains("Notes");
 
            cy.get(".govuk-button").contains("Add a note").click();
            cy.url().should("include","/supervision/deputies/1/notes/add-note");
 
            cy.get("#f-back-button").click();
-           cy.get(".main > header").contains("Notes");
+           cy.get(".govuk-heading-l").contains("Notes");
        })
     });
 
@@ -79,7 +79,7 @@ describe("Notes", () => {
             cy.get(".govuk-button-group > .govuk-link")
                 .should("contain", "Cancel")
                 .click();
-            cy.get(".main > header").should("contain", "Notes");
+            cy.get(".govuk-heading-l").should("contain", "Notes");
             cy.url().should("contain", "/supervision/deputies/1/notes");
         });
 

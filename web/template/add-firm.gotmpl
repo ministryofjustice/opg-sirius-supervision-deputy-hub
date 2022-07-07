@@ -1,6 +1,8 @@
 {{ template "page" . }}
 {{ define "main" }}
-    <header>
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
+<header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Create new firm
         </h1>

@@ -19,7 +19,6 @@ type deputyHubVars struct {
 	XSRFToken         string
 	DeputyDetails     sirius.DeputyDetails
 	Error             string
-	Errors            sirius.ValidationErrors
 	SuccessMessage    string
 	ActiveClientCount int
 	IsFinanceManager  bool
