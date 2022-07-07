@@ -19,14 +19,13 @@ type deputyHubVars struct {
 	XSRFToken         string
 	DeputyDetails     sirius.DeputyDetails
 	Error             string
-	ErrorMessage      string
 	Errors            sirius.ValidationErrors
 	SuccessMessage    string
 	ActiveClientCount int
 	IsFinanceManager  bool
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -60,8 +59,6 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, defaultPATeam int, 
 			return nil
 		})
 
-		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
-
 		if err := group.Wait(); err != nil {
 			return err
 		}
@@ -87,11 +84,4 @@ func getSuccessFromUrl(url *url.URL, ecmName string, firmName string) string {
 	default:
 		return ""
 	}
-}
-
-func checkForDefaultEcmId(EcmId, defaultPaTeam int) string {
-	if EcmId == defaultPaTeam {
-		return "An executive case manager has not been assigned. "
-	}
-	return ""
 }

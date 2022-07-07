@@ -47,12 +47,11 @@ func TestGetNotes(t *testing.T) {
 
 	client := &mockDeputyHubNotesInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path?success=true", nil)
 
-	handler := renderTemplateForDeputyHubNotes(client, defaultPATeam, template)
+	handler := renderTemplateForDeputyHubNotes(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
@@ -74,7 +73,6 @@ func TestGetNotes(t *testing.T) {
 func TestPostAddNote(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockDeputyHubNotesInformation{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -84,7 +82,7 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -108,7 +106,6 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -118,7 +115,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -152,7 +149,6 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -162,7 +158,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

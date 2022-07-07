@@ -1,4 +1,7 @@
 {{ define "pa-deputy-header" }}
+    {{ if .DeputyDetails.ExecutiveCaseManager.IsDefault }}
+        {{ template "default-ecm-banner" .DeputyDetails }}
+    {{ end }}
 
     <a id="f-back-button" class="govuk-back-link">Back</a>
     <div class="govuk-grid-row">

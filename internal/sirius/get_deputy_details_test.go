@@ -30,6 +30,73 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 		"deputyType": {
 			"handle": "PA",
 			"label": "Public Authority"
+		},
+	  "executiveCaseManager": {
+		"id": 11,
+		"name": "PA Team 1 - (Supervision)",
+		"displayName": "PA Team 1 - (Supervision)"
+	  }
+    }`
+
+	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := DeputyDetails{
+		ID:               1,
+		DeputyFirstName:  "",
+		DeputySurname:    "",
+		DeputyCasrecId:   10000000,
+		OrganisationName: "Test Organisation",
+		Email:            "deputyship@essexcounty.gov.uk",
+		PhoneNumber:      "0115 876 5574",
+		AddressLine1:     "Deputyship Team",
+		AddressLine2:     "Seax House",
+		AddressLine3:     "19 Market Rd",
+		Town:             "Chelmsford",
+		County:           "Essex",
+		Postcode:         "CM1 1GG",
+		ExecutiveCaseManager: ExecutiveCaseManager{
+			EcmId:     11,
+			EcmName:   "PA Team 1 - (Supervision)",
+			IsDefault: false,
+		},
+		DeputyType: DeputyType{
+			Handle: "PA",
+			Label:  "Public Authority",
+		},
+	}
+
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+
+	assert.Equal(t, expectedResponse, deputyDetails)
+	assert.Equal(t, nil, err)
+}
+
+func TestDeputyDetailsReturnedPADefaultECM(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `    {
+      	"id": 1,
+      	"deputyCasrecId": 10000000,
+      	"organisationName": "Test Organisation",
+		"email": "deputyship@essexcounty.gov.uk",
+		"phoneNumber": "0115 876 5574",
+		"addressLine1": "Deputyship Team",
+		"addressLine2": "Seax House",
+		"addressLine3": "19 Market Rd",
+		"town": "Chelmsford",
+		"county": "Essex",
+		"postcode": "CM1 1GG",
+		"deputyType": {
+			"handle": "PA",
+			"label": "Public Authority"
 		}
     }`
 
@@ -57,8 +124,9 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 		County:           "Essex",
 		Postcode:         "CM1 1GG",
 		ExecutiveCaseManager: ExecutiveCaseManager{
-			EcmId:   23,
-			EcmName: "Public Authority Deputy Team",
+			EcmId:     23,
+			EcmName:   "Public Authority Deputy Team",
+			IsDefault: true,
 		},
 		DeputyType: DeputyType{
 			Handle: "PA",
@@ -115,8 +183,9 @@ func TestDeputyDetailsReturnedPro(t *testing.T) {
 		DeputyNumber:     1000,
 		OrganisationName: "organisationName",
 		ExecutiveCaseManager: ExecutiveCaseManager{
-			EcmId:   223,
-			EcmName: "displayName",
+			EcmId:     223,
+			EcmName:   "displayName",
+			IsDefault: false,
 		},
 		Firm: Firm{
 			FirmName: "This is the Firm Name",

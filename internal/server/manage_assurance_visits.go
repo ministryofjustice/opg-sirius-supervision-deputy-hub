@@ -25,7 +25,6 @@ type ManageAssuranceVisitVars struct {
 	DeputyDetails       sirius.DeputyDetails
 	Error               string
 	Errors              sirius.ValidationErrors
-	ErrorMessage        string
 	Visitors            sirius.Visitors
 	VisitRagRatingTypes []sirius.VisitRagRatingTypes
 	VisitOutcomeTypes   []sirius.VisitOutcomeTypes

@@ -37,12 +37,11 @@ func TestGetFirm(t *testing.T) {
 
 	client := &mockFirmInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForAddFirm(client, defaultPATeam, template)
+	handler := renderTemplateForAddFirm(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
@@ -57,7 +56,6 @@ func TestGetFirm(t *testing.T) {
 func TestPostAddFirm(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockFirmInformation{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
@@ -67,7 +65,7 @@ func TestPostAddFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -89,7 +87,6 @@ func TestAddFirmValidationErrors(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
@@ -99,7 +96,7 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -127,7 +124,6 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 	}
 
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
@@ -137,7 +133,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

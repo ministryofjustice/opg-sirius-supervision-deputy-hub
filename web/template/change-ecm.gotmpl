@@ -3,9 +3,6 @@
 {{ define "main" }}
     <div class="main">
         {{ template "error-summary" .Errors }}
-        {{ if ne .ErrorMessage "" }}
-            {{ template "error-banner" . }}
-        {{ end }}
         {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
             {{ template "pa-deputy-header" . }}
         {{ end }}
@@ -34,9 +31,7 @@
                             class="govuk-body govuk-!-margin-bottom-5"
                             for="current-ecm">
                             Current ECM:
-                            {{ if ne .DeputyDetails.ExecutiveCaseManager.EcmId .DefaultPaTeam }}
-                                {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
-                            {{ else if ne .DeputyDetails.ExecutiveCaseManager.EcmId 0 }}
+                            {{ if not .DeputyDetails.ExecutiveCaseManager.IsDefault }}
                                 {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
                             {{ end }}
                         </p>

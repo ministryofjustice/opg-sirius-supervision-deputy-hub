@@ -22,8 +22,6 @@ type changeECMHubVars struct {
 	Error          string
 	Errors         sirius.ValidationErrors
 	SuccessMessage string
-	ErrorMessage   string
-	DefaultPaTeam  int
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
@@ -49,13 +47,9 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				Path:           r.URL.Path,
 				XSRFToken:      ctx.XSRFToken,
 				DeputyDetails:  deputyDetails,
-				DefaultPaTeam:  defaultPATeam,
 				EcmTeamDetails: ecmTeamDetails,
 				SuccessMessage: successMessage,
 			}
-
-			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -67,7 +61,6 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				Path:           r.URL.Path,
 				XSRFToken:      ctx.XSRFToken,
 				DeputyDetails:  deputyDetails,
-				DefaultPaTeam:  defaultPATeam,
 				EcmTeamDetails: ecmTeamDetails,
 			}
 

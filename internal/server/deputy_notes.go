@@ -21,7 +21,6 @@ type deputyHubNotesVars struct {
 	DeputyNotes    sirius.DeputyNoteCollection
 	Error          string
 	Errors         sirius.ValidationErrors
-	ErrorMessage   string
 	SuccessMessage string
 }
 
@@ -30,13 +29,12 @@ type addNoteVars struct {
 	XSRFToken     string
 	Title         string
 	Note          string
-	Error         sirius.ValidationError
+	Error         string
 	Errors        sirius.ValidationErrors
-	ErrorMessage  string
 	DeputyDetails sirius.DeputyDetails
 }
 
-func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -64,7 +62,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 				SuccessMessage: successMessage,
 			}
 
-			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -90,8 +87,6 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, defaultPA
 					Errors:        verr.Errors,
 					DeputyDetails: deputyDetails,
 				}
-
-				vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)

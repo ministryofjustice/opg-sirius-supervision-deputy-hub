@@ -2,9 +2,6 @@
 {{ define "main" }}
     {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ if ne .ErrorMessage "" }}
-            {{ template "error-banner" . }}
-        {{ end }}
         {{ template "pa-deputy-header" . }}
     {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
         {{ template "pro-deputy-header" . }}
