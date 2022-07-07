@@ -116,3 +116,19 @@ describe("Timelink links to Change ECM page", () => {
         ).should("contain", "by case manager (12345678)");
     });
 });
+
+describe("Navigation", () => {
+    it("should navigate to and from the change ECM page", () => {
+        cy.setCookie("Other", "other");
+        cy.setCookie("XSRF-TOKEN", "abcde");
+        cy.visit("/supervision/deputies/1");
+
+        cy.get("#change-ecm").should("contain", "Change ECM").click();
+
+        cy.url().should("include", "/supervision/deputies/1/change-ecm");
+        cy.get(".govuk-heading-l").contains("Change Executive Case Manager");
+
+        cy.get("#f-back-button").click();
+        cy.get(".govuk-heading-l").contains("Deputy details");
+    })
+});
