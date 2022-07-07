@@ -20,6 +20,9 @@ describe("Manage important Information", () => {
                 "contain",
                 "Manage important information"
             );
+
+            cy.get("#f-back-button").click();
+            cy.get(".govuk-heading-l").contains("Deputy details");
         });
 
         it("shows a cancel button which returns me to the dashboard", () => {

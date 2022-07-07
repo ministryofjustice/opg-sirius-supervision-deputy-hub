@@ -35,8 +35,8 @@ function toggleChangeFirmAutoCompleteHideClass() {
         .classList.toggle("hide");
 }
 
-if (document.querySelector("#back-button")) {
-    document.getElementById("back-button").onclick = function (e) {
+if (document.querySelector("#f-back-button")) {
+    document.getElementById("f-back-button").onclick = function (e) {
         e.preventDefault()
         history.back();
     }

@@ -2,14 +2,19 @@ describe("Timeline", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/1/timeline");
     });
 
-    it("has a header called timeline", () => {
-        cy.get(".main > header").should("contain", "Timeline");
-    });
+    it("should navigate to and from the Timeline tab", () => {
+        cy.visit("/supervision/deputies/1");
+        cy.get(".moj-sub-navigation__list").contains("Timeline").click();
+
+        cy.url().should("include", "/supervision/deputies/1/timeline");
+        cy.get(".main > header").contains("Timeline");
+    })
 
     it("contains appropriate test data for a timeline event", () => {
+        cy.visit("/supervision/deputies/1/timeline");
+
         cy.get(".moj-timeline__title").should(
             "contain",
             "New client added to deputyship"
