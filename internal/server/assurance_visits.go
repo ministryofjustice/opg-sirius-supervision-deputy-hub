@@ -18,7 +18,6 @@ type AssuranceVisitsVars struct {
 	DeputyDetails   sirius.DeputyDetails
 	Error           string
 	Errors          sirius.ValidationErrors
-	ErrorMessage    string
 	SuccessMessage  string
 	AssuranceVisits []sirius.AssuranceVisits
 }
@@ -39,18 +38,19 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			successMessage = ""
 		}
 
-		vars := AssuranceVisitsVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
-			DeputyDetails:  deputyDetails,
-			SuccessMessage: successMessage,
-		}
-
 		visits, err := client.GetAssuranceVisits(ctx, deputyId)
 		if err != nil {
 			return err
 		}
-		vars.AssuranceVisits = visits
+
+		vars := AssuranceVisitsVars{
+			Path:            r.URL.Path,
+			XSRFToken:       ctx.XSRFToken,
+			DeputyDetails:   deputyDetails,
+			SuccessMessage:  successMessage,
+			AssuranceVisits: visits,
+		}
+
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }

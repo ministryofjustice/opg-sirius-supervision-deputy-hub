@@ -1,4 +1,4 @@
-{{ define "error-banner" }}
+{{ define "default-ecm-banner" }}
 
     <div class="moj-banner moj-banner--warning">
         <svg
@@ -18,7 +18,9 @@
             <span class="moj-banner__assistive">Warning</span>
             <ul class="govuk-list govuk-!-margin-top-0 govuk-!-margin-bottom-0">
                 <!-- prettier-ignore -->
-                <li>{{ .ErrorMessage }}<a class="govuk-link" href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}">Assign an executive case manager</a></li>
+                <li>An executive case manager has not been assigned. <a class="govuk-link" href="{{ prefix (printf "/%d/change-ecm" .ID) }}"
+                    >Assign an executive case manager</a>
+                </li>
             </ul>
         </div>
     </div>

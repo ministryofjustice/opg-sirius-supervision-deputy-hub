@@ -18,11 +18,10 @@ type deputyHubEventVars struct {
 	DeputyDetails sirius.DeputyDetails
 	DeputyEvents  sirius.DeputyEventCollection
 	Error         string
-	ErrorMessage  string
 	Errors        sirius.ValidationErrors
 }
 
-func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -42,8 +41,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, defaultP
 			DeputyDetails: deputyDetails,
 			DeputyEvents:  deputyEvents,
 		}
-
-		vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

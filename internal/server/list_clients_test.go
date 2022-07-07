@@ -29,12 +29,11 @@ func TestNavigateToClientTab(t *testing.T) {
 
 	client := &mockDeputyHubClientInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForClientTab(client, defaultPATeam, template)
+	handler := renderTemplateForClientTab(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)

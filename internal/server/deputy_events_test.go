@@ -28,12 +28,11 @@ func TestNavigateToTimeline(t *testing.T) {
 
 	client := &mockDeputyHubTimelineInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHubEvents(client, defaultPATeam, template)
+	handler := renderTemplateForDeputyHubEvents(client, template)
 	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)

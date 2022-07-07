@@ -19,10 +19,9 @@ type editDeputyHubVars struct {
 	DeputyDetails sirius.DeputyDetails
 	Error         string
 	Errors        sirius.ValidationErrors
-	ErrorMessage  string
 }
 
-func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -37,8 +36,6 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, defaultPATe
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
 			}
-
-			vars.ErrorMessage = checkForDefaultEcmId(deputyDetails.ExecutiveCaseManager.EcmId, defaultPATeam)
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 

@@ -23,7 +23,7 @@ type addFirmVars struct {
 	DeputyId      int
 }
 
-func renderTemplateForAddFirm(client FirmInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
