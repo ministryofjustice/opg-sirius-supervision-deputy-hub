@@ -1,6 +1,6 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "error-summary" .Errors }}
+{{ template "content-header" . }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ template "pa-deputy-details" . }}
     {{ end }}

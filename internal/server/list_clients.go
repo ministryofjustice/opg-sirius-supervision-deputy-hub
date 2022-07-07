@@ -20,7 +20,6 @@ type listClientsVars struct {
 	DeputyClientsDetails sirius.DeputyClientDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
-	Errors               sirius.ValidationErrors
 	ActiveClientCount    int
 }
 

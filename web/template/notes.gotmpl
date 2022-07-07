@@ -1,54 +1,46 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .SuccessMessage }}
-        {{ template "success-banner" . }}
-    {{ end }}
-    {{ template "error-summary" .Errors }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ template "pa-deputy-header" . }}
-    {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-        {{ template "pro-deputy-header" . }}
-    {{ end }}
-    {{ template "navigation" . }}
-    <div class="main">
-        <header>
-            <h1
-                class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                Notes
-            </h1>
-            <div class="moj-button-menu">
-                <div class="moj-button-menu__wrapper">
-                    <a
-                        class="govuk-button moj-button-menu__item govuk-button--secondary"
-                        href="{{ prefix (printf "/%d/notes/add-note" .DeputyDetails.ID) }}"
-                        role="button"
-                        draggable="false"
-                        data-module="govuk-button">
-                        Add a note
-                    </a>
+{{ if .SuccessMessage }}
+    {{ template "success-banner" . }}
+{{ end }}
+{{ template "content-header" . }}
+{{ template "navigation" . }}
+    <header>
+        <h1
+            class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            Notes
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    href="{{ prefix (printf "/%d/notes/add-note" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    data-module="govuk-button">
+                    Add a note
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="moj-timeline">
+        {{ range .DeputyNotes }}
+            <div class="moj-timeline__item">
+                <div class="moj-timeline__header">
+                    <h2 class="moj-timeline__title">{{ .Name }}</h2>
+                    <p class="moj-timeline__byline">
+                        {{ printf "by %v (%v)" .UserDisplayName .UserPhoneNumber }}
+                    </p>
+                </div>
+                <p class="moj-timeline__date">
+                    <time>{{ .Timestamp }}</time>
+                </p>
+                <div class="moj-timeline__description">
+                    {{ .NoteText }}
                 </div>
             </div>
-        </header>
+        {{ end }}
 
-        <div class="moj-timeline">
-            {{ range .DeputyNotes }}
-                <div class="moj-timeline__item">
-                    <div class="moj-timeline__header">
-                        <h2 class="moj-timeline__title">{{ .Name }}</h2>
-                        <p class="moj-timeline__byline">
-                            {{ printf "by %v (%v)" .UserDisplayName .UserPhoneNumber }}
-                        </p>
-                    </div>
-                    <p class="moj-timeline__date">
-                        <time>{{ .Timestamp }}</time>
-                    </p>
-                    <div class="moj-timeline__description">
-                        {{ .NoteText }}
-                    </div>
-                </div>
-            {{ end }}
-
-        </div>
     </div>
 {{ end }}

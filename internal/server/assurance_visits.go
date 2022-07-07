@@ -17,7 +17,6 @@ type AssuranceVisitsVars struct {
 	XSRFToken       string
 	DeputyDetails   sirius.DeputyDetails
 	Error           string
-	Errors          sirius.ValidationErrors
 	SuccessMessage  string
 	AssuranceVisits []sirius.AssuranceVisits
 }

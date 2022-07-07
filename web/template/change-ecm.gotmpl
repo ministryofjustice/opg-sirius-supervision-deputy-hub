@@ -1,71 +1,63 @@
 {{ template "page" . }}
-
 {{ define "main" }}
-    <div class="main">
-        {{ template "error-summary" .Errors }}
-        {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-            {{ template "pa-deputy-header" . }}
-        {{ end }}
-        {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-            {{ template "pro-deputy-header" . }}
-        {{ end }}
-        <div class="govuk-grid-row govuk-!-margin-top-5">
-            <div class="govuk-grid-column-full">
-                <header>
-                    <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                        Change Executive Case Manager
-                    </h1>
-                </header>
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
+<div class="govuk-grid-row govuk-!-margin-top-5">
+        <div class="govuk-grid-column-full">
+            <header>
+                <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+                    Change Executive Case Manager
+                </h1>
+            </header>
 
-                <div class="govuk-grid-row">
-                    <form
-                        id="change-ecm-form"
-                        class="change-ecm govuk-grid-column-one-half"
-                        method="post">
-                        <input
-                            type="hidden"
-                            name="xsrfToken"
-                            value="{{ .XSRFToken }}" />
+            <div class="govuk-grid-row">
+                <form
+                    id="change-ecm-form"
+                    class="change-ecm govuk-grid-column-one-half"
+                    method="post">
+                    <input
+                        type="hidden"
+                        name="xsrfToken"
+                        value="{{ .XSRFToken }}" />
 
-                        <p
-                            class="govuk-body govuk-!-margin-bottom-5"
-                            for="current-ecm">
-                            Current ECM:
-                            {{ if not .DeputyDetails.ExecutiveCaseManager.IsDefault }}
-                                {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
+                    <p
+                        class="govuk-body govuk-!-margin-bottom-5"
+                        for="current-ecm">
+                        Current ECM:
+                        {{ if not .DeputyDetails.ExecutiveCaseManager.IsDefault }}
+                            {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
+                        {{ end }}
+                    </p>
+                    <label class="govuk-label" for="select-ecm">
+                        Enter an Executive Case Manager name
+                    </label>
+                    <div
+                        class="autocomplete-wrapper"
+                        id="select-ecm-dropdown">
+                        <select id="select-ecm" name="select-ecm">
+                            <option value=""></option>
+                            {{ range .EcmTeamDetails }}
+                                <!-- prettier-ignore -->
+                                <option value="{{ .ID }}" {{ if eq .CurrentEcm .ID }} selected="selected" {{ end }}>{{ .DisplayName }}</option>
                             {{ end }}
-                        </p>
-                        <label class="govuk-label" for="select-ecm">
-                            Enter an Executive Case Manager name
-                        </label>
-                        <div
-                            class="autocomplete-wrapper"
-                            id="select-ecm-dropdown">
-                            <select id="select-ecm" name="select-ecm">
-                                <option value=""></option>
-                                {{ range .EcmTeamDetails }}
-                                    <!-- prettier-ignore -->
-                                    <option value="{{ .ID }}" {{ if eq .CurrentEcm .ID }} selected="selected" {{ end }}>{{ .DisplayName }}</option>
-                                {{ end }}
-                            </select>
-                        </div>
+                        </select>
+                    </div>
 
-                        <div class="govuk-button-group govuk-!-margin-top-7">
-                            <button
-                                type="submit"
-                                class="govuk-button"
-                                data-module="govuk-button">
-                                Save ECM
-                            </button>
+                    <div class="govuk-button-group govuk-!-margin-top-7">
+                        <button
+                            type="submit"
+                            class="govuk-button"
+                            data-module="govuk-button">
+                            Save ECM
+                        </button>
 
-                            <a
-                                class="govuk-link data-emc-cancel"
-                                href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
-                                Cancel
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                        <a
+                            class="govuk-link data-emc-cancel"
+                            href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
