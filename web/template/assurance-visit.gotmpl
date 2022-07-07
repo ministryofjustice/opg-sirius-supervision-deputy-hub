@@ -1,6 +1,6 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .Success }}
+    {{ if .SuccessMessage }}
         {{ template "success-banner" . }}
     {{ end }}
     {{ template "error-summary" (rename_errors .Errors) }}

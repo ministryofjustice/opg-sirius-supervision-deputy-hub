@@ -20,7 +20,6 @@ type addFirmVars struct {
 	DeputyDetails sirius.DeputyDetails
 	Error         string
 	Errors        sirius.ValidationErrors
-	Success       bool
 	DeputyId      int
 }
 

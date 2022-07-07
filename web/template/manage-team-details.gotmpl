@@ -1,8 +1,5 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .Success }}
-        {{ template "success-banner" " You have successfully edited your details." }}
-    {{ end }}
     {{ template "error-summary" .Errors }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ if ne .ErrorMessage "" }}
