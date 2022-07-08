@@ -1,12 +1,7 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ template "error-summary" (rename_errors .Errors) }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ template "pa-deputy-header" . }}
-    {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-        {{ template "pro-deputy-header" . }}
-    {{ end }}
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
             Manage assurance visit

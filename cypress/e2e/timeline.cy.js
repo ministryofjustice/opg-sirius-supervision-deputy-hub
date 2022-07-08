@@ -9,7 +9,7 @@ describe("Timeline", () => {
         cy.get(".moj-sub-navigation__list").contains("Timeline").click();
 
         cy.url().should("include", "/supervision/deputies/1/timeline");
-        cy.get(".main > header").contains("Timeline");
+        cy.get(".govuk-heading-l").contains("Timeline");
     })
 
     it("contains appropriate test data for a timeline event", () => {

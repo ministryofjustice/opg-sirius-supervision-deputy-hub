@@ -1,17 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
-    {{ if .SuccessMessage }}
-        {{ template "success-banner" . }}
-    {{ end }}
-    {{ template "error-summary" (rename_errors .Errors) }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
-        {{ template "pa-deputy-header" . }}
-    {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
-        {{ template "pro-deputy-header" . }}
-    {{ end }}
-    {{ template "navigation" . }}
-
+{{ if .SuccessMessage }}
+    {{ template "success-banner" . }}
+{{ end }}
+{{ template "content-header" . }}
+{{ template "navigation" . }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Assurance visits
