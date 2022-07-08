@@ -13,12 +13,13 @@ type AssuranceVisit interface {
 }
 
 type AssuranceVisitsVars struct {
-	Path            string
-	XSRFToken       string
-	DeputyDetails   sirius.DeputyDetails
-	Error           string
-	SuccessMessage  string
-	AssuranceVisits []sirius.AssuranceVisits
+	Path             string
+	XSRFToken        string
+	DeputyDetails    sirius.DeputyDetails
+	Error            string
+	AddVisitDisabled bool
+	SuccessMessage   string
+	AssuranceVisits  []sirius.AssuranceVisits
 }
 
 func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Handler {
@@ -43,13 +44,21 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 		}
 
 		vars := AssuranceVisitsVars{
-			Path:            r.URL.Path,
-			XSRFToken:       ctx.XSRFToken,
-			DeputyDetails:   deputyDetails,
-			SuccessMessage:  successMessage,
-			AssuranceVisits: visits,
+			Path:             r.URL.Path,
+			XSRFToken:        ctx.XSRFToken,
+			DeputyDetails:    deputyDetails,
+			SuccessMessage:   successMessage,
+			AssuranceVisits:  visits,
+			AddVisitDisabled: !isCurrentVisitReviewed(visits),
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
+}
+
+func isCurrentVisitReviewed(visits []sirius.AssuranceVisits) bool {
+	if len(visits) > 0 {
+		return visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != ""
+	}
+	return false
 }
