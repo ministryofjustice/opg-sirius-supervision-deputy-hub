@@ -3,11 +3,13 @@ describe("Manage an Assurance Visit", () => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
         cy.setCookie("user", "finance-user");
-        cy.visit("/supervision/deputies/3/manage-assurance-visit/35");
-
     });
 
     describe("Manage an assurance visit form", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/3/manage-assurance-visit/35");
+        });
+
         it("cancel button returns user to the assurance visit page", () => {
             cy.get(".govuk-button-group > .govuk-link")
                 .should("contain", "Cancel")

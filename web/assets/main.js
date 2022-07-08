@@ -37,7 +37,14 @@ function toggleChangeFirmAutoCompleteHideClass() {
 
 if (document.querySelector("#f-back-button")) {
     document.getElementById("f-back-button").onclick = function (e) {
-        e.preventDefault()
+        e.preventDefault();
         history.back();
+    }
+}
+
+if (document.querySelector("#f-button-disabled")) {
+    document.getElementById("f-button-disabled").onclick = function (e) {
+        e.preventDefault();
+        document.getElementById("f-button-disabled-warning").classList.remove("hide");
     }
 }
