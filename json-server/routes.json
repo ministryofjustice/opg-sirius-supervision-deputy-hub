@@ -7,7 +7,7 @@
     "/users/current": "/users",
     "/deputies/:deputyId/ecm": "/ecm",
     "/deputies/:id/contact-details": "/deputies/:id",
-    "/deputies/:id/assurance-visits": "/assuranceVisits",
+    "/deputies/:id/assurance-visits": "/assuranceVisits/:id",
     "/deputies/:id/assurance-visits/:visitId": "/assuranceVisit",
     "/firm": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
