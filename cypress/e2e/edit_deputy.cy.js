@@ -4,7 +4,7 @@ describe("Edit deputy tab", () => {
         cy.setCookie("XSRF-TOKEN", "abcde");
     });
 
-    it("should navigate to and from the Timeline tab", () => {
+    it("should navigate to and from the Deputy tab", () => {
         cy.visit("/supervision/deputies/1");
         cy.contains(".govuk-button", "Manage team details").click();
         cy.url().should("include", "/supervision/deputies/1/manage-team-details");

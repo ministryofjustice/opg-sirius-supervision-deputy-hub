@@ -17,7 +17,7 @@ describe("Notes", () => {
 
            cy.get("#f-back-button").click();
            cy.get(".govuk-heading-l").contains("Notes");
-       })
+       });
     });
 
     describe("Adding a note", () => {

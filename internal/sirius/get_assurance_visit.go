@@ -45,12 +45,12 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
-	AssuranceVisitFormatted := editAssuranceVisit(v)
+	AssuranceVisitFormatted := formatAssuranceVisit(v)
 
 	return AssuranceVisitFormatted, err
 }
 
-func editAssuranceVisit(v AssuranceVisit) AssuranceVisit {
+func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
 	updatedVisit := AssuranceVisit{
 		RequestedDate:       FormatDateAndTime("2006-01-02T15:04:05+00:00", v.RequestedDate, "2006-01-02"),
 		Id:                  v.Id,
