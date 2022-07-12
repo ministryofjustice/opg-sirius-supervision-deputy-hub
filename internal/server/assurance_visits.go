@@ -60,5 +60,5 @@ func isCurrentVisitReviewed(visits []sirius.AssuranceVisits) bool {
 	if len(visits) > 0 {
 		return visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != ""
 	}
-	return false
+	return true
 }

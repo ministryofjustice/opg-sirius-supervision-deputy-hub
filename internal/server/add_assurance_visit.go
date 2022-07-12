@@ -56,11 +56,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 			err = client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := AddAssuranceVisitVars{
-					Path:      r.URL.Path,
-					XSRFToken: ctx.XSRFToken,
-					Errors:    verr.Errors,
-				}
+				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 

@@ -84,6 +84,11 @@ func TestIsCurrentVisitReviewed(t *testing.T) {
 		want   bool
 	}{
 		{
+			"No visits",
+			[]sirius.AssuranceVisits{},
+			true,
+		},
+		{
 			"Latest visit is reviewed",
 			[]sirius.AssuranceVisits{
 				{
