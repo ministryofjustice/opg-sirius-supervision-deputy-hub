@@ -50,12 +50,12 @@ func (c *Client) GetAssuranceVisits(ctx Context, deputyId int) ([]AssuranceVisit
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&k)
-	AssuranceVisitsFormatted := editAssuranceVisits(k.AssuranceVisits, deputyId)
+	AssuranceVisitsFormatted := formatAssuranceVisits(k.AssuranceVisits, deputyId)
 
 	return AssuranceVisitsFormatted, err
 }
 
-func editAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits {
+func formatAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits {
 	var list []AssuranceVisits
 	for _, s := range k {
 		event := AssuranceVisits{
