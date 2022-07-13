@@ -12,11 +12,15 @@
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
+                    {{ if .AddVisitDisabled }}
+                        id="f-button-disabled"
+                    {{ else }}
+                        id="hook-add-a-visit"
+                    {{ end }}
                     href="{{ prefix (printf "/%d/add-assurance-visit" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary"
-                    id="hook-add-a-visit"
                     data-module="govuk-button">
                     Add a visit
                 </a>
@@ -24,28 +28,32 @@
         </div>
     </header>
 
-    {{ range .AssuranceVisits }}
+    <div id="f-button-disabled-warning" class="hide">
+        {{ template "warning-banner" "You cannot add anything until the current assurance process has a review date and RAG status" }}
+    </div>
+
+    {{ range $i, $visit := .AssuranceVisits }}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <dl id="assurance-visit-details" class="govuk-summary-list">
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Requested date</dt>
                         <dd class="govuk-summary-list__value hook_requested_date">
-                            {{ .RequestedDate }}
+                            {{ $visit.RequestedDate }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Requested by</dt>
                         <dd class="govuk-summary-list__value hook_requested_by">
-                            {{ .RequestedBy.UserDisplayName }}
+                            {{ $visit.RequestedBy.UserDisplayName }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Commissioned date</dt>
                         <dd class="govuk-summary-list__value hook_commissioned_date">
                             {{$nullDateValue:="01/01/0001"}}
-                            {{ if ne .CommissionedDate $nullDateValue}}
-                                {{ .CommissionedDate }}
+                            {{ if ne $visit.CommissionedDate $nullDateValue}}
+                                {{ $visit.CommissionedDate }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -54,8 +62,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Visitor</dt>
                         <dd class="govuk-summary-list__value hook_visitor">
-                            {{ if .VisitorAllocated }}
-                                {{ .VisitorAllocated }}
+                            {{ if $visit.VisitorAllocated }}
+                                {{ $visit.VisitorAllocated }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -64,8 +72,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Report due date</dt>
                         <dd class="govuk-summary-list__value hook_report_due_date">
-                            {{ if ne .ReportDueDate $nullDateValue}}
-                                {{ .ReportDueDate }}
+                            {{ if ne $visit.ReportDueDate $nullDateValue}}
+                                {{ $visit.ReportDueDate }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -74,8 +82,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Report received date</dt>
                         <dd class="govuk-summary-list__value hook_report_received_date">
-                            {{ if ne .ReportReceivedDate $nullDateValue}}
-                                {{ .ReportReceivedDate }}
+                            {{ if ne $visit.ReportReceivedDate $nullDateValue}}
+                                {{ $visit.ReportReceivedDate }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -84,8 +92,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Outcome</dt>
                         <dd class="govuk-summary-list__value hook_outcome">
-                            {{ if .VisitOutcome.Label }}
-                                {{ .VisitOutcome.Label }}
+                            {{ if $visit.VisitOutcome.Label }}
+                                {{ $visit.VisitOutcome.Label }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -94,8 +102,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Report reviewed date</dt>
                         <dd class="govuk-summary-list__value hook_report_reviewed_date">
-                            {{ if ne .ReportReviewDate $nullDateValue}}
-                                {{ .ReportReviewDate }}
+                            {{ if ne $visit.ReportReviewDate $nullDateValue}}
+                                {{ $visit.ReportReviewDate }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -104,8 +112,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Reviewed by</dt>
                         <dd class="govuk-summary-list__value hook_reviewed_by">
-                            {{ if .ReviewedBy.UserDisplayName }}
-                                {{ .ReviewedBy.UserDisplayName }}
+                            {{ if $visit.ReviewedBy.UserDisplayName }}
+                                {{ $visit.ReviewedBy.UserDisplayName }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -114,8 +122,8 @@
                     <div class="govuk-summary-list__row">
                         <dt class="govuk-summary-list__key">Report marked as</dt>
                         <dd class="govuk-summary-list__value hook_report_marked_as">
-                            {{ if .VisitReportMarkedAs.Label }}
-                                {{ .VisitReportMarkedAs.Label }}
+                            {{ if $visit.VisitReportMarkedAs.Label }}
+                                {{ $visit.VisitReportMarkedAs.Label }}
                             {{ else }}
                                 -
                             {{ end }}
@@ -124,18 +132,22 @@
                 </dl>
             </div>
         </div>
-        <div class="moj-button-menu__wrapper">
-            <a
-                href="{{ prefix (printf "/%d/manage-assurance-visit/%d" .DeputyId .VisitId) }}"
-                role="button"
-                draggable="false"
-                class="govuk-button moj-button-menu__item govuk-button--secondary"
-                id="hook-manage-a-visit"
-                data-module="govuk-button">
-                Manage assurance visit
-            </a>
-        </div>
-        </br>
+        {{ if eq $i 0 }}
+            <div class="moj-button-menu__wrapper">
+                <a
+                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $visit.DeputyId $visit.VisitId) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    id="hook-manage-a-visit"
+                    data-module="govuk-button">
+                    Manage assurance visit
+                </a>
+            </div>
+        {{ end }}
+        {{ if not (is_last $i $.AssuranceVisits) }}
+            <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+        {{ end }}
     {{ end }}
 {{ end }}
 

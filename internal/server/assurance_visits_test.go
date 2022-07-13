@@ -23,11 +23,13 @@ func (m *mockManageAssuranceVisit) GetAssuranceVisits(ctx sirius.Context, deputy
 	return m.assuranceVisits, m.assuranceVisitsError
 }
 
-func TestGetManageAssuranceVisits(t *testing.T) {
+func TestGetManageAssuranceVisits_latestNotReviewed(t *testing.T) {
 	assert := assert.New(t)
 
 	client := &mockManageAssuranceVisit{}
 	template := &mockTemplates{}
+
+	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{})
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
@@ -39,4 +41,110 @@ func TestGetManageAssuranceVisits(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.True(template.lastVars.(AssuranceVisitsVars).AddVisitDisabled)
+}
+
+func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
+	assert := assert.New(t)
+
+	client := &mockManageAssuranceVisit{}
+	template := &mockTemplates{}
+
+	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
+		ReportReviewDate: "01/01/2022",
+		VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+			Label:  "RED",
+			Handle: "RED",
+		},
+	})
+
+	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
+		ReportReviewDate: "01/01/2021",
+	})
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "", nil)
+
+	handler := renderTemplateForAssuranceVisits(client, template)
+	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.False(template.lastVars.(AssuranceVisitsVars).AddVisitDisabled)
+}
+
+func TestIsCurrentVisitReviewed(t *testing.T) {
+	tests := []struct {
+		name   string
+		visits []sirius.AssuranceVisits
+		want   bool
+	}{
+		{
+			"No visits",
+			[]sirius.AssuranceVisits{},
+			true,
+		},
+		{
+			"Latest visit is reviewed",
+			[]sirius.AssuranceVisits{
+				{
+					ReportReviewDate: "01/01/2022",
+					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+						Label:  "RED",
+						Handle: "RED",
+					},
+				},
+				{},
+			},
+			true,
+		},
+		{
+			"Latest visit has no review date",
+			[]sirius.AssuranceVisits{
+				{
+					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+						Label:  "RED",
+						Handle: "RED",
+					},
+				},
+				{},
+			},
+			false,
+		},
+		{
+			"Latest visit has no RAG",
+			[]sirius.AssuranceVisits{
+				{
+					ReportReviewDate: "01/01/2022",
+				},
+				{},
+			},
+			false,
+		},
+		{
+			"Latest visit not reviewed but previous one is",
+			[]sirius.AssuranceVisits{
+				{},
+				{
+					ReportReviewDate: "01/01/2022",
+					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+						Label:  "RED",
+						Handle: "RED",
+					},
+				},
+			},
+			false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := isCurrentVisitReviewed(tt.visits); got != tt.want {
+				t.Errorf("isCurrentVisitReviewed() = %v, want %v", got, tt.want)
+			}
+		})
+	}
 }
