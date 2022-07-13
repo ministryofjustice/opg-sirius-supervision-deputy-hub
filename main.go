@@ -57,6 +57,7 @@ func main() {
 			"translate":       util.Translate,
 			"rename_errors":   util.RenameErrors,
 			"feature_flagged": util.IsFeatureFlagged(features),
+			"is_last":         util.IsLast,
 		}).
 		ParseGlob(webDir + "/template/*/*.gotmpl")
 

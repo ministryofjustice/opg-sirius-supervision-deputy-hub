@@ -5,7 +5,7 @@
 {{ end }}
 {{ template "content-header" . }}
 {{ template "navigation" . }}
-<header>
+    <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Assurance visits
         </h1>
@@ -132,20 +132,22 @@
                 </dl>
             </div>
         </div>
-            {{ if eq $i 0 }}
-                <div class="moj-button-menu__wrapper">
-                    <a
-                        href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $visit.DeputyId $visit.VisitId) }}"
-                        role="button"
-                        draggable="false"
-                        class="govuk-button moj-button-menu__item govuk-button--secondary"
-                        id="hook-manage-a-visit"
-                        data-module="govuk-button">
-                        Manage assurance visit
-                    </a>
-                </div>
-            {{ end }}
-        </br>
+        {{ if eq $i 0 }}
+            <div class="moj-button-menu__wrapper">
+                <a
+                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $visit.DeputyId $visit.VisitId) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    id="hook-manage-a-visit"
+                    data-module="govuk-button">
+                    Manage assurance visit
+                </a>
+            </div>
+        {{ end }}
+        {{ if not (is_last $i $.AssuranceVisits) }}
+            <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+        {{ end }}
     {{ end }}
 {{ end }}
 

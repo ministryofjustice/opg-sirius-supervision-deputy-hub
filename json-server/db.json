@@ -1942,6 +1942,10 @@
   ],
   "assuranceVisits": [
     {
+      "id": 1,
+      "assuranceVisits": []
+    },
+    {
       "id": 2,
       "assuranceVisits": [
         {
