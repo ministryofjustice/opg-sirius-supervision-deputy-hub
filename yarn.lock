@@ -1731,10 +1731,10 @@ cssesc@^3.0.0:
   resolved "https://registry.yarnpkg.com/cssesc/-/cssesc-3.0.0.tgz#37741919903b868565e1c09ea747445cd18983ee"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-cypress-failed-log@^2.9.5:
-  version "2.9.5"
-  resolved "https://registry.yarnpkg.com/cypress-failed-log/-/cypress-failed-log-2.9.5.tgz#eddb83615d0a97c6388e2b4c097c42d314ff3f1f"
-  integrity sha512-3Tw3V2VKp60zDZwvC7sIW+poULqOILf3MZYOtTq5UcLAruFFotY03YUwpvTeFgZ79+4NDZfOE2vm2Wbqb+g5mg==
+cypress-failed-log@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/cypress-failed-log/-/cypress-failed-log-2.10.0.tgz#dbbe9b57a55a7a204b2f7898eb17a2b34253d4fd"
+  integrity sha512-v+GsOcpCAgj335zfDy9jDnaujH31SM/6pEQBp0dH0clbYu4NSXirLRXW9WoKhd0j70UrAA0hTLNbS2oTt1Y5kA==
   dependencies:
     debug "4.3.4"
     logdown "3.3.1"
