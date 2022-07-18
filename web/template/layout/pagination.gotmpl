@@ -1,0 +1,66 @@
+{{ define "pagination" }}
+    <nav class="moj-pagination" aria-label="Pagination navigation">
+
+        <p class="govuk-visually-hidden" id="pagination-form-heading">Pagination navigation</p>
+
+        <div class="flex-container">
+
+            <p class="moj-pagination__results">Showing <b>
+                    {{ if le .PageDetails.ShowingLowerLimit .ClientList.TotalClients }}
+                        {{ .PageDetails.ShowingLowerLimit }}
+                    {{ else }}
+                        {{.ClientList.TotalClients}}
+                    {{ end }}</b> to <b>
+                    {{ if le .PageDetails.ShowingUpperLimit .ClientList.TotalClients }}
+                        {{ .PageDetails.ShowingUpperLimit }}
+                    {{ else }}
+                        {{.ClientList.TotalClients}}
+                    {{ end }}</b> of <b>{{ .ClientList.TotalClients }}</b> clients</p>
+
+            <ul class="moj-pagination__list">
+                <li class="moj-pagination__item moj-pagination__item--prev">
+                    <a class="moj-pagination__link {{if eq .ClientList.Pages.PageCurrent 1 }}hide{{end}} {{ if lt .ClientList.Pages.PageTotal 2 }}hide{{ end }}"
+                       href="">Previous<span class="govuk-visually-hidden"> page</span></a>
+                </li>
+                {{$currentPage := .ClientList.Pages.PageCurrent}}
+
+                <li class="moj-pagination__item">
+                    <a class="moj-pagination__link {{if eq .PageDetails.FirstPage $currentPage }}moj-pagination__item--active{{end}}"
+                       href="/page=1">
+                        {{ .PageDetails.FirstPage }}
+                    </a>
+                </li>
+                <li class="moj-pagination__item moj-pagination__item--dots">...</li>
+
+                {{ range .PageDetails.LimitedPagination }}
+                    <li class="moj-pagination__item">
+                        <a class="moj-pagination__link {{if eq . $currentPage }}moj-pagination__item--active{{end}}"
+                           href="">{{ . }}</a>
+                    </li>
+                {{ end }}
+
+                <li class="moj-pagination__item">
+                    <a class="moj-pagination__link {{if eq .PageDetails.LastPage $currentPage }}moj-pagination__item--active{{end}}"
+                       href="">{{ .PageDetails.LastPage }}</a>
+                </li>
+
+                <li class="moj-pagination__item moj-pagination__item--next">
+                    <a class="moj-pagination__link {{if lt .ClientList.Pages.PageTotal 2 }}hide{{end}} {{ if eq .ClientList.Pages.PageCurrent .ClientList.Pages.PageTotal }}hide{{ end }}"
+                       href="">Next<span class="govuk-visually-hidden"> page</span></a>
+            </ul>
+            <div class="flex-container">
+                <label class="govuk-label" for="sort">View</label>
+                <select class="govuk-select" id="sort" name="clientsPerPage" aria-labelledby="display-rows"
+                        aria-label="display-rows" onchange="this.form.submit()">
+                    <option value="25" id="display-rows_25" {{if eq .PageDetails.StoredClientLimit 25}}selected{{end}} >
+                        25</option>
+                    <option value="50" id="display-rows_50"
+                            {{if eq .PageDetails.StoredClientLimit 50 }}selected{{end}}} >50</option>
+                    <option value="100" id="display-rows_100"
+                            {{if eq .PageDetails.StoredClientLimit 100 }}selected{{end}} >100</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+{{ end }}

@@ -15,7 +15,7 @@ type mockEditDeputyHubInformation struct {
 	count            int
 	lastCtx          sirius.Context
 	err              error
-	deputyClientData sirius.DeputyClientDetails
+	deputyClientData sirius.ClientList
 	ariaSorting      sirius.AriaSorting
 	userDetails      sirius.UserDetails
 }
@@ -27,7 +27,7 @@ func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, dep
 	return m.err
 }
 
-func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
+func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, int, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

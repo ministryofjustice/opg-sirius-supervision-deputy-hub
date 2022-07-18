@@ -1,7 +1,7 @@
 {{ template "page" . }}
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "navigation" . }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
     <header>
         <h1
             class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
@@ -35,6 +35,9 @@
             <span class="data-item govuk-heading-xl govuk-!-margin-bottom-0"></span>
             <span class="data-item govuk-body"></span>
         </div>
+    </div>
+    <div>
+        {{ template "pagination" . }}
     </div>
     <table id="pa-clients-3" class="govuk-table sortable">
         <thead class="govuk-table__head">
@@ -235,7 +238,7 @@
                         {{ else }}
                             {{ .OldestReport.DueDate }}
                         {{ end }}
-                        <br />
+                        <br/>
                         {{ .OldestReport.StatusLabel }}
                     {{ else }}
                         -
