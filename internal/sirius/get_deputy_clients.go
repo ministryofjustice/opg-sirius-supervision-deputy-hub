@@ -103,7 +103,7 @@ type Page struct {
 }
 
 type ApiClientList struct {
-	Clients       []apiClient `json:"persons"`
+	Clients       []apiClient `json:"clients"`
 	Pages         Page        `json:"pages"`
 	TotalClients  int         `json:"total"`
 	ActiveFilters []string
@@ -184,14 +184,14 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 	clientList.ActiveFilters = apiClientList.ActiveFilters
 
 	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "crec")
 
 	switch columnBeingSorted {
-	case "sort=reportdue":
+	case "reportdue":
 		reportDueScoreSort(clients, sortOrder)
-	case "sort=crec":
+	case "crec":
 		crecScoreSort(clients, sortOrder)
 	default:
 		alphabeticalSort(clients, sortOrder)

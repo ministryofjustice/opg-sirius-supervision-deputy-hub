@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -28,34 +29,22 @@ type listClientsVars struct {
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
 	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-		var displayClientLimit int
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
-		//search, _ := strconv.Atoi(r.FormValue("page"))
-		search := 1
-		bothDisplayClientLimits := r.Form["clientsPerPage"]
-		currentClientDisplay, _ := strconv.Atoi(r.FormValue("currentClientDisplay"))
+		urlParams := r.URL.Query()
 
-		if len(bothDisplayClientLimits) != 0 {
-			topDisplayClientLimit, _ := strconv.Atoi(bothDisplayClientLimits[0])
-			bottomDisplayClientLimit, _ := strconv.Atoi(bothDisplayClientLimits[1])
-			if topDisplayClientLimit != currentClientDisplay {
-				displayClientLimit = topDisplayClientLimit
-			} else if bottomDisplayClientLimit != currentClientDisplay {
-				displayClientLimit = bottomDisplayClientLimit
-			} else {
-				displayClientLimit = currentClientDisplay
-			}
-		} else {
+		deputyId, _ := strconv.Atoi(routeVars["id"])
+		search, _ := strconv.Atoi(urlParams.Get("page"))
+		displayClientLimit, _ := strconv.Atoi(r.FormValue("clientsPerPage"))
+		if displayClientLimit == 0 {
 			displayClientLimit = 25
 		}
 
-		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
+		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
 		clientList, ariaSorting, activeClientCount, err := client.GetDeputyClients(ctx, deputyId, displayClientLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
@@ -79,11 +68,10 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 	}
 }
 
-func parseUrl(url string) (string, string) {
-	urlQuery := strings.Split(url, "?")
-	if len(urlQuery) >= 2 {
-		sortParams := urlQuery[1]
-		sortParamsArray := strings.Split(sortParams, ":")
+func parseUrl(urlParams url.Values) (string, string) {
+	sortParam := urlParams.Get("sort")
+	if sortParam != "" {
+		sortParamsArray := strings.Split(sortParam, ":")
 		columnBeingSorted := sortParamsArray[0]
 		sortOrder := sortParamsArray[1]
 		return columnBeingSorted, sortOrder

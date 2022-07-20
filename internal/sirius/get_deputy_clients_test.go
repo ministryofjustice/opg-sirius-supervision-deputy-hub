@@ -17,7 +17,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "caseRecNumber": "67422477",
@@ -728,7 +728,7 @@ func TestActiveClientCountOnlyCountsActiveOrders(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "orders": [
@@ -784,7 +784,7 @@ func TestActiveClientCountCanCountMultipleIndividuals(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "orders": [

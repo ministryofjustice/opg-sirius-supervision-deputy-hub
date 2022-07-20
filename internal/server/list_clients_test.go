@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -50,9 +51,10 @@ func TestNavigateToClientTab(t *testing.T) {
 }
 
 func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients?sort=crec:desc"
-	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+	urlParams := url.Values{}
+	urlParams.Set("sort", "crec:desc")
+	expectedResponseColumnBeingSorted, sortOrder := "crec", "desc"
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
@@ -60,9 +62,9 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients"
+	urlParams := url.Values{}
 	expectedResponseColumnBeingSorted, sortOrder := "", ""
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)

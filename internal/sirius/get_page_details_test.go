@@ -14,13 +14,13 @@ func TestGetPreviousPageNumber(t *testing.T) {
 	assert.Equal(t, GetPreviousPageNumber(5), 4)
 }
 
-func SetUpGetNextPageNumber(pageCurrent int, pageTotal int, totalTasks int) ClientList {
+func SetUpGetNextPageNumber(pageCurrent int, pageTotal int, totalClients int) ClientList {
 	clientList := ClientList{
 		Pages: Page{
 			PageCurrent: pageCurrent,
 			PageTotal:   pageTotal,
 		},
-		TotalClients: totalTasks,
+		TotalClients: totalClients,
 	}
 	return clientList
 }
@@ -41,7 +41,7 @@ func TestGetShowingLowerLimitNumberAlwaysReturns1IfOnly1Page(t *testing.T) {
 	assert.Equal(t, GetShowingLowerLimitNumber(clientList, 100), 1)
 }
 
-func TestGetShowingLowerLimitNumberAlwaysReturns0If0Tasks(t *testing.T) {
+func TestGetShowingLowerLimitNumberAlwaysReturns0If0Clients(t *testing.T) {
 	clientList := SetUpGetNextPageNumber(1, 0, 0)
 
 	assert.Equal(t, GetShowingLowerLimitNumber(clientList, 25), 0)
@@ -71,12 +71,4 @@ func TestGetShowingUpperLimitNumberWillReturnTotalClientsIfOnFinalPage(t *testin
 	assert.Equal(t, GetShowingUpperLimitNumber(clientList, 25), 10)
 	assert.Equal(t, GetShowingUpperLimitNumber(clientList, 50), 10)
 	assert.Equal(t, GetShowingUpperLimitNumber(clientList, 100), 10)
-}
-
-func MakeListOfPagesRange(min, max int) []int {
-	a := make([]int, max-min+1)
-	for i := range a {
-		a[i] = min + i
-	}
-	return a
 }
