@@ -2,16 +2,11 @@
   &__link--btn {
     background: none !important;
     border: none;
-    outline: none !important;
     padding: 0 !important;
     font-family: arial, sans-serif;
     color: govuk-colour("blue");
     cursor: pointer;
     font-size: large;
-    &:focus {
-        border: none !important;
-        outline: none !important;
-    }
   }
   &__item--prev {
     .moj-pagination__link {

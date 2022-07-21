@@ -1,5 +1,5 @@
 {{ define "pagination" }}
-    <nav class="moj-pagination" aria-label="Pagination navigation" id="pagination-label">
+    <nav class="moj-pagination govuk-!-margin-bottom-2 govuk-!-margin-top-1" aria-label="Pagination navigation" id="pagination-label">
 
         <p class="govuk-visually-hidden" id="pagination-form-heading">Pagination navigation</p>
 
@@ -65,7 +65,7 @@
             </ul>
             <div class="flex-container">
                 <label class="govuk-label" for="label-display-rows">View</label>
-                <select class="govuk-select" id="display-rows" name="clientsPerPage" aria-labelledby="display-rows"
+                <select class="govuk-select" id="display-rows" name="limit" aria-labelledby="display-rows"
                         aria-label="display-rows" onchange="this.form.submit()">
                     <option value="25" id="display-rows_25" {{if eq $currentLimit 25}}selected{{end}} >
                         25

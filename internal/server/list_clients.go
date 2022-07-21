@@ -38,8 +38,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		urlParams := r.URL.Query()
 
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		search, _ := strconv.Atoi(urlParams.Get("page"))
-		displayClientLimit, _ := strconv.Atoi(r.FormValue("clientsPerPage"))
+		search, _ := strconv.Atoi(r.FormValue("page"))
+		displayClientLimit, _ := strconv.Atoi(r.FormValue("limit"))
 		if displayClientLimit == 0 {
 			displayClientLimit = 25
 		}
