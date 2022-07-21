@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -10,7 +11,8 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
+	GetDeputyClients(sirius.Context, int, int, int, string, string, string) (sirius.ClientList, sirius.AriaSorting, int, error)
+	GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails
 }
 
 type listClientsVars struct {
@@ -18,6 +20,8 @@ type listClientsVars struct {
 	XSRFToken            string
 	AriaSorting          sirius.AriaSorting
 	DeputyClientsDetails sirius.DeputyClientDetails
+	ClientList           sirius.ClientList
+	PageDetails          sirius.PageDetails
 	DeputyDetails        sirius.DeputyDetails
 	Error                string
 	ActiveClientCount    int
@@ -31,19 +35,30 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
+		urlParams := r.URL.Query()
+
 		deputyId, _ := strconv.Atoi(routeVars["id"])
+		search, _ := strconv.Atoi(r.FormValue("page"))
+		displayClientLimit, _ := strconv.Atoi(r.FormValue("limit"))
+		if displayClientLimit == 0 {
+			displayClientLimit = 25
+		}
 
-		columnBeingSorted, sortOrder := parseUrl(r.URL.String())
+		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		deputyClientsDetails, ariaSorting, activeClientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		clientList, ariaSorting, activeClientCount, err := client.GetDeputyClients(ctx, deputyId, displayClientLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
 
+		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
+
 		vars := listClientsVars{
 			Path:                 r.URL.Path,
 			XSRFToken:            ctx.XSRFToken,
-			DeputyClientsDetails: deputyClientsDetails,
+			DeputyClientsDetails: clientList.Clients,
+			ClientList:           clientList,
+			PageDetails:          pageDetails,
 			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
 			ActiveClientCount:    activeClientCount,
@@ -53,11 +68,10 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 	}
 }
 
-func parseUrl(url string) (string, string) {
-	urlQuery := strings.Split(url, "?")
-	if len(urlQuery) >= 2 {
-		sortParams := urlQuery[1]
-		sortParamsArray := strings.Split(sortParams, ":")
+func parseUrl(urlParams url.Values) (string, string) {
+	sortParam := urlParams.Get("sort")
+	if sortParam != "" {
+		sortParamsArray := strings.Split(sortParam, ":")
 		columnBeingSorted := sortParamsArray[0]
 		sortOrder := sortParamsArray[1]
 		return columnBeingSorted, sortOrder

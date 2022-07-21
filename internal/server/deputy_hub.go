@@ -10,7 +10,7 @@ import (
 )
 
 type DeputyHubInformation interface {
-	GetDeputyClients(sirius.Context, int, string, string, string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error)
+	GetDeputyClients(sirius.Context, int, int, int, string, string, string) (sirius.ClientList, sirius.AriaSorting, int, error)
 	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 }
 
@@ -33,7 +33,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		_, _, clientCount, err := client.GetDeputyClients(ctx, deputyId, deputyDetails.DeputyType.Handle, "", "")
+		_, _, clientCount, err := client.GetDeputyClients(ctx, deputyId, 25, 1, deputyDetails.DeputyType.Handle, "", "")
 		if err != nil {
 			return err
 		}

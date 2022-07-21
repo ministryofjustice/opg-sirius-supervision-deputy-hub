@@ -17,7 +17,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "caseRecNumber": "67422477",
@@ -80,7 +80,12 @@ func TestDeputyClientReturned(t *testing.T) {
         },
         "riskScore": 5
       }
-    ]
+    ],
+    "pages": {
+      "current": 1,
+      "total": 1
+    },
+    "total": 1
   } `
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
@@ -92,7 +97,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := DeputyClientDetails{
+	clients := DeputyClientDetails{
 		DeputyClient{
 			ClientId:          67,
 			Firstname:         "John",
@@ -110,7 +115,17 @@ func TestDeputyClientReturned(t *testing.T) {
 		},
 	}
 
-	deputyClientDetails, ariaTags, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	expectedResponse := ClientList{
+		Clients: clients,
+		Pages: Page{
+			PageCurrent: 1,
+			PageTotal:   1,
+		},
+		TotalClients:  1,
+		ActiveFilters: []string(nil),
+	}
+
+	deputyClientDetails, ariaTags, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
 	assert.Equal(t, 1, activeClientCount)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
@@ -125,14 +140,14 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	clientList, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
-	expectedResponse := DeputyClientDetails(nil)
+	expectedResponse := ClientList{}
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
-	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/pa/1/clients",
+		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -144,12 +159,12 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	clientList, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
-	expectedResponse := DeputyClientDetails(nil)
+	expectedResponse := ClientList{}
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, expectedResponse, clientList)
 }
 
 func SetUpTestData() DeputyClientDetails {
@@ -713,7 +728,7 @@ func TestActiveClientCountOnlyCountsActiveOrders(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "orders": [
@@ -758,7 +773,7 @@ func TestActiveClientCountOnlyCountsActiveOrders(t *testing.T) {
 			Body:       r,
 		}, nil
 	}
-	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
 	assert.Equal(t, 1, activeClientCount)
 	assert.Equal(t, nil, err)
@@ -769,7 +784,7 @@ func TestActiveClientCountCanCountMultipleIndividuals(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "orders": [
@@ -835,7 +850,7 @@ func TestActiveClientCountCanCountMultipleIndividuals(t *testing.T) {
 			Body:       r,
 		}, nil
 	}
-	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
 	assert.Equal(t, 3, activeClientCount)
 	assert.Equal(t, nil, err)
