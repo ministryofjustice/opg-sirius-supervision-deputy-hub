@@ -387,7 +387,9 @@
   ],
   "clients": {
     "limit": 25,
-    "metadata": [],
+    "metadata": {
+      "totalActiveClients": 3
+    },
     "pages": {
       "current": 1,
       "total": 1
