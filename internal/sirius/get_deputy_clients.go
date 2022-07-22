@@ -54,20 +54,18 @@ type latestCompletedVisit struct {
 	RagRatingLowerCase  string
 }
 
-type apiClients struct {
-	Clients []struct {
-		ClientId            int    `json:"id"`
-		Firstname           string `json:"firstname"`
-		Surname             string `json:"surname"`
-		CourtRef            string `json:"caseRecNumber"`
-		RiskScore           int    `json:"riskScore"`
-		ClientAccommodation struct {
-			Label string `json:"label"`
-		}
-		Orders               apiOrders               `json:"orders"`
-		OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
-		LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
-	} `json:"persons"`
+type apiClient struct {
+	ClientId            int    `json:"id"`
+	Firstname           string `json:"firstname"`
+	Surname             string `json:"surname"`
+	CourtRef            string `json:"caseRecNumber"`
+	RiskScore           int    `json:"riskScore"`
+	ClientAccommodation struct {
+		Label string `json:"label"`
+	}
+	Orders               apiOrders               `json:"orders"`
+	OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
+	LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
 }
 
 type Order struct {
@@ -99,36 +97,60 @@ type AriaSorting struct {
 	CRECAriaSort      string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (DeputyClientDetails, AriaSorting, int, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients", strings.ToLower(deputyType), deputyId), nil)
+type Page struct {
+	PageCurrent int `json:"current"`
+	PageTotal   int `json:"total"`
+}
+
+type Metadata struct {
+	TotalActiveClients int `json:"totalActiveClients"`
+}
+
+type ApiClientList struct {
+	Clients      []apiClient `json:"clients"`
+	Pages        Page        `json:"pages"`
+	Metadata     Metadata    `json:"metadata"`
+	TotalClients int         `json:"total"`
+}
+
+type ClientList struct {
+	Clients      DeputyClientDetails
+	Pages        Page
+	TotalClients int
+	Metadata     Metadata
+}
+
+func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (ClientList, AriaSorting, error) {
+	var clientList ClientList
+	var apiClientList ApiClientList
+
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(deputyType), deputyId, displayClientLimit, search), nil)
 
 	if err != nil {
-		return nil, AriaSorting{}, 0, err
+		return clientList, AriaSorting{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, AriaSorting{}, 0, err
+		return clientList, AriaSorting{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, AriaSorting{}, 0, ErrUnauthorized
+		return clientList, AriaSorting{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, AriaSorting{}, 0, newStatusError(resp)
+		return clientList, AriaSorting{}, newStatusError(resp)
 	}
 
-	var v apiClients
-	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
-		return nil, AriaSorting{}, 0, err
+	if err = json.NewDecoder(resp.Body).Decode(&apiClientList); err != nil {
+		return clientList, AriaSorting{}, err
 	}
 
 	var clients DeputyClientDetails
-	activeClientCount := 0
-	for _, t := range v.Clients {
+	for _, t := range apiClientList.Clients {
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
 			var client = DeputyClient{
@@ -152,28 +174,30 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId int, deputyType string, 
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
-			if client.OrderStatus == "Active" {
-				activeClientCount += 1
-			}
 			clients = append(clients, client)
 		}
 	}
 
+	clientList.Clients = clients
+	clientList.Pages = apiClientList.Pages
+	clientList.TotalClients = apiClientList.TotalClients
+	clientList.Metadata = apiClientList.Metadata
+
 	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "sort=crec")
+	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "crec")
 
 	switch columnBeingSorted {
-	case "sort=reportdue":
+	case "reportdue":
 		reportDueScoreSort(clients, sortOrder)
-	case "sort=crec":
+	case "crec":
 		crecScoreSort(clients, sortOrder)
 	default:
 		alphabeticalSort(clients, sortOrder)
 	}
 
-	return clients, aria, activeClientCount, err
+	return clientList, aria, err
 }
 
 /*

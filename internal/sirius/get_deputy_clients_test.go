@@ -17,7 +17,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "caseRecNumber": "67422477",
@@ -80,7 +80,15 @@ func TestDeputyClientReturned(t *testing.T) {
         },
         "riskScore": 5
       }
-    ]
+    ],
+    "pages": {
+      "current": 1,
+      "total": 1
+    },
+    "metadata": {
+      "totalActiveClients": 1
+    },
+    "total": 1
   } `
 
 	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
@@ -92,7 +100,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := DeputyClientDetails{
+	clients := DeputyClientDetails{
 		DeputyClient{
 			ClientId:          67,
 			Firstname:         "John",
@@ -110,9 +118,19 @@ func TestDeputyClientReturned(t *testing.T) {
 		},
 	}
 
-	deputyClientDetails, ariaTags, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	expectedResponse := ClientList{
+		Clients: clients,
+		Pages: Page{
+			PageCurrent: 1,
+			PageTotal:   1,
+		},
+		Metadata:     Metadata{TotalActiveClients: 1},
+		TotalClients: 1,
+	}
 
-	assert.Equal(t, 1, activeClientCount)
+	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
+
+	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
@@ -125,14 +143,14 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	clientList, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
-	expectedResponse := DeputyClientDetails(nil)
+	expectedResponse := ClientList{}
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
-	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/pa/1/clients",
+		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -144,12 +162,12 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	deputyClientDetails, ariaTags, _, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
+	clientList, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
-	expectedResponse := DeputyClientDetails(nil)
+	expectedResponse := ClientList{}
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, expectedResponse, deputyClientDetails)
+	assert.Equal(t, expectedResponse, clientList)
 }
 
 func SetUpTestData() DeputyClientDetails {
@@ -706,137 +724,4 @@ func TestRestructureOrdersReturnsEmptyStringForNilSupervisionLevel(t *testing.T)
 		Order{OrderStatus: "Active", SupervisionLevel: "", OrderDate: dateOne},
 	}
 	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
-}
-
-func TestActiveClientCountOnlyCountsActiveOrders(t *testing.T) {
-	mockClient := &mocks.MockClient{}
-	client, _ := NewClient(mockClient, "http://localhost:3000")
-
-	json := ` {
-    "persons": [
-      {
-        "id": 67,
-        "orders": [
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "DUPLICATE",
-              "label": "Duplicate",
-              "deprecated": false
-            }
-          },
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "ACTIVE",
-              "label": "Active",
-              "deprecated": false
-            }
-          },
-          {
-            "id": 60,
-            "orderDate": "01/12/2017",
-            "orderStatus": {
-              "handle": "CLOSED",
-              "label": "Closed",
-              "deprecated": false
-            }
-          }
-        ],
-        "riskScore": 5
-      }
-    ]
-  } `
-
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
-
-	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
-		return &http.Response{
-			StatusCode: 200,
-			Body:       r,
-		}, nil
-	}
-	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
-
-	assert.Equal(t, 1, activeClientCount)
-	assert.Equal(t, nil, err)
-}
-
-func TestActiveClientCountCanCountMultipleIndividuals(t *testing.T) {
-	mockClient := &mocks.MockClient{}
-	client, _ := NewClient(mockClient, "http://localhost:3000")
-
-	json := ` {
-    "persons": [
-      {
-        "id": 67,
-        "orders": [
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "DUPLICATE",
-              "label": "Duplicate",
-              "deprecated": false
-            }
-          },
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "ACTIVE",
-              "label": "Active",
-              "deprecated": false
-            }
-          }
-        ],
-        "riskScore": 5
-      },
-   		{
-        "id": 67,
-        "orders": [
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "ACTIVE",
-              "label": "Active",
-              "deprecated": false
-            }
-          }
-        ],
-        "riskScore": 5
-      },
-   {
-        "id": 67,
-        "orders": [
-          {
-            "id": 59,
-            "orderDate": "01/12/2020",
-            "orderStatus": {
-              "handle": "ACTIVE",
-              "label": "Active",
-              "deprecated": false
-            }
-          }
-        ],
-        "riskScore": 5
-      }
-    ]
-  } `
-
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
-
-	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
-		return &http.Response{
-			StatusCode: 200,
-			Body:       r,
-		}, nil
-	}
-	_, _, activeClientCount, err := client.GetDeputyClients(getContext(nil), 1, "PA", "", "")
-
-	assert.Equal(t, 3, activeClientCount)
-	assert.Equal(t, nil, err)
 }
