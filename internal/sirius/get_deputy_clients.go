@@ -102,51 +102,54 @@ type Page struct {
 	PageTotal   int `json:"total"`
 }
 
+type Metadata struct {
+	TotalActiveClients int `json:"totalActiveClients"`
+}
+
 type ApiClientList struct {
-	Clients       []apiClient `json:"clients"`
-	Pages         Page        `json:"pages"`
-	TotalClients  int         `json:"total"`
-	ActiveFilters []string
+	Clients      []apiClient `json:"clients"`
+	Pages        Page        `json:"pages"`
+	Metadata     Metadata    `json:"metadata"`
+	TotalClients int         `json:"total"`
 }
 
 type ClientList struct {
-	Clients       DeputyClientDetails
-	Pages         Page
-	TotalClients  int
-	ActiveFilters []string
+	Clients      DeputyClientDetails
+	Pages        Page
+	TotalClients int
+	Metadata     Metadata
 }
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (ClientList, AriaSorting, int, error) {
+func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (ClientList, AriaSorting, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(deputyType), deputyId, displayClientLimit, search), nil)
 
 	if err != nil {
-		return clientList, AriaSorting{}, 0, err
+		return clientList, AriaSorting{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return clientList, AriaSorting{}, 0, err
+		return clientList, AriaSorting{}, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return clientList, AriaSorting{}, 0, ErrUnauthorized
+		return clientList, AriaSorting{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return clientList, AriaSorting{}, 0, newStatusError(resp)
+		return clientList, AriaSorting{}, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&apiClientList); err != nil {
-		return clientList, AriaSorting{}, 0, err
+		return clientList, AriaSorting{}, err
 	}
 
 	var clients DeputyClientDetails
-	activeClientCount := 0
 	for _, t := range apiClientList.Clients {
 		orders := restructureOrders(t.Orders)
 		if len(orders) > 0 {
@@ -171,9 +174,6 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
 			}
-			if client.OrderStatus == "Active" {
-				activeClientCount += 1
-			}
 			clients = append(clients, client)
 		}
 	}
@@ -181,7 +181,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 	clientList.Clients = clients
 	clientList.Pages = apiClientList.Pages
 	clientList.TotalClients = apiClientList.TotalClients
-	clientList.ActiveFilters = apiClientList.ActiveFilters
+	clientList.Metadata = apiClientList.Metadata
 
 	var aria AriaSorting
 	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
@@ -197,7 +197,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 		alphabeticalSort(clients, sortOrder)
 	}
 
-	return clientList, aria, activeClientCount, err
+	return clientList, aria, err
 }
 
 /*

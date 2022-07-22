@@ -11,7 +11,7 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, int, int, int, string, string, string) (sirius.ClientList, sirius.AriaSorting, int, error)
+	GetDeputyClients(sirius.Context, int, int, int, string, string, string) (sirius.ClientList, sirius.AriaSorting, error)
 	GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails
 }
 
@@ -46,7 +46,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		clientList, ariaSorting, activeClientCount, err := client.GetDeputyClients(ctx, deputyId, displayClientLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		clientList, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, displayClientLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
@@ -61,7 +61,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			PageDetails:          pageDetails,
 			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
-			ActiveClientCount:    activeClientCount,
+			ActiveClientCount:    clientList.Metadata.TotalActiveClients,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

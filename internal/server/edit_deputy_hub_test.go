@@ -27,11 +27,11 @@ func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, dep
 	return m.err
 }
 
-func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, int, error) {
+func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.ariaSorting, 0, m.err
+	return m.deputyClientData, m.ariaSorting, m.err
 }
 
 func (m *mockEditDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
