@@ -1,4 +1,4 @@
-FROM golang:1.18.3-alpine as base
+FROM golang:1.18.4-alpine as base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
@@ -49,16 +49,17 @@ COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:3.16.0
+FROM alpine:3.16.1
 
 WORKDIR /go/bin
 
 RUN apk --update --no-cache add \
-    ca-certificates \
-    && rm -rf /var/cache/apk/*
+    ca-certificates && \
+    apk upgrade busybox --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
+    rm -rf /var/cache/apk/*
 RUN apk --no-cache add tzdata
 
 COPY --from=build-env /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
 COPY --from=build-env /app/web/template web/template
 COPY --from=asset-env /app/web/static web/static
-ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"] 
+ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"]
