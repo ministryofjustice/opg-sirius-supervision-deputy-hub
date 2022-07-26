@@ -61,6 +61,9 @@ type DeputyEvent struct {
 	IsNewEvent      bool
 }
 
+const TimelineDateTimeFormat string = "2006-01-02 15:04:05"
+const TimelineDateTimeDisplayFormat string = "02/01/2006 15:04:05"
+
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
 	var v DeputyEventCollection
 
@@ -96,7 +99,7 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       FormatDateAndTime("2006-01-02 15:04:05", s.Timestamp, "02/01/2006 15:04:05"),
+			Timestamp:       FormatDateAndTime(TimelineDateTimeFormat, s.Timestamp, TimelineDateTimeDisplayFormat),
 			EventType:       reformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
@@ -131,8 +134,8 @@ func reformatEventType(s string) string {
 
 func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
 	sort.Slice(v, func(i, j int) bool {
-		changeToTimeTypeI, _ := time.Parse("02/01/2006 15:04:05", v[i].Timestamp)
-		changeToTimeTypeJ, _ := time.Parse("02/01/2006 15:04:05", v[j].Timestamp)
+		changeToTimeTypeI, _ := time.Parse(TimelineDateTimeDisplayFormat, v[i].Timestamp)
+		changeToTimeTypeJ, _ := time.Parse(TimelineDateTimeDisplayFormat, v[j].Timestamp)
 		return changeToTimeTypeJ.Before(changeToTimeTypeI)
 	})
 	return v
