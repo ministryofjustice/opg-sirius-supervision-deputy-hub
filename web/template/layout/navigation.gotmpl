@@ -19,7 +19,7 @@
                             {{ if eq .Path (printf "/%d/clients" .DeputyDetails.ID) }}
                                 aria-current="page"
                             {{ end }}
-                            href="{{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}"
+                            href="{{ prefix (printf "/%d/clients?sort=surname:asc&limit=25&page=1" .DeputyDetails.ID) }}"
                             >Clients</a
                         >
                     </li>

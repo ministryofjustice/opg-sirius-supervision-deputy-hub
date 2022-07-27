@@ -1,7 +1,7 @@
 {
     "/api/v1/*": "/$1",
-    "/deputies/pa/:personId/clients": "/clients",
-    "/deputies/pro/:personId/clients": "/clients",
+    "/deputies/pa/:personId/clients*": "/clients",
+    "/deputies/pro/:personId/clients*": "/clients",
     "/timeline/:personId": "/timeline",
     "/:personId/notes": "/notes",
     "/users/current": "/users",
