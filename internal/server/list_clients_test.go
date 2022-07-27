@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -13,15 +14,22 @@ type mockDeputyHubClientInformation struct {
 	count            int
 	lastCtx          sirius.Context
 	err              error
-	deputyClientData sirius.DeputyClientDetails
+	deputyClientData sirius.ClientList
+	pageDetails      sirius.PageDetails
 	ariaSorting      sirius.AriaSorting
 }
 
-func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId int, deputyType string, columnBeingSorted string, sortOrder string) (sirius.DeputyClientDetails, sirius.AriaSorting, int, error) {
+func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.ariaSorting, 0, m.err
+	return m.deputyClientData, m.ariaSorting, m.err
+}
+
+func (m *mockDeputyHubClientInformation) GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails {
+	m.count += 1
+
+	return m.pageDetails
 }
 
 func TestNavigateToClientTab(t *testing.T) {
@@ -43,9 +51,10 @@ func TestNavigateToClientTab(t *testing.T) {
 }
 
 func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients?sort=crec:desc"
-	expectedResponseColumnBeingSorted, sortOrder := "sort=crec", "desc"
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+	urlParams := url.Values{}
+	urlParams.Set("sort", "crec:desc")
+	expectedResponseColumnBeingSorted, sortOrder := "crec", "desc"
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
@@ -53,9 +62,9 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
-	urlPassedin := "http://localhost:8888/supervision/deputies/78/clients"
+	urlParams := url.Values{}
 	expectedResponseColumnBeingSorted, sortOrder := "", ""
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlPassedin)
+	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
