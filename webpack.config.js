@@ -1,6 +1,6 @@
-var path = require("path");
-var CopyPlugin = require("copy-webpack-plugin");
-var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+let path = require("path");
+let CopyPlugin = require("copy-webpack-plugin");
+let MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: {
