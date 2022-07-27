@@ -45,7 +45,7 @@ describe("Notes", () => {
             it("allows me to enter note information which amends character count", () => {
                 cy.get("#title").type("example note title");
                 cy.get("#note").type("example note text");
-                cy.get("#note-info").should(
+                cy.get("#note-info + .govuk-character-count__status").should(
                     "contain",
                     "You have 983 characters remaining"
                 );
