@@ -148,4 +148,20 @@ describe("Manage Deputy Contact Details", () => {
             "Organisation Ltd"
         );
     });
+
+    describe("Deputy contact details changed timeline event", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/1/timeline");
+        });
+
+        it("has a timeline event for when the deputy contact details have changed", () => {
+            cy.get("[data-cy=deputy-contact-details-event]").within(() => {
+                cy.contains(".moj-timeline__title", "Deputy contact details changed");
+                cy.contains(".moj-timeline__byline", "case manager (12345678)");
+                cy.get(".moj-timeline__description > .govuk-list").children()
+                    .first().should("contain", "Address line 1: Town Hall")
+                    .next().should("contain", "Address line 2: City Centre");
+            });
+        });
+    });
 });

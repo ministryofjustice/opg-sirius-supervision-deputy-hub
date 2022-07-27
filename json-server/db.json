@@ -1474,6 +1474,13 @@
             "oldValue": "Old Building",
             "newValue": "Town Hall",
             "type": "string"
+          },
+
+          {
+            "fieldName": "addressLine2",
+            "oldValue": "Back Alley",
+            "newValue": "City Centre",
+            "type": "string"
           }
         ]
       }
@@ -1532,7 +1539,7 @@
           {
             "fieldName": "firm",
             "oldValue": null,
-            "newValue": "new firm",
+            "newValue": "My First Firm",
             "type": "string"
           },
           {
