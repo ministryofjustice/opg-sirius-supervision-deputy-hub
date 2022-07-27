@@ -129,25 +129,18 @@ describe("Change Firm", () => {
         });
 
         it("has a timeline event for when the firm is changed", () => {
-            cy.get(".moj-timeline > :nth-child(2)").should(
-                "contain",
-                "Deputy firm updated"
-            );
-            cy.get(
-                ":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(1)"
-            ).should("contain", "New firm:");
-            cy.get(
-                ":nth-child(1) > .moj-timeline__description > .govuk-list > :nth-child(2)"
-            ).should("contain", "Old firm:");
+            cy.get("[data-cy=deputy-allocated-firm-event]").within(() => {
+                cy.contains(".moj-timeline__title", "Deputy firm updated");
+                cy.contains(".moj-timeline__byline", "case manager (12345678)");
+                cy.get(".moj-timeline__description > .govuk-list").children()
+                    .first().should("contain", "New firm:")
+                    .next().should("contain", "Old firm:");
+            });
         });
 
         it("does not show the firm on timeline event if its the first firm set", () => {
-            cy.get(
-                ":nth-child(2) > .moj-timeline__description > .govuk-list > li"
-            ).should("contain", "New firm:");
-            cy.get(
-                ":nth-child(2) > .moj-timeline__description > .govuk-list > :nth-child(2)"
-            ).should("not.exist");
+            cy.contains("[data-cy=deputy-allocated-firm-event] > .moj-timeline__description > .govuk-list > li", "My First Firm")
+                .parent().should("have.length", 1);
         });
     });
 });

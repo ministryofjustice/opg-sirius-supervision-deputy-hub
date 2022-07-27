@@ -100,7 +100,7 @@ describe("Change ECM links to deputy details", () => {
     });
 });
 
-describe("Timelink links to Change ECM page", () => {
+describe("Timeline links to Change ECM page", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
@@ -108,23 +108,17 @@ describe("Timelink links to Change ECM page", () => {
     });
 
     it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
-        cy.get(":nth-child(4) > .moj-timeline__header").should(
-            "contain",
-            "Executive Case Manager set to Public Authority deputy team"
-        );
-        cy.get(
-            ":nth-child(4) > .moj-timeline__header > .moj-timeline__byline"
-        ).should("contain", "by Lay Team 1 - (Supervision");
+        cy.get("[data-cy=pa-created-event]").within(() => {
+            cy.contains(".moj-timeline__title", "Executive Case Manager set to Public Authority deputy team");
+            cy.contains(".moj-timeline__byline", "Lay Team 1 - (Supervision)");
+        });
     });
 
     it("has a timeline event for when an ecm is allocated", () => {
-        cy.get(":nth-child(3) > .moj-timeline__header").should(
-            "contain",
-            "Executive Case Manager changed to PATeam1 User1"
-        );
-        cy.get(
-            ":nth-child(3) > .moj-timeline__header > .moj-timeline__byline"
-        ).should("contain", "by case manager (12345678)");
+        cy.get("[data-cy=deputy-allocated-ecm-event]").within(() => {
+            cy.contains(".moj-timeline__title", "Executive Case Manager changed to PATeam1 User1");
+            cy.contains(".moj-timeline__byline", "case manager (12345678)");
+        });
     });
 });
 
