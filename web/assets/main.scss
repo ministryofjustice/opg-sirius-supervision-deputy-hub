@@ -8,6 +8,7 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 @import "accessible-autocomplete";
 @import "./scss/pa-hub";
 @import "./scss/pro-hub";
+@import "./scss/_moj-pagination";
 
 .moj-header__container {
   max-width: 98%;

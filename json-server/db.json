@@ -387,13 +387,15 @@
   ],
   "clients": {
     "limit": 25,
-    "metadata": [],
+    "metadata": {
+      "totalActiveClients": 3
+    },
     "pages": {
       "current": 1,
       "total": 1
     },
     "total": 3,
-    "persons": [
+    "clients": [
       {
         "id": 67,
         "uId": "7000-0000-2118",
