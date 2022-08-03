@@ -1454,6 +1454,40 @@
       }
     },
     {
+      "id": 377,
+      "hash": "AS",
+      "timestamp": "2022-04-22 15:57:11",
+      "eventType": "Opg\\Core\\Model\\Event\\Person\\DeputyContactDetailsChanged",
+      "user": {
+        "id": 51,
+        "phoneNumber": "12345678",
+        "displayName": "case manager",
+        "email": "case.manager@opgtest.com"
+      },
+      "event": {
+        "personType": "Deputy",
+        "personId": "1",
+        "personUid": "7000-0000-2530",
+        "personName": "pro dept",
+        "personCourtRef": null,
+        "changes": [
+          {
+            "fieldName": "addressLine1",
+            "oldValue": "Old Building",
+            "newValue": "Town Hall",
+            "type": "string"
+          },
+
+          {
+            "fieldName": "addressLine2",
+            "oldValue": "Back Alley",
+            "newValue": "City Centre",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
       "id": 388,
       "hash": "AS",
       "timestamp": "2022-03-22 15:57:11",
@@ -1507,7 +1541,7 @@
           {
             "fieldName": "firm",
             "oldValue": null,
-            "newValue": "new firm",
+            "newValue": "My First Firm",
             "type": "string"
           },
           {
