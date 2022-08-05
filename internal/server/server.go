@@ -2,20 +2,16 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-go-common/logging"
+	"github.com/ministryofjustice/opg-go-common/securityheaders"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html/template"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
-
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-go-common/securityheaders"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
-
-type Logger interface {
-	Request(*http.Request, error)
-}
 
 type Client interface {
 	ErrorHandlerClient
@@ -38,65 +34,68 @@ type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
+func New(logger *logging.Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
 	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam)
 
-	router := mux.NewRouter()
+	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/health-check", healthCheck())
 
-	router.Handle("/{id}",
+	pageRouter := router.PathPrefix("/{id}").Subrouter()
+	pageRouter.Use(logging.Use(logger))
+
+	pageRouter.Handle("",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
 
-	router.Handle("/{id}/clients",
+	pageRouter.Handle("/clients",
 		wrap(
 			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
 
-	router.Handle("/{id}/timeline",
+	pageRouter.Handle("/timeline",
 		wrap(
 			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
 
-	router.Handle("/{id}/notes",
+	pageRouter.Handle("/notes",
 		wrap(
 			renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
 
-	router.Handle("/{id}/notes/add-note",
+	pageRouter.Handle("/notes/add-note",
 		wrap(
 			renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
 
-	router.Handle("/{id}/manage-team-details",
+	pageRouter.Handle("/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
 
-	router.Handle("/{id}/change-ecm",
+	pageRouter.Handle("/change-ecm",
 		wrap(
 			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
 
-	router.Handle("/{id}/change-firm",
+	pageRouter.Handle("/change-firm",
 		wrap(
 			renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
 
-	router.Handle("/{id}/add-firm",
+	pageRouter.Handle("/add-firm",
 		wrap(
 			renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
 
-	router.Handle("/{id}/manage-deputy-contact-details",
+	pageRouter.Handle("/manage-deputy-contact-details",
 		wrap(
 			renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
 
-	router.Handle("/{id}/manage-important-information",
+	pageRouter.Handle("/manage-important-information",
 		wrap(
 			renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
 
-	router.Handle("/{id}/assurance-visits",
+	pageRouter.Handle("/assurance-visits",
 		wrap(
 			renderTemplateForAssuranceVisits(client, templates["assurance-visit.gotmpl"])))
 
-	router.Handle("/{id}/add-assurance-visit",
+	pageRouter.Handle("/add-assurance-visit",
 		wrap(
 			renderTemplateForAddAssuranceVisit(client, templates["add-assurance-visit.gotmpl"])))
 
-	router.Handle("/{id}/manage-assurance-visit/{visitId}",
+	pageRouter.Handle("/manage-assurance-visit/{visitId}",
 		wrap(
 			renderTemplateForManageAssuranceVisit(client, templates["manage-assurance-visit.gotmpl"])))
 
@@ -148,7 +147,7 @@ type ErrorHandlerClient interface {
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
-func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int) func(next Handler) http.Handler {
+func errorHandler(logger *logging.Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
