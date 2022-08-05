@@ -21,7 +21,7 @@ type deputyHubEventVars struct {
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}

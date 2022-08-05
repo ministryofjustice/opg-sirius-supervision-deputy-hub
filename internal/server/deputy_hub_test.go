@@ -43,7 +43,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 

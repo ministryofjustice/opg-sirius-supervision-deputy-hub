@@ -48,7 +48,7 @@ func TestGetChangeECM(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForChangeECM(client, defaultPATeam, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -80,7 +80,7 @@ func TestPostChangeECM(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -113,7 +113,7 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

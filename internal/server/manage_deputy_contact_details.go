@@ -23,7 +23,7 @@ type manageDeputyContactDetailsVars struct {
 }
 
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
-	return func(perm sirius.PermissionSet, deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
