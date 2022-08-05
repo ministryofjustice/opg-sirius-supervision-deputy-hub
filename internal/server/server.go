@@ -132,7 +132,7 @@ func (e StatusError) Code() int {
 	return int(e)
 }
 
-type Handler func(perm sirius.PermissionSet, d sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error
+type Handler func(d sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error
 
 type errorVars struct {
 	Firstname string
@@ -145,24 +145,17 @@ type errorVars struct {
 }
 
 type ErrorHandlerClient interface {
-	MyPermissions(sirius.Context) (sirius.PermissionSet, error)
 	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
 }
 
 func errorHandler(logger Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			myPermissions, err := client.MyPermissions(getContext(r))
+			deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
+			deputyDetails, err := client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
 
 			if err == nil {
-				routeVars := mux.Vars(r)
-				deputyId, _ := strconv.Atoi(routeVars["id"])
-				var deputyDetails sirius.DeputyDetails
-				deputyDetails, err = client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
-
-				if err == nil {
-					err = next(myPermissions, deputyDetails, w, r)
-				}
+				err = next(deputyDetails, w, r)
 			}
 
 			if err != nil {

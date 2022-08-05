@@ -1,25 +1,4 @@
 {
-  "permissions": {
-    "v1-users": {
-      "permissions": [
-        "PUT",
-        "POST",
-        "DELETE"
-      ]
-    },
-    "team": {
-      "permissions": [
-        "GET",
-        "POST",
-        "PUT"
-      ]
-    },
-    "v1-teams": {
-      "permissions": [
-        "DELETE"
-      ]
-    }
-  },
   "users": {
     "id": 51,
     "name": "case",
