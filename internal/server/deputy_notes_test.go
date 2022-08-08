@@ -52,7 +52,7 @@ func TestGetNotes(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path?success=true", nil)
 
 	handler := renderTemplateForDeputyHubNotes(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -82,7 +82,7 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -115,7 +115,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -158,7 +158,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

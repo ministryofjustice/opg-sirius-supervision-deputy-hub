@@ -51,7 +51,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -83,7 +83,7 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

@@ -74,7 +74,7 @@ func TestGetManageAssurance(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageAssuranceVisit(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{ID: 123}, w, r)
+	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
 
 	assert.Nil(err)
 
@@ -111,7 +111,7 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssuranceVisit(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		redirect = renderTemplateForManageAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

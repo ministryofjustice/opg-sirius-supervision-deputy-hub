@@ -34,7 +34,7 @@ func TestGetManageDeputyDetails(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageDeputyContactDetails(client, template)
-	err := handler(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
@@ -56,7 +56,7 @@ func TestPostManageDeputyDetails(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageDeputyContactDetails(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		redirect = renderTemplateForManageDeputyContactDetails(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -87,7 +87,7 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageDeputyContactDetails(client, template)(sirius.PermissionSet{}, sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForManageDeputyContactDetails(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
