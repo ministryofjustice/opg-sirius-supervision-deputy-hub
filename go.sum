@@ -11,6 +11,8 @@ github.com/ministryofjustice/opg-go-common v0.0.0-20220428163523-1de8465d8199 h1
 github.com/ministryofjustice/opg-go-common v0.0.0-20220428163523-1de8465d8199/go.mod h1:1RmCNi6dkAv8umAgNHp8RkuBoSKLlxp1UtfsGYH7ufc=
 github.com/ministryofjustice/opg-go-common v0.0.0-20220804152412-71c922a30dce h1:RNdCHYeZ6F3NBjmG++z9tXOsYeycJbkVPOPaSqFBCfU=
 github.com/ministryofjustice/opg-go-common v0.0.0-20220804152412-71c922a30dce/go.mod h1:1RmCNi6dkAv8umAgNHp8RkuBoSKLlxp1UtfsGYH7ufc=
+github.com/ministryofjustice/opg-go-common v0.0.0-20220808084206-2ba2684d0b46 h1:jCTvFCbfztD3FaYXdnHtjDiSAkMJOMeCquLHD+5jjOY=
+github.com/ministryofjustice/opg-go-common v0.0.0-20220808084206-2ba2684d0b46/go.mod h1:1RmCNi6dkAv8umAgNHp8RkuBoSKLlxp1UtfsGYH7ufc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
