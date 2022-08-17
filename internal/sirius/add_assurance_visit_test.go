@@ -2,7 +2,7 @@ package sirius
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -15,7 +15,7 @@ func TestAddAssuranceVisit(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(nil)))
+	r := io.NopCloser(bytes.NewReader([]byte(nil)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{

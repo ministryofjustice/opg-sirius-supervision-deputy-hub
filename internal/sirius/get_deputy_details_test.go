@@ -2,7 +2,7 @@ package sirius
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -38,7 +38,7 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 	  }
     }`
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
@@ -100,7 +100,7 @@ func TestDeputyDetailsReturnedPADefaultECM(t *testing.T) {
 		}
     }`
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
@@ -167,7 +167,7 @@ func TestDeputyDetailsReturnedPro(t *testing.T) {
 		}
    }`
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
