@@ -49,16 +49,16 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			DeputyDetails:    deputyDetails,
 			SuccessMessage:   successMessage,
 			AssuranceVisits:  visits,
-			AddVisitDisabled: !isCurrentVisitReviewed(visits),
+			AddVisitDisabled: !isCurrentVisitReviewedOrCancelled(visits),
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
 
-func isCurrentVisitReviewed(visits []sirius.AssuranceVisits) bool {
+func isCurrentVisitReviewedOrCancelled(visits []sirius.AssuranceVisits) bool {
 	if len(visits) > 0 {
-		return visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != ""
+		return (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled"
 	}
 	return true
 }

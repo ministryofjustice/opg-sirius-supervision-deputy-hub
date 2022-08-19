@@ -77,7 +77,7 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	assert.False(template.lastVars.(AssuranceVisitsVars).AddVisitDisabled)
 }
 
-func TestIsCurrentVisitReviewed(t *testing.T) {
+func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 	tests := []struct {
 		name   string
 		visits []sirius.AssuranceVisits
@@ -139,10 +139,36 @@ func TestIsCurrentVisitReviewed(t *testing.T) {
 			},
 			false,
 		},
+		{
+			"Latest visit is cancelled",
+			[]sirius.AssuranceVisits{
+				{
+					VisitOutcome: sirius.VisitOutcomeTypes{
+						Label:  "Cancelled",
+						Handle: "CANCELLED",
+					},
+				},
+				{},
+			},
+			true,
+		},
+		{
+			"Latest visit is not cancelled",
+			[]sirius.AssuranceVisits{
+				{
+					VisitOutcome: sirius.VisitOutcomeTypes{
+						Label:  "Successful",
+						Handle: "SUCCESSFUL",
+					},
+				},
+				{},
+			},
+			false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isCurrentVisitReviewed(tt.visits); got != tt.want {
+			if got := isCurrentVisitReviewedOrCancelled(tt.visits); got != tt.want {
 				t.Errorf("isCurrentVisitReviewed() = %v, want %v", got, tt.want)
 			}
 		})
