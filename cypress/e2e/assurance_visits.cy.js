@@ -59,13 +59,19 @@ describe("Assurance Visits", () => {
             cy.url().should("contain", "/supervision/deputies/3/add-assurance-visit");
         });
 
-        it("displays warning and does not navigate when latest visit is not marked as reviewed", () => {
+        it("displays warning and does not navigate when latest visit is not marked as reviewed or cancelled", () => {
             cy.visit("/supervision/deputies/2/assurance-visits");
             cy.contains(".govuk-button", "Add a visit").click();
             cy.url().should("contain", "/supervision/deputies/2");
             cy.get("#f-button-disabled-warning")
                 .should("be.visible")
-                .should("contain", "You cannot add anything until the current assurance process has a review date and RAG status");
+                .should("contain", "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled");
+        });
+
+        it("is enabled when latest visit is cancelled", () => {
+            cy.visit("/supervision/deputies/4/assurance-visits");
+            cy.contains(".govuk-button", "Add a visit").click();
+            cy.url().should("contain", "/supervision/deputies/4/add-assurance-visit");
         });
     });
 });
