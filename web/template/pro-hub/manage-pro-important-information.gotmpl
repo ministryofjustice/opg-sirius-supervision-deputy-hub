@@ -1,5 +1,4 @@
 {{ define "manage-pro-important-information" }}
-{{ template "pro-deputy-header" . }}
 {{ template "error-summary" (rename_errors .Errors) }}
 
 <div class="govuk-grid-row govuk-!-margin-top-5">
@@ -90,7 +89,7 @@
                     data-module="govuk-character-count"
                     data-maxlength="1000">
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="other-important-information">
+                        <label class="govuk-label" for="other-info-note">
                             Other important information
                         </label>
                         {{/* prettier-ignore-start */}}
