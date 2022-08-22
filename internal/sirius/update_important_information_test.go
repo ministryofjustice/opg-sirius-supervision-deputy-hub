@@ -3,7 +3,7 @@ package sirius
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -45,7 +45,7 @@ func TestUpdateImportantInformationForPaInfo(t *testing.T) {
 		"otherImportantInformation": "important info"
 	}`
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
@@ -87,7 +87,7 @@ func TestUpdateImportantInformationForProData(t *testing.T) {
 		"otherImportantInformation": "important info"
 	}`
 
-	r := ioutil.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
