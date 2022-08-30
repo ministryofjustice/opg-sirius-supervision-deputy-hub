@@ -49,7 +49,7 @@ COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:3.16.1
+FROM alpine:3.16.2
 
 WORKDIR /go/bin
 
