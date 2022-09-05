@@ -24,5 +24,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/json-server/Dockerfile
+    volumes:
+      - ../json-server/db:/app/db
     ports:
       - '3000:3000'
