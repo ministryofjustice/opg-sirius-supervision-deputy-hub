@@ -8,14 +8,16 @@ import (
 )
 
 type CreateAssuranceVisit struct {
+	AssuranceType string `json:"assuranceType"`
 	RequestedDate string `json:"requestedDate"`
 	RequestedBy   int    `json:"requestedBy"`
 }
 
-func (c *Client) AddAssuranceVisit(ctx Context, requestedDate string, userId, deputyId int) error {
+func (c *Client) AddAssuranceVisit(ctx Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(CreateAssuranceVisit{
+		AssuranceType: assuranceType,
 		RequestedDate: requestedDate,
 		RequestedBy:   userId,
 	})

@@ -7,6 +7,7 @@ import (
 )
 
 type AssuranceVisits struct {
+	AssuranceType       AssuranceTypes      `json:"assuranceType"`
 	RequestedDate       string              `json:"requestedDate"`
 	RequestedBy         User                `json:"requestedBy"`
 	VisitId             int                 `json:"id"`
@@ -59,6 +60,7 @@ func formatAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits 
 	var list []AssuranceVisits
 	for _, s := range k {
 		event := AssuranceVisits{
+			AssuranceType:       s.AssuranceType,
 			RequestedDate:       FormatDateAndTime("2006-01-02T15:04:05+00:00", s.RequestedDate, "02/01/2006"),
 			VisitId:             s.VisitId,
 			RequestedBy:         s.RequestedBy,
