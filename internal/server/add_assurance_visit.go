@@ -53,7 +53,6 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 			}
 
 			if len(vars.Errors) > 0 {
-				fmt.Println("test")
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
