@@ -1,0 +1,67 @@
+{{ template "page" . }}
+
+{{ define "main" }}
+    {{ if .SuccessMessage }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+            Assurance visits
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                    {{ if .AddVisitDisabled }}
+                        id="f-button-disabled"
+                    {{ else }}
+                        id="hook-add-a-visit"
+                    {{ end }}
+                    href="{{ prefix (printf "/%d/add-assurance-visit" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    data-module="govuk-button">
+                    Add a visit
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div id="f-button-disabled-warning" class="hide">
+        {{ template "warning-banner" "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled" }}
+    </div>
+
+    {{ range $i, $visit := .AssuranceVisits }}
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                {{ if eq $visit.AssuranceType.Handle "PDR" }}
+                    {{ template "pdr" $visit }}
+                {{ else }}
+                    {{ template "assurance-visit" $visit }}
+                {{ end }}
+            </div>
+        </div>
+        {{ if eq $i 0 }}
+            <div class="moj-button-menu__wrapper">
+                <a
+                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $visit.DeputyId $visit.VisitId) }}"
+                    role="button"
+                    draggable="false"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    id="hook-manage-a-visit"
+                    data-module="govuk-button">
+                    {{ if eq $visit.AssuranceType.Label "PDR" }}
+                        Manage PDR
+                    {{ else }}
+                        Manage assurance visit
+                    {{ end }}
+                </a>
+            </div>
+        {{ end }}
+        {{ if not (is_last $i $.AssuranceVisits) }}
+            <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+        {{ end }}
+    {{ end }}
+{{ end }}

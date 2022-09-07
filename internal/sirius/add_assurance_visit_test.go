@@ -24,7 +24,7 @@ func TestAddAssuranceVisit(t *testing.T) {
 		}, nil
 	}
 
-	err := client.AddAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	err := client.AddAssuranceVisit(getContext(nil), "VISIT", "2022-06-17", 53, 76)
 	assert.Nil(t, err)
 }
 
@@ -36,7 +36,7 @@ func TestAddAssuranceVisitReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	err := client.AddAssuranceVisit(getContext(nil), "VISIT", "2022-06-17", 53, 76)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -53,7 +53,7 @@ func TestAddAssuranceVisitReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddAssuranceVisit(getContext(nil), "2022-06-17", 53, 76)
+	err := client.AddAssuranceVisit(getContext(nil), "VISIT", "2022-06-17", 53, 76)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

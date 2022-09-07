@@ -27,7 +27,17 @@ describe("Assurance Visits", () => {
             cy.visit("/supervision/deputies/3/assurance-visits");
 
             cy.get(".govuk-button").contains("Manage assurance visit").click();
-            cy.url().should("include","/supervision/deputies/3/manage-assurance-visit/1");
+            cy.url().should("include","/supervision/deputies/3/manage-assurance-visit/35");
+
+            cy.get("#f-back-button").click();
+            cy.get(".govuk-heading-l").contains("Assurance visits");
+        });
+
+        it("should navigate to and from Manage PDR", () => {
+            cy.visit("/supervision/deputies/2/assurance-visits");
+
+            cy.get(".govuk-button").contains("Manage PDR").click();
+            cy.url().should("include","/supervision/deputies/2/manage-assurance-visit/36");
 
             cy.get("#f-back-button").click();
             cy.get(".govuk-heading-l").contains("Assurance visits");
@@ -35,20 +45,43 @@ describe("Assurance Visits", () => {
     });
 
     describe("Content", () => {
-        beforeEach(() => {
-            cy.visit("/supervision/deputies/2/assurance-visits");
-        });
-
         it("shows header title and button", () => {
+            cy.visit("/supervision/deputies/3/assurance-visits");
             cy.get(".govuk-main-wrapper > header").contains("Assurance visits");
             cy.get(".govuk-button").contains("Add a visit");
         });
 
         it("should display assurance visit main content", () => {
-            cy.get("#assurance-visit-details > :nth-child(1) > .govuk-summary-list__key").contains("Requested date");
-            cy.get('#assurance-visit-details > :nth-child(1) > .govuk-summary-list__value').contains("30/06/2022");
-            cy.get("#assurance-visit-details > :nth-child(2) > .govuk-summary-list__key").contains("Requested by");
-            cy.get("#assurance-visit-details > :nth-child(2) > .govuk-summary-list__value").contains("case manager");
+            cy.visit("/supervision/deputies/3/assurance-visits");
+            cy.get("#assurance-visit-details > :nth-child(1) > .govuk-summary-list__key").contains("Assurance type");
+            cy.get('#assurance-visit-details > :nth-child(1) > .govuk-summary-list__value').contains("VISIT");
+            cy.get("#assurance-visit-details > :nth-child(2) > .govuk-summary-list__key").contains("Requested date");
+            cy.get('#assurance-visit-details > :nth-child(2) > .govuk-summary-list__value').contains("22/07/2021");
+            cy.get("#assurance-visit-details > :nth-child(3) > .govuk-summary-list__key").contains("Requested by");
+            cy.get("#assurance-visit-details > :nth-child(3) > .govuk-summary-list__value").contains("nice user");
+            cy.get("#assurance-visit-details > :nth-child(4) > .govuk-summary-list__key").contains("Commissioned date");
+            cy.get("#assurance-visit-details > :nth-child(5) > .govuk-summary-list__key").contains("Visitor");
+            cy.get("#assurance-visit-details > :nth-child(6) > .govuk-summary-list__key").contains("Report due date");
+            cy.get("#assurance-visit-details > :nth-child(7) > .govuk-summary-list__key").contains("Report received date");
+            cy.get("#assurance-visit-details > :nth-child(8) > .govuk-summary-list__key").contains("Outcome");
+            cy.get("#assurance-visit-details > :nth-child(9) > .govuk-summary-list__key").contains("Report reviewed date");
+            cy.get("#assurance-visit-details > :nth-child(10) > .govuk-summary-list__key").contains("Reviewed by");
+            cy.get("#assurance-visit-details > :nth-child(11) > .govuk-summary-list__key").contains("Report marked as");
+        });
+
+        it("should display PDR main content", () => {
+            cy.visit("/supervision/deputies/2/assurance-visits");
+            cy.get("#assurance-visit-details > :nth-child(1) > .govuk-summary-list__key").contains("Assurance type");
+            cy.get('#assurance-visit-details > :nth-child(1) > .govuk-summary-list__value').contains("PDR");
+            cy.get("#assurance-visit-details > :nth-child(2) > .govuk-summary-list__key").contains("Requested date");
+            cy.get('#assurance-visit-details > :nth-child(2) > .govuk-summary-list__value').contains("30/06/2022");
+            cy.get("#assurance-visit-details > :nth-child(3) > .govuk-summary-list__key").contains("Requested by");
+            cy.get("#assurance-visit-details > :nth-child(3) > .govuk-summary-list__value").contains("case manager");
+            cy.get("#assurance-visit-details > :nth-child(4) > .govuk-summary-list__key").contains("PDR due date");
+            cy.get("#assurance-visit-details > :nth-child(5) > .govuk-summary-list__key").contains("PDR received date");
+            cy.get("#assurance-visit-details > :nth-child(6) > .govuk-summary-list__key").contains("PDR reviewed date");
+            cy.get("#assurance-visit-details > :nth-child(7) > .govuk-summary-list__key").contains("Reviewed by");
+            cy.get("#assurance-visit-details > :nth-child(8) > .govuk-summary-list__key").contains("PDR marked as");
         });
     });
 

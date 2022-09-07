@@ -11,7 +11,7 @@ import (
 
 type AddAssuranceVisit interface {
 	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	AddAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error
+	AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
 }
 
 type AddAssuranceVisitVars struct {
@@ -39,12 +39,21 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+			var assuranceType = r.PostFormValue("assurance-type")
 			var requestedDate = r.PostFormValue("requested-date")
 
+			vars.Errors = sirius.ValidationErrors{}
+
+			if assuranceType == "" {
+				vars.Errors["assurance-type"] = map[string]string{"": "Select an assurance type"}
+			}
+
 			if requestedDate == "" {
-				vars.Errors = sirius.ValidationErrors{
-					"requested-date": {"": "Enter a real date"},
-				}
+				vars.Errors["requested-date"] = map[string]string{"": "Enter a requested date"}
+			}
+
+			if len(vars.Errors) > 0 {
+				fmt.Println("test")
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
@@ -53,7 +62,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return err
 			}
 
-			err = client.AddAssuranceVisit(ctx, requestedDate, user.ID, deputyId)
+			err = client.AddAssuranceVisit(ctx, assuranceType, requestedDate, user.ID, deputyId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors

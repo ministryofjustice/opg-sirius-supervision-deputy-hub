@@ -20,6 +20,9 @@
                     {{ if eq .FieldName "requestedDate" }}
                         Requested date:
                     {{ end }}
+                    {{ if eq .FieldName "assuranceType" }}
+                        Assurance type:
+                    {{ end }}
                     {{ .NewValue }}
                 </li>
                 {{ end }}

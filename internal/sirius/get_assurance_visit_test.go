@@ -17,6 +17,11 @@ func TestAssuranceVisitReturned(t *testing.T) {
 
 	json := `{
 				"id":3,
+				"assuranceType": {
+				  "handle": "VISIT",
+				  "label": "Visit",
+				  "deprecated": null
+				},
 				"requestedDate":"2022-06-25T12:16:34+00:00",
 				"requestedBy": {
 						"id":53,
@@ -54,6 +59,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 
 	expectedResponse := AssuranceVisit{
 		Id:                  3,
+		AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
 		RequestedDate:       "2022-06-25",
 		RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
 		CommissionedDate:    "2022-01-01",

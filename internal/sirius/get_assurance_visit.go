@@ -8,6 +8,7 @@ import (
 
 type AssuranceVisit struct {
 	Id                  int                 `json:"id"`
+	AssuranceType       AssuranceTypes      `json:"assuranceType"`
 	RequestedDate       string              `json:"requestedDate"`
 	RequestedBy         User                `json:"requestedBy"`
 	CommissionedDate    string              `json:"commissionedDate"`
@@ -52,6 +53,7 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 
 func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
 	updatedVisit := AssuranceVisit{
+		AssuranceType:       v.AssuranceType,
 		RequestedDate:       FormatDateAndTime(DateTimeFormat, v.RequestedDate, DateTimeDisplayFormat),
 		Id:                  v.Id,
 		RequestedBy:         v.RequestedBy,
