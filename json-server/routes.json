@@ -8,7 +8,7 @@
     "/deputies/:deputyId/ecm": "/ecm",
     "/deputies/:id/contact-details": "/deputies/:id",
     "/deputies/:id/assurance-visits": "/assuranceVisits/:id",
-    "/deputies/:id/assurance-visits/:visitId": "/assuranceVisit",
+    "/deputies/:id/assurance-visits/:visitId": "/assuranceVisit/:visitId",
     "/firm": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
     "/reference-data/deputyBooleanType": "/deputyBooleanType",

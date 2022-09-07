@@ -31,7 +31,7 @@ type ManageAssuranceVisitVars struct {
 	Visit               sirius.AssuranceVisit
 }
 
-func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Template) Handler {
+func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmpl Template, pdrTmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -48,6 +48,11 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 		vars.Visit = visit
 		if err != nil {
 			return err
+		}
+
+		tmpl := visitTmpl
+		if visit.AssuranceType.Handle == "PDR" {
+			tmpl = pdrTmpl
 		}
 
 		visitors, err := client.GetVisitors(ctx)
@@ -124,7 +129,12 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, tmpl Tem
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=manageAssuranceVisit", deputyId))
+			success := "manageAssuranceVisit"
+			if visit.AssuranceType.Handle == "PDR" {
+				success = "managePDR"
+			}
+
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=%s", deputyId, success))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
