@@ -2,44 +2,80 @@
 {{ define "main" }}
 {{ template "content-header" . }}
 {{ template "error-summary" (rename_errors .Errors) }}
-<header>
+    <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
             Add assurance visit
         </h1>
     </header>
-    <form id="add-assurance-visit-form" method="post" autocomplete="off">
-      <input
-          type="hidden"
-          name="xsrfToken"
-          value="{{ .XSRFToken }}" />
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
-                <label class="govuk-label" for="requested-date">
-                    Requested date
-                </label>
-                <input
-                    class="govuk-input govuk-input--width-10"
-                    id="f-requested-date"
-                    name="requested-date"
-                    type="date"
-                    style="text-transform:uppercase"
-                    />
-            </div>
-        </div>
-        <div class="govuk-button-group govuk-!-margin-top-7">
-            <button
-                type="submit"
-                class="govuk-button"
-                data-module="govuk-button">
-                Save assurance visit
-            </button>
-           <a
-               class="govuk-link"
-               href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
-               Cancel
-           </a>
-        </div>
-    </form>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="add-assurance-visit-form" method="post" autocomplete="off">
+                <input type="hidden"
+                       name="xsrfToken"
+                       value="{{ .XSRFToken }}" />
 
+                {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                    <div class="govuk-form-group">
+                        <fieldset class="govuk-fieldset" aria-describedby="assurance-type" id="f-assurance-type">
+                            <legend class="govuk-fieldset__legend">
+                                Assurance type
+                            </legend>
+                            <div class="govuk-radios">
+
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="assurance-pdr"
+                                           name="assurance-type" type="radio"
+                                           value="PDR" />
+                                    <label class="govuk-label govuk-radios__label" for="assurance-pdr">
+                                        PDR
+                                    </label>
+                                </div>
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="assurance-visit"
+                                           name="assurance-type" type="radio"
+                                           value="VISIT" />
+                                    <label class="govuk-label govuk-radios__label" for="assurance-visit">
+                                        Visit
+                                    </label>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                {{ else }}
+                    <input type="hidden"
+                           name="assurance-type"
+                           value="VISIT" />
+                {{ end }}
+
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" aria-describedby="assurance-type">
+                        <label class="govuk-label" for="f-requested-date">
+                            Requested date
+                        </label>
+                        <input
+                            class="govuk-input govuk-input--width-10"
+                            id="f-requested-date"
+                            name="requested-date"
+                            type="date"
+                            style="text-transform:uppercase"
+                            />
+                    </fieldset>
+                </div>
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save assurance visit
+                    </button>
+                   <a
+                       class="govuk-link"
+                       href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+                       Cancel
+                   </a>
+                </div>
+            </form>
+        </div>
+    </div>
 
 {{ end }}

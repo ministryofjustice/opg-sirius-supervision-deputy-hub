@@ -34,6 +34,8 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			successMessage = "Assurance process updated"
 		case "manageAssuranceVisit":
 			successMessage = "Assurance visit updated"
+		case "managePDR":
+			successMessage = "PDR updated"
 		default:
 			successMessage = ""
 		}

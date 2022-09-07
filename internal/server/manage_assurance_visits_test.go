@@ -68,12 +68,13 @@ func TestGetManageAssurance(t *testing.T) {
 	client.On("GetVisitRagRatingTypes", mock.Anything).Return(visitRagRatingTypes, nil)
 	client.On("GetVisitOutcomeTypes", mock.Anything).Return(visitOutcomeTypes, nil)
 
-	template := &mockTemplates{}
+	visitTemplate := &mockTemplates{}
+	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForManageAssuranceVisit(client, template)
+	handler := renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)
 	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
 
 	assert.Nil(err)
@@ -81,15 +82,15 @@ func TestGetManageAssurance(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(1, template.count)
-	assert.Equal("page", template.lastName)
+	assert.Equal(1, visitTemplate.count)
+	assert.Equal("page", visitTemplate.lastName)
 	assert.Equal(ManageAssuranceVisitVars{
 		DeputyDetails:       deputyDetails,
 		Visitors:            visitors,
 		VisitRagRatingTypes: visitRagRatingTypes,
 		VisitOutcomeTypes:   visitOutcomeTypes,
 		Visit:               visit,
-	}, template.lastVars)
+	}, visitTemplate.lastVars)
 }
 
 func TestPostManageAssuranceVisit(t *testing.T) {
@@ -101,7 +102,8 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 	client.On("GetVisitRagRatingTypes", mock.Anything).Return([]sirius.VisitRagRatingTypes{}, nil)
 	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]sirius.VisitOutcomeTypes{}, nil)
 	client.On("UpdateAssuranceVisit", mock.Anything, sirius.AssuranceVisitDetails{}, 123, 1).Return(nil)
-	template := &mockTemplates{}
+	visitTemplate := &mockTemplates{}
+	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
@@ -111,11 +113,81 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(Redirect("/123/assurance-visits?success=manageAssuranceVisit"), redirect)
+}
+
+func TestGetManagePDR(t *testing.T) {
+	assert := assert.New(t)
+
+	deputyDetails := sirius.DeputyDetails{ID: 123}
+	visitors := sirius.Visitors{sirius.Visitor{ID: 1, Name: "Mr Visitor"}}
+	visitRagRatingTypes := []sirius.VisitRagRatingTypes{{Handle: "x", Label: "y"}}
+	visitOutcomeTypes := []sirius.VisitOutcomeTypes{{Handle: "x", Label: "w"}}
+	visit := sirius.AssuranceVisit{Id: 1, AssuranceType: sirius.AssuranceTypes{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: sirius.User{UserId: 2}}
+
+	client := &mockManageAssuranceVisitInformation{}
+	client.On("GetAssuranceVisitById", mock.Anything, 0, 0).Return(visit, nil)
+	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
+	client.On("GetVisitors", mock.Anything).Return(visitors, nil)
+	client.On("GetVisitRagRatingTypes", mock.Anything).Return(visitRagRatingTypes, nil)
+	client.On("GetVisitOutcomeTypes", mock.Anything).Return(visitOutcomeTypes, nil)
+
+	visitTemplate := &mockTemplates{}
+	pdrTemplate := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "", nil)
+
+	handler := renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)
+	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, pdrTemplate.count)
+	assert.Equal("page", pdrTemplate.lastName)
+	assert.Equal(ManageAssuranceVisitVars{
+		DeputyDetails:       deputyDetails,
+		Visitors:            visitors,
+		VisitRagRatingTypes: visitRagRatingTypes,
+		VisitOutcomeTypes:   visitOutcomeTypes,
+		Visit:               visit,
+	}, pdrTemplate.lastVars)
+}
+
+func TestPostManagePDR(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageAssuranceVisitInformation{}
+	client.On("GetAssuranceVisitById", mock.Anything, 123, 1).Return(sirius.AssuranceVisit{AssuranceType: sirius.AssuranceTypes{Handle: "PDR", Label: "PDR"}}, nil)
+	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
+	client.On("GetVisitors", mock.Anything).Return(sirius.Visitors{}, nil)
+	client.On("GetVisitRagRatingTypes", mock.Anything).Return([]sirius.VisitRagRatingTypes{}, nil)
+	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]sirius.VisitOutcomeTypes{}, nil)
+	client.On("UpdateAssuranceVisit", mock.Anything, sirius.AssuranceVisitDetails{}, 123, 1).Return(nil)
+	visitTemplate := &mockTemplates{}
+	pdrTemplate := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var redirect error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
+		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(sirius.DeputyDetails{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+	assert.Equal(Redirect("/123/assurance-visits?success=managePDR"), redirect)
 }

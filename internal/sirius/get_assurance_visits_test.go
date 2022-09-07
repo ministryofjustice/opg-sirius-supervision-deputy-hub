@@ -20,6 +20,11 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			[
 				{
 					"id":3,
+					"assuranceType": {
+					  "handle": "VISIT",
+					  "label": "Visit",
+					  "deprecated": null
+					},
 					"requestedDate":"2022-06-25T12:16:34+00:00",
 					"requestedBy": {
 							"id":53,
@@ -60,6 +65,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 	expectedResponse := []AssuranceVisits{
 		{
 			VisitId:             3,
+			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
 			RequestedDate:       "25/06/2022",
 			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
 			DeputyId:            1,

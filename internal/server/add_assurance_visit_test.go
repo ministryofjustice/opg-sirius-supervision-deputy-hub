@@ -25,7 +25,7 @@ func (m *mockAddAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (s
 	return m.userDetails, m.err
 }
 
-func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, requestedDate string, userId, deputyId int) error {
+func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
