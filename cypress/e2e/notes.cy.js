@@ -101,10 +101,15 @@ describe("Notes", () => {
 
         it("displays an error if the request fails with a 500 error", () => {
             cy.setCookie("fail-route", "500-example");
+            cy.setCookie("fail-code", "500");
             cy.get("#add-note-form").submit();
-            cy.get(".govuk-error-summary__title").should(
+            cy.get(".govuk-heading-l").should(
                 "contain",
-                "There is a problem"
+                "Sorry, there is a problem with the service"
+            );
+            cy.get(".govuk-body").should(
+                "contain",
+                " returned 500"
             );
         });
     });
