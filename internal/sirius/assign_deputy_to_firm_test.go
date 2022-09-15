@@ -22,18 +22,19 @@ func TestAssignDeputyToFirm(t *testing.T) {
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
-			StatusCode: 201,
+			StatusCode: 200,
 			Body:       r,
 		}, nil
 	}
 
 	err := client.AssignDeputyToFirm(getContext(nil), 76, 1)
-	assert.Equal(t, err, ValidationError{"", ValidationErrors(nil)})
+	assert.Equal(t, nil, err)
 }
 
 func TestAssignDeputyToFirmReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		_, _ = w.Write([]byte("{}"))
 	}))
 	defer svr.Close()
 

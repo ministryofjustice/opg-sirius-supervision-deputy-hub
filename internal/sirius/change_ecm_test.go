@@ -67,6 +67,7 @@ func TestChangeECMReturnsErrorIfNoId(t *testing.T) {
 func TestChangeECMReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		_, _ = w.Write([]byte("{}"))
 	}))
 	defer svr.Close()
 

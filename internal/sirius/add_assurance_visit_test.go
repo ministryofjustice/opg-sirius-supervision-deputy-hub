@@ -31,6 +31,7 @@ func TestAddAssuranceVisit(t *testing.T) {
 func TestAddAssuranceVisitReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		_, _ = w.Write([]byte("{}"))
 	}))
 	defer svr.Close()
 
