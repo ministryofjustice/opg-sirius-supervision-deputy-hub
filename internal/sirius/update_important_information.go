@@ -56,7 +56,7 @@ func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, important
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
 
-		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
+		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
 			return ValidationError{
 				Errors: v.ValidationErrors,
 			}

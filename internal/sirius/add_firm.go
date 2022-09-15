@@ -51,7 +51,7 @@ func (c *Client) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, erro
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
 
-		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil {
+		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
 			return 0, ValidationError{
 				Errors: v.ValidationErrors,
 			}

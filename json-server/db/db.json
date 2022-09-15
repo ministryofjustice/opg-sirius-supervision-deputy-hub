@@ -1678,6 +1678,12 @@
   ],
   "errors": [
     {
+      "id": "500-example",
+      "type": "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html",
+      "title": "Internal Server Error",
+      "detail": "blah"
+    },
+    {
       "id": "addAssuranceVisit",
       "validation_errors": {
         "requested-date": {
