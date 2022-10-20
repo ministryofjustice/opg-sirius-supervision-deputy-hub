@@ -79,9 +79,11 @@ describe("Assurance Visits", () => {
             cy.get("#assurance-visit-details > :nth-child(3) > .govuk-summary-list__value").contains("case manager");
             cy.get("#assurance-visit-details > :nth-child(4) > .govuk-summary-list__key").contains("PDR due date");
             cy.get("#assurance-visit-details > :nth-child(5) > .govuk-summary-list__key").contains("PDR received date");
-            cy.get("#assurance-visit-details > :nth-child(6) > .govuk-summary-list__key").contains("PDR reviewed date");
-            cy.get("#assurance-visit-details > :nth-child(7) > .govuk-summary-list__key").contains("Reviewed by");
-            cy.get("#assurance-visit-details > :nth-child(8) > .govuk-summary-list__key").contains("PDR marked as");
+            cy.get("#assurance-visit-details > :nth-child(6) > .govuk-summary-list__key").contains("Outcome");
+            cy.get('#assurance-visit-details > :nth-child(6) > .govuk-summary-list__value').contains("Received");
+            cy.get("#assurance-visit-details > :nth-child(7) > .govuk-summary-list__key").contains("PDR reviewed date");
+            cy.get("#assurance-visit-details > :nth-child(8) > .govuk-summary-list__key").contains("Reviewed by");
+            cy.get("#assurance-visit-details > :nth-child(9) > .govuk-summary-list__key").contains("PDR marked as");
         });
     });
 

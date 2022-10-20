@@ -12,6 +12,7 @@ type AssuranceVisitDetails struct {
 	ReportDueDate       string `json:"reportDueDate"`
 	ReportReceivedDate  string `json:"reportReceivedDate"`
 	VisitOutcome        string `json:"assuranceVisitOutcome"`
+	PdrOutcome          string `json:"pdrOutcome"`
 	ReportReviewDate    string `json:"reportReviewDate"`
 	VisitReportMarkedAs string `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string `json:"visitorAllocated"`
@@ -26,6 +27,7 @@ func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm Assu
 		ReportDueDate:       manageAssuranceVisitForm.ReportDueDate,
 		ReportReceivedDate:  manageAssuranceVisitForm.ReportReceivedDate,
 		VisitOutcome:        manageAssuranceVisitForm.VisitOutcome,
+		PdrOutcome:          manageAssuranceVisitForm.PdrOutcome,
 		ReportReviewDate:    manageAssuranceVisitForm.ReportReviewDate,
 		VisitReportMarkedAs: manageAssuranceVisitForm.VisitReportMarkedAs,
 		VisitorAllocated:    manageAssuranceVisitForm.VisitorAllocated,

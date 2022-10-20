@@ -15,6 +15,7 @@ type AssuranceVisits struct {
 	ReportDueDate       string              `json:"reportDueDate"`
 	ReportReceivedDate  string              `json:"reportReceivedDate"`
 	VisitOutcome        VisitOutcomeTypes   `json:"assuranceVisitOutcome"`
+	PdrOutcome          PdrOutcomeTypes     `json:"pdrOutcome"`
 	ReportReviewDate    string              `json:"reportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
@@ -70,6 +71,7 @@ func formatAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits 
 			ReportReceivedDate:  FormatDateAndTime("2006-01-02T15:04:05+00:00", s.ReportReceivedDate, "02/01/2006"),
 			ReportReviewDate:    FormatDateAndTime("2006-01-02T15:04:05+00:00", s.ReportReviewDate, "02/01/2006"),
 			VisitOutcome:        s.VisitOutcome,
+			PdrOutcome:          s.PdrOutcome,
 			VisitReportMarkedAs: s.VisitReportMarkedAs,
 			VisitorAllocated:    s.VisitorAllocated,
 			ReviewedBy:          s.ReviewedBy,
