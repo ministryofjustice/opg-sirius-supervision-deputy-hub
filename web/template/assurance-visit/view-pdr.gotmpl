@@ -40,6 +40,16 @@
             </dd>
         </div>
         <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Outcome</dt>
+            <dd class="govuk-summary-list__value hook_outcome">
+                {{ if .PdrOutcome.Label }}
+                    {{ .PdrOutcome.Label }}
+                {{ else }}
+                    -
+                {{ end }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">PDR reviewed date</dt>
             <dd class="govuk-summary-list__value hook_report_reviewed_date">
                 {{ if ne .ReportReviewDate $nullDateValue }}

@@ -14,5 +14,6 @@
     "/reference-data/deputyBooleanType": "/deputyBooleanType",
     "/reference-data/deputyReportSystem": "/deputyReportSystem",
     "/reference-data/visitOutcome": "/visitOutcome",
+    "/reference-data/pdrOutcome": "/pdrOutcome",
     "/reference-data/ragRating": "/ragRating"
 }

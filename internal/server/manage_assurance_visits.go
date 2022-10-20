@@ -16,6 +16,7 @@ type ManageAssuranceVisit interface {
 	GetVisitors(ctx sirius.Context) (sirius.Visitors, error)
 	GetVisitRagRatingTypes(ctx sirius.Context) ([]sirius.VisitRagRatingTypes, error)
 	GetVisitOutcomeTypes(ctx sirius.Context) ([]sirius.VisitOutcomeTypes, error)
+	GetPdrOutcomeTypes(ctx sirius.Context) ([]sirius.PdrOutcomeTypes, error)
 	GetAssuranceVisitById(ctx sirius.Context, deputyId int, visitId int) (sirius.AssuranceVisit, error)
 }
 
@@ -28,6 +29,7 @@ type ManageAssuranceVisitVars struct {
 	Visitors            sirius.Visitors
 	VisitRagRatingTypes []sirius.VisitRagRatingTypes
 	VisitOutcomeTypes   []sirius.VisitOutcomeTypes
+	PdrOutcomeTypes     []sirius.PdrOutcomeTypes
 	Visit               sirius.AssuranceVisit
 }
 
@@ -83,6 +85,16 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 			return nil
 		})
 
+		group.Go(func() error {
+			pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+
+			vars.PdrOutcomeTypes = pdrOutcomeTypes
+			return nil
+		})
+
 		if err := group.Wait(); err != nil {
 			return err
 		}
@@ -110,6 +122,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 				ReportDueDate:       r.PostFormValue("report-due-date"),
 				ReportReceivedDate:  r.PostFormValue("report-received-date"),
 				VisitOutcome:        r.PostFormValue("visit-outcome"),
+				PdrOutcome:          r.PostFormValue("pdr-outcome"),
 				ReportReviewDate:    reportReviewDate,
 				VisitReportMarkedAs: r.PostFormValue("visit-report-marked-as"),
 				ReviewedBy:          reviewedBy,
