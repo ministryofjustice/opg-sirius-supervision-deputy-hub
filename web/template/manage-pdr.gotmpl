@@ -53,6 +53,29 @@
                 </div>
 
                 <div class="govuk-form-group">
+                    <fieldset
+                            class="govuk-fieldset"
+                            aria-describedby="contact-hint">
+                        <legend class="govuk-fieldset__legend">
+                            Outcome
+                        </legend>
+                        {{ $currentPdrOutcomeLabel:=.Visit.PdrOutcome.Label }}
+                        <div class="govuk-radios">
+                            {{ range .PdrOutcomeTypes }}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="pdr-outcome-{{ .Label }}"
+                                           name="pdr-outcome" type="radio"
+                                           value="{{ .Label }}" {{ if ne $currentPdrOutcomeLabel "" }}{{ if eq $currentPdrOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                    <label class="govuk-label govuk-radios__label" for="pdr-outcome-{{ .Label }}">
+                                        {{ .Label }}
+                                    </label>
+                                </div>
+                            {{ end }}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group">
                     <label class="govuk-label" for="report-review-date">
                         PDR review date
                     </label>
