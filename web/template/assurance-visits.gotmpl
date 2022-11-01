@@ -30,7 +30,7 @@
     </header>
 
     <div id="f-button-disabled-warning" class="hide">
-        {{ template "warning-banner" "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled" }}
+        {{ template "warning-banner" .ErrorMessage }}
     </div>
 
     {{ range $i, $visit := .AssuranceVisits }}
