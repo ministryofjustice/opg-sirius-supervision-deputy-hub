@@ -100,7 +100,7 @@ describe("Assurance Visits", () => {
             cy.url().should("contain", "/supervision/deputies/2");
             cy.get("#f-button-disabled-warning")
                 .should("be.visible")
-                .should("contain", "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled");
+                .should("contain", "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'");
         });
 
         it("is enabled when latest visit is cancelled", () => {
