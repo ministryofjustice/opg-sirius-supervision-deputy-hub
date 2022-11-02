@@ -180,7 +180,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 				{},
 			},
 			true,
-			"You cannot add anything until the current assurance process has a review date or is Not received",
+			"You cannot add anything until the current assurance process has a review date or is marked as 'Not received'",
 		},
 		{
 			"Latest visit has no RAG",
@@ -248,7 +248,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 				},
 			},
 			true,
-			"You cannot add anything until the current assurance process has a review date or is Not received",
+			"You cannot add anything until the current assurance process has a review date or is marked as 'Not received'",
 		},
 		{
 			"Latest visit is cancelled",
@@ -328,7 +328,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 				{},
 			},
 			true,
-			"You cannot add anything until the current assurance process has a review date or is Not received",
+			"You cannot add anything until the current assurance process has a review date or is marked as 'Not received'",
 		},
 	}
 	for _, tt := range tests {

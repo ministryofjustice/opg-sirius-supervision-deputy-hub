@@ -66,7 +66,7 @@ func isAddVisitDisabled(visits []sirius.AssuranceVisits) (bool, string) {
 			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || visits[0].ReportReviewDate != "" || visits[0].VisitReportMarkedAs.Label == "" {
 				return false, ""
 			}
-			return true, "You cannot add anything until the current assurance process has a review date or is Not received"
+			return true, "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'"
 		}
 		if (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled" {
 			return false, ""
