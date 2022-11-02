@@ -127,10 +127,6 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			visits: []sirius.AssuranceVisits{
 				{
 					ReportReviewDate: "01/01/2022",
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
-						Label:  "RED",
-						Handle: "RED",
-					},
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "PDR",
 						Label:  "PDR",
@@ -168,10 +164,6 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest PDR visit has no review date",
 			[]sirius.AssuranceVisits{
 				{
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
-						Label:  "RED",
-						Handle: "RED",
-					},
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "PDR",
 						Label:  "PDR",
@@ -198,18 +190,23 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"You cannot add anything until the current assurance process has a review date and RAG status or is cancelled",
 		},
 		{
-			"Latest PDR visit has no RAG",
+			"Latest PDR visit has review date and RAG",
 			[]sirius.AssuranceVisits{
 				{
+					ReportReviewDate: "01/01/2022",
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
+					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+						Label:  "RED",
+						Handle: "RED",
+					},
 				},
 				{},
 			},
-			false,
-			"",
+			true,
+			"You cannot add anything until the current assurance process has a review date or is marked as 'Not received'",
 		},
 		{
 			"Latest visit not reviewed but previous one is",
