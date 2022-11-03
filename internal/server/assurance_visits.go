@@ -63,7 +63,7 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 func isAddVisitDisabled(visits []sirius.AssuranceVisits) (bool, string) {
 	if len(visits) > 0 {
 		if visits[0].AssuranceType.Label == "PDR" {
-			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label == "") {
+			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || (visits[0].ReportReviewDate != "") {
 				return false, ""
 			}
 			return true, "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'"
