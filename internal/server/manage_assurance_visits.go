@@ -116,13 +116,20 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 				reviewedBy = user.ID
 			}
 
+			pdrOutcome := ""
+			if r.PostFormValue("pdr-outcome") == "Not received" {
+				pdrOutcome = "NOT_RECEIVED"
+			} else if r.PostFormValue("pdr-outcome") == "Received" {
+				pdrOutcome = "RECEIVED"
+			}
+
 			manageAssuranceVisitForm := sirius.AssuranceVisitDetails{
 				CommissionedDate:    r.PostFormValue("commissioned-date"),
 				VisitorAllocated:    r.PostFormValue("visitor-allocated"),
 				ReportDueDate:       r.PostFormValue("report-due-date"),
 				ReportReceivedDate:  r.PostFormValue("report-received-date"),
 				VisitOutcome:        r.PostFormValue("visit-outcome"),
-				PdrOutcome:          r.PostFormValue("pdr-outcome"),
+				PdrOutcome:          pdrOutcome,
 				ReportReviewDate:    reportReviewDate,
 				VisitReportMarkedAs: r.PostFormValue("visit-report-marked-as"),
 				ReviewedBy:          reviewedBy,
