@@ -71,6 +71,7 @@ describe("Manage an Assurance Visit", () => {
             cy.get(".govuk-fieldset__legend").contains("Outcome");
             cy.get(".govuk-label").contains("PDR review date");
             cy.get(".govuk-fieldset__legend").contains("PDR marked as");
+            cy.get(".govuk-label").contains("Note");
             cy.get(".govuk-button").contains("Save PDR");
         });
 

@@ -50,7 +50,8 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				"reviewedBy": {
 				  "id": 53,
 				  "displayName": "case manager"
-				}
+				},
+				"note" : "This is just to see the notes and it is below 1000 characters"
 			}`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
@@ -74,6 +75,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 		PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
 		ReportReviewDate:    "2022-02-02",
 		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+		Note:                "This is just to see the notes and it is below 1000 characters",
 		VisitorAllocated:    "Jane Janeson",
 		ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
 	}
