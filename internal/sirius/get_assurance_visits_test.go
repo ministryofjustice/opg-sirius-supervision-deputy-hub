@@ -38,6 +38,40 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					  "label": "Cancelled",
 					  "deprecated": null
 					},
+					"pdrOutcome": null,
+					"reportReviewDate": "2022-02-02T00:00:00+00:00",
+					"assuranceVisitReportMarkedAs": {
+					  "handle": "RED",
+					  "label": "Red",
+					  "deprecated": null
+					},
+					"visitorAllocated": "Jane Janeson",
+					"reviewedBy": {
+					  "id": 53,
+					  "displayName": "case manager"
+					}
+				},
+				{
+					"id":4,
+					"assuranceType": {
+					  "handle": "PDR",
+					  "label": "PDR",
+					  "deprecated": null
+					},
+					"requestedDate":"2022-06-25T12:16:34+00:00",
+					"requestedBy": {
+							"id":53,
+							"displayName":"case manager"
+					},
+					"commissionedDate": "2022-01-01T00:00:00+00:00",
+					"reportDueDate": "2022-01-07T00:00:00+00:00",
+					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
+					"assuranceVisitOutcome": null,
+					"pdrOutcome": {
+					  "handle": "RECEIVED",
+					  "label": "Received",
+					  "deprecated": null
+					},
 					"reportReviewDate": "2022-02-02T00:00:00+00:00",
 					"assuranceVisitReportMarkedAs": {
 					  "handle": "RED",
@@ -73,6 +107,21 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			ReportDueDate:       "07/01/2022",
 			ReportReceivedDate:  "07/01/2022",
 			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
+			ReportReviewDate:    "02/02/2022",
+			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			VisitorAllocated:    "Jane Janeson",
+			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
+		},
+		{
+			VisitId:             4,
+			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
+			RequestedDate:       "25/06/2022",
+			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			DeputyId:            1,
+			CommissionedDate:    "01/01/2022",
+			ReportDueDate:       "07/01/2022",
+			ReportReceivedDate:  "07/01/2022",
+			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
 			ReportReviewDate:    "02/02/2022",
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 			VisitorAllocated:    "Jane Janeson",
