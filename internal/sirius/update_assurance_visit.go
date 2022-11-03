@@ -52,7 +52,12 @@ func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm Assu
 	}
 
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusCreated {
+
+	if resp.StatusCode == http.StatusUnauthorized {
+		return ErrUnauthorized
+	}
+
+	if resp.StatusCode != http.StatusOK {
 		var v struct {
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
