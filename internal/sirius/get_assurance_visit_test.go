@@ -35,6 +35,11 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				  "label": "Cancelled",
 				  "deprecated": null
 				},
+				"pdrOutcome": {
+				  "handle": "RECEIVED",
+				  "label": "Received",
+				  "deprecated": null
+				},
 				"reportReviewDate": "2022-02-02T00:00:00+00:00",
 				"assuranceVisitReportMarkedAs": {
 				  "handle": "RED",
@@ -66,6 +71,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 		ReportDueDate:       "2022-01-07",
 		ReportReceivedDate:  "2022-01-07",
 		VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
+		PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
 		ReportReviewDate:    "2022-02-02",
 		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 		VisitorAllocated:    "Jane Janeson",

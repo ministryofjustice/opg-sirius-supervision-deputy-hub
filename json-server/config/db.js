@@ -2031,6 +2031,11 @@ module.exports = function () {
                         "reportDueDate": null,
                         "reportReceivedDate": null,
                         "assuranceVisitOutcome": null,
+                        "pdrOutcome": {
+                            "handle": "RECEIVED",
+                            "label": "Received",
+                            "deprecated": null
+                        },
                         "reportReviewDate": null,
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": null,
@@ -2068,6 +2073,7 @@ module.exports = function () {
                             "label": "Cancelled",
                             "deprecated": null
                         },
+                        "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
                         "assuranceVisitReportMarkedAs": {
                             "handle": "RED",
@@ -2125,6 +2131,7 @@ module.exports = function () {
                         "reportDueDate": "2022-01-07T00:00:00+00:00",
                         "reportReceivedDate": "2022-01-07T00:00:00+00:00",
                         "assuranceVisitOutcome": null,
+                        "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
                         "assuranceVisitReportMarkedAs": {
                             "handle": "RED",
@@ -2177,6 +2184,7 @@ module.exports = function () {
                         "reportDueDate": "2022-01-07T00:00:00+00:00",
                         "reportReceivedDate": "2022-01-07T00:00:00+00:00",
                         "assuranceVisitOutcome": null,
+                        "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
                         "assuranceVisitReportMarkedAs": {
                             "handle": "RED",
@@ -2238,6 +2246,7 @@ module.exports = function () {
                             "label": "Cancelled",
                             "deprecated": null
                         },
+                        "pdrOutcome": null,
                         "reportReviewDate": null,
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
@@ -2275,6 +2284,7 @@ module.exports = function () {
                             "label": "Cancelled",
                             "deprecated": null
                         },
+                        "pdrOutcome": null,
                         "reportReviewDate": null,
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
@@ -2341,6 +2351,16 @@ module.exports = function () {
                 "label": "Cancelled"
             }
         ],
+        "pdrOutcome": [
+            {
+                "handle": "RECEIVED",
+                "label": "Received"
+            },
+            {
+                "handle": "NOT_RECEIVED",
+                "label": "Not received"
+            }
+        ],
         "assuranceVisit": [
             {
                 "id": 35,
@@ -2370,6 +2390,7 @@ module.exports = function () {
                 "reportDueDate": null,
                 "reportReceivedDate": null,
                 "assuranceVisitOutcome": null,
+                "pdrOutcome": null,
                 "reportReviewDate": null,
                 "assuranceVisitReportMarkedAs": {
                     "handle": "RED",
@@ -2407,6 +2428,11 @@ module.exports = function () {
                 "reportDueDate": null,
                 "reportReceivedDate": null,
                 "assuranceVisitOutcome": null,
+                "pdrOutcome": {
+                    "handle": "RECEIVED",
+                    "label": "Received",
+                    "deprecated": null
+                },
                 "reportReviewDate": null,
                 "assuranceVisitReportMarkedAs": {
                     "handle": "RED",
