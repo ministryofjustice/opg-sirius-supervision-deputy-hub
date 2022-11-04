@@ -49,7 +49,8 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					"reviewedBy": {
 					  "id": 53,
 					  "displayName": "case manager"
-					}
+					},
+					"note": "This is just notes for something to show"
 				},
 				{
 					"id":4,
@@ -82,7 +83,8 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					"reviewedBy": {
 					  "id": 53,
 					  "displayName": "case manager"
-					}
+					},
+					"note": ""
 				}
 			]
 		}`
@@ -109,6 +111,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
 			ReportReviewDate:    "02/02/2022",
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			Note:                "This is just notes for something to show",
 			VisitorAllocated:    "Jane Janeson",
 			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
 		},
@@ -124,6 +127,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
 			ReportReviewDate:    "02/02/2022",
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			Note:                "",
 			VisitorAllocated:    "Jane Janeson",
 			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
 		},

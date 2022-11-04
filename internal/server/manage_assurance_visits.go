@@ -5,6 +5,7 @@ import (
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -31,6 +32,7 @@ type ManageAssuranceVisitVars struct {
 	VisitOutcomeTypes   []sirius.VisitOutcomeTypes
 	PdrOutcomeTypes     []sirius.PdrOutcomeTypes
 	Visit               sirius.AssuranceVisit
+	ErrorNote           string
 }
 
 func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmpl Template, pdrTmpl Template) Handler {
@@ -126,6 +128,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 				ReportReviewDate:    reportReviewDate,
 				VisitReportMarkedAs: r.PostFormValue("visit-report-marked-as"),
 				ReviewedBy:          reviewedBy,
+				Note:                strings.TrimSpace(r.PostFormValue("note")),
 			}
 
 			err = client.UpdateAssuranceVisit(ctx, manageAssuranceVisitForm, deputyId, visitId)
@@ -138,6 +141,8 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 					VisitRagRatingTypes: vars.VisitRagRatingTypes,
 					VisitOutcomeTypes:   vars.VisitOutcomeTypes,
 					Visitors:            visitors,
+					ErrorNote:           r.PostFormValue("note"),
+					DeputyDetails:       deputyDetails,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

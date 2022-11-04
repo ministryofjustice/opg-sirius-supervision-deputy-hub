@@ -18,6 +18,7 @@ type AssuranceVisit struct {
 	PdrOutcome          PdrOutcomeTypes     `json:"pdrOutcome"`
 	ReportReviewDate    string              `json:"reportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
+	Note                string              `json:"note"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
 	ReviewedBy          User                `json:"reviewedBy"`
 }
@@ -65,6 +66,7 @@ func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
 		VisitOutcome:        v.VisitOutcome,
 		PdrOutcome:          v.PdrOutcome,
 		VisitReportMarkedAs: v.VisitReportMarkedAs,
+		Note:                v.Note,
 		VisitorAllocated:    v.VisitorAllocated,
 		ReviewedBy:          v.ReviewedBy,
 	}
