@@ -116,6 +116,32 @@
                     </fieldset>
                 </div>
 
+                <div
+                    class="govuk-character-count"
+                    data-module="govuk-character-count"
+                    data-maxlength="1000">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="note">
+                            Note
+                        </label>
+                        {{/* prettier-ignore-start */}}
+                        <textarea
+                            class="govuk-textarea govuk-js-character-count"
+                            id="note"
+                            name="note"
+                            rows="10"
+                            aria-describedby="note-info note-hint"
+                        >{{ if .ErrorNote }}{{ .ErrorNote }}{{ else }}{{.Visit.Note}}{{ end }}</textarea>
+                        {{/* prettier-ignore-end */}}
+                        <div
+                            id="note-info"
+                            class="govuk-hint govuk-character-count__message"
+                            aria-live="polite">
+                            You have 1000 characters remaining
+                        </div>
+                    </div>
+                </div>
+
                 <div class="govuk-button-group govuk-!-margin-top-7">
                     <button
                         type="submit"
