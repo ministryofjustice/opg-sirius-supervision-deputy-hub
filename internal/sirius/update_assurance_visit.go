@@ -17,6 +17,7 @@ type AssuranceVisitDetails struct {
 	VisitReportMarkedAs string `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string `json:"visitorAllocated"`
 	ReviewedBy          int    `json:"reviewedBy"`
+	Note                string `json:"note"`
 }
 
 func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm AssuranceVisitDetails, deputyId, visitId int) error {
@@ -32,6 +33,7 @@ func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm Assu
 		VisitReportMarkedAs: manageAssuranceVisitForm.VisitReportMarkedAs,
 		VisitorAllocated:    manageAssuranceVisitForm.VisitorAllocated,
 		ReviewedBy:          manageAssuranceVisitForm.ReviewedBy,
+		Note:                manageAssuranceVisitForm.Note,
 	})
 
 	if err != nil {
@@ -50,11 +52,20 @@ func (c *Client) UpdateAssuranceVisit(ctx Context, manageAssuranceVisitForm Assu
 	}
 
 	defer resp.Body.Close()
+
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
+		var v struct {
+			ValidationErrors ValidationErrors `json:"validation_errors"`
+		}
+
+		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
+			return ValidationError{Errors: v.ValidationErrors}
+		}
+
 		return newStatusError(resp)
 	}
 

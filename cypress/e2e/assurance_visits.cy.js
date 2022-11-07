@@ -67,6 +67,7 @@ describe("Assurance Visits", () => {
             cy.get("#assurance-visit-details > :nth-child(9) > .govuk-summary-list__key").contains("Report reviewed date");
             cy.get("#assurance-visit-details > :nth-child(10) > .govuk-summary-list__key").contains("Reviewed by");
             cy.get("#assurance-visit-details > :nth-child(11) > .govuk-summary-list__key").contains("Report marked as");
+            cy.get("#assurance-visit-details > :nth-child(12) > .govuk-summary-list__key").contains("Notes");
         });
 
         it("should display PDR main content", () => {
@@ -84,6 +85,7 @@ describe("Assurance Visits", () => {
             cy.get("#assurance-visit-details > :nth-child(7) > .govuk-summary-list__key").contains("PDR reviewed date");
             cy.get("#assurance-visit-details > :nth-child(8) > .govuk-summary-list__key").contains("Reviewed by");
             cy.get("#assurance-visit-details > :nth-child(9) > .govuk-summary-list__key").contains("PDR marked as");
+            cy.get("#assurance-visit-details > :nth-child(10) > .govuk-summary-list__key").contains("Notes");
         });
     });
 

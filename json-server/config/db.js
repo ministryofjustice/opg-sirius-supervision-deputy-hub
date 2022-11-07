@@ -2042,7 +2042,8 @@ module.exports = function () {
                             "label": "Green"
                         },
                         "visitorAllocated": null,
-                        "reviewedBy": null
+                        "reviewedBy": null,
+                        "note" : ''
                     },
                     {
                         "id": 33,
@@ -2099,7 +2100,8 @@ module.exports = function () {
                             ],
                             "locked": false,
                             "suspended": false
-                        }
+                        },
+                        "note" : 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2157,7 +2159,8 @@ module.exports = function () {
                             ],
                             "locked": false,
                             "suspended": false
-                        }
+                        },
+                        "note" : 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2210,7 +2213,8 @@ module.exports = function () {
                             ],
                             "locked": false,
                             "suspended": false
-                        }
+                        },
+                        "note" : 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2253,7 +2257,8 @@ module.exports = function () {
                         "reportReviewDate": null,
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
-                        "reviewedBy": null
+                        "reviewedBy": null,
+                        "note" : 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2291,7 +2296,8 @@ module.exports = function () {
                         "reportReviewDate": null,
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
-                        "reviewedBy": null
+                        "reviewedBy": null,
+                        "note" : 'Some notes that have been written here'
                     }
                 ]
             }
@@ -2401,7 +2407,8 @@ module.exports = function () {
                     "deprecated": null
                 },
                 "visitorAllocated": null,
-                "reviewedBy": null
+                "reviewedBy": null,
+                "note" : 'Some notes that have been written here'
             },
             {
                 "id": 36,
@@ -2443,7 +2450,8 @@ module.exports = function () {
                     "deprecated": null
                 },
                 "visitorAllocated": null,
-                "reviewedBy": null
+                "reviewedBy": null,
+                "note" : 'Some notes that have been written here'
             }
         ]
     }

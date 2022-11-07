@@ -2,12 +2,12 @@ package sirius
 
 import (
 	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,7 +45,6 @@ func TestUpdateAssuranceVisitReturnsNewStatusError(t *testing.T) {
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
 	err := client.UpdateAssuranceVisit(getContext(nil), AssuranceVisitDetails{}, 53, 76)
-
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/deputies/53/assurance-visits/76",

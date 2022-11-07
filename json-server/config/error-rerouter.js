@@ -9,7 +9,7 @@ const getStatusCode = (req) => {
 };
 
 module.exports = (req, res, next) => {
-    if (["POST", "PATCH"].includes(req.method)) {
+    if (["POST", "PATCH", "PUT"].includes(req.method)) {
         const failRoute = getFailRoute(req);
 
         if (failRoute) {
@@ -18,5 +18,6 @@ module.exports = (req, res, next) => {
             res.status(getStatusCode(req) ?? 400);
         }
     }
+
     next();
 };
