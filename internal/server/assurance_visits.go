@@ -20,6 +20,7 @@ type AssuranceVisitsVars struct {
 	AddVisitDisabled bool
 	SuccessMessage   string
 	AssuranceVisits  []sirius.AssuranceVisits
+	ErrorMessage     string
 }
 
 func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Handler {
@@ -46,21 +47,31 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 		}
 
 		vars := AssuranceVisitsVars{
-			Path:             r.URL.Path,
-			XSRFToken:        ctx.XSRFToken,
-			DeputyDetails:    deputyDetails,
-			SuccessMessage:   successMessage,
-			AssuranceVisits:  visits,
-			AddVisitDisabled: !isCurrentVisitReviewedOrCancelled(visits),
+			Path:            r.URL.Path,
+			XSRFToken:       ctx.XSRFToken,
+			DeputyDetails:   deputyDetails,
+			SuccessMessage:  successMessage,
+			AssuranceVisits: visits,
 		}
+
+		vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(visits)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
 
-func isCurrentVisitReviewedOrCancelled(visits []sirius.AssuranceVisits) bool {
+func isAddVisitDisabled(visits []sirius.AssuranceVisits) (bool, string) {
 	if len(visits) > 0 {
-		return (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled"
+		if visits[0].AssuranceType.Label == "PDR" {
+			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || (visits[0].ReportReviewDate != "") {
+				return false, ""
+			}
+			return true, "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'"
+		}
+		if (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled" {
+			return false, ""
+		}
+		return true, "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled"
 	}
-	return true
+	return false, ""
 }

@@ -2037,7 +2037,10 @@ module.exports = function () {
                             "deprecated": null
                         },
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": null,
+                        "assuranceVisitReportMarkedAs": {
+                            "handle": "GREEN",
+                            "label": "Green"
+                        },
                         "visitorAllocated": null,
                         "reviewedBy": null,
                         "note" : ''
