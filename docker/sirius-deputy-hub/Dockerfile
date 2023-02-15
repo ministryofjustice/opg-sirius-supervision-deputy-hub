@@ -49,13 +49,14 @@ COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:3.17.0
+FROM alpine:latest
 
 WORKDIR /go/bin
 
 RUN apk --update --no-cache add \
     ca-certificates && \
     apk upgrade busybox --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
+    apk upgrade libcrypto3 libssl3 && \
     rm -rf /var/cache/apk/*
 RUN apk --no-cache add tzdata
 
