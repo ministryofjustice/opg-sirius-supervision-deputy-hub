@@ -616,8 +616,8 @@ func TestReformatCompletedDateReturnsDateInCorrectFormat(t *testing.T) {
 }
 
 func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
-	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
-	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+	dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
 
 	orderData := Orders{
 		Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateOne},
@@ -629,8 +629,8 @@ func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 	assert.Equal(t, expectedResponse, result)
 }
 func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
-	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
-	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+	dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
 
 	orderData := Orders{
 		Order{OrderStatus: "Close", SupervisionLevel: "General", OrderDate: dateOne},
@@ -643,8 +643,8 @@ func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
 }
 
 func TestGetMostRecentSupervisionLevel(t *testing.T) {
-	dateOne, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2014-12-01 00:00:00 +0000 UTC")
-	dateTwo, _ := time.Parse("2006-02-01 00:00:00 +0000 UTC", "2017-12-01 00:00:00 +0000 UTC")
+	dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
+	dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
 
 	orderData := Orders{
 		Order{OrderStatus: "Close", SupervisionLevel: "Minimal", OrderDate: dateOne},
