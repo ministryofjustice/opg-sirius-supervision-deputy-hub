@@ -13,8 +13,9 @@
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <p class="govuk-body govuk-!-margin-bottom-5">
-                        <a href="">Change the deputy&apos;s firm</a> if
-                        they&apos;ve moved to a different organisation
+                        <a 
+                            href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}" Change the deputy&apos;s firm
+                        </a> if they&apos;ve moved to a different organisation
                     </p>
 
                     <form

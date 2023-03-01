@@ -6,7 +6,8 @@ describe("Change Firm", () => {
 
     describe("Changing a firm", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/change-firm");
+            cy.visit("/supervision/deputies/3");
+            cy.get("#change-firm").click();
         });
 
         it("shows title for page", () => {
