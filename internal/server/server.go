@@ -34,8 +34,8 @@ type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger *logging.Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int) http.Handler {
-	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam)
+func New(logger *logging.Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int, defaultPROTeam int) http.Handler {
+	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam, defaultPROTeam)
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/health-check", healthCheck())
@@ -144,14 +144,14 @@ type errorVars struct {
 }
 
 type ErrorHandlerClient interface {
-	GetDeputyDetails(sirius.Context, int, int) (sirius.DeputyDetails, error)
+	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
 }
 
-func errorHandler(logger *logging.Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int) func(next Handler) http.Handler {
+func errorHandler(logger *logging.Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int, defaultPROTeam int) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
-			deputyDetails, err := client.GetDeputyDetails(getContext(r), defaultPATeam, deputyId)
+			deputyDetails, err := client.GetDeputyDetails(getContext(r), defaultPATeam, defaultPROTeam, deputyId)
 
 			if err == nil {
 				err = next(deputyDetails, w, r)
