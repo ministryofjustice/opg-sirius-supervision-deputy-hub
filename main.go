@@ -81,7 +81,7 @@ func main() {
 
 	defaultPROTeam, err := strconv.Atoi(DefaultProTeam)
 	if err != nil {
-		logger.Print("Error converting DEFAULT_PA_TEAM to int")
+		logger.Print("Error converting DEFAULT_PRO_TEAM to int")
 	}
 
 	server := &http.Server{
