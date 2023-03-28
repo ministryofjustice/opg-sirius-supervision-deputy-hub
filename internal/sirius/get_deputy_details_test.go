@@ -72,7 +72,7 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 		},
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -134,7 +134,69 @@ func TestDeputyDetailsReturnedPADefaultECM(t *testing.T) {
 		},
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
+
+	assert.Equal(t, expectedResponse, deputyDetails)
+	assert.Equal(t, nil, err)
+}
+
+func TestDeputyDetailsReturnedPRODefaultECM(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `    {
+      	"id": 1,
+      	"deputyCasrecId": 10000000,
+      	"organisationName": "Test Organisation",
+		"email": "deputyship@essexcounty.gov.uk",
+		"phoneNumber": "0115 876 5574",
+		"addressLine1": "Deputyship Team",
+		"addressLine2": "Seax House",
+		"addressLine3": "19 Market Rd",
+		"town": "Chelmsford",
+		"county": "Essex",
+		"postcode": "CM1 1GG",
+		"deputyType": {
+			"handle": "PRO",
+			"label": "Professional"
+		}
+    }`
+
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := DeputyDetails{
+		ID:               1,
+		DeputyFirstName:  "",
+		DeputySurname:    "",
+		DeputyCasrecId:   10000000,
+		OrganisationName: "Test Organisation",
+		Email:            "deputyship@essexcounty.gov.uk",
+		PhoneNumber:      "0115 876 5574",
+		AddressLine1:     "Deputyship Team",
+		AddressLine2:     "Seax House",
+		AddressLine3:     "19 Market Rd",
+		Town:             "Chelmsford",
+		County:           "Essex",
+		Postcode:         "CM1 1GG",
+		ExecutiveCaseManager: ExecutiveCaseManager{
+			EcmId:     28,
+			EcmName:   "Professional deputy team - New deputy order",
+			IsDefault: true,
+		},
+		DeputyType: DeputyType{
+			Handle: "PRO",
+			Label:  "Professional",
+		},
+	}
+
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -199,7 +261,7 @@ func TestDeputyDetailsReturnedPro(t *testing.T) {
 		},
 	}
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
 
 	assert.Equal(t, expectedResponse, deputyDetails)
 	assert.Equal(t, nil, err)
@@ -213,7 +275,7 @@ func TestGetDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,
@@ -237,7 +299,7 @@ func TestGetDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 1)
+	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
 
 	expectedResponse := DeputyDetails{
 		ID:               0,
