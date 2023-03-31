@@ -27,6 +27,7 @@ func main() {
 	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
 	prefix := getEnv("PREFIX", "")
 	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
+	DefaultProTeam := getEnv("DEFAULT_PRO_TEAM", "28")
 	firmHubURL := getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm"
 	features := strings.Split(getEnv("FEATURES", ""), ",")
 
@@ -76,12 +77,16 @@ func main() {
 	defaultPATeam, err := strconv.Atoi(DefaultPaTeam)
 	if err != nil {
 		logger.Print("Error converting DEFAULT_PA_TEAM to int")
+	}
 
+	defaultPROTeam, err := strconv.Atoi(DefaultProTeam)
+	if err != nil {
+		logger.Print("Error converting DEFAULT_PRO_TEAM to int")
 	}
 
 	server := &http.Server{
 		Addr:    ":" + port,
-		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, webDir, defaultPATeam),
+		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, webDir, defaultPATeam, defaultPROTeam),
 	}
 
 	go func() {
