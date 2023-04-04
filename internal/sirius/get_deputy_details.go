@@ -73,7 +73,7 @@ type DeputyDetails struct {
 	Firm                             Firm                       `json:"firm"`
 }
 
-func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) (DeputyDetails, error) {
+func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam int, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)
@@ -103,6 +103,14 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, deputyId int) 
 		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
 	}
 	if v.ExecutiveCaseManager.EcmId == defaultPATeam {
+		v.ExecutiveCaseManager.IsDefault = true
+	}
+
+	if v.DeputyType.Handle == "PRO" && v.ExecutiveCaseManager.EcmId == 0 {
+		v.ExecutiveCaseManager.EcmId = defaultPROTeam
+		v.ExecutiveCaseManager.EcmName = "Professional deputy team - New deputy order"
+	}
+	if v.ExecutiveCaseManager.EcmId == defaultPROTeam {
 		v.ExecutiveCaseManager.IsDefault = true
 	}
 
