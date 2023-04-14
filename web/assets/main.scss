@@ -5,7 +5,7 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 
 @import "node_modules/govuk-frontend/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
-@import "accessible-autocomplete";
+@import "node_modules/accessible-autocomplete/src/autocomplete";
 @import "./scss/pa-hub";
 @import "./scss/pro-hub";
 @import "./scss/_moj-pagination";
@@ -34,3 +34,6 @@ $govuk-assets-path: "/supervision/deputies/assets/";
   display: none;
 }
 
+.autocomplete__wrapper {
+    font-family: "GDS Transport", arial, sans-serif;
+}

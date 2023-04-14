@@ -1,42 +1,36 @@
 {
-    "name": "opg-sirius-supervision-deputy-hub",
-    "version": "1.0.0",
-    "license": "MIT",
-    "dependencies": {
-        "@ministryofjustice/frontend": "^1.6.2",
-        "accessible-autocomplete": "^2.0.4",
-        "govuk-frontend": "^4.3.1",
-        "jquery": "^3.6.1"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.20.5",
-        "@babel/preset-env": "^7.20.2",
-        "babel-loader": "^9.1.0",
-        "copy-webpack-plugin": "^11.0.0",
-        "css-loader": "^6.7.1",
-        "cypress": "^12.0.0",
-        "cypress-failed-log": "^2.10.0",
-        "mini-css-extract-plugin": "^2.6.1",
-        "prettier": "^2.7.1",
-        "prettier-plugin-go-template": "^0.0.13",
-        "sass": "^1.56.1",
-        "sass-loader": "^13.1.0",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.0"
-    },
-    "scripts": {
-        "build": "webpack",
-        "watch": "webpack --watch",
-        "test-sirius": "cd internal/sirius && go test",
-        "test-server": "cd internal/server && go test",
-        "cypress": "cypress open",
-        "cypress-headless": "cypress run -b chrome",
-        "cypress-for-m1-build": "docker-compose -f docker/docker-compose.ci.yml build deputy-hub json-server",
-        "cypress-for-m1-up": "docker-compose -f docker/docker-compose.ci.yml up -d deputy-hub json-server",
-        "cypress-build-down": "docker-compose -f docker/docker-compose.ci.yml down",
-        "fmt": "prettier --write ."
-    },
-    "resolutions": {
-        "colors": "1.4.0"
-    }
+  "name": "opg-sirius-supervision-deputy-hub",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "@ministryofjustice/frontend": "^1.6.2",
+    "accessible-autocomplete": "^2.0.4",
+    "govuk-frontend": "^4.3.1",
+    "jquery": "^3.6.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.14",
+    "prettier": "^2.7.1",
+    "sass": "^1.38.1",
+    "cypress": "^12.0.0",
+    "cypress-failed-log": "^2.10.0"
+  },
+  "scripts": {
+    "build": "yarn build:js && yarn build:css && yarn build:images",
+    "build:js": "esbuild --bundle web/assets/main.js --minify --outfile=web/static/javascript/all.js --sourcemap --resolve-extensions=.mjs,.js",
+    "build:css": "sass --load-path . --style compressed web/assets/main.scss web/static/stylesheets/all.css",
+    "build:images": "mkdir -p web/static/assets/images && cp node_modules/govuk-frontend/govuk/assets/images/* node_modules/@ministryofjustice/frontend/moj/assets/images/* web/static/assets/images",
+    "clean": "rm -rf web/static",
+    "test-sirius": "cd internal/sirius && go test",
+    "test-server": "cd internal/server && go test",
+    "cypress": "cypress open",
+    "cypress-headless": "cypress run -b chrome",
+    "cypress-for-m1-build": "docker-compose -f docker/docker-compose.ci.yml build deputy-hub json-server",
+    "cypress-for-m1-up": "docker-compose -f docker/docker-compose.ci.yml up -d deputy-hub json-server",
+    "cypress-build-down": "docker-compose -f docker/docker-compose.ci.yml down",
+    "fmt": "prettier --write ."
+  },
+  "resolutions": {
+    "colors": "1.4.0"
+  }
 }
