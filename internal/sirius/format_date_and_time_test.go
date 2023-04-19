@@ -21,8 +21,5 @@ func TestFormatDateAndTime(t *testing.T) {
 
 func isDST() bool {
 	loc, _ := time.LoadLocation("Europe/Dublin")
-	if time.Now().In(loc) != time.Now() {
-		return true
-	}
-	return false
+	return time.Now().In(loc) != time.Now()
 }
