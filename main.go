@@ -20,6 +20,9 @@ import (
 
 func main() {
 	logger := logging.New(os.Stdout, "opg-sirius-supervision-deputy-hub ")
+	//loc, err := time.LoadLocation("Europe/London")
+	//// handle err
+	//time.Local = loc
 
 	port := getEnv("PORT", "1234")
 	webDir := getEnv("WEB_DIR", "web")
@@ -115,6 +118,5 @@ func getEnv(key, def string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
-
 	return def
 }

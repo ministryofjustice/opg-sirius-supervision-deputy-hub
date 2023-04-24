@@ -1,3 +1,5 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.ManageAssuranceVisitVars*/ -}}
+
 {{ template "page" . }}
 {{ define "main" }}
     {{ template "content-header" . }}
@@ -15,7 +17,6 @@
                     name="xsrfToken"
                     value="{{ .XSRFToken }}"/>
                 <div class="govuk-form-group">
-                    {{ $nullDateValue:="0001-01-01" }}
                     <label class="govuk-label" for="commissioned-date">
                         Commissioned date
                     </label>
@@ -25,10 +26,10 @@
                         name="commissioned-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.CommissionedDate $nullDateValue }}
+                            {{ if eq .Visit.CommissionedDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.CommissionedDate }}"
+                                value="{{ .Visit.CommissionedDate.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -55,10 +56,10 @@
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportDueDate $nullDateValue }}
+                            {{ if eq .Visit.ReportDueDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportDueDate }}"
+                                value="{{ .Visit.ReportDueDate.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -72,10 +73,10 @@
                         name="report-received-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReceivedDate $nullDateValue }}
+                            {{ if eq .Visit.ReportReceivedDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReceivedDate }}"
+                                value="{{ .Visit.ReportReceivedDate.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -114,10 +115,10 @@
                         name="report-review-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReviewDate $nullDateValue }}
+                            {{ if eq .Visit.ReportReviewDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReviewDate }}"
+                                value="{{ .Visit.ReportReviewDate.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>

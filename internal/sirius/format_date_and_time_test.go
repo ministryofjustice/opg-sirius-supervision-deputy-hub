@@ -1,13 +1,14 @@
 package sirius
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"testing"
+	"time"
 )
 
-func TestFormatDateAndTime(t *testing.T) {
+func TestFormatDateTimeStringIntoDateTime(t *testing.T) {
 	unsortedData := "2020-10-18 10:11:08"
-	expectedResponse := "18/10/2020 10:11:08"
-	assert.Equal(t, expectedResponse, FormatDateAndTime("2006-01-02 15:04:05", unsortedData, "02/01/2006 15:04:05"))
+	expectedResponse, err := time.Parse("2006-01-02 15:04:05", "2020-10-18 10:11:08")
+	assert.Nil(t, err)
+	assert.Equal(t, expectedResponse, FormatDateTimeStringIntoDateTime("2006-01-02 15:04:05", unsortedData))
 }

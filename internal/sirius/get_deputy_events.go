@@ -53,11 +53,11 @@ type ClientPerson struct {
 }
 
 type DeputyEvent struct {
-	TimelineEventId int    `json:"id"`
-	Timestamp       string `json:"timestamp"`
-	EventType       string `json:"eventType"`
-	User            User   `json:"user"`
-	Event           Event  `json:"event"`
+	TimelineEventId int       `json:"id"`
+	Timestamp       time.Time `json:"timestamp"`
+	EventType       string    `json:"eventType"`
+	User            User      `json:"user"`
+	Event           Event     `json:"event"`
 	IsNewEvent      bool
 }
 
@@ -99,7 +99,7 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 	var list DeputyEventCollection
 	for _, s := range v {
 		event := DeputyEvent{
-			Timestamp:       FormatDateAndTime(TimelineDateTimeFormat, s.Timestamp, TimelineDateTimeDisplayFormat),
+			Timestamp:       s.Timestamp,
 			EventType:       reformatEventType(s.EventType),
 			TimelineEventId: s.TimelineEventId,
 			User:            s.User,
@@ -109,7 +109,16 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 
 		list = append(list, event)
 	}
+	for _, s := range v {
+		fmt.Println("time")
+		fmt.Println(s.Timestamp)
+	}
+
 	sortTimeLineNewestOneFirst(list)
+	for _, s := range list {
+		fmt.Println("list")
+		fmt.Println(s.Timestamp)
+	}
 	return list
 }
 
@@ -134,9 +143,7 @@ func reformatEventType(s string) string {
 
 func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
 	sort.Slice(v, func(i, j int) bool {
-		changeToTimeTypeI, _ := time.Parse(TimelineDateTimeDisplayFormat, v[i].Timestamp)
-		changeToTimeTypeJ, _ := time.Parse(TimelineDateTimeDisplayFormat, v[j].Timestamp)
-		return changeToTimeTypeJ.Before(changeToTimeTypeI)
+		return v[j].Timestamp.Before(v[i].Timestamp)
 	})
 	return v
 }

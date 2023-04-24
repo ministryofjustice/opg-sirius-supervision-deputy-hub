@@ -2,6 +2,7 @@ package sirius
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -33,6 +34,10 @@ func (c *Client) GetVisitors(ctx Context) (Visitors, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
+		fmt.Println("error")
+		fmt.Println(v)
+		fmt.Println("resp")
+		fmt.Println(resp)
 		return v, newStatusError(resp)
 	}
 	err = json.NewDecoder(resp.Body).Decode(&v)
