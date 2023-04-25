@@ -5,7 +5,6 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
-	"time"
 )
 
 type AssuranceVisit interface {
@@ -60,7 +59,7 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 }
 
 func isAddVisitDisabled(visits []sirius.AssuranceVisits) (bool, string) {
-	nullDate, _ := time.Parse("2006-01-02T15:04:05+00:00", "0001-01-01 00:00:00 +0000 UTC")
+	nullDate := sirius.GetNullDate()
 
 	if len(visits) > 0 {
 		if visits[0].AssuranceType.Label == "PDR" {

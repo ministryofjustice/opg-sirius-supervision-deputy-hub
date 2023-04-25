@@ -216,7 +216,7 @@
                     </td>
                     <td class="govuk-table__cell visit_type nowrap">
                         {{ if ne .LatestCompletedVisit.VisitCompletedDate "" }}
-                            {{ .LatestCompletedVisit.VisitCompletedDate }}
+                            {{ .LatestCompletedVisit.VisitCompletedDate.Format "02/01/2006" }}
                             <span class="secondary">
                                             {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency }}
                                         </span>
@@ -235,9 +235,9 @@
                     <td class="govuk-table__cell reports nowrap due">
                         {{ if ne .OldestReport.DueDate "" }}
                             {{ if .OldestReport.RevisedDueDate }}
-                                {{ .OldestReport.RevisedDueDate }}
+                                {{ .OldestReport.RevisedDueDate.Format "02/01/2006" }}
                             {{ else }}
-                                {{ .OldestReport.DueDate }}
+                                {{ .OldestReport.DueDate.Format "02/01/2006" }}
                             {{ end }}
                             <br/>
                             {{ .OldestReport.StatusLabel }}

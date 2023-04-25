@@ -63,7 +63,6 @@ func (c *Client) GetAssuranceVisits(ctx Context, deputyId int) ([]AssuranceVisit
 
 func formatAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits {
 	var list []AssuranceVisits
-	nullDate, _ := time.Parse("2006-01-02T15:04:05+00:00", "0001-01-01 00:00:00 +0000 UTC")
 
 	for _, s := range k {
 		event := AssuranceVisits{
@@ -82,7 +81,7 @@ func formatAssuranceVisits(k []AssuranceVisits, deputyId int) []AssuranceVisits 
 			VisitReportMarkedAs: s.VisitReportMarkedAs,
 			VisitorAllocated:    s.VisitorAllocated,
 			ReviewedBy:          s.ReviewedBy,
-			NullDateForFrontEnd: nullDate,
+			NullDateForFrontEnd: GetNullDate(),
 		}
 
 		list = append(list, event)
