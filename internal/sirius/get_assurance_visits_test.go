@@ -174,9 +174,3 @@ func TestGetAssuranceVisitsReturnsUnauthorisedClientError(t *testing.T) {
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, assuranceVisits)
 }
-
-func GenerateTimeForTest(year int, month time.Month, day, hour, min, seconds int) time.Time {
-	location := time.FixedZone("", 0)
-	newTime := time.Date(year, month, day, hour, min, seconds, 0, location)
-	return newTime
-}

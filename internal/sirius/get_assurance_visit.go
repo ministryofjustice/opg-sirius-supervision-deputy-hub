@@ -3,9 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -51,25 +49,9 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 		return v, newStatusError(resp)
 	}
 
-	io.Copy(os.Stdout, resp.Body)
-
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	AssuranceVisitFormatted := formatAssuranceVisit(v)
-
-	fmt.Println("sirius date")
-	fmt.Println(v.ReportReviewDate)
-	fmt.Println(v.ReportDueDate)
-	fmt.Println(v.RequestedDate)
-	fmt.Println(v.CommissionedDate)
-	fmt.Println(v.ReportReceivedDate)
-
-	fmt.Println("parse 1")
-	fmt.Println(time.Now().UTC())
-	fmt.Println(v.ReportDueDate.UTC())
-	//fmt.Println(v.RequestedDate.Local())
-	//fmt.Println(v.CommissionedDate.Location())
-	fmt.Println(v.ReportReceivedDate)
 
 	return AssuranceVisitFormatted, err
 }

@@ -61,9 +61,6 @@ type DeputyEvent struct {
 	IsNewEvent      bool
 }
 
-const TimelineDateTimeFormat string = "2006-01-02 15:04:05"
-const TimelineDateTimeDisplayFormat string = "02/01/2006 15:04:05"
-
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
 	var v DeputyEventCollection
 
