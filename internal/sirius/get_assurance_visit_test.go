@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+//
 //func TestAssuranceVisitReturned(t *testing.T) {
 //	mockClient := &mocks.MockClient{}
 //	client, _ := NewClient(mockClient, "http://localhost:3000")
@@ -18,14 +19,14 @@ import (
 //				  "label": "Visit",
 //				  "deprecated": null
 //				},
-//				"requestedDate":"2023-07-05T10:29:13+01:00",
+//				"requestedDate":"2023-07-05T10:29:13+00:00",
 //				"requestedBy": {
 //						"id":53,
 //						"displayName":"case manager"
 //				},
-//				"commissionedDate": "2023-04-06T01:00:00+01:00",
-//				"reportDueDate": "2023-04-26T01:00:00+01:00",
-//				"reportReceivedDate": "2023-04-28T01:00:00+01:00",
+//				"commissionedDate": "2023-04-06T01:00:00+00:00",
+//				"reportDueDate": "2023-04-06T01:00:00+00:00",
+//				"reportReceivedDate": "2023-04-06T01:00:00+00:00",
 //				"assuranceVisitOutcome": {
 //				 "handle": "CANCELLED",
 //				 "label": "Cancelled",
@@ -36,7 +37,7 @@ import (
 //				 "label": "Received",
 //				 "deprecated": null
 //				},
-//				"reportReviewDate": "2023-04-06T01:00:00+01:00,
+//				"reportReviewDate": "2023-04-06T01:00:00+00:00,
 //				"assuranceVisitReportMarkedAs": {
 //				 "handle": "RED",
 //				 "label": "Red",
@@ -62,14 +63,14 @@ import (
 //	expectedResponse := AssuranceVisit{
 //		Id:                  3,
 //		AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-//		RequestedDate:       FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+01:00"),
+//		RequestedDate:       FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+00:00"),
 //		RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
-//		CommissionedDate:    FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+01:00"),
-//		ReportDueDate:       FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+01:00"),
-//		ReportReceivedDate:  FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+01:00"),
+//		CommissionedDate:    FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+00:00"),
+//		ReportDueDate:       FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2023-04-06T01:00:00+00:00"),
+//		ReportReceivedDate:  FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2023-04-06T01:00:00+00:00"),
 //		VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
 //		PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
-//		ReportReviewDate:    FormatDateTimeStringIntoDateTime(DateTimeFormat, "2023-04-06T01:00:00+01:00"),
+//		ReportReviewDate:    FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2023-04-06T01:00:00+00:00"),
 //		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 //		Note:                "This is just to see the notes and it is below 1000 characters",
 //		VisitorAllocated:    "Jane Janeson",

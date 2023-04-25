@@ -55,6 +55,7 @@ func (c *Client) GetAssuranceVisits(ctx Context, deputyId int) ([]AssuranceVisit
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&k)
+
 	AssuranceVisitsFormatted := formatAssuranceVisits(k.AssuranceVisits, deputyId)
 
 	return AssuranceVisitsFormatted, err

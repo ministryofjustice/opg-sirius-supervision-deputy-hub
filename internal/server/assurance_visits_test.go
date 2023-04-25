@@ -56,7 +56,7 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	template := &mockTemplates{}
 
 	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2022",
+		ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 		VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 			Label:  "RED",
 			Handle: "RED",
@@ -68,7 +68,7 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	})
 
 	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2021",
+		ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 		AssuranceType: sirius.AssuranceTypes{
 			Handle: "VISIT",
 			Label:  "Visit",
@@ -107,7 +107,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			name: "Latest visit is reviewed",
 			visits: []sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 						Label:  "RED",
 						Handle: "RED",
@@ -126,7 +126,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			name: "Latest PDR visit is reviewed",
 			visits: []sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "PDR",
 						Label:  "PDR",
@@ -178,7 +178,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest visit has no RAG",
 			[]sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "VISIT",
 						Label:  "Visit",
@@ -194,7 +194,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			[]sirius.AssuranceVisits{
 				{},
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 						Label:  "RED",
 						Handle: "RED",
@@ -222,7 +222,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 					},
 				},
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2022-01-01T10:11:08+00:00"),
 				},
 			},
 			true,

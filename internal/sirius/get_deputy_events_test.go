@@ -7,47 +7,46 @@ import (
 	"testing"
 )
 
-//2022-02-02T00:00:00+00:00
 //func TestDeputyEventsReturned(t *testing.T) {
 //	mockClient := &mocks.MockClient{}
 //	client, _ := NewClient(mockClient, "http://localhost:3000")
 //
 //	json := `[
-//   {
-//     "id": 300,
-//     "hash": "AW",
-//     "timestamp": "2021-09-09T14:01:59+00:00",
-//     "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-//     "user": {
-//       "id": 41,
-//       "phoneNumber": "12345678",
-//       "displayName": "system admin",
-//       "email": "system.admin@opgtest.com"
-//     },
-//     "event": {
-//       "orderType": "pfa",
-//       "orderUid": "7000-0000-1995",
-//       "orderId": "58",
-//       "orderCourtRef": "03305972",
-//       "courtReferenceNumber": "03305972",
-//       "courtReference": "03305972",
-//       "personType": "Deputy",
-//       "personId": "76",
-//       "personUid": "7000-0000-2530",
-//       "personName": "Mx Bob Builder",
-//       "personCourtRef": null,
-//       "additionalPersons": [
-//         {
-//           "personType": "Client",
-//           "personId": "63",
-//           "personUid": "7000-0000-1961",
-//           "personName": "Test Name",
-//           "personCourtRef": "40124126"
-//         }
-//       ]
-//     }
-//   }
-// ]`
+//  {
+//    "id": 300,
+//    "hash": "AW",
+//    "timestamp": "2021-09-09T14:01:59+00:00",
+//    "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
+//    "user": {
+//      "id": 41,
+//      "phoneNumber": "12345678",
+//      "displayName": "system admin",
+//      "email": "system.admin@opgtest.com"
+//    },
+//    "event": {
+//      "orderType": "pfa",
+//      "orderUid": "7000-0000-1995",
+//      "orderId": "58",
+//      "orderCourtRef": "03305972",
+//      "courtReferenceNumber": "03305972",
+//      "courtReference": "03305972",
+//      "personType": "Deputy",
+//      "personId": "76",
+//      "personUid": "7000-0000-2530",
+//      "personName": "Mx Bob Builder",
+//      "personCourtRef": null,
+//      "additionalPersons": [
+//        {
+//          "personType": "Client",
+//          "personId": "63",
+//          "personUid": "7000-0000-1961",
+//          "personName": "Test Name",
+//          "personCourtRef": "40124126"
+//        }
+//      ]
+//    }
+//  }
+//]`
 //
 //	r := io.NopCloser(bytes.NewReader([]byte(json)))
 //
@@ -61,7 +60,7 @@ import (
 //	expectedResponse := DeputyEventCollection{
 //		DeputyEvent{
 //			TimelineEventId: 300,
-//			Timestamp:       ParseDateForTest("2021-09-09T14:01:59+00:00"),
+//			Timestamp:       FormatDateTimeStringIntoDateTime("2006-01-02T15:04:05+00:00", "2021-09-09T14:01:59+00:00"),
 //			EventType:       "DeputyLinkedToOrder",
 //			User:            User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678"},
 //			Event: Event{

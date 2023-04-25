@@ -109,17 +109,8 @@ func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
 
 		list = append(list, event)
 	}
-	for _, s := range v {
-		fmt.Println("time")
-		fmt.Println(s.Timestamp)
-	}
 
-	sortTimeLineNewestOneFirst(list)
-	for _, s := range list {
-		fmt.Println("list")
-		fmt.Println(s.Timestamp)
-	}
-	return list
+	return sortTimeLineNewestOneFirst(list)
 }
 
 func calculateIfNewEvent(changes []Changes) bool {

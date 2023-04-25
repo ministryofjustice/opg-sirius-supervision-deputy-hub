@@ -1,140 +1,143 @@
 package sirius
 
 import (
+	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-//func TestAssuranceVisitsReturned(t *testing.T) {
-//	mockClient := &mocks.MockClient{}
-//	client, _ := NewClient(mockClient, "http://localhost:3000")
-//
-//	json := `{
-//		"assuranceVisits":
-//			[
-//				{
-//					"id":3,
-//					"assuranceType": {
-//					  "handle": "VISIT",
-//					  "label": "Visit",
-//					  "deprecated": null
-//					},
-//					"requestedDate":"2022-06-25T12:16:34+00:00",
-//					"requestedBy": {
-//							"id":53,
-//							"displayName":"case manager"
-//					},
-//					"commissionedDate": "2022-01-01T00:00:00+00:00",
-//					"reportDueDate": "2022-01-07T00:00:00+00:00",
-//					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
-//					"assuranceVisitOutcome": {
-//					  "handle": "CANCELLED",
-//					  "label": "Cancelled",
-//					  "deprecated": null
-//					},
-//					"pdrOutcome": null,
-//					"reportReviewDate": "2022-02-02T00:00:00+00:00",
-//					"assuranceVisitReportMarkedAs": {
-//					  "handle": "RED",
-//					  "label": "Red",
-//					  "deprecated": null
-//					},
-//					"visitorAllocated": "Jane Janeson",
-//					"reviewedBy": {
-//					  "id": 53,
-//					  "displayName": "case manager"
-//					},
-//					"note": "This is just notes for something to show"
-//				},
-//				{
-//					"id":4,
-//					"assuranceType": {
-//					  "handle": "PDR",
-//					  "label": "PDR",
-//					  "deprecated": null
-//					},
-//					"requestedDate":"2022-06-25T12:16:34+00:00",
-//					"requestedBy": {
-//							"id":53,
-//							"displayName":"case manager"
-//					},
-//					"commissionedDate": "2022-01-01T00:00:00+00:00",
-//					"reportDueDate": "2022-01-07T00:00:00+00:00",
-//					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
-//					"assuranceVisitOutcome": null,
-//					"pdrOutcome": {
-//					  "handle": "RECEIVED",
-//					  "label": "Received",
-//					  "deprecated": null
-//					},
-//					"reportReviewDate": "2022-02-02T00:00:00+00:00",
-//					"assuranceVisitReportMarkedAs": {
-//					  "handle": "RED",
-//					  "label": "Red",
-//					  "deprecated": null
-//					},
-//					"visitorAllocated": "Jane Janeson",
-//					"reviewedBy": {
-//					  "id": 53,
-//					  "displayName": "case manager"
-//					},
-//					"note": ""
-//				}
-//			]
-//		}`
-//
-//	r := io.NopCloser(bytes.NewReader([]byte(json)))
-//
-//	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
-//		return &http.Response{
-//			StatusCode: 200,
-//			Body:       r,
-//		}, nil
-//	}
-//
-//	expectedResponse := []AssuranceVisits{
-//		{
-//			VisitId:             3,
-//			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-//			RequestedDate:       FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "25/06/2022"),
-//			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
-//			DeputyId:            1,
-//			CommissionedDate:    FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "01/01/2022"),
-//			ReportDueDate:       FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "07/01/2022"),
-//			ReportReceivedDate:  FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "07/01/2022"),
-//			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
-//			ReportReviewDate:    FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "02/02/2022"),
-//			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-//			Note:                "This is just notes for something to show",
-//			VisitorAllocated:    "Jane Janeson",
-//			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
-//		},
-//		{
-//			VisitId:             4,
-//			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
-//			RequestedDate:       FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "25/06/2022"),
-//			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
-//			DeputyId:            1,
-//			CommissionedDate:    FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "01/01/2022"),
-//			ReportDueDate:       FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "07/01/2022"),
-//			ReportReceivedDate:  FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "07/01/2022"),
-//			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
-//			ReportReviewDate:    FormatDateTimeStringIntoDateTime(DateTimeDisplayFormat, "02/02/2022"),
-//			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-//			Note:                "",
-//			VisitorAllocated:    "Jane Janeson",
-//			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
-//		},
-//	}
-//
-//	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 1)
-//
-//	assert.Equal(t, expectedResponse, assuranceVisits)
-//	assert.Equal(t, nil, err)
-//}
+func TestAssuranceVisitsReturned(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `{
+		"assuranceVisits":
+			[
+				{
+					"id":3,
+					"assuranceType": {
+					  "handle": "VISIT",
+					  "label": "Visit",
+					  "deprecated": null
+					},
+					"requestedDate":"2023-04-01T15:04:05+00:00",
+					"requestedBy": {
+							"id":53,
+							"displayName":"case manager"
+					},
+					"commissionedDate": "2023-04-01T15:04:05+00:00",
+					"reportDueDate": "2023-04-01T15:04:05+00:00",
+					"reportReceivedDate": "2023-04-01T15:04:05+00:00",
+					"assuranceVisitOutcome": {
+					  "handle": "CANCELLED",
+					  "label": "Cancelled",
+					  "deprecated": null
+					},
+					"pdrOutcome": null,
+					"reportReviewDate": "2023-04-01T15:04:05+00:00",
+					"assuranceVisitReportMarkedAs": {
+					  "handle": "RED",
+					  "label": "Red",
+					  "deprecated": null
+					},
+					"visitorAllocated": "Jane Janeson",
+					"reviewedBy": {
+					  "id": 53,
+					  "displayName": "case manager"
+					},
+					"note": "This is just notes for something to show"
+				},
+				{
+					"id":4,
+					"assuranceType": {
+					  "handle": "PDR",
+					  "label": "PDR",
+					  "deprecated": null
+					},
+					"requestedDate":"2023-04-01T15:04:05+00:00",
+					"requestedBy": {
+							"id":53,
+							"displayName":"case manager"
+					},
+					"commissionedDate": "2023-04-01T15:04:05+00:00",
+					"reportDueDate": "2023-04-01T15:04:05+00:00",
+					"reportReceivedDate": "2023-04-01T15:04:05+00:00",
+					"assuranceVisitOutcome": null,
+					"pdrOutcome": {
+					  "handle": "RECEIVED",
+					  "label": "Received",
+					  "deprecated": null
+					},
+					"reportReviewDate": "2023-04-01T15:04:05+00:00",
+					"assuranceVisitReportMarkedAs": {
+					  "handle": "RED",
+					  "label": "Red",
+					  "deprecated": null
+					},
+					"visitorAllocated": "Jane Janeson",
+					"reviewedBy": {
+					  "id": 53,
+					  "displayName": "case manager"
+					},
+					"note": ""
+				}
+			]
+		}`
+
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := []AssuranceVisits{
+		{
+			VisitId:             3,
+			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
+			RequestedDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			DeputyId:            1,
+			CommissionedDate:    GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			ReportDueDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			ReportReceivedDate:  GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
+			ReportReviewDate:    GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			Note:                "This is just notes for something to show",
+			VisitorAllocated:    "Jane Janeson",
+			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
+		},
+		{
+			VisitId:             4,
+			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
+			RequestedDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			DeputyId:            1,
+			CommissionedDate:    GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			ReportDueDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			ReportReceivedDate:  GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
+			ReportReviewDate:    GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
+			Note:                "",
+			VisitorAllocated:    "Jane Janeson",
+			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
+		},
+	}
+
+	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 1)
+	assert.Equal(t, expectedResponse, assuranceVisits)
+	assert.Equal(t, nil, err)
+}
 
 func TestGetAssuranceVisitsReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -170,4 +173,10 @@ func TestGetAssuranceVisitsReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, assuranceVisits)
+}
+
+func GenerateTimeForTest(year int, month time.Month, day, hour, min, seconds int) time.Time {
+	location := time.FixedZone("", 0)
+	newTime := time.Date(year, month, day, hour, min, seconds, 0, location)
+	return newTime
 }
