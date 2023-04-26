@@ -22,21 +22,21 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				  "label": "Visit",
 				  "deprecated": null
 				},
-				"requestedDate":"2023-04-01T15:04:05+00:00",
+				"requestedDate":"2023-04-01T15:04:05Z",
 				"requestedBy": {
 						"id":53,
 						"displayName":"case manager"
 				},
-				"commissionedDate": "2023-05-01T15:04:05+00:00",
-				"reportDueDate": "2023-05-11T15:04:05+00:00",
-				"reportReceivedDate": "2023-04-22T15:04:05+00:00",
+				"commissionedDate": "2023-05-01T15:04:05Z",
+				"reportDueDate": "2023-05-11T15:04:05Z",
+				"reportReceivedDate": "2023-04-22T15:04:05Z",
 				"assuranceVisitOutcome": {
 				  "handle": "CANCELLED",
 				  "label": "Cancelled",
 				  "deprecated": null
 				},
 				"pdrOutcome": null,
-				"reportReviewDate": "2023-10-01T15:04:05+00:00",
+				"reportReviewDate": "2023-10-01T15:04:05Z",
 				"assuranceVisitReportMarkedAs": {
 				  "handle": "RED",
 				  "label": "Red",

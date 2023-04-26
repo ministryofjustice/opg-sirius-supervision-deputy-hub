@@ -19,7 +19,7 @@ func TestDeputyEventsReturned(t *testing.T) {
  {
    "id": 300,
    "hash": "AW",
-   "timestamp": "2021-09-09T14:01:59+00:00",
+   "timestamp": "2021-09-09T14:01:59Z",
    "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
    "user": {
      "id": 41,

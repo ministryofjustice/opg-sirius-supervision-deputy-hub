@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -20,9 +21,14 @@ import (
 
 func main() {
 	logger := logging.New(os.Stdout, "opg-sirius-supervision-deputy-hub ")
-	//loc, err := time.LoadLocation("Europe/London")
-	//// handle err
-	//time.Local = loc
+	// manually set time zone
+	if tz := os.Getenv("TZ"); tz != "" {
+		var err error
+		time.Local, err = time.LoadLocation(tz)
+		if err != nil {
+			log.Printf("error loading location '%s': %v\n", tz, err)
+		}
+	}
 
 	port := getEnv("PORT", "1234")
 	webDir := getEnv("WEB_DIR", "web")

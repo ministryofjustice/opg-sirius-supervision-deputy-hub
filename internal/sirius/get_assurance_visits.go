@@ -58,6 +58,11 @@ func (c *Client) GetAssuranceVisits(ctx Context, deputyId int) ([]AssuranceVisit
 
 	AssuranceVisitsFormatted := formatAssuranceVisits(k.AssuranceVisits, deputyId)
 
+	fmt.Println("time now")
+	fmt.Println(time.Now())
+	fmt.Println("local time now")
+	fmt.Println(time.Now().Local())
+
 	return AssuranceVisitsFormatted, err
 }
 
