@@ -4,23 +4,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type AssuranceVisit struct {
 	Id                  int                 `json:"id"`
 	AssuranceType       AssuranceTypes      `json:"assuranceType"`
-	RequestedDate       string              `json:"requestedDate"`
+	RequestedDate       time.Time           `json:"requestedDate"`
 	RequestedBy         User                `json:"requestedBy"`
-	CommissionedDate    string              `json:"commissionedDate"`
-	ReportDueDate       string              `json:"reportDueDate"`
-	ReportReceivedDate  string              `json:"reportReceivedDate"`
+	CommissionedDate    time.Time           `json:"commissionedDate"`
+	ReportDueDate       time.Time           `json:"reportDueDate"`
+	ReportReceivedDate  time.Time           `json:"reportReceivedDate"`
 	VisitOutcome        VisitOutcomeTypes   `json:"assuranceVisitOutcome"`
 	PdrOutcome          PdrOutcomeTypes     `json:"pdrOutcome"`
-	ReportReviewDate    string              `json:"reportReviewDate"`
+	ReportReviewDate    time.Time           `json:"reportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	Note                string              `json:"note"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
 	ReviewedBy          User                `json:"reviewedBy"`
+	NullDateForFrontEnd time.Time
 }
 
 func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (AssuranceVisit, error) {
@@ -48,27 +50,31 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
+
 	AssuranceVisitFormatted := formatAssuranceVisit(v)
 
 	return AssuranceVisitFormatted, err
 }
 
 func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
+	nullDate, _ := time.Parse("2006-01-02T15:04:05+00:00", "0001-01-01 00:00:00 +0000 UTC")
+
 	updatedVisit := AssuranceVisit{
 		AssuranceType:       v.AssuranceType,
-		RequestedDate:       FormatDateAndTime(DateTimeFormat, v.RequestedDate, DateTimeDisplayFormat),
+		RequestedDate:       v.RequestedDate,
 		Id:                  v.Id,
 		RequestedBy:         v.RequestedBy,
-		CommissionedDate:    FormatDateAndTime(DateTimeFormat, v.CommissionedDate, DateTimeDisplayFormat),
-		ReportDueDate:       FormatDateAndTime(DateTimeFormat, v.ReportDueDate, DateTimeDisplayFormat),
-		ReportReceivedDate:  FormatDateAndTime(DateTimeFormat, v.ReportReceivedDate, DateTimeDisplayFormat),
-		ReportReviewDate:    FormatDateAndTime(DateTimeFormat, v.ReportReviewDate, DateTimeDisplayFormat),
+		CommissionedDate:    v.CommissionedDate,
+		ReportDueDate:       v.ReportDueDate,
+		ReportReceivedDate:  v.ReportReceivedDate,
+		ReportReviewDate:    v.ReportReviewDate,
 		VisitOutcome:        v.VisitOutcome,
 		PdrOutcome:          v.PdrOutcome,
 		VisitReportMarkedAs: v.VisitReportMarkedAs,
 		Note:                v.Note,
 		VisitorAllocated:    v.VisitorAllocated,
 		ReviewedBy:          v.ReviewedBy,
+		NullDateForFrontEnd: nullDate,
 	}
 
 	return updatedVisit
