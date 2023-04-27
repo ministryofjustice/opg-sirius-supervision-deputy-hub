@@ -18,27 +18,27 @@ type apiOrder struct {
 			Label string `json:"label"`
 		}
 	}
-	OrderDate string `json:"orderDate"`
+	OrderDate time.Time `json:"orderDate"`
 }
 
 type apiOrders []apiOrder
 
 type apiReport struct {
-	DueDate        string `json:"dueDate"`
-	RevisedDueDate string `json:"revisedDueDate"`
+	DueDate        time.Time `json:"dueDate"`
+	RevisedDueDate time.Time `json:"revisedDueDate"`
 	Status         struct {
 		Label string `json:"label"`
 	} `json:"status"`
 }
 
 type reportReturned struct {
-	DueDate        string
-	RevisedDueDate string
+	DueDate        time.Time
+	RevisedDueDate time.Time
 	StatusLabel    string
 }
 
 type apiLatestCompletedVisit struct {
-	VisitCompletedDate  string
+	VisitCompletedDate  time.Time
 	VisitReportMarkedAs struct {
 		Label string `json:"label"`
 	} `json:"visitReportMarkedAs"`
@@ -48,10 +48,11 @@ type apiLatestCompletedVisit struct {
 }
 
 type latestCompletedVisit struct {
-	VisitCompletedDate  string
+	VisitCompletedDate  time.Time
 	VisitReportMarkedAs string
 	VisitUrgency        string
 	RagRatingLowerCase  string
+	NullDateForFrontEnd time.Time
 }
 
 type apiClient struct {
@@ -168,10 +169,11 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 					t.OldestReport.Status.Label,
 				},
 				LatestCompletedVisit: latestCompletedVisit{
-					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
+					t.LatestCompletedVisit.VisitCompletedDate,
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
 					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+					GetNullDate(),
 				},
 			}
 			clients = append(clients, client)
@@ -228,9 +230,6 @@ func restructureOrders(apiOrders apiOrders) Orders {
 	orders := make(Orders, len(apiOrders))
 
 	for i, t := range apiOrders {
-		// reformatting order date to yyyy-dd-mm
-		reformattedDate := formatDate(t.OrderDate)
-
 		var supervisionLevel string
 		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
 			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
@@ -241,17 +240,12 @@ func restructureOrders(apiOrders apiOrders) Orders {
 		orders[i] = Order{
 			OrderStatus:      t.OrderStatus.Label,
 			SupervisionLevel: supervisionLevel,
-			OrderDate:        reformattedDate,
+			OrderDate:        t.OrderDate,
 		}
 	}
 
 	updatedOrders := removeOpenStatusOrders(orders)
 	return updatedOrders
-}
-
-func formatDate(dateString string) time.Time {
-	dateTime, _ := time.Parse("02/01/2006", dateString)
-	return dateTime
 }
 
 func removeOpenStatusOrders(orders Orders) Orders {
@@ -291,22 +285,21 @@ func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDe
 	return clients
 }
 
-func setDueDateForSort(dueDate, revisedDueDate string) string {
-	if revisedDueDate != "" {
+func setDueDateForSort(dueDate, revisedDueDate time.Time) time.Time {
+	nullDate := GetNullDate()
+	if revisedDueDate != nullDate {
 		return revisedDueDate
-	} else if dueDate != "" {
+	} else if dueDate != nullDate {
 		return dueDate
 	} else {
-		return "12/12/9999"
+		return GenerateTimeForTest(9999, time.December, 12, 0, 0, 0)
 	}
 }
 
 func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
 	sort.Slice(clients, func(i, j int) bool {
-		x := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
-		y := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
-		dateTimeI := formatDate(x)
-		dateTimeJ := formatDate(y)
+		dateTimeI := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
+		dateTimeJ := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
 
 		if sortOrder == "asc" {
 			return dateTimeI.Before(dateTimeJ)
@@ -329,12 +322,4 @@ func changeSortButtonDirection(sortOrder string, columnBeingSorted string, funct
 		return "none"
 	}
 
-}
-
-func reformatCompletedDate(unformattedDate string) string {
-	if len(unformattedDate) > 1 {
-		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
-		return date.Format("02/01/2006")
-	}
-	return ""
 }
