@@ -29,7 +29,7 @@
                             {{ if eq .Visit.CommissionedDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.CommissionedDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.CommissionedDate.Local.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -59,7 +59,7 @@
                             {{ if eq .Visit.ReportDueDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportDueDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportDueDate.Local.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -76,7 +76,7 @@
                             {{ if eq .Visit.ReportReceivedDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReceivedDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportReceivedDate.Local.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>
@@ -118,7 +118,7 @@
                             {{ if eq .Visit.ReportReviewDate .Visit.NullDateForFrontEnd }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReviewDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportReviewDate.Local.Format "2006-01-02" }}"
                             {{ end }}
                     />
                 </div>

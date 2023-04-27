@@ -57,7 +57,7 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 }
 
 func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
-	nullDate, _ := time.Parse("2006-01-02T15:04:05+00:00", "0001-01-01 00:00:00 +0000 UTC")
+	nullDate := GetNullDate()
 
 	updatedVisit := AssuranceVisit{
 		AssuranceType:       v.AssuranceType,
