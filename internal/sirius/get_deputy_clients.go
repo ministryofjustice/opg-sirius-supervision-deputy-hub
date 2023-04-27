@@ -179,23 +179,23 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 	}
 
 	clientList.Clients = clients
-	//clientList.Pages = apiClientList.Pages
-	//clientList.TotalClients = apiClientList.TotalClients
-	//clientList.Metadata = apiClientList.Metadata
-	//
+	clientList.Pages = apiClientList.Pages
+	clientList.TotalClients = apiClientList.TotalClients
+	clientList.Metadata = apiClientList.Metadata
+
 	var aria AriaSorting
 	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
 	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "reportdue")
 	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "crec")
 
-	//switch columnBeingSorted {
-	//case "reportdue":
-	//	reportDueScoreSort(clients, sortOrder)
-	//case "crec":
-	//	crecScoreSort(clients, sortOrder)
-	//default:
-	//	alphabeticalSort(clients, sortOrder)
-	//}
+	switch columnBeingSorted {
+	case "reportdue":
+		reportDueScoreSort(clients, sortOrder)
+	case "crec":
+		crecScoreSort(clients, sortOrder)
+	default:
+		alphabeticalSort(clients, sortOrder)
+	}
 
 	return clientList, aria, err
 
@@ -247,11 +247,6 @@ func restructureOrders(apiOrders apiOrders) Orders {
 	updatedOrders := removeOpenStatusOrders(orders)
 	return updatedOrders
 }
-
-//func formatDate(dateString string) time.Time {
-//	dateTime, _ := time.Parse("02/01/2006", dateString)
-//	return dateTime
-//}
 
 func removeOpenStatusOrders(orders Orders) Orders {
 	/* An order is open when it's with the Allocations team,
@@ -305,8 +300,6 @@ func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 	sort.Slice(clients, func(i, j int) bool {
 		dateTimeI := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
 		dateTimeJ := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
-		//dateTimeI := formatDate(x)
-		//dateTimeJ := formatDate(y)
 
 		if sortOrder == "asc" {
 			return dateTimeI.Before(dateTimeJ)
@@ -330,11 +323,3 @@ func changeSortButtonDirection(sortOrder string, columnBeingSorted string, funct
 	}
 
 }
-
-//func reformatCompletedDate(unformattedDate string) string {
-//	if len(unformattedDate) > 1 {
-//		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
-//		return date.Format("02/01/2006")
-//	}
-//	return ""
-//}
