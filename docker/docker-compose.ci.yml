@@ -12,6 +12,7 @@ services:
       SIRIUS_URL: http://json-server:3000
       PREFIX: /supervision/deputies
       FEATURES:
+      TZ: "Europe/London"
 
   json-server:
     build:
