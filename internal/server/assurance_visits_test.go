@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -56,7 +57,7 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	template := &mockTemplates{}
 
 	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2022",
+		ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 		VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 			Label:  "RED",
 			Handle: "RED",
@@ -68,7 +69,7 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	})
 
 	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2021",
+		ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 		AssuranceType: sirius.AssuranceTypes{
 			Handle: "VISIT",
 			Label:  "Visit",
@@ -107,7 +108,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			name: "Latest visit is reviewed",
 			visits: []sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 						Label:  "RED",
 						Handle: "RED",
@@ -126,7 +127,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			name: "Latest PDR visit is reviewed",
 			visits: []sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "PDR",
 						Label:  "PDR",
@@ -178,7 +179,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest visit has no RAG",
 			[]sirius.AssuranceVisits{
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 					AssuranceType: sirius.AssuranceTypes{
 						Handle: "VISIT",
 						Label:  "Visit",
@@ -194,7 +195,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			[]sirius.AssuranceVisits{
 				{},
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
 						Label:  "RED",
 						Handle: "RED",
@@ -222,7 +223,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 					},
 				},
 				{
-					ReportReviewDate: "01/01/2022",
+					ReportReviewDate: sirius.GenerateTimeForTest(2022, time.January, 01, 10, 11, 8),
 				},
 			},
 			true,
