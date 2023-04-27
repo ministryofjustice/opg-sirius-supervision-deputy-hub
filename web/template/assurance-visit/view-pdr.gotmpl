@@ -11,7 +11,7 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Requested date</dt>
             <dd class="govuk-summary-list__value hook_requested_date">
-                {{ .RequestedDate.Format "02/01/2006" }}
+                {{ .RequestedDate.Local.Format "02/01/2006" }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -25,7 +25,7 @@
             <dt class="govuk-summary-list__key">PDR due date</dt>
             <dd class="govuk-summary-list__value hook_report_due_date">
                 {{ if ne .ReportDueDate .NullDateForFrontEnd }}
-                    {{ .ReportDueDate.Format "02/01/2006" }}
+                    {{ .ReportDueDate.Local.Format "02/01/2006" }}
                 {{ else }}
                     -
                 {{ end }}
@@ -35,7 +35,7 @@
             <dt class="govuk-summary-list__key">PDR received date</dt>
             <dd class="govuk-summary-list__value hook_report_received_date">
                 {{ if ne .ReportReceivedDate .NullDateForFrontEnd }}
-                    {{ .ReportReceivedDate.Format "02/01/2006" }}
+                    {{ .ReportReceivedDate.Local.Format "02/01/2006" }}
                 {{ else }}
                     -
                 {{ end }}
@@ -55,7 +55,7 @@
             <dt class="govuk-summary-list__key">PDR reviewed date</dt>
             <dd class="govuk-summary-list__value hook_report_reviewed_date">
                 {{ if ne .ReportReviewDate .NullDateForFrontEnd }}
-                    {{ .ReportReviewDate.Format "02/01/2006" }}
+                    {{ .ReportReviewDate.Local.Format "02/01/2006" }}
                 {{ else }}
                     -
                 {{ end }}
