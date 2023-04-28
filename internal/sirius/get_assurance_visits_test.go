@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -25,21 +26,21 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					  "label": "Visit",
 					  "deprecated": null
 					},
-					"requestedDate":"2022-06-25T12:16:34+00:00",
+					"requestedDate":"2023-04-01T15:04:05Z",
 					"requestedBy": {
 							"id":53,
 							"displayName":"case manager"
 					},
-					"commissionedDate": "2022-01-01T00:00:00+00:00",
-					"reportDueDate": "2022-01-07T00:00:00+00:00",
-					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
+					"commissionedDate": "2023-05-01T15:04:05Z",
+					"reportDueDate": "2023-05-11T15:04:05Z",
+					"reportReceivedDate": "2023-04-22T15:04:05Z",
 					"assuranceVisitOutcome": {
 					  "handle": "CANCELLED",
 					  "label": "Cancelled",
 					  "deprecated": null
 					},
 					"pdrOutcome": null,
-					"reportReviewDate": "2022-02-02T00:00:00+00:00",
+					"reportReviewDate": "2023-10-01T15:04:05Z",
 					"assuranceVisitReportMarkedAs": {
 					  "handle": "RED",
 					  "label": "Red",
@@ -59,21 +60,21 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					  "label": "PDR",
 					  "deprecated": null
 					},
-					"requestedDate":"2022-06-25T12:16:34+00:00",
+					"requestedDate":"2023-04-01T15:04:05Z",
 					"requestedBy": {
 							"id":53,
 							"displayName":"case manager"
 					},
-					"commissionedDate": "2022-01-01T00:00:00+00:00",
-					"reportDueDate": "2022-01-07T00:00:00+00:00",
-					"reportReceivedDate": "2022-01-07T00:00:00+00:00",
+					"commissionedDate": "2023-05-01T15:04:05Z",
+					"reportDueDate": "2023-05-11T15:04:05Z",
+					"reportReceivedDate": "2023-04-22T15:04:05Z",
 					"assuranceVisitOutcome": null,
 					"pdrOutcome": {
 					  "handle": "RECEIVED",
 					  "label": "Received",
 					  "deprecated": null
 					},
-					"reportReviewDate": "2022-02-02T00:00:00+00:00",
+					"reportReviewDate": "2023-10-01T15:04:05Z",
 					"assuranceVisitReportMarkedAs": {
 					  "handle": "RED",
 					  "label": "Red",
@@ -102,14 +103,14 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 		{
 			VisitId:             3,
 			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-			RequestedDate:       "25/06/2022",
+			RequestedDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
 			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
 			DeputyId:            1,
-			CommissionedDate:    "01/01/2022",
-			ReportDueDate:       "07/01/2022",
-			ReportReceivedDate:  "07/01/2022",
+			CommissionedDate:    GenerateTimeForTest(2023, time.May, 01, 15, 04, 5),
+			ReportDueDate:       GenerateTimeForTest(2023, time.May, 11, 15, 04, 5),
+			ReportReceivedDate:  GenerateTimeForTest(2023, time.April, 22, 15, 04, 5),
 			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
-			ReportReviewDate:    "02/02/2022",
+			ReportReviewDate:    GenerateTimeForTest(2023, time.October, 01, 15, 04, 5),
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 			Note:                "This is just notes for something to show",
 			VisitorAllocated:    "Jane Janeson",
@@ -118,14 +119,14 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 		{
 			VisitId:             4,
 			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
-			RequestedDate:       "25/06/2022",
+			RequestedDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
 			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
 			DeputyId:            1,
-			CommissionedDate:    "01/01/2022",
-			ReportDueDate:       "07/01/2022",
-			ReportReceivedDate:  "07/01/2022",
+			CommissionedDate:    GenerateTimeForTest(2023, time.May, 01, 15, 04, 5),
+			ReportDueDate:       GenerateTimeForTest(2023, time.May, 11, 15, 04, 5),
+			ReportReceivedDate:  GenerateTimeForTest(2023, time.April, 22, 15, 04, 5),
 			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
-			ReportReviewDate:    "02/02/2022",
+			ReportReviewDate:    GenerateTimeForTest(2023, time.October, 01, 15, 04, 5),
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 			Note:                "",
 			VisitorAllocated:    "Jane Janeson",
@@ -134,7 +135,6 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 	}
 
 	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 1)
-
 	assert.Equal(t, expectedResponse, assuranceVisits)
 	assert.Equal(t, nil, err)
 }
