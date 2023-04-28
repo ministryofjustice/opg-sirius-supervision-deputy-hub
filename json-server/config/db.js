@@ -1402,7 +1402,7 @@ module.exports = function () {
             {
                 "id": 392,
                 "hash": "AW",
-                "timestamp": "2021-09-09 14:01:59",
+                "timestamp": "2021-09-09T14:01:59Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
                 "user": {
                     "id": 41,
@@ -1436,7 +1436,7 @@ module.exports = function () {
             {
                 "id": 377,
                 "hash": "AS",
-                "timestamp": "2022-04-22 15:57:11",
+                "timestamp": "2022-04-22T15:57:11Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Person\\DeputyContactDetailsChanged",
                 "user": {
                     "id": 51,
@@ -1470,7 +1470,7 @@ module.exports = function () {
             {
                 "id": 388,
                 "hash": "AS",
-                "timestamp": "2022-03-22 15:57:11",
+                "timestamp": "2022-03-22T15:57:11Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
                 "user": {
                     "id": 51,
@@ -1503,7 +1503,7 @@ module.exports = function () {
             {
                 "id": 387,
                 "hash": "AR",
-                "timestamp": "2022-03-22 15:56:53",
+                "timestamp": "2022-03-22T15:56:53Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
                 "user": {
                     "id": 51,
@@ -1536,7 +1536,7 @@ module.exports = function () {
             {
                 "id": 402,
                 "hash": "AY",
-                "timestamp": "2021-11-24 14:01:59",
+                "timestamp": "2021-11-24T14:01:59Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocated",
                 "user": {
                     "id": 51,
@@ -1556,7 +1556,7 @@ module.exports = function () {
             {
                 "id": 394,
                 "hash": "AY",
-                "timestamp": "2021-09-09 14:01:59",
+                "timestamp": "2021-09-09T14:01:59Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged",
                 "user": {
                     "id": 41,
@@ -1598,7 +1598,7 @@ module.exports = function () {
             {
                 "id": 395,
                 "hash": "AY",
-                "timestamp": "2021-10-10 15:01:59",
+                "timestamp": "2021-10-10T15:01:59Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\PADeputyCreated",
                 "user": {
                     "id": 21,
@@ -1616,7 +1616,7 @@ module.exports = function () {
             {
                 "id": 396,
                 "hash": "AY",
-                "timestamp": "2021-10-10 15:01:59",
+                "timestamp": "2021-10-10T15:01:59Z",
                 "eventType": "Opg\\Core\\Model\\Event\\Deputy\\AssuranceVisitAdded",
                 "user": {
                     "id": 21,
@@ -1659,7 +1659,7 @@ module.exports = function () {
                 "noteType": "ORDER_CREATED",
                 "description": "notes",
                 "name": "Note added",
-                "createdTime": "20/09/2021 08:50:13",
+                "createdTime": "2021-09-09T08:50:13Z",
                 "direction": null
             },
             {
@@ -1673,7 +1673,7 @@ module.exports = function () {
                 "noteType": "ORDER_STATUS_UPDATED",
                 "description": "...and here are the notes",
                 "name": "Email received",
-                "createdTime": "20/09/2021 08:50:12",
+                "createdTime": "2021-09-09T08:50:12Z",
                 "direction": null
             }
         ],

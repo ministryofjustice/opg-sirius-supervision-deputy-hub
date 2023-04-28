@@ -1,3 +1,4 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius.DeputyEvent*/ -}}
 {{ define "pa-deputy-allocated-to-ecm" }}
     <div class="moj-timeline__item" data-cy="deputy-allocated-ecm-event">
         <div class="moj-timeline__header">
@@ -9,7 +10,7 @@
             </p>
         </div>
         <p class="moj-timeline__date">
-            <time>{{ .Timestamp }}</time>
+            <time>{{ .Timestamp.Local.Format "02/01/2006 15:04:05" }}</time>
         </p>
     </div>
 {{ end }}
