@@ -23,7 +23,7 @@ describe("Timeline", () => {
             "contain",
             "by system admin (12345678)"
         );
-        cy.get("time").should("contain", "09/09/2021");
+        cy.get("time").should("contain", "09/09/2021 14:01:59");
         cy.get(".govuk-list > :nth-child(1)").should(
             "contain",
             "Order number: 03305972"

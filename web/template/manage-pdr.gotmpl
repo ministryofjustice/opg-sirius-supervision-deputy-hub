@@ -15,6 +15,8 @@
                     name="xsrfToken"
                     value="{{ .XSRFToken }}"/>
 
+                {{ $nullDateValue := "0001-01-01" }}
+
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="report-due-date">
                         PDR due date
@@ -25,10 +27,10 @@
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportDueDate .Visit.NullDateForFrontEnd }}
+                            {{ if eq .Visit.ReportDueDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportDueDate.Local.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportDueDate }}"
                             {{ end }}
                     />
                 </div>
@@ -42,10 +44,10 @@
                         name="report-received-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReceivedDate .Visit.NullDateForFrontEnd }}
+                            {{ if eq .Visit.ReportReceivedDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReceivedDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportReceivedDate }}"
                             {{ end }}
                     />
                 </div>
@@ -83,10 +85,10 @@
                         name="report-review-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReviewDate .Visit.NullDateForFrontEnd }}
+                            {{ if eq .Visit.ReportReviewDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReviewDate.Format "2006-01-02" }}"
+                                value="{{ .Visit.ReportReviewDate }}"
                             {{ end }}
                     />
                 </div>

@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 func TestDeputyNotesReturned(t *testing.T) {
@@ -27,7 +26,7 @@ func TestDeputyNotesReturned(t *testing.T) {
       "noteType": "ORDER_CREATED",
       "description": "notes",
       "name": "This is a HW order...",
-      "createdTime": "2021-09-09T08:50:13Z",
+      "createdTime": "20/09/2021 08:50:13",
       "direction": null
     },
     {
@@ -41,7 +40,7 @@ func TestDeputyNotesReturned(t *testing.T) {
       "noteType": "ORDER_STATUS_UPDATED",
       "description": "...and here are the order status notes",
       "name": null,
-      "createdTime": "2021-09-09T08:50:12Z",
+      "createdTime": "20/09/2021 08:50:12",
       "direction": null
     }
   ]`
@@ -67,7 +66,7 @@ func TestDeputyNotesReturned(t *testing.T) {
 			NoteType:        "ORDER_CREATED",
 			NoteText:        "notes",
 			Name:            "This is a HW order...",
-			Timestamp:       GenerateTimeForTest(2021, time.September, 9, 8, 50, 13),
+			Timestamp:       "20/09/2021 08:50:13",
 			Direction:       "",
 		},
 		DeputyNote{
@@ -81,7 +80,7 @@ func TestDeputyNotesReturned(t *testing.T) {
 			NoteType:        "ORDER_STATUS_UPDATED",
 			NoteText:        "...and here are the order status notes",
 			Name:            "",
-			Timestamp:       GenerateTimeForTest(2021, time.September, 9, 8, 50, 12),
+			Timestamp:       "20/09/2021 08:50:12",
 			Direction:       "",
 		},
 	}

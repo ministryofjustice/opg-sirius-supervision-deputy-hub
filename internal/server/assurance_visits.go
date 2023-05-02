@@ -1,10 +1,11 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type AssuranceVisit interface {
@@ -52,6 +53,7 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			SuccessMessage:  successMessage,
 			AssuranceVisits: visits,
 		}
+
 		vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(visits)
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
@@ -59,16 +61,14 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 }
 
 func isAddVisitDisabled(visits []sirius.AssuranceVisits) (bool, string) {
-	nullDate := sirius.GetNullDate()
-
 	if len(visits) > 0 {
 		if visits[0].AssuranceType.Label == "PDR" {
-			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || (visits[0].ReportReviewDate != nullDate) {
+			if visits[0].PdrOutcome.Handle == "NOT_RECEIVED" || (visits[0].ReportReviewDate != "") {
 				return false, ""
 			}
 			return true, "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'"
 		}
-		if (visits[0].ReportReviewDate != nullDate && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled" {
+		if (visits[0].ReportReviewDate != "" && visits[0].VisitReportMarkedAs.Label != "") || visits[0].VisitOutcome.Label == "Cancelled" {
 			return false, ""
 		}
 		return true, "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled"

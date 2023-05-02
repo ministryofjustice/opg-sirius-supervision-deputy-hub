@@ -2,13 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAssuranceVisitReturned(t *testing.T) {
@@ -22,21 +22,25 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				  "label": "Visit",
 				  "deprecated": null
 				},
-				"requestedDate":"2023-04-01T15:04:05Z",
+				"requestedDate":"2022-06-25T12:16:34+00:00",
 				"requestedBy": {
 						"id":53,
 						"displayName":"case manager"
 				},
-				"commissionedDate": "2023-05-01T15:04:05Z",
-				"reportDueDate": "2023-05-11T15:04:05Z",
-				"reportReceivedDate": "2023-04-22T15:04:05Z",
+				"commissionedDate": "2022-01-01T00:00:00+00:00",
+				"reportDueDate": "2022-01-07T00:00:00+00:00",
+				"reportReceivedDate": "2022-01-07T00:00:00+00:00",
 				"assuranceVisitOutcome": {
 				  "handle": "CANCELLED",
 				  "label": "Cancelled",
 				  "deprecated": null
 				},
-				"pdrOutcome": null,
-				"reportReviewDate": "2023-10-01T15:04:05Z",
+				"pdrOutcome": {
+				  "handle": "RECEIVED",
+				  "label": "Received",
+				  "deprecated": null
+				},
+				"reportReviewDate": "2022-02-02T00:00:00+00:00",
 				"assuranceVisitReportMarkedAs": {
 				  "handle": "RED",
 				  "label": "Red",
@@ -47,7 +51,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				  "id": 53,
 				  "displayName": "case manager"
 				},
-				"note": "This is just notes for something to show"
+				"note" : "This is just to see the notes and it is below 1000 characters"
 			}`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
@@ -62,15 +66,16 @@ func TestAssuranceVisitReturned(t *testing.T) {
 	expectedResponse := AssuranceVisit{
 		Id:                  3,
 		AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-		RequestedDate:       GenerateTimeForTest(2023, time.April, 01, 15, 04, 5),
+		RequestedDate:       "2022-06-25",
 		RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
-		CommissionedDate:    GenerateTimeForTest(2023, time.May, 01, 15, 04, 5),
-		ReportDueDate:       GenerateTimeForTest(2023, time.May, 11, 15, 04, 5),
-		ReportReceivedDate:  GenerateTimeForTest(2023, time.April, 22, 15, 04, 5),
+		CommissionedDate:    "2022-01-01",
+		ReportDueDate:       "2022-01-07",
+		ReportReceivedDate:  "2022-01-07",
 		VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
-		ReportReviewDate:    GenerateTimeForTest(2023, time.October, 01, 15, 04, 5),
+		PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
+		ReportReviewDate:    "2022-02-02",
 		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-		Note:                "This is just notes for something to show",
+		Note:                "This is just to see the notes and it is below 1000 characters",
 		VisitorAllocated:    "Jane Janeson",
 		ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
 	}
