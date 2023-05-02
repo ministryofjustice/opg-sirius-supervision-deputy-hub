@@ -1,4 +1,3 @@
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius.DeputyEvent*/ -}}
 {{ define "deputy-information-updated" }}
     <div class="moj-timeline__item" data-cy="deputy-information-event">
         <div class="moj-timeline__header">
@@ -10,7 +9,7 @@
             </p>
         </div>
         <p class="moj-timeline__date">
-            <time>{{ .Timestamp.Local.Format "02/01/2006 15:04:05" }}</time>
+            <time>{{ .Timestamp }}</time>
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">

@@ -2,13 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDeputyEventsReturned(t *testing.T) {
@@ -16,41 +16,41 @@ func TestDeputyEventsReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `[
- {
-   "id": 300,
-   "hash": "AW",
-   "timestamp": "2021-09-09T14:01:59Z",
-   "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-   "user": {
-     "id": 41,
-     "phoneNumber": "12345678",
-     "displayName": "system admin",
-     "email": "system.admin@opgtest.com"
-   },
-   "event": {
-     "orderType": "pfa",
-     "orderUid": "7000-0000-1995",
-     "orderId": "58",
-     "orderCourtRef": "03305972",
-     "courtReferenceNumber": "03305972",
-     "courtReference": "03305972",
-     "personType": "Deputy",
-     "personId": "76",
-     "personUid": "7000-0000-2530",
-     "personName": "Mx Bob Builder",
-     "personCourtRef": null,
-     "additionalPersons": [
-       {
-         "personType": "Client",
-         "personId": "63",
-         "personUid": "7000-0000-1961",
-         "personName": "Test Name",
-         "personCourtRef": "40124126"
-       }
-     ]
-   }
- }
-]`
+    {
+      "id": 300,
+      "hash": "AW",
+      "timestamp": "2021-09-09 14:01:59",
+      "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
+      "user": {
+        "id": 41,
+        "phoneNumber": "12345678",
+        "displayName": "system admin",
+        "email": "system.admin@opgtest.com"
+      },
+      "event": {
+        "orderType": "pfa",
+        "orderUid": "7000-0000-1995",
+        "orderId": "58",
+        "orderCourtRef": "03305972",
+        "courtReferenceNumber": "03305972",
+        "courtReference": "03305972",
+        "personType": "Deputy",
+        "personId": "76",
+        "personUid": "7000-0000-2530",
+        "personName": "Mx Bob Builder",
+        "personCourtRef": null,
+        "additionalPersons": [
+          {
+            "personType": "Client",
+            "personId": "63",
+            "personUid": "7000-0000-1961",
+            "personName": "Test Name",
+            "personCourtRef": "40124126"
+          }
+        ]
+      }
+    }
+  ]`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -64,7 +64,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 300,
-			Timestamp:       GenerateTimeForTest(2021, time.September, 9, 14, 01, 59),
+			Timestamp:       "09/09/2021 14:01:59",
 			EventType:       "DeputyLinkedToOrder",
 			User:            User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678"},
 			Event: Event{
@@ -130,7 +130,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 	unsortedData := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp:       GenerateTimeForTest(2021, time.September, 9, 10, 12, 8),
+			Timestamp:       "19/10/2020 10:12:08",
 			EventType:       "PersonContactDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -161,7 +161,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 387,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 10, 12, 8),
+			Timestamp:       "18/10/2020 10:12:08",
 			EventType:       "PaDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -202,7 +202,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 390,
-			Timestamp:       GenerateTimeForTest(2020, time.September, 20, 10, 11, 8),
+			Timestamp:       "20/09/2020 10:11:08",
 			EventType:       "DeputyLinkedToOrder",
 			User: User{
 				UserId:          51,
@@ -229,7 +229,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 389,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 16, 10, 11, 8),
+			Timestamp:       "16/10/2020 10:11:08",
 			EventType:       "PADeputyCreated",
 			User: User{
 				UserId:          51,
@@ -251,7 +251,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp:       GenerateTimeForTest(2021, time.September, 9, 10, 12, 8),
+			Timestamp:       "19/10/2020 10:12:08",
 			EventType:       "PersonContactDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -282,7 +282,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 387,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 10, 12, 8),
+			Timestamp:       "18/10/2020 10:12:08",
 			EventType:       "PaDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -323,7 +323,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 389,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 16, 10, 11, 8),
+			Timestamp:       "16/10/2020 10:11:08",
 			EventType:       "PADeputyCreated",
 			User: User{
 				UserId:          51,
@@ -343,7 +343,7 @@ func TestSortTimeLineNewestOneFirst(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 390,
-			Timestamp:       GenerateTimeForTest(2020, time.September, 20, 10, 11, 8),
+			Timestamp:       "20/09/2020 10:11:08",
 			EventType:       "DeputyLinkedToOrder",
 			User: User{
 				UserId:          51,
@@ -376,7 +376,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	unsortedData := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 10, 11, 8),
+			Timestamp:       "2020-10-18 10:11:08",
 			EventType:       "Opg\\Core\\Model\\Event\\Order\\PersonContactDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -407,7 +407,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 387,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 11, 12, 8),
+			Timestamp:       "2020-10-18 11:12:08",
 			EventType:       "Opg\\Core\\Model\\Event\\Order\\PaDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -448,7 +448,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 390,
-			Timestamp:       GenerateTimeForTest(2020, time.September, 20, 10, 11, 8),
+			Timestamp:       "2020-09-20 10:11:08",
 			EventType:       "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
 			User: User{
 				UserId:          51,
@@ -475,7 +475,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 389,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 16, 10, 11, 8),
+			Timestamp:       "2020-10-16 10:11:08",
 			EventType:       "Opg\\Core\\Model\\Event\\Order\\PADeputyCreated",
 			User: User{
 				UserId:          51,
@@ -497,7 +497,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 387,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 11, 12, 8),
+			Timestamp:       "18/10/2020 11:12:08",
 			EventType:       "PaDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -538,7 +538,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 18, 10, 11, 8),
+			Timestamp:       "18/10/2020 10:11:08",
 			EventType:       "PersonContactDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -569,7 +569,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 389,
-			Timestamp:       GenerateTimeForTest(2020, time.October, 16, 10, 11, 8),
+			Timestamp:       "16/10/2020 10:11:08",
 			EventType:       "PADeputyCreated",
 			User: User{
 				UserId:          51,
@@ -589,7 +589,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 390,
-			Timestamp:       GenerateTimeForTest(2020, time.September, 20, 10, 11, 8),
+			Timestamp:       "20/09/2020 10:11:08",
 			EventType:       "DeputyLinkedToOrder",
 			User: User{
 				UserId:          51,

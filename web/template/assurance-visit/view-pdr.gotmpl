@@ -1,5 +1,3 @@
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius/AssuranceVisits*/ -}}
-
 {{ define "pdr" }}
     <dl id="assurance-visit-details" class="govuk-summary-list">
         <div class="govuk-summary-list__row">
@@ -11,7 +9,7 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Requested date</dt>
             <dd class="govuk-summary-list__value hook_requested_date">
-                {{ .RequestedDate.Local.Format "02/01/2006" }}
+                {{ .RequestedDate }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -20,12 +18,12 @@
                 {{ .RequestedBy.UserDisplayName }}
             </dd>
         </div>
-
+        {{ $nullDateValue:="01/01/0001" }}
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">PDR due date</dt>
             <dd class="govuk-summary-list__value hook_report_due_date">
-                {{ if ne .ReportDueDate .NullDateForFrontEnd }}
-                    {{ .ReportDueDate.Local.Format "02/01/2006" }}
+                {{ if ne .ReportDueDate $nullDateValue }}
+                    {{ .ReportDueDate }}
                 {{ else }}
                     -
                 {{ end }}
@@ -34,8 +32,8 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">PDR received date</dt>
             <dd class="govuk-summary-list__value hook_report_received_date">
-                {{ if ne .ReportReceivedDate .NullDateForFrontEnd }}
-                    {{ .ReportReceivedDate.Local.Format "02/01/2006" }}
+                {{ if ne .ReportReceivedDate $nullDateValue }}
+                    {{ .ReportReceivedDate }}
                 {{ else }}
                     -
                 {{ end }}
@@ -54,8 +52,8 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">PDR reviewed date</dt>
             <dd class="govuk-summary-list__value hook_report_reviewed_date">
-                {{ if ne .ReportReviewDate .NullDateForFrontEnd }}
-                    {{ .ReportReviewDate.Local.Format "02/01/2006" }}
+                {{ if ne .ReportReviewDate $nullDateValue }}
+                    {{ .ReportReviewDate }}
                 {{ else }}
                     -
                 {{ end }}
