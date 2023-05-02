@@ -4,24 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 type DeputyNoteCollection []DeputyNote
 
 type DeputyNote struct {
-	ID              int       `json:"id"`
-	DeputyId        int       `json:"personId"`
-	UserId          int       `json:"userId"`
-	UserDisplayName string    `json:"userDisplayName"`
-	UserEmail       string    `json:"userEmail"`
-	UserPhoneNumber string    `json:"userPhoneNumber"`
-	Type            string    `json:"type"`
-	NoteType        string    `json:"noteType"`
-	NoteText        string    `json:"description"`
-	Name            string    `json:"name"`
-	Timestamp       time.Time `json:"createdTime"`
-	Direction       string    `json:"direction"`
+	ID              int    `json:"id"`
+	DeputyId        int    `json:"personId"`
+	UserId          int    `json:"userId"`
+	UserDisplayName string `json:"userDisplayName"`
+	UserEmail       string `json:"userEmail"`
+	UserPhoneNumber string `json:"userPhoneNumber"`
+	Type            string `json:"type"`
+	NoteType        string `json:"noteType"`
+	NoteText        string `json:"description"`
+	Name            string `json:"name"`
+	Timestamp       string `json:"createdTime"`
+	Direction       string `json:"direction"`
 }
 
 func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
