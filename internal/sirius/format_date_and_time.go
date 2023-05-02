@@ -1,8 +1,6 @@
 package sirius
 
-import (
-	"time"
-)
+import "time"
 
 const DateTimeFormat string = "2006-01-02T15:04:05+00:00"
 const DateTimeDisplayFormat string = "2006-01-02"
