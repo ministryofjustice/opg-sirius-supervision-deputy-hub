@@ -201,8 +201,8 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 }
 
 /*
-	GetOrderStatus returns the status of the oldest active order for a client.
-  If there isn’t one, the status of the oldest order is returned.
+		GetOrderStatus returns the status of the oldest active order for a client.
+	  If there isn’t one, the status of the oldest order is returned.
 */
 func getOrderStatus(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
