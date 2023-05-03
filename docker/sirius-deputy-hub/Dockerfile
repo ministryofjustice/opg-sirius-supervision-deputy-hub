@@ -58,6 +58,7 @@ RUN apk --update --no-cache add \
     apk upgrade libcrypto3 libssl3 && \
     rm -rf /var/cache/apk/*
 RUN apk --no-cache add tzdata
+ENV TZ="Europe/London"
 
 COPY --from=build-env /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
 COPY --from=build-env /app/web/template web/template
