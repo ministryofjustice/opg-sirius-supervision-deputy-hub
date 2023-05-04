@@ -8,14 +8,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"time"
 )
 
 func AmendDateForDST(date string) string {
-	if time.Now().Local() != time.Now() {
-		return FormatDateAndTime(TimelineDateTimeDisplayFormat, date, TimelineDateTimeDisplayFormat)
-	}
-	return date
+	return FormatDateAndTime(TimelineDateTimeDisplayFormat, date, TimelineDateTimeDisplayFormat)
 }
 
 func TestDeputyEventsReturned(t *testing.T) {
