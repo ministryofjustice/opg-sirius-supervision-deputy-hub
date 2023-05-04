@@ -13,7 +13,3 @@ func FormatDateAndTime(formatForDateTime string, dateString string, displayLayou
 	dateTime := stringToDateTime.Local().Format(displayLayoutDateTime)
 	return dateTime
 }
-
-func isDST() bool {
-	return time.Now().Local() != time.Now()
-}

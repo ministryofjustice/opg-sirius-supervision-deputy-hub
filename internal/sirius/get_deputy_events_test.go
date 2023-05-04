@@ -8,10 +8,11 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func AmendDateForDST(date string) string {
-	if isDST() {
+	if time.Now().Local() != time.Now() {
 		return FormatDateAndTime(TimelineDateTimeDisplayFormat, date, TimelineDateTimeDisplayFormat)
 	}
 	return date
