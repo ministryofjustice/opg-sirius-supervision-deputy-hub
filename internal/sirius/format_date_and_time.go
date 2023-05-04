@@ -10,6 +10,6 @@ func FormatDateAndTime(formatForDateTime string, dateString string, displayLayou
 		return dateString
 	}
 	stringToDateTime, _ := time.Parse(formatForDateTime, dateString)
-	dateTime := stringToDateTime.Format(displayLayoutDateTime)
+	dateTime := stringToDateTime.Local().Format(displayLayoutDateTime)
 	return dateTime
 }
