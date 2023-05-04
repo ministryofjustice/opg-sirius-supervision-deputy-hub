@@ -2,55 +2,58 @@ package sirius
 
 import (
 	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 )
+
+func AmendDateForDST(date string) string {
+	return FormatDateAndTime(TimelineDateTimeDisplayFormat, date, TimelineDateTimeDisplayFormat)
+}
 
 func TestDeputyEventsReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `[
-    {
-      "id": 300,
-      "hash": "AW",
-      "timestamp": "2021-09-09 14:01:59",
-      "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-      "user": {
-        "id": 41,
-        "phoneNumber": "12345678",
-        "displayName": "system admin",
-        "email": "system.admin@opgtest.com"
-      },
-      "event": {
-        "orderType": "pfa",
-        "orderUid": "7000-0000-1995",
-        "orderId": "58",
-        "orderCourtRef": "03305972",
-        "courtReferenceNumber": "03305972",
-        "courtReference": "03305972",
-        "personType": "Deputy",
-        "personId": "76",
-        "personUid": "7000-0000-2530",
-        "personName": "Mx Bob Builder",
-        "personCourtRef": null,
-        "additionalPersons": [
-          {
-            "personType": "Client",
-            "personId": "63",
-            "personUid": "7000-0000-1961",
-            "personName": "Test Name",
-            "personCourtRef": "40124126"
-          }
-        ]
-      }
-    }
-  ]`
+   {
+     "id": 300,
+     "hash": "AW",
+     "timestamp": "2021-09-09 14:01:59",
+     "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
+     "user": {
+       "id": 41,
+       "phoneNumber": "12345678",
+       "displayName": "system admin",
+       "email": "system.admin@opgtest.com"
+     },
+     "event": {
+       "orderType": "pfa",
+       "orderUid": "7000-0000-1995",
+       "orderId": "58",
+       "orderCourtRef": "03305972",
+       "courtReferenceNumber": "03305972",
+       "courtReference": "03305972",
+       "personType": "Deputy",
+       "personId": "76",
+       "personUid": "7000-0000-2530",
+       "personName": "Mx Bob Builder",
+       "personCourtRef": null,
+       "additionalPersons": [
+         {
+           "personType": "Client",
+           "personId": "63",
+           "personUid": "7000-0000-1961",
+           "personName": "Test Name",
+           "personCourtRef": "40124126"
+         }
+       ]
+     }
+   }
+ ]`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -64,7 +67,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 300,
-			Timestamp:       "09/09/2021 14:01:59",
+			Timestamp:       AmendDateForDST("09/09/2021 14:01:59"),
 			EventType:       "DeputyLinkedToOrder",
 			User:            User{UserId: 41, UserDisplayName: "system admin", UserPhoneNumber: "12345678"},
 			Event: Event{
@@ -497,7 +500,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	expectedResponse := DeputyEventCollection{
 		DeputyEvent{
 			TimelineEventId: 387,
-			Timestamp:       "18/10/2020 11:12:08",
+			Timestamp:       AmendDateForDST("18/10/2020 11:12:08"),
 			EventType:       "PaDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -538,7 +541,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 388,
-			Timestamp:       "18/10/2020 10:11:08",
+			Timestamp:       AmendDateForDST("18/10/2020 10:11:08"),
 			EventType:       "PersonContactDetailsChanged",
 			User: User{
 				UserId:          51,
@@ -569,7 +572,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 389,
-			Timestamp:       "16/10/2020 10:11:08",
+			Timestamp:       AmendDateForDST("16/10/2020 10:11:08"),
 			EventType:       "PADeputyCreated",
 			User: User{
 				UserId:          51,
@@ -589,7 +592,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		DeputyEvent{
 			TimelineEventId: 390,
-			Timestamp:       "20/09/2020 10:11:08",
+			Timestamp:       AmendDateForDST("20/09/2020 10:11:08"),
 			EventType:       "DeputyLinkedToOrder",
 			User: User{
 				UserId:          51,
@@ -617,7 +620,6 @@ func TestEditDeputyEvents(t *testing.T) {
 	}
 	assert.Equal(t, expectedResponse, editDeputyEvents(unsortedData))
 }
-
 func TestCalculateIfNewEvent(t *testing.T) {
 	assert.Equal(t, true, calculateIfNewEvent(
 		[]Changes{
