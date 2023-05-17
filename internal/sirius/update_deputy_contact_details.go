@@ -18,6 +18,7 @@ type DeputyContactDetails struct {
 	AddressLine3     string `json:"addressLine3"`
 	Town             string `json:"town"`
 	County           string `json:"county"`
+	Country          string `json:"country"`
 	Postcode         string `json:"postcode"`
 	DeputySubType    string `json:"deputySubType"`
 }

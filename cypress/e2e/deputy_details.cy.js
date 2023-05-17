@@ -53,6 +53,9 @@ describe("Deputy details tab", () => {
             cy.get(
                 "#team-details > :nth-child(4) > .govuk-summary-list__value"
             ).should("contain", "Deputyship Team");
+            cy.get(
+                "#team-details > :nth-child(4) > .govuk-summary-list__value"
+            ).should("contain", "United Kingdom");
         });
 
         it("has a href link for email addresses", () => {
