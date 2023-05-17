@@ -60,7 +60,6 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 		AddressLine3:     "19 Market Rd",
 		Town:             "Chelmsford",
 		County:           "Essex",
-		Country:          "",
 		Postcode:         "CM1 1GG",
 		ExecutiveCaseManager: ExecutiveCaseManager{
 			EcmId:     11,
@@ -123,7 +122,6 @@ func TestDeputyDetailsReturnedPADefaultECM(t *testing.T) {
 		AddressLine3:     "19 Market Rd",
 		Town:             "Chelmsford",
 		County:           "Essex",
-		Country:          "",
 		Postcode:         "CM1 1GG",
 		ExecutiveCaseManager: ExecutiveCaseManager{
 			EcmId:     23,
@@ -157,7 +155,6 @@ func TestDeputyDetailsReturnedPRODefaultECM(t *testing.T) {
 		"addressLine3": "19 Market Rd",
 		"town": "Chelmsford",
 		"county": "Essex",
-		"country": "United Kingdom",
 		"postcode": "CM1 1GG",
 		"deputyType": {
 			"handle": "PRO",
@@ -187,7 +184,6 @@ func TestDeputyDetailsReturnedPRODefaultECM(t *testing.T) {
 		AddressLine3:     "19 Market Rd",
 		Town:             "Chelmsford",
 		County:           "Essex",
-		Country:          "United Kingdom",
 		Postcode:         "CM1 1GG",
 		ExecutiveCaseManager: ExecutiveCaseManager{
 			EcmId:     28,

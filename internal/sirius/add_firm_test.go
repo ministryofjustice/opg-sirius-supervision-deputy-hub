@@ -21,7 +21,7 @@ func TestAddFirm(t *testing.T) {
 		"addressLine2":"Address 2",
 		"addressLine3":"Address 3",
 		"town":"City",
-		"county":"County",
+		"county":"Country",
 		"postcode":"ff11bc",
 		"email":"Email_address@address.com",
 		"phoneNumber":"11111111"
@@ -42,7 +42,7 @@ func TestAddFirm(t *testing.T) {
 		AddressLine2: "Address 2",
 		AddressLine3: "Address 3",
 		Town:         "City",
-		County:       "County",
+		County:       "Country",
 		Postcode:     "ff11bc",
 		Email:        "Email_address@address.com",
 		PhoneNumber:  "11111111",

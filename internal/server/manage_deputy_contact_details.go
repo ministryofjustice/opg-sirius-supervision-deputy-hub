@@ -51,7 +51,6 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				AddressLine3:     r.PostFormValue("address-line-3"),
 				Town:             r.PostFormValue("town"),
 				County:           r.PostFormValue("county"),
-				Country:          r.PostFormValue("country"),
 				Postcode:         r.PostFormValue("postcode"),
 				PhoneNumber:      r.PostFormValue("telephone"),
 				Email:            r.PostFormValue("email"),

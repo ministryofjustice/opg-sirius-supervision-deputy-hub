@@ -26,7 +26,6 @@ func TestUpdateDeputyContactDetails(t *testing.T) {
     "AddressLine3":                     "r.PostFormValue("address-line-3")",
     "Town":                             "r.PostFormValue("town")",
     "County":                           "r.PostFormValue("county")",
-	"Country":                          "r.PostFormValue("country")",
     "Postcode":                         "r.PostFormValue("postcode")",
 	}`
 
@@ -47,7 +46,6 @@ func TestUpdateDeputyContactDetails(t *testing.T) {
 		AddressLine3: "address-line-3",
 		Town:         "town",
 		County:       "county",
-		Country:      "country",
 		Postcode:     "postcode",
 	}
 
@@ -72,7 +70,6 @@ func TestUpdateDeputyContactDetailsReturnsNewStatusError(t *testing.T) {
 		AddressLine3: "address-line-3",
 		Town:         "town",
 		County:       "county",
-		Country:      "country",
 		Postcode:     "postcode",
 	}
 
@@ -101,7 +98,6 @@ func TestUpdateDeputyContactDetailsReturnsUnauthorisedClientError(t *testing.T) 
 		AddressLine3: "address-line-3",
 		Town:         "town",
 		County:       "county",
-		Country:      "country",
 		Postcode:     "postcode",
 	}
 
