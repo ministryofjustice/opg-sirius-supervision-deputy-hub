@@ -53,7 +53,7 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 `yarn cypress-for-m1-build` <br>
 `yarn cypress-for-m1-up` <br>
 `yarn cypress-headless` This command will run all the cypress tests <br>
-`yarn cypress-headless --spec "cypress/e2e/A_FILE_NAME.spec.js` will only run the tests in that file
+`yarn cypress-headless --spec "cypress/e2e/A_FILE_NAME.cy.js"` will only run the tests in that file
 
 Only thing to note is that if there are any changers locally to a gotmpl file you will need to run<br>
 `cypress-build-down`<br>
