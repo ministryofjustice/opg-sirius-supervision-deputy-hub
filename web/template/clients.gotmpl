@@ -51,8 +51,7 @@
                         aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
                             Client
                         </button>
                     </th>
@@ -64,8 +63,7 @@
                         aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">
                             Client
                         </button>
                     </th>
@@ -77,8 +75,7 @@
                         aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
                             Client
                         </button>
                     </th>
@@ -99,8 +96,7 @@
                         aria-sort="none">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
                             Report due
                         </button>
                     </th>
@@ -112,8 +108,7 @@
                         aria-sort="ascending">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">
                             Report due
                         </button>
                     </th>
@@ -125,8 +120,7 @@
                         aria-sort="descending">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
                             Report due
                         </button>
                     </th>
@@ -139,8 +133,7 @@
                         aria-sort="none">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
                             Risk
                         </button>
                     </th>
@@ -152,8 +145,7 @@
                         aria-sort="ascending">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">
                             Risk
                         </button>
                     </th>
@@ -165,8 +157,7 @@
                         aria-sort="descending">
                         <button
                             type="button"
-                            data-sort={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}
-                            data-module="callHref">
+                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
                             Risk
                         </button>
                     </th>
