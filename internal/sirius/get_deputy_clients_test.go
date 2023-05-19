@@ -725,3 +725,10 @@ func TestRestructureOrdersReturnsEmptyStringForNilSupervisionLevel(t *testing.T)
 	}
 	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
 }
+
+func TestAriaSorting_GetHTMLSortDirection(t *testing.T) {
+	s := AriaSorting{}
+	assert.Equal(t, "desc", s.GetHTMLSortDirection("ascending"))
+	assert.Equal(t, "asc", s.GetHTMLSortDirection("descending"))
+	assert.Equal(t, "asc", s.GetHTMLSortDirection("none"))
+}

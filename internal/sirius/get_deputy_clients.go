@@ -338,3 +338,10 @@ func reformatCompletedDate(unformattedDate string) string {
 	}
 	return ""
 }
+
+func (s AriaSorting) GetHTMLSortDirection(direction string) string {
+	if direction == "ascending" {
+		return "desc"
+	}
+	return "asc"
+}

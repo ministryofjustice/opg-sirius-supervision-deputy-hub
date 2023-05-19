@@ -15,7 +15,7 @@ type DeputyHubClientInformation interface {
 	GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails
 }
 
-type listClientsVars struct {
+type ListClientsVars struct {
 	Path                 string
 	XSRFToken            string
 	AriaSorting          sirius.AriaSorting
@@ -53,7 +53,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
 
-		vars := listClientsVars{
+		vars := ListClientsVars{
 			Path:                 r.URL.Path,
 			XSRFToken:            ctx.XSRFToken,
 			DeputyClientsDetails: clientList.Clients,
