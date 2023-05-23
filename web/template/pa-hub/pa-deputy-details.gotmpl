@@ -85,12 +85,24 @@
                     <dd class="govuk-summary-list__value">
                         {{ .DeputyDetails.OrganisationTeamOrDepartmentName }}
                         <br />
-                        {{ .DeputyDetails.AddressLine1 }} <br />
-                        {{ .DeputyDetails.AddressLine2 }} <br />
-                        {{ .DeputyDetails.AddressLine3 }} <br />
-                        {{ .DeputyDetails.Town }} <br />
-                        {{ .DeputyDetails.County }} <br />
-                        {{ .DeputyDetails.Postcode }}
+                        {{ if ne .DeputyDetails.AddressLine1 ""}}
+                            {{ .DeputyDetails.AddressLine1 }} <br />
+                        {{ end }}
+                        {{ if ne .DeputyDetails.AddressLine2 ""}}
+                            {{ .DeputyDetails.AddressLine2 }} <br />
+                        {{ end }}
+                        {{ if ne .DeputyDetails.AddressLine3 ""}}
+                            {{ .DeputyDetails.AddressLine3 }} <br />
+                        {{ end }}
+                        {{ if ne .DeputyDetails.Town ""}}
+                            {{ .DeputyDetails.Town }} <br />
+                        {{ end }}
+                        {{ if ne .DeputyDetails.County ""}}
+                            {{ .DeputyDetails.County }} <br />
+                        {{ end }}
+                        {{ if ne .DeputyDetails.Postcode ""}}
+                            {{ .DeputyDetails.Postcode }} 
+                        {{ end }}
                     </dd>
                 </div>
             </dl>
