@@ -1,3 +1,4 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.ListClientsVars*/ -}}
 {{ template "page" . }}
 {{ define "main" }}
     {{ template "content-header" . }}
@@ -43,125 +44,45 @@
         <table id="pa-clients-3" class="govuk-table sortable">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                {{ if eq .AriaSorting.SurnameAriaSort "none" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-name-column-none"
-                        aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
-                            Client
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.SurnameAriaSort "ascending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-name-column-ascending"
-                        aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:desc" .DeputyDetails.ID) }}">
-                            Client
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.SurnameAriaSort "descending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-name-column-descending"
-                        aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=surname:asc" .DeputyDetails.ID) }}">
-                            Client
-                        </button>
-                    </th>
-                {{ end }}
-                <th scope="col" class="govuk-table__header">
-                    Accommodation type
+                <th
+                    scope="col"
+                    class="govuk-table__header"
+                    label="sort-name-column-{{ .AriaSorting.SurnameAriaSort }}"
+                    aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
+                    {{ $direction := (.AriaSorting.GetHTMLSortDirection .AriaSorting.SurnameAriaSort) }}
+                    <a class="sorting-arrows button"
+                       href="{{ prefix (printf "/%d/clients?sort=surname:%s" .DeputyDetails.ID $direction ) }}">
+                        Client
+                    </a>
                 </th>
+                <th scope="col" class="govuk-table__header">Accommodation type</th>
                 <th scope="col" class="govuk-table__header">Status</th>
-                <th scope="col" class="govuk-table__header">
-                    Supervision level
-                </th>
+                <th scope="col" class="govuk-table__header">Supervision level</th>
                 <th scope="col" class="govuk-table__header">Visits</th>
-                {{ if eq .AriaSorting.ReportDueAriaSort "none" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-due-date-column-none"
-                        aria-sort="none">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
-                            Report due
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.ReportDueAriaSort "ascending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-due-date-column-ascending"
-                        aria-sort="ascending">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:desc" .DeputyDetails.ID) }}">
-                            Report due
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.ReportDueAriaSort "descending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-due-date-column-descending"
-                        aria-sort="descending">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=reportdue:asc" .DeputyDetails.ID) }}">
-                            Report due
-                        </button>
-                    </th>
-                {{ end }}
-                {{ if eq .AriaSorting.CRECAriaSort "none" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-aria-column-none"
-                        aria-sort="none">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
-                            Risk
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.CRECAriaSort "ascending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-aria-column-ascending"
-                        aria-sort="ascending">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:desc" .DeputyDetails.ID) }}">
-                            Risk
-                        </button>
-                    </th>
-                {{ else if eq .AriaSorting.CRECAriaSort "descending" }}
-                    <th
-                        scope="col"
-                        class="govuk-table__header"
-                        label="sort-aria-column-descending"
-                        aria-sort="descending">
-                        <button
-                            type="button"
-                            onclick="window.location.href={{ prefix (printf "/%d/clients?sort=crec:asc" .DeputyDetails.ID) }}">
-                            Risk
-                        </button>
-                    </th>
-                {{ end }}
+                <th
+                    scope="col"
+                    class="govuk-table__header"
+                    label="sort-due-date-column-{{ .AriaSorting.ReportDueAriaSort }}"
+                    aria-sort="{{ .AriaSorting.ReportDueAriaSort }}">
+                    {{ $direction = (.AriaSorting.GetHTMLSortDirection .AriaSorting.ReportDueAriaSort) }}
+                    <a
+                        class="sorting-arrows button"
+                        href="{{ prefix (printf "/%d/clients?sort=reportdue:%s" .DeputyDetails.ID $direction) }}">
+                        Report due
+                    </a>
+                </th>
+                <th
+                    scope="col"
+                    class="govuk-table__header"
+                    label="sort-aria-column-{{ .AriaSorting.CRECAriaSort }}"
+                    aria-sort="{{ .AriaSorting.CRECAriaSort }}">
+                    {{ $direction = (.AriaSorting.GetHTMLSortDirection .AriaSorting.CRECAriaSort) }}
+                    <a
+                        class="sorting-arrows button"
+                        href="{{ prefix (printf "/%d/clients?sort=crec:%s" .DeputyDetails.ID $direction) }}">
+                        Risk
+                    </a>
+                </th>
             </tr>
             </thead>
 

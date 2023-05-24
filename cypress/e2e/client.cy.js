@@ -65,7 +65,7 @@ describe("Clients tab", () => {
         });
 
         it("Clients surname have been sorted in order of descending", () => {
-            cy.get('[label="sort-name-column-ascending"] > button').click();
+            cy.get('[label="sort-name-column-ascending"] > a').click();
             cy.get(":nth-child(1) > .client_name_ref > .govuk-link").should(
                 "contain",
                 "Here"
@@ -81,30 +81,30 @@ describe("Clients tab", () => {
         });
 
         it("Clients report due dates have been sorted in order of ascending", () => {
-            cy.get('[label="sort-due-date-column-none"] > button').click();
+            cy.get('[label="sort-due-date-column-none"] > a').click();
             cy.get(":nth-child(1) > .reports").should("contain", "21/12/2015");
             cy.get(":nth-child(2) > .reports").should("contain", "01/10/2018");
             cy.get(":nth-child(3) > .reports").should("contain", "-");
         });
 
         it("Clients report due dates have been sorted in order of descending", () => {
-            cy.get('[label="sort-due-date-column-none"] > button').click();
-            cy.get('[label="sort-due-date-column-ascending"] > button').click();
+            cy.get('[label="sort-due-date-column-none"] > a').click();
+            cy.get('[label="sort-due-date-column-ascending"] > a').click();
             cy.get(":nth-child(1) > .reports").should("contain", "-");
             cy.get(":nth-child(2) > .reports").should("contain", "01/10/2018");
             cy.get(":nth-child(3) > .reports").should("contain", "21/12/2015");
         });
 
         it("Clients risk have been sorted in order of ascending", () => {
-            cy.get('[label="sort-aria-column-none"] > button').click();
+            cy.get('[label="sort-aria-column-none"] > a').click();
             cy.get(":nth-child(1) > .data-crec").should("contain", "2");
             cy.get(":nth-child(2) > .data-crec").should("contain", "3");
             cy.get(":nth-child(3) > .data-crec").should("contain", "4");
         });
 
         it("Clients risk have been sorted in order of descending", () => {
-            cy.get('[label="sort-aria-column-none"] > button').click();
-            cy.get('[label="sort-aria-column-ascending"] > button').click();
+            cy.get('[label="sort-aria-column-none"] > a').click();
+            cy.get('[label="sort-aria-column-ascending"] > a').click();
             cy.get(":nth-child(1) > .data-crec").should("contain", "4");
             cy.get(":nth-child(2) > .data-crec").should("contain", "3");
             cy.get(":nth-child(3) > .data-crec").should("contain", "2");
