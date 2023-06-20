@@ -7,7 +7,7 @@ describe("Deputy Hub", () => {
 
     describe("Header", () => {
         it("shows opg sirius within banner", () => {
-            cy.contains(".moj-header__link", "Sirius - Supervision");
+            cy.contains(".moj-header__link", "Sirius");
         });
 
         const expectedTitle = ["Power of Attorney", "Supervision", "Admin", "Sign out"];
