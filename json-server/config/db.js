@@ -2043,7 +2043,7 @@ module.exports = function () {
                         },
                         "visitorAllocated": null,
                         "reviewedBy": null,
-                        "note" : ''
+                        "note": ''
                     },
                     {
                         "id": 33,
@@ -2101,7 +2101,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2160,7 +2160,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2214,7 +2214,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2258,7 +2258,7 @@ module.exports = function () {
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2297,7 +2297,7 @@ module.exports = function () {
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             }
@@ -2408,7 +2408,7 @@ module.exports = function () {
                 },
                 "visitorAllocated": null,
                 "reviewedBy": null,
-                "note" : 'Some notes that have been written here'
+                "note": 'Some notes that have been written here'
             },
             {
                 "id": 36,
@@ -2451,8 +2451,142 @@ module.exports = function () {
                 },
                 "visitorAllocated": null,
                 "reviewedBy": null,
-                "note" : 'Some notes that have been written here'
+                "note": 'Some notes that have been written here'
             }
-        ]
+        ],
+        "tasktypes": {
+            "task_types": {
+                "SAP": {
+                    "handle": "SAP",
+                    "incomplete": "Start Assurance process",
+                    "complete": "Start Assurance process",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "AVRD": {
+                    "handle": "AVRD",
+                    "incomplete": "Assurance visit report due",
+                    "complete": "Assurance visit report due",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "AVR": {
+                    "handle": "AVR",
+                    "incomplete": "Assurance visit review",
+                    "complete": "Assurance visit review",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "AVFU": {
+                    "handle": "AVFU",
+                    "incomplete": "Assurance visit follow up",
+                    "complete": "Assurance visit follow up",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "GE": {
+                    "handle": "GE",
+                    "incomplete": "General enquiry",
+                    "complete": "General enquiry",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "SFU": {
+                    "handle": "SFU",
+                    "incomplete": "Safeguarding follow up",
+                    "complete": "Safeguarding follow up",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "CFU": {
+                    "handle": "CFU",
+                    "incomplete": "Complaint follow up",
+                    "complete": "Complaint follow up",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "IIE": {
+                    "handle": "IIE",
+                    "incomplete": "Indemnity insurance expiry",
+                    "complete": "Indemnity insurance expiry",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
+                },
+                "IIR": {
+                    "handle": "IIR",
+                    "incomplete": "Indemnity insurance requested",
+                    "complete": "Indemnity insurance requested",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
+                },
+                "PRD": {
+                    "handle": "PRD",
+                    "incomplete": "PDR report due",
+                    "complete": "PDR report due",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
+                },
+                "PFU": {
+                    "handle": "PFU",
+                    "incomplete": "PDR follow up",
+                    "complete": "PDR follow up",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
+                },
+                "QCUC": {
+                    "handle": "QCUC",
+                    "incomplete": "Quarterly catch up call",
+                    "complete": "Quarterly catch up call",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": false,
+                    "paDeputyTask": true
+                },
+                "MSR": {
+                    "handle": "MSR",
+                    "incomplete": "Monthly spreadsheet return",
+                    "complete": "Monthly spreadsheet return",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": false,
+                    "paDeputyTask": true
+                }
+            }
+        }
     }
 }
