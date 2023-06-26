@@ -30,7 +30,7 @@
                                 <div class="govuk-radios">
                                     {{ range .TaskTypes }}
                                         <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="{{.Handle}}" name="{{.Handle}}"
+                                            <input class="govuk-radios__input" id="{{.Handle}}" name="tasktype"
                                                    type="radio"
                                                    value="{{.Handle}}">
                                             <label class="govuk-label govuk-radios__label"
@@ -43,7 +43,7 @@
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="duedate">Due date (required)</label>
-                            <input id="duedate" class="govuk-input govuk-input--width-10" name="duedate"
+                            <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
                                    value="{{.DueDate}}" type="date">
                         </div>
 

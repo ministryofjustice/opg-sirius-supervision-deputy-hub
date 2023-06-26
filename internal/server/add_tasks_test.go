@@ -80,82 +80,39 @@ func TestAddTask_success(t *testing.T) {
 	assert.Equal(returnedError, Redirect("/123/tasks?success=true"))
 }
 
-//func TestAddFirmValidationErrors(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockFirmInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"stringLengthTooLong": "The firm name must be 255 characters or fewer",
-//		},
-//	}
-//
-//	client.err = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//
-//	assert.Equal(addFirmVars{
-//		Path:   "/133",
-//		Errors: validationErrors,
-//	}, template.lastVars)
-//
-//	assert.Nil(returnedError)
-//}
-//
-//func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockFirmInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"isEmpty": "The firm name is required and can't be empty",
-//		},
-//	}
-//
-//	client.err = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//
-//	expectedValidationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"isEmpty": "The firm name is required and can't be empty",
-//		},
-//	}
-//
-//	assert.Equal(addFirmVars{
-//		Path:   "/133",
-//		Errors: expectedValidationErrors,
-//	}, template.lastVars)
-//
-//	assert.Nil(returnedError)
-//}
+func TestAddTaskValidationErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddTasksClient{}
+
+	validationErrors := sirius.ValidationErrors{
+		"dueDate": {
+			"dateFalseFormat": "This must be a real date",
+		},
+	}
+
+	client.err = sirius.ValidationError{
+		Errors: validationErrors,
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForAddTask(client, template)(sirius.DeputyDetails{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+
+	assert.Equal(AddTaskVars{
+		Path:   "/133",
+		Errors: validationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
