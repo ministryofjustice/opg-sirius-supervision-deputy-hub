@@ -29,7 +29,6 @@ func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoi
 	if err != nil {
 		return err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
