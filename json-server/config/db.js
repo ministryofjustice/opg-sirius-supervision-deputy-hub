@@ -1805,6 +1805,17 @@ module.exports = function () {
                         "stringLengthTooLong": "The other important information must be 1000 characters or fewer"
                     }
                 }
+            },
+            {
+                "id": "addTask",
+                "validation_errors": {
+                    "taskType": {
+                        "isEmpty": "Value is required and cannot be empty",
+                    },
+                    "dueDate": {
+                        "dateFalseFormat": "This must be a real date",
+                    },
+                }
             }
         ],
         "successes": [
@@ -2454,6 +2465,7 @@ module.exports = function () {
                 "note": 'Some notes that have been written here'
             }
         ],
+        "tasks": [],
         "tasktypes": {
             "task_types": {
                 "SAP": {
@@ -2464,7 +2476,7 @@ module.exports = function () {
                     "category": "deputy",
                     "ecmTask": false,
                     "proDeputyTask": true,
-                    "paDeputyTask": true
+                    "paDeputyTask": false
                 },
                 "AVRD": {
                     "handle": "AVRD",
@@ -2473,7 +2485,7 @@ module.exports = function () {
                     "user": true,
                     "category": "deputy",
                     "ecmTask": false,
-                    "proDeputyTask": true,
+                    "proDeputyTask": false,
                     "paDeputyTask": true
                 },
                 "AVR": {
@@ -2494,96 +2506,6 @@ module.exports = function () {
                     "category": "deputy",
                     "ecmTask": false,
                     "proDeputyTask": true,
-                    "paDeputyTask": true
-                },
-                "GE": {
-                    "handle": "GE",
-                    "incomplete": "General enquiry",
-                    "complete": "General enquiry",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": true
-                },
-                "SFU": {
-                    "handle": "SFU",
-                    "incomplete": "Safeguarding follow up",
-                    "complete": "Safeguarding follow up",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": true
-                },
-                "CFU": {
-                    "handle": "CFU",
-                    "incomplete": "Complaint follow up",
-                    "complete": "Complaint follow up",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": true
-                },
-                "IIE": {
-                    "handle": "IIE",
-                    "incomplete": "Indemnity insurance expiry",
-                    "complete": "Indemnity insurance expiry",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": false
-                },
-                "IIR": {
-                    "handle": "IIR",
-                    "incomplete": "Indemnity insurance requested",
-                    "complete": "Indemnity insurance requested",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": false
-                },
-                "PRD": {
-                    "handle": "PRD",
-                    "incomplete": "PDR report due",
-                    "complete": "PDR report due",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": false
-                },
-                "PFU": {
-                    "handle": "PFU",
-                    "incomplete": "PDR follow up",
-                    "complete": "PDR follow up",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": true,
-                    "paDeputyTask": false
-                },
-                "QCUC": {
-                    "handle": "QCUC",
-                    "incomplete": "Quarterly catch up call",
-                    "complete": "Quarterly catch up call",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": false,
-                    "paDeputyTask": true
-                },
-                "MSR": {
-                    "handle": "MSR",
-                    "incomplete": "Monthly spreadsheet return",
-                    "complete": "Monthly spreadsheet return",
-                    "user": true,
-                    "category": "deputy",
-                    "ecmTask": false,
-                    "proDeputyTask": false,
                     "paDeputyTask": true
                 }
             }

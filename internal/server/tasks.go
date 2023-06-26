@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
@@ -19,8 +20,8 @@ func renderTemplateForTasksTab(client TasksClient, tmpl Template) Handler {
 		switch r.Method {
 		case http.MethodGet:
 			successMessage := ""
-			if r.URL.Query().Get("success") == "true" {
-				successMessage = "Task added"
+			if taskName := r.URL.Query().Get("success"); taskName != "" {
+				successMessage = fmt.Sprintf("%s task added", taskName)
 			}
 
 			vars := deputyHubNotesVars{

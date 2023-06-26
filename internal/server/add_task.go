@@ -52,9 +52,9 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		} else {
 			var (
-				taskType = r.PostFormValue("taskType")
-				dueDate  = r.PostFormValue("dueDate")
-				notes    = r.PostFormValue("note")
+				taskType = r.PostFormValue("tasktype")
+				dueDate  = r.PostFormValue("duedate")
+				notes    = r.PostFormValue("notes")
 			)
 
 			err := client.AddTask(ctx, deputyId, taskType, dueDate, notes)
@@ -67,7 +67,14 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=true", deputyId))
+			var taskName string
+			for _, t := range taskTypes {
+				if t.Handle == taskType {
+					taskName = t.Description
+				}
+			}
+
+			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, deputyId))
 		}
 	}
 }
