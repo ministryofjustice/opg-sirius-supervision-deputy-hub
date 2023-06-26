@@ -77,7 +77,7 @@ func TestAddTask_success(t *testing.T) {
 	})
 
 	testHandler.ServeHTTP(w, r)
-	assert.Equal(returnedError, Redirect("/123?success=true"))
+	assert.Equal(returnedError, Redirect("/123/tasks?success=true"))
 }
 
 //func TestAddFirmValidationErrors(t *testing.T) {

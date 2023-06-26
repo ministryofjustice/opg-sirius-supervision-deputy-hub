@@ -1,8 +1,9 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTaskVars*/ -}}
 {{ template "page" . }}
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
-<div class="govuk-grid-row govuk-!-margin-top-5">
+    {{ template "content-header" . }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
                 <h1
@@ -19,45 +20,56 @@
                     <input
                         type="hidden"
                         name="xsrfToken"
-                        value="{{ .XSRFToken }}" />
+                        value="{{ .XSRFToken }}"/>
 
                     <div class="govuk-form-group">
 
-{{/*                        <label class="govuk-label" for="title">*/}}
-{{/*                            Title (required)*/}}
-{{/*                        </label>*/}}
-{{/*                        <input*/}}
-{{/*                            class="govuk-input"*/}}
-{{/*                            id="title"*/}}
-{{/*                            name="title"*/}}
-{{/*                            type="text"*/}}
-{{/*                            {{ if .Errors }}value="{{ .Title }}"{{ end }} />*/}}
-{{/*                    </div>*/}}
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend">Type of task (required)</legend>
+                                <div class="govuk-radios">
+                                    {{ range .TaskTypes }}
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="{{.Handle}}" name="{{.Handle}}"
+                                                   type="radio"
+                                                   value="{{.Handle}}">
+                                            <label class="govuk-label govuk-radios__label"
+                                                   for="{{.Handle}}">{{.Description}}</label>
+                                        </div>
+                                    {{ end }}
+                                </div>
+                            </fieldset>
+                        </div>
 
-{{/*                    <div*/}}
-{{/*                        class="govuk-character-count"*/}}
-{{/*                        data-module="govuk-character-count"*/}}
-{{/*                        data-maxlength="1000">*/}}
-{{/*                        <div class="govuk-form-group">*/}}
-{{/*                            <label class="govuk-label" for="note">*/}}
-{{/*                                Note (required)*/}}
-{{/*                            </label>*/}}
-{{/*                            */}}{{/* prettier-ignore-start */}}
-{{/*                            <textarea*/}}
-{{/*                                class="govuk-textarea govuk-js-character-count"*/}}
-{{/*                                id="note"*/}}
-{{/*                                name="note"*/}}
-{{/*                                rows="10"*/}}
-{{/*                                aria-describedby="note-info note-hint"*/}}
-{{/*                            >{{ if .Errors }}{{ .Note }}{{ end }}</textarea>*/}}
-{{/*                            */}}{{/* prettier-ignore-end */}}
-{{/*                            <div*/}}
-{{/*                                id="note-info"*/}}
-{{/*                                class="govuk-hint govuk-character-count__message"*/}}
-{{/*                                aria-live="polite">*/}}
-{{/*                                You have 1000 characters remaining*/}}
-{{/*                            </div>*/}}
-{{/*                        </div>*/}}
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="duedate">Due date (required)</label>
+                            <input id="duedate" class="govuk-input govuk-input--width-10" name="duedate"
+                                   value="{{.DueDate}}" type="date">
+                        </div>
+
+                        <div
+                            class="govuk-character-count"
+                            data-module="govuk-character-count"
+                            data-maxlength="1000">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="notes">
+                                    Notes
+                                </label>
+                                <textarea
+                                    class="govuk-textarea govuk-js-character-count"
+                                    id="notes"
+                                    name="notes"
+                                    rows="10"
+                                    aria-describedby="notes-info notes-hint"
+                                >{{.Notes}}</textarea>
+                                <div
+                                    id="notes-info"
+                                    class="govuk-hint govuk-character-count__message"
+                                    aria-live="polite">
+                                    You have 1,000 characters remaining
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="govuk-button-group govuk-!-margin-top-7">

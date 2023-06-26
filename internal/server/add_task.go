@@ -14,7 +14,7 @@ type AddTasksClient interface {
 	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]sirius.TaskType, error)
 }
 
-type addTaskVars struct {
+type AddTaskVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
@@ -41,7 +41,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return err
 		}
 
-		vars := addTaskVars{
+		vars := AddTaskVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			TaskTypes:     taskTypes,
