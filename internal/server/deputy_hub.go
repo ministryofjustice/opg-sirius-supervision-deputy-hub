@@ -71,7 +71,7 @@ func getSuccessFromUrl(url *url.URL, ecmName string, firmName string) string {
 	case "deputyDetails":
 		return "Deputy details updated"
 	case "ecm":
-		return "Ecm changed to " + ecmName
+		return "ECM changed to " + ecmName
 	case "importantInformation":
 		return "Important information updated"
 	case "newFirm":
