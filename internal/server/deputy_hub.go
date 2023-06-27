@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"html/template"
 )
 
 type DeputyHubInformation interface {
@@ -19,7 +20,7 @@ type deputyHubVars struct {
 	XSRFToken         string
 	DeputyDetails     sirius.DeputyDetails
 	Error             string
-	SuccessMessage    string
+	SuccessMessage    template.HTML
 	ActiveClientCount int
 	IsFinanceManager  bool
 }
@@ -43,7 +44,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			Path:              r.URL.Path,
 			XSRFToken:         ctx.XSRFToken,
 			DeputyDetails:     deputyDetails,
-			SuccessMessage:    successMessage,
+			SuccessMessage:    template.HTML(successMessage),
 			ActiveClientCount: clientList.Metadata.TotalActiveClients,
 		}
 
@@ -71,7 +72,7 @@ func getSuccessFromUrl(url *url.URL, ecmName string, firmName string) string {
 	case "deputyDetails":
 		return "Deputy details updated"
 	case "ecm":
-		return "ECM changed to " + ecmName
+		return "<abbr title='Executive Case Manager'>ECM</abbr> changed to " + ecmName
 	case "importantInformation":
 		return "Important information updated"
 	case "newFirm":

@@ -54,7 +54,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=ecm")
 	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
-	assert.Equal(t, SuccessMessage, "ECM changed to Jon Snow")
+	assert.Equal(t, SuccessMessage, "<abbr title='Executive Case Manager'>ECM</abbr> changed to Jon Snow")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
