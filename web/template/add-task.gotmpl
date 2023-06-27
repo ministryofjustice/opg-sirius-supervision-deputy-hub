@@ -26,7 +26,7 @@
 
                         <div class="govuk-form-group">
                             <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend">Type of task (required)</legend>
+                                <legend class="govuk-fieldset__legend" id="f-tasktype">Type of task (required)</legend>
                                 <div class="govuk-radios">
                                     {{ range .TaskTypes }}
                                         <div class="govuk-radios__item">
@@ -43,7 +43,7 @@
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="duedate">Due date (required)</label>
-                            <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
+                            <input id="f-duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
                                    value="{{.DueDate}}" type="date">
                         </div>
 
@@ -57,7 +57,7 @@
                                 </label>
                                 <textarea
                                     class="govuk-textarea govuk-js-character-count"
-                                    id="notes"
+                                    id="f-notes"
                                     name="notes"
                                     rows="10"
                                     aria-describedby="notes-info notes-hint"
