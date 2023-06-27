@@ -87,6 +87,11 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
+
+			if _, ok := err.(sirius.StatusError); ok {
+				return err
+			}
+
 			return Redirect(fmt.Sprintf("/%d?success=ecm", deputyId))
 
 		default:
