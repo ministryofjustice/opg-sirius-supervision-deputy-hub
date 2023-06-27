@@ -10,7 +10,6 @@ import (
 
 type AddTasksClient interface {
 	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string) error
-	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]sirius.TaskType, error)
 }
 
@@ -19,9 +18,6 @@ type AddTaskVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	TaskTypes     []sirius.TaskType
-	SelectedType  string
-	DueDate       string
-	Notes         string
 	Error         string
 	Errors        sirius.ValidationErrors
 }

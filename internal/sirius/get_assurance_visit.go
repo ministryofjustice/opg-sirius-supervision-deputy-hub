@@ -56,13 +56,13 @@ func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (
 func formatAssuranceVisit(v AssuranceVisit) AssuranceVisit {
 	updatedVisit := AssuranceVisit{
 		AssuranceType:       v.AssuranceType,
-		RequestedDate:       FormatDateAndTime(DateTimeFormat, v.RequestedDate, DateTimeDisplayFormat),
+		RequestedDate:       FormatDateTime(IsoDateTimeZone, v.RequestedDate, IsoDate),
 		Id:                  v.Id,
 		RequestedBy:         v.RequestedBy,
-		CommissionedDate:    FormatDateAndTime(DateTimeFormat, v.CommissionedDate, DateTimeDisplayFormat),
-		ReportDueDate:       FormatDateAndTime(DateTimeFormat, v.ReportDueDate, DateTimeDisplayFormat),
-		ReportReceivedDate:  FormatDateAndTime(DateTimeFormat, v.ReportReceivedDate, DateTimeDisplayFormat),
-		ReportReviewDate:    FormatDateAndTime(DateTimeFormat, v.ReportReviewDate, DateTimeDisplayFormat),
+		CommissionedDate:    FormatDateTime(IsoDateTimeZone, v.CommissionedDate, IsoDate),
+		ReportDueDate:       FormatDateTime(IsoDateTimeZone, v.ReportDueDate, IsoDate),
+		ReportReceivedDate:  FormatDateTime(IsoDateTimeZone, v.ReportReceivedDate, IsoDate),
+		ReportReviewDate:    FormatDateTime(IsoDateTimeZone, v.ReportReviewDate, IsoDate),
 		VisitOutcome:        v.VisitOutcome,
 		PdrOutcome:          v.PdrOutcome,
 		VisitReportMarkedAs: v.VisitReportMarkedAs,

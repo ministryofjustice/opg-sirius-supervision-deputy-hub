@@ -8,7 +8,7 @@ import (
 
 type addTask struct {
 	DeputyId    int    `json:"personId"`
-	TaskType    string `json:"taskType"`
+	TaskType    string `json:"type"`
 	DueDate     string `json:"dueDate"`
 	Notes       string `json:"notes"`
 	IsCaseOwner bool   `json:"isCaseOwner"` // temporary until assignee selection is added
@@ -18,9 +18,10 @@ func (c *Client) AddTask(ctx Context, deputyId int, taskType string, dueDate str
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addTask{
 		TaskType:    taskType,
-		DueDate:     dueDate,
+		DueDate:     FormatDateTime(IsoDateTimeZone, dueDate, SiriusDate),
 		Notes:       notes,
 		IsCaseOwner: true,
+		DeputyId:    deputyId,
 	})
 	if err != nil {
 		return err

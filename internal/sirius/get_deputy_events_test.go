@@ -11,7 +11,7 @@ import (
 )
 
 func AmendDateForDST(date string) string {
-	return FormatDateAndTime(TimelineDateTimeDisplayFormat, date, TimelineDateTimeDisplayFormat)
+	return FormatDateTime(SiriusDateTime, date, SiriusDateTime)
 }
 
 func TestDeputyEventsReturned(t *testing.T) {
