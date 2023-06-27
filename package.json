@@ -7,7 +7,7 @@
     "accessible-autocomplete": "^2.0.4",
     "govuk-frontend": "^4.3.1",
     "jquery": "^3.6.1",
-    "opg-sirius-header": "ministryofjustice/opg-sirius-header"
+    "opg-sirius-header": "ministryofjustice/opg-sirius-header#f3f313fe941b808081fcef32231f9d1c833daffe"
   },
   "devDependencies": {
     "esbuild": "^0.15.14",
