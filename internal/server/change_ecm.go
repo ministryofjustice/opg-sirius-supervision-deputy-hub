@@ -88,7 +88,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			if _, ok := err.(sirius.StatusError); ok {
+			if err != nil {
 				return err
 			}
 
