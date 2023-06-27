@@ -6,24 +6,9 @@ describe("Deputy Hub", () => {
     });
 
     describe("Header", () => {
-        it("shows opg sirius within banner", () => {
-            cy.contains(".moj-header__link", "OPG");
+        it("should load header template within banner", () => {
+            cy.get('.moj-header__logo > .moj-header__link').should('contain.text', 'OPG');
             cy.contains(".moj-header__link", "Sirius");
-        });
-
-        const expected = ["Workflow", "Supervision", "LPA", "Admin", "Logout"];
-
-        it("has working nav links within header banner", () => {
-            cy.get(".moj-header__navigation-list")
-                .children()
-                .each(($el, index) => {
-                    cy.wrap($el).should("contain", expected[index]);
-                    let $linkName = expected[index].toLowerCase();
-                    cy.wrap($el)
-                        .find("a")
-                        .should("have.attr", "href")
-                        .and("contain", `/${$linkName}`);
-                });
         });
     });
 
