@@ -6,6 +6,7 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 @import "node_modules/govuk-frontend/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
 @import "node_modules/accessible-autocomplete/src/autocomplete";
+@import "node_modules/opg-sirius-header/sass/sirius-header";
 @import "./scss/pa-hub";
 @import "./scss/pro-hub";
 @import "./scss/_moj-pagination";
@@ -37,14 +38,4 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 
 .autocomplete__wrapper {
     font-family: "GDS Transport", arial, sans-serif;
-}
-
-.moj-header__navigation-link {
-    &[aria-current="page"] {
-        color: govuk-colour("blue") !important;
-        font-weight: bold;
-        a:hover {
-            text-decoration: none !important;
-        }
-    }
 }
