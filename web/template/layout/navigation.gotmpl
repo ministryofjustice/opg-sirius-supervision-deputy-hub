@@ -16,6 +16,16 @@
                     <li class="moj-sub-navigation__item">
                         <a
                             class="moj-sub-navigation__link"
+                            {{ if eq .Path (printf "/%d/contacts" .DeputyDetails.ID) }}
+                                aria-current="page"
+                            {{ end }}
+                            href="{{ prefix (printf "/%d/contacts" .DeputyDetails.ID) }}"
+                            >Contacts</a
+                        >
+                    </li>
+                    <li class="moj-sub-navigation__item">
+                        <a
+                            class="moj-sub-navigation__link"
                             {{ if eq .Path (printf "/%d/clients" .DeputyDetails.ID) }}
                                 aria-current="page"
                             {{ end }}

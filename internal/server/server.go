@@ -28,6 +28,7 @@ type Client interface {
 	AddAssuranceVisit
 	AssuranceVisit
 	ManageAssuranceVisit
+	ContactInformation
 }
 
 type Template interface {
@@ -46,6 +47,14 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
+
+	pageRouter.Handle("/contacts",
+		wrap(
+			renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
+
+	pageRouter.Handle("/contacts/add-contact",
+		wrap(
+			renderTemplateForAddContact(client, templates["add-contact.gotmpl"])))
 
 	pageRouter.Handle("/clients",
 		wrap(
