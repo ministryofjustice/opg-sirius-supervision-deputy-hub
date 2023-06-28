@@ -130,7 +130,7 @@ describe("Change Firm", () => {
         });
 
         it("has a timeline event for when the firm is changed", () => {
-            cy.get("[data-cy=deputy-allocated-firm-event]").within(() => {
+            cy.get("[data-cy=deputy-allocated-firm-event]").first().within(() => {
                 cy.contains(".moj-timeline__title", "Deputy firm updated");
                 cy.contains(".moj-timeline__byline", "case manager (12345678)");
                 cy.get(".moj-timeline__description > .govuk-list").children()
