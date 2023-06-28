@@ -40,7 +40,7 @@ describe("Change ECM", () => {
             cy.contains("#select-ecm__listbox", "Jon Snow").click();
             cy.get("form").submit();
             cy.get("h1").should("contain", "Deputy details");
-            cy.get(".moj-banner--success").should("contain", "Ecm changed to");
+            cy.get(".moj-banner--success").should("contain", "ECM changed to");
         });
 
         it("displays warning when no ecm chosen and form submitted", () => {
