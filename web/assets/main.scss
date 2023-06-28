@@ -38,3 +38,11 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 .autocomplete__wrapper {
     font-family: "GDS Transport", arial, sans-serif;
 }
+
+.moj-header__navigation-link {
+    &[aria-current="page"] {
+        color: govuk-colour("blue") !important;
+        font-weight: bold;
+        text-decoration: none !important;
+    }
+}
