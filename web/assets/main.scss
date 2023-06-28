@@ -43,8 +43,6 @@ $govuk-assets-path: "/supervision/deputies/assets/";
     &[aria-current="page"] {
         color: govuk-colour("blue") !important;
         font-weight: bold;
-        a:hover {
-            text-decoration: none !important;
-        }
+        text-decoration: none !important;
     }
 }
