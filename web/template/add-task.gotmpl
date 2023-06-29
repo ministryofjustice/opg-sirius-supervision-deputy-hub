@@ -26,13 +26,16 @@
 
                         <div class="govuk-form-group">
                             <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend" id="f-tasktype">Type of task (required)</legend>
+                                <legend class="govuk-fieldset__legend" id="tasktype">Type of task (required)</legend>
+                                {{ $selectedType := .TaskType }}
                                 <div class="govuk-radios">
                                     {{ range .TaskTypes }}
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input" id="{{.Handle}}" name="tasktype"
                                                    type="radio"
-                                                   value="{{.Handle}}">
+                                                   value="{{.Handle}}"
+                                                   {{ if eq .Handle $selectedType }} checked {{ end }}
+                                            >
                                             <label class="govuk-label govuk-radios__label"
                                                    for="{{.Handle}}">{{.Description}}</label>
                                         </div>
@@ -43,7 +46,7 @@
 
                         <div class="govuk-form-group">
                             <label class="govuk-label" for="duedate">Due date (required)</label>
-                            <input id="f-duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
+                            <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
                                    value="{{.DueDate}}" type="date">
                         </div>
 
@@ -57,7 +60,7 @@
                                 </label>
                                 <textarea
                                     class="govuk-textarea govuk-js-character-count"
-                                    id="f-notes"
+                                    id="notes"
                                     name="notes"
                                     rows="10"
                                     aria-describedby="notes-info notes-hint"

@@ -15,18 +15,18 @@ import (
 
 type mockAddTasksClient struct {
 	mock.Mock
-	count       int
-	lastCtx     sirius.Context
-	err         error
-	userDetails sirius.UserDetails
-	taskTypes   []sirius.TaskType
+	count     int
+	lastCtx   sirius.Context
+	err       error
+	verr      error
+	taskTypes []sirius.TaskType
 }
 
 func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.verr
 }
 
 func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]sirius.TaskType, error) {
@@ -56,9 +56,9 @@ func TestLoadAddTaskForm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddTask(client, template)
-	err := handler(deputy, w, r)
+	res := handler(deputy, w, r)
 
-	assert.Nil(err)
+	assert.Nil(res)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
@@ -87,16 +87,16 @@ func TestAddTask_success(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
+	var res error
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddTask(client, nil)(deputy, w, r)
+		res = renderTemplateForAddTask(client, nil)(deputy, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
-	assert.Equal(returnedError, Redirect("/123/tasks?success=A Big Critical Task"))
+	assert.Equal(res, Redirect("/123/tasks?success=A Big Critical Task"))
 }
 
 func TestAddTaskValidationErrors(t *testing.T) {
@@ -109,7 +109,7 @@ func TestAddTaskValidationErrors(t *testing.T) {
 		},
 	}
 
-	client.err = sirius.ValidationError{
+	client.verr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -119,11 +119,11 @@ func TestAddTaskValidationErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
+	var res error
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddTask(client, template)(sirius.DeputyDetails{}, w, r)
+		res = renderTemplateForAddTask(client, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -133,5 +133,5 @@ func TestAddTaskValidationErrors(t *testing.T) {
 		Errors: validationErrors,
 	}, template.lastVars)
 
-	assert.Nil(returnedError)
+	assert.Nil(res)
 }
