@@ -15,5 +15,6 @@
     "/reference-data/deputyReportSystem": "/deputyReportSystem",
     "/reference-data/visitOutcome": "/visitOutcome",
     "/reference-data/pdrOutcome": "/pdrOutcome",
-    "/reference-data/ragRating": "/ragRating"
+    "/reference-data/ragRating": "/ragRating",
+    "/tasktypes/deputy": "/tasktypes"
 }
