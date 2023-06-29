@@ -117,12 +117,7 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	expectedValidationError := sirius.ValidationError{
 		Errors: sirius.ValidationErrors{
@@ -148,12 +143,7 @@ func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 
 	var returnedError error
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(StatusError(http.StatusMethodNotAllowed), returnedError)
 }
@@ -176,13 +166,7 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 	r.PostForm = form
 
 	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(StatusError(http.StatusGatewayTimeout), returnedError)
 }
