@@ -607,14 +607,6 @@ func TestFormatDate(t *testing.T) {
 	assert.Equal(t, expectedResponse, result)
 }
 
-func TestReformatCompletedDateReturnsNullIfNoDate(t *testing.T) {
-	assert.Equal(t, "", reformatCompletedDate(""))
-}
-
-func TestReformatCompletedDateReturnsDateInCorrectFormat(t *testing.T) {
-	assert.Equal(t, "25/02/2020", reformatCompletedDate("2020-02-25T00:00:00+00:00"))
-}
-
 func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 	dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
 	dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
