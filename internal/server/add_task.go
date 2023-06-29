@@ -18,6 +18,9 @@ type AddTaskVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	TaskTypes     []sirius.TaskType
+	TaskType      string
+	DueDate       string
+	Notes         string
 	Error         string
 	Errors        sirius.ValidationErrors
 }
@@ -56,10 +59,20 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			err := client.AddTask(ctx, deputyId, taskType, dueDate, notes)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars = AddTaskVars{
+					Path:          r.URL.Path,
+					XSRFToken:     ctx.XSRFToken,
+					TaskTypes:     taskTypes,
+					DeputyDetails: deputyDetails,
+					TaskType:      taskType,
+					DueDate:       dueDate,
+					Notes:         notes,
+					Errors:        verr.Errors,
+				}
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
-			} else if err != nil {
+			}
+			if err != nil {
 				return err
 			}
 

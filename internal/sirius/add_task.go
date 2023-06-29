@@ -18,7 +18,7 @@ func (c *Client) AddTask(ctx Context, deputyId int, taskType string, dueDate str
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addTask{
 		TaskType:    taskType,
-		DueDate:     FormatDateTime(IsoDateTimeZone, dueDate, SiriusDate),
+		DueDate:     FormatDateTime(IsoDate, dueDate, SiriusDate),
 		Notes:       notes,
 		IsCaseOwner: true,
 		DeputyId:    deputyId,
