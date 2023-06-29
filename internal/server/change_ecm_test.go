@@ -115,9 +115,7 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-
-	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+	var returnedError error = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	expectedValidationError := sirius.ValidationError{
 		Errors: sirius.ValidationErrors{
@@ -141,9 +139,7 @@ func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 	r, _ := http.NewRequest("PUT", "/76/ecm", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-
-	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+	var returnedError error = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(StatusError(http.StatusMethodNotAllowed), returnedError)
 }
@@ -165,8 +161,7 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 	form.Add("select-ecm", "26")
 	r.PostForm = form
 
-	var returnedError error
-	returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+	var returnedError error = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(StatusError(http.StatusGatewayTimeout), returnedError)
 }
