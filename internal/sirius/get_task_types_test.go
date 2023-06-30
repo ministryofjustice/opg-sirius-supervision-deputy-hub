@@ -7,7 +7,6 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"sort"
 	"testing"
 )
 
@@ -55,10 +54,6 @@ func TestGetTaskTypes_PA(t *testing.T) {
 
 	taskTypes, err := client.GetTaskTypes(getContext(nil), deputy)
 
-	sort.Slice(taskTypes, func(i, j int) bool {
-		return taskTypes[i].Handle < taskTypes[j].Handle
-	})
-
 	assert.Equal(t, expectedResponse, taskTypes)
 	assert.Equal(t, nil, err)
 }
@@ -95,10 +90,6 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 	}
 
 	taskTypes, err := client.GetTaskTypes(getContext(nil), deputy)
-
-	sort.Slice(taskTypes, func(i, j int) bool {
-		return taskTypes[i].Handle < taskTypes[j].Handle
-	})
 
 	assert.Equal(t, expectedResponse, taskTypes)
 	assert.Equal(t, nil, err)

@@ -3,6 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"net/http"
+	"sort"
 )
 
 type TaskType struct {
@@ -53,6 +54,10 @@ func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]TaskType, er
 			deputyTaskTypes = append(deputyTaskTypes, t)
 		}
 	}
+
+	sort.Slice(deputyTaskTypes, func(i, j int) bool {
+		return deputyTaskTypes[i].Handle < deputyTaskTypes[j].Handle
+	})
 
 	return deputyTaskTypes, err
 }

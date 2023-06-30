@@ -10,7 +10,7 @@ type addTask struct {
 	DeputyId    int    `json:"personId"`
 	TaskType    string `json:"type"`
 	DueDate     string `json:"dueDate"`
-	Notes       string `json:"notes"`
+	Notes       string `json:"description"`
 	IsCaseOwner bool   `json:"isCaseOwner"` // temporary until assignee selection is added
 }
 
