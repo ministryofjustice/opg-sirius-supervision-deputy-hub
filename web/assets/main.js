@@ -47,3 +47,8 @@ if (document.querySelector("#f-button-disabled")) {
         document.getElementById("f-button-disabled-warning").classList.remove("hide");
     }
 }
+
+document.querySelectorAll(".min-date-today")
+    .forEach(function(input) {
+    input.setAttribute("min", new Date().toISOString().split('T')[0]);
+});

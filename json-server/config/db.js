@@ -1805,6 +1805,17 @@ module.exports = function () {
                         "stringLengthTooLong": "The other important information must be 1000 characters or fewer"
                     }
                 }
+            },
+            {
+                "id": "addTask",
+                "validation_errors": {
+                    "taskType": {
+                        "isEmpty": "Value is required and cannot be empty",
+                    },
+                    "dueDate": {
+                        "dateFalseFormat": "This must be a real date",
+                    },
+                }
             }
         ],
         "successes": [
@@ -2043,7 +2054,7 @@ module.exports = function () {
                         },
                         "visitorAllocated": null,
                         "reviewedBy": null,
-                        "note" : ''
+                        "note": ''
                     },
                     {
                         "id": 33,
@@ -2101,7 +2112,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2160,7 +2171,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2214,7 +2225,7 @@ module.exports = function () {
                             "locked": false,
                             "suspended": false
                         },
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             },
@@ -2258,7 +2269,7 @@ module.exports = function () {
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     },
                     {
                         "id": 33,
@@ -2297,7 +2308,7 @@ module.exports = function () {
                         "assuranceVisitReportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
-                        "note" : 'Some notes that have been written here'
+                        "note": 'Some notes that have been written here'
                     }
                 ]
             }
@@ -2408,7 +2419,7 @@ module.exports = function () {
                 },
                 "visitorAllocated": null,
                 "reviewedBy": null,
-                "note" : 'Some notes that have been written here'
+                "note": 'Some notes that have been written here'
             },
             {
                 "id": 36,
@@ -2451,8 +2462,53 @@ module.exports = function () {
                 },
                 "visitorAllocated": null,
                 "reviewedBy": null,
-                "note" : 'Some notes that have been written here'
+                "note": 'Some notes that have been written here'
             }
-        ]
+        ],
+        "tasks": [],
+        "tasktypes": {
+            "task_types": {
+                "SAP": {
+                    "handle": "SAP",
+                    "incomplete": "Start Assurance process",
+                    "complete": "Start Assurance process",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
+                },
+                "AVRD": {
+                    "handle": "AVRD",
+                    "incomplete": "Assurance visit report due",
+                    "complete": "Assurance visit report due",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": false,
+                    "paDeputyTask": true
+                },
+                "AVR": {
+                    "handle": "AVR",
+                    "incomplete": "Assurance visit review",
+                    "complete": "Assurance visit review",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "AVFU": {
+                    "handle": "AVFU",
+                    "incomplete": "Assurance visit follow up",
+                    "complete": "Assurance visit follow up",
+                    "user": true,
+                    "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                }
+            }
+        }
     }
 }
