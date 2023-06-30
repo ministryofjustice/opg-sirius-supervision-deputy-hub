@@ -1858,6 +1858,37 @@ module.exports = function () {
         ],
         "teams": [
             {
+                "id": 1,
+                "name": "Pro Team 1 - (Supervision)",
+                "phoneNumber": "0123456789",
+                "displayName": "Pro Team 1 - (Supervision)",
+                "deleted": false,
+                "email": "ProTeam1.team@opgtest.com",
+                "members": [
+                    {
+                        "id": 11,
+                        "name": "Steven Steven",
+                        "phoneNumber": "12345678",
+                        "displayName": "Steven Toast",
+                        "deleted": false,
+                        "email": "steventoast@opgtest.com"
+                    },
+                    {
+                        "id": 93,
+                        "name": "Ray Purchase",
+                        "phoneNumber": "1555678",
+                        "displayName": "Ray Purchase",
+                        "deleted": false,
+                        "email": "raypurchase@opgtest.com"
+                    },
+                ],
+                "children": [],
+                "teamType": {
+                    "handle": "PRO",
+                    "label": "PRO"
+                }
+            },
+            {
                 "id": 23,
                 "name": "PA Team 1 - (Supervision)",
                 "phoneNumber": "0123456789",

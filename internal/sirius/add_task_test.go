@@ -20,6 +20,9 @@ func TestTask(t *testing.T) {
 	  "createdByUser": {
 		"id": 1
 	  },
+      "assignee": {
+		"id": 1
+	  },
 	  "description": "<p>Note text<\/p>",
 	  "createdTime": "26\/06\/2023 00:00:00"
 	}`
@@ -33,7 +36,7 @@ func TestTask(t *testing.T) {
 		}, nil
 	}
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note")
+	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
 	assert.Nil(t, err)
 }
 
@@ -46,7 +49,7 @@ func TestAddTaskReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note")
+	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -63,7 +66,7 @@ func TestAddTaskReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note")
+	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

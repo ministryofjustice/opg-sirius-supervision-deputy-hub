@@ -50,6 +50,48 @@
                                    value="{{.DueDate}}" type="date">
                         </div>
 
+                        <div class="govuk-form-group">
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend" id="assignedto">Assigned to (required)</legend>
+                                <div class="govuk-radios">
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="assignedto-ecm" name="assignedto"
+                                               type="radio"
+                                               value="{{ .DeputyDetails.ExecutiveCaseManager.EcmId }}"
+                                               checked
+                                        >
+                                        <label class="govuk-label govuk-radios__label"
+                                               for="assignedto-ecm">{{ .DeputyDetails.ExecutiveCaseManager.EcmName }} (Executive Case Manager)</label>
+                                    </div>
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input" id="assignedto-other" name="assignedto"
+                                               type="radio"
+                                               value="assignedto-other"
+                                        >
+                                        <label class="govuk-label govuk-radios__label"
+                                               for="assignedto-other">Someone else</label>
+                                    </div>
+                                </div>
+
+                                <div id="autocomplete-input" class="hide">
+                                    <div class="govuk-radios__conditional">
+                                        <div class="autocomplete-wrapper" id="select-ecm-dropdown">
+                                            <label class="govuk-label" for="select-ecm">
+                                                Enter a name
+                                            </label>
+                                            <select id="select-ecm" name="select-assignedto">
+                                                <option value=""></option>
+                                                {{ range .Assignees }}
+                                                    <option value="{{ .ID }}">{{ .DisplayName }}</option>
+                                                {{ end }}
+                                            </select>
+                                        </div>
+                                        <br>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
                         <div
                             class="govuk-character-count"
                             data-module="govuk-character-count"

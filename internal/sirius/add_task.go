@@ -7,21 +7,21 @@ import (
 )
 
 type addTask struct {
-	DeputyId    int    `json:"personId"`
-	TaskType    string `json:"type"`
-	DueDate     string `json:"dueDate"`
-	Notes       string `json:"description"`
-	IsCaseOwner bool   `json:"isCaseOwner"` // temporary until assignee selection is added
+	DeputyId   int    `json:"personId"`
+	TaskType   string `json:"type"`
+	DueDate    string `json:"dueDate"`
+	Notes      string `json:"description"`
+	AssigneeId int    `json:"assigneeId"`
 }
 
-func (c *Client) AddTask(ctx Context, deputyId int, taskType string, dueDate string, notes string) error {
+func (c *Client) AddTask(ctx Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addTask{
-		TaskType:    taskType,
-		DueDate:     FormatDateTime(IsoDate, dueDate, SiriusDate),
-		Notes:       notes,
-		IsCaseOwner: true,
-		DeputyId:    deputyId,
+		TaskType:   taskType,
+		DueDate:    FormatDateTime(IsoDate, dueDate, SiriusDate),
+		Notes:      notes,
+		AssigneeId: assigneeId,
+		DeputyId:   deputyId,
 	})
 	if err != nil {
 		return err

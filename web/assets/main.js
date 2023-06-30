@@ -24,13 +24,19 @@ if (document.querySelector("#select-existing-firm")) {
 
 if (document.querySelector("#f-existing-firm")) {
     document.getElementById("f-existing-firm").onclick = function () {
-        toggleChangeFirmAutoCompleteHideClass();
+        toggleAutocompleteInput();
     };
 }
 
-function toggleChangeFirmAutoCompleteHideClass() {
+if (document.querySelector("#assignedto-other")) {
+    document.getElementById("assignedto-other").onclick = function () {
+        toggleAutocompleteInput();
+    };
+}
+
+function toggleAutocompleteInput() {
     document
-        .getElementById("change-firm-autocomplete")
+        .getElementById("autocomplete-input")
         .classList.toggle("hide");
 }
 

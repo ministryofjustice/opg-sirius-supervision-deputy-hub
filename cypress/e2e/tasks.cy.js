@@ -28,6 +28,7 @@ describe("Tasks", () => {
         it("should add a task successfully", () => {
             cy.get('label:contains("Assurance visit review")').click();
             cy.get('label:contains("Due date (required")').type(new Date().toISOString().split("T")[0]);
+
             cy.get('label:contains("Notes")').type("Test note for task");
             cy.contains("button", "Save task").click();
 
