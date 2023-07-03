@@ -2,15 +2,15 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
 )
 
 type AddTasksClient interface {
-	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string) error
+	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error
 	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]sirius.TaskType, error)
+	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]sirius.TeamMember, error)
 }
 
 type AddTaskVars struct {
@@ -18,6 +18,7 @@ type AddTaskVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	TaskTypes     []sirius.TaskType
+	Assignees     []sirius.TeamMember
 	TaskType      string
 	DueDate       string
 	Notes         string
@@ -32,10 +33,15 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 		}
 
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
+		deputyId := deputyDetails.ID
 
 		taskTypes, err := client.GetTaskTypes(ctx, deputyDetails)
+		if err != nil {
+			return err
+		}
+
+		defaultPATeam := 1
+		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {
 			return err
 		}
@@ -45,18 +51,28 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			XSRFToken:     ctx.XSRFToken,
 			TaskTypes:     taskTypes,
 			DeputyDetails: deputyDetails,
+			Assignees:     assignees,
 		}
 
 		if r.Method == http.MethodGet {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		} else {
 			var (
-				taskType = r.PostFormValue("tasktype")
-				dueDate  = r.PostFormValue("duedate")
-				notes    = r.PostFormValue("notes")
+				taskType   = r.PostFormValue("tasktype")
+				dueDate    = r.PostFormValue("duedate")
+				notes      = r.PostFormValue("notes")
+				ecm        = r.PostFormValue("assignedto")
+				assignedTo = r.PostFormValue("select-assignedto")
 			)
 
-			err := client.AddTask(ctx, deputyId, taskType, dueDate, notes)
+			var assigneeId int
+			if ecm == "other" {
+				assigneeId, _ = strconv.Atoi(assignedTo)
+			} else {
+				assigneeId, _ = strconv.Atoi(ecm)
+			}
+
+			err := client.AddTask(ctx, deputyId, taskType, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars = AddTaskVars{
@@ -64,6 +80,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 					XSRFToken:     ctx.XSRFToken,
 					TaskTypes:     taskTypes,
 					DeputyDetails: deputyDetails,
+					Assignees:     assignees,
 					TaskType:      taskType,
 					DueDate:       dueDate,
 					Notes:         notes,

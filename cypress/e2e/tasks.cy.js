@@ -28,6 +28,19 @@ describe("Tasks", () => {
         it("should add a task successfully", () => {
             cy.get('label:contains("Assurance visit review")').click();
             cy.get('label:contains("Due date (required")').type(new Date().toISOString().split("T")[0]);
+
+            cy.get('.govuk-radios:has(label:contains("PA Team 1 - (Supervision) (Executive Case Manager)"))')
+                .find('input')
+                .should("be.checked");
+            cy.get('#select-ecm').should("be.hidden");
+            cy.get('label:contains("Someone else")').click();
+            cy.get('#select-ecm').should("be.visible");
+            cy.get("#select-ecm").type("S");
+            cy.get("#select-ecm__listbox").find("li").should("have.length", 2);
+            cy.get("#select-ecm").type("t");
+            cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
+            cy.contains("#select-ecm__listbox", "Steven Toast").click();
+
             cy.get('label:contains("Notes")').type("Test note for task");
             cy.contains("button", "Save task").click();
 
