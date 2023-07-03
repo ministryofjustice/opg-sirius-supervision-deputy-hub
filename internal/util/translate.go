@@ -107,6 +107,16 @@ var validationMappings = map[string]map[string]pair{
 		"stringLengthTooLong": pair{"surname", "The deputy surname must be 255 characters or fewer"},
 		"isEmpty":             pair{"surname", "The deputy surname is required and can't be empty"},
 	},
+	// task
+	"taskType": {
+		"isEmpty": pair{"taskType", "Select the task type"},
+	},
+	"dueDate": {
+		"isEmpty": pair{"dueDate", "Enter a due date"},
+	},
+	"notes": {
+		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
+	},
 	// other
 	"otherImportantInformation": {
 		"stringLengthTooLong": pair{"otherImportantInformation", "The other important information must be 1000 characters or fewer"},

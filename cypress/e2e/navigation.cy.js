@@ -10,6 +10,7 @@ describe("Navigation bar", () => {
         ["Clients", "/supervision/deputies/1/clients"],
         ["Timeline", "/supervision/deputies/1/timeline"],
         ["Notes", "/supervision/deputies/1/notes"],
+        ["Tasks", "/supervision/deputies/1/tasks"],
         ["Assurance visits", "/supervision/deputies/1/assurance-visits"],
     ];
 

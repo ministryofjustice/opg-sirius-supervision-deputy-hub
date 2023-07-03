@@ -168,7 +168,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 					t.OldestReport.Status.Label,
 				},
 				LatestCompletedVisit: latestCompletedVisit{
-					reformatCompletedDate(t.LatestCompletedVisit.VisitCompletedDate),
+					FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
 					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
 					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
@@ -329,14 +329,6 @@ func changeSortButtonDirection(sortOrder string, columnBeingSorted string, funct
 		return "none"
 	}
 
-}
-
-func reformatCompletedDate(unformattedDate string) string {
-	if len(unformattedDate) > 1 {
-		date, _ := time.Parse("2006-01-02T15:04:05-07:00", unformattedDate)
-		return date.Format("02/01/2006")
-	}
-	return ""
 }
 
 func (s AriaSorting) GetHTMLSortDirection(direction string) string {
