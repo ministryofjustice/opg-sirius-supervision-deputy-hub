@@ -1626,24 +1626,50 @@ module.exports = function () {
                 },
                 "event": {
                     "class": "Opg\\Core\\Model\\Event\\Deputy\\AssuranceVisitAdded",
-                    "payload": {
-                        "personType": "Deputy",
-                        "personId": "66",
-                        "personUid": "7000-0000-2118",
-                        "personName": "test62f136dbe2b13 Bold",
-                        "changes": [
-                            {
-                                "fieldName": "requestedDate",
-                                "newValue": "06/09/2022",
-                                "type": "string"
-                            },
-                            {
-                                "fieldName": "requestedBy",
-                                "newValue": "Finance User Testing",
-                                "type": "string"
-                            }
-                        ]
-                    }
+                    "personType": "Deputy",
+                    "personId": "66",
+                    "personUid": "7000-0000-2118",
+                    "personName": "test62f136dbe2b13 Bold",
+                    "changes": [
+                        {
+                            "fieldName": "requestedDate",
+                            "newValue": "06/09/2022",
+                            "type": "string"
+                        },
+                        {
+                            "fieldName": "requestedBy",
+                            "newValue": "Finance User Testing",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
+                "id": 397,
+                "hash": "AY",
+                "timestamp": "2021-10-10 15:01:59",
+                "eventType": "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
+                "user": {
+                    "id": 21,
+                    "phoneNumber": "0123456789",
+                    "displayName": "Lay Team 1 - (Supervision)",
+                    "email": "LayTeam1.team@opgtest.com"
+                },
+                "event": {
+                    "isCaseEvent": false,
+                    "isPersonEvent": true,
+                    "taskId": 249,
+                    "taskType": "AVFU",
+                    "dueDate": "2023-07-13 00:00:00",
+                    "description": "This is a note",
+                    "name": "",
+                    "assigneeId": "28",
+                    "assignee": "PA Team Workflow",
+                    "isCaseOwnerTask": false,
+                    "personType": "Deputy",
+                    "personId": "76",
+                    "personUid": "7000-0000-2530",
+                    "personName": "Bobby Deputiser"
                 }
             }
         ],

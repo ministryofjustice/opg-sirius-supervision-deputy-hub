@@ -32,7 +32,7 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	return m.verr
 }
 
-func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]sirius.TaskType, error) {
+func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, details sirius.DeputyDetails) ([]sirius.TaskType, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

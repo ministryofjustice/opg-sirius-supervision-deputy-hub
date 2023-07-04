@@ -1,22 +1,19 @@
 package server
 
 import (
-	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEventCollection, error)
+	GetDeputyEvents(sirius.Context, sirius.DeputyDetails) (sirius.DeputyEvents, error)
 }
 
 type deputyHubEventVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	DeputyEvents  sirius.DeputyEventCollection
+	DeputyEvents  sirius.DeputyEvents
 	Error         string
 }
 
@@ -27,9 +24,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		}
 
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
-		deputyEvents, err := client.GetDeputyEvents(ctx, deputyId)
+		deputyEvents, err := client.GetDeputyEvents(ctx, deputyDetails)
 		if err != nil {
 			return err
 		}
