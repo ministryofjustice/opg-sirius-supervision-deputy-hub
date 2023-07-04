@@ -61,4 +61,22 @@ describe("Tasks", () => {
             });
         });
     });
+
+    describe("Task timeline", () => {
+        it("displays a task timeline event", () => {
+            cy.visit("/supervision/deputies/1/timeline");
+
+            cy.get('[data-cy="task-created-event"]').within(() => {
+                cy.contains(".moj-timeline__title", "Assurance visit follow up task created by");
+                cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
+
+                cy.get(".moj-timeline__description").get("li")
+                    .should("contain", "Assigned to PA Team Workflow")
+                    .next()
+                    .should("contain", "Due date 13/07/2023")
+                    .next()
+                    .should("contain", "This is a note");
+            });
+        });
+    })
 });
