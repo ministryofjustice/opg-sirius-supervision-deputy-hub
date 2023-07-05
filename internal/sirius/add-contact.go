@@ -8,18 +8,17 @@ import (
 )
 
 type ContactDetails struct {
-	Name           string `json:"name"`
-	JobTitle       string `json:"jobTitle"`
-	Email          string `json:"email"`
-	Phone          string `json:"phone"`
-	SecondaryPhone string `json:"secondaryPhone"`
-	Notes          string `json:"notes"`
-	NamedDeputy    bool   `json:"namedDeputy"`
-	MainContact    bool   `json:"mainContact"`
+	ContactName      string `json:"contactName"`
+	JobTitle         string `json:"jobTitle"`
+	Email            string `json:"email"`
+	PhoneNumber      string `json:"phoneNumber"`
+	OtherPhoneNumber string `json:"otherPhoneNumber"`
+	Notes            string `json:"notes"`
+	IsNamedDeputy    string `json:"isNamedDeputy"`
+	IsMainContact    string `json:"isMainContact"`
 }
 
 func (c *Client) AddContactDetails(ctx Context, deputyId int, addContactForm ContactDetails) error {
-	var k ContactDetails	
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addContactForm)
 	if err != nil {
@@ -27,11 +26,13 @@ func (c *Client) AddContactDetails(ctx Context, deputyId int, addContactForm Con
 	}
 
 	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
+	fmt.Println(&body)
 	req, err := c.newRequest(ctx, http.MethodPost, url, &body)
 
 	if err != nil {
 		return err
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.http.Do(req)
@@ -61,6 +62,5 @@ func (c *Client) AddContactDetails(ctx Context, deputyId int, addContactForm Con
 		return newStatusError(resp)
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&k)
 	return err
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 	"fmt"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
@@ -20,6 +19,7 @@ type addContactVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	DeputyId      int
+	Form          sirius.ContactDetails
 }
 
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
@@ -40,27 +40,35 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		case http.MethodPost:
-
 			addContactDetailForm := sirius.ContactDetails{
-				Name:           r.PostFormValue("name"),
-				JobTitle:       r.PostFormValue("job-title"),
-				Email:          r.PostFormValue("email"),
-				Phone:          r.PostFormValue("phone"),
-				SecondaryPhone: r.PostFormValue("phone-secondary"),
-				Notes:          r.PostFormValue("notes"),
-				NamedDeputy:    r.PostFormValue("named-deputy") == "yes",
-				MainContact:    r.PostFormValue("main-contact") == "yes",
+				ContactName:      r.PostFormValue("name"),
+				JobTitle:         r.PostFormValue("job-title"),
+				Email:            r.PostFormValue("email"),
+				PhoneNumber:      r.PostFormValue("phone"),
+				OtherPhoneNumber: r.PostFormValue("other-phone"),
+				Notes:            r.PostFormValue("notes"),
+				IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
+				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
 			err := client.AddContactDetails(ctx, deputyId, addContactDetailForm)
 
+			//fmt.Println(err)
+
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := addFirmVars{
+				fmt.Println(verr.Errors)
+				vars := addContactVars{
 					Path:      r.URL.Path,
 					XSRFToken: ctx.XSRFToken,
 					Errors:    verr.Errors,
+					DeputyDetails: deputyDetails,
+					Form: addContactDetailForm,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			if(err != nil) {
+				return err	
 			}
 
 			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", deputyId))

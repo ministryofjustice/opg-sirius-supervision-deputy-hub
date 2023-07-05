@@ -2,7 +2,7 @@
 {{ define "main" }}
 {{ template "content-header" . }}
 {{ template "error-summary" (rename_errors .Errors) }}
-<header>
+    <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             Create new contact
         </h1>
@@ -18,10 +18,11 @@
                     <label class="govuk-label" for="deputy">Name (required)</label>
                     <input
                         class="govuk-input"
-                        id="f-name"
+                        id="f-contactName"
                         name="name"
                         type="text"
-                        value="" />
+                        value="{{ .Form.ContactName }}"
+                         />
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="deputy">Job title</label>
@@ -30,7 +31,8 @@
                         id="f-job-title"
                         name="job-title"
                         type="text"
-                        value="" />
+                        value="{{ .Form.JobTitle }}"
+                         />
                 </div>
                 <div class="govuk-form-group">
                     <label class="govuk-label" for="email">
@@ -41,46 +43,50 @@
                         id="f-email"
                         name="email"
                         type="text"
-                        value="" />
+                        value="{{ .Form.Email }}"
+                         />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="telephone">
+                    <label class="govuk-label" for="phone">
                         Phone (required)
                     </label>
                     <input
                         class="govuk-input"
-                        id="f-telephone"
-                        name="telephone"
+                        id="f-phoneNumber"
+                        name="phone"
                         type="text"
-                        value="" />
+                        value="{{ .Form.PhoneNumber }}"
+                         />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="telephone-secondary">
+                    <label class="govuk-label" for="otherPhone">
                         Other phone
                     </label>
                     <input
                         class="govuk-input"
-                        id="f-telephone-secondary"
-                        name="telephone-secondary"
+                        id="f-otherPhone"
+                        name="other-phone"
                         type="text"
-                        value="" />
+                        value="{{ .Form.OtherPhoneNumber }}"
+                         />
                 </div>
                 <div
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="255">
-                    <div class="govuk-form-group" id="f-note">
-                        <label class="govuk-label" for="note">
+                    <div class="govuk-form-group" id="f-notes">
+                        <label class="govuk-label" for="notes">
                             Notes
                         </label>
                         {{/* prettier-ignore-start */}}
                         <textarea
                             class="govuk-textarea govuk-js-character-count"
-                            id="note"
-                            name="note"
+                            id="notes"
+                            name="notes"
                             rows="5"
                             aria-describedby="note-info note-hint"
-                        ></textarea>
+                        >{{ .Form.Notes }}</textarea>
+                        
                         {{/* prettier-ignore-end */}}
                         <div
                             id="note-info"
@@ -91,20 +97,20 @@
                     </div>
                 </div>
                 <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
+                    <fieldset class="govuk-fieldset" id="f-isNamedDeputy">
                         <legend class="govuk-fieldset__legend">
                             Named deputy (required)
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="named-deputy-yes" name="named-deputy" type="radio" value="true">
-                                <label class="govuk-label govuk-radios__label" for="named-deputy-yes">
+                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="yes">
+                                <label class="govuk-label govuk-radios__label" for="is-named-deputy-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="named-deputy-no" name="named-deputy" type="radio" value="false">
-                                <label class="govuk-label govuk-radios__label" for="named-deputy-no">
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="no">
+                                <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
                                 No
                                 </label>
                             </div>
@@ -112,20 +118,20 @@
                     </fieldset>
                 </div>
                 <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset">
+                    <fieldset class="govuk-fieldset" id="f-isMainContact">
                         <legend class="govuk-fieldset__legend">
                             Main contact (required)
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="main-contact-yes" name="main-contact" type="radio" value="true">
-                                <label class="govuk-label govuk-radios__label" for="main-contact-yes">
+                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="yes">
+                                <label class="govuk-label govuk-radios__label" for="is-main-contact-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="main-contact-no" name="main-contact" type="radio" value="false">
-                                <label class="govuk-label govuk-radios__label" for="main-contact-no">
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="no">
+                                <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
                                 No
                                 </label>
                             </div>
