@@ -103,13 +103,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="yes">
+                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="yes" {{ if eq .Form.IsNamedDeputy "yes" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="no">
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="no" {{ if eq .Form.IsNamedDeputy "no" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
                                 No
                                 </label>
@@ -124,13 +124,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="yes">
+                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="yes" {{ if eq .Form.IsMainContact "yes" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="no">
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="no" {{ if eq .Form.IsMainContact "no" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
                                 No
                                 </label>
