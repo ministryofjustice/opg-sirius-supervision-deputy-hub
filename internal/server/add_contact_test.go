@@ -151,7 +151,7 @@ func TestAddContactFormatValidationErrors(t *testing.T) {
 		"otherPhoneNumber": {
 			"stringLengthTooLong": "The other telephone number must be 255 characters or fewer",
 		},
-		"notes": {
+		"contactNotes": {
 			"stringLengthTooLong": "The note must be 255 characters or fewer",
 		},
 	}
@@ -189,7 +189,7 @@ func TestAddContactFormatValidationErrors(t *testing.T) {
 		"otherPhoneNumber": {
 			"stringLengthTooLong": "The other telephone number must be 255 characters or fewer",
 		},
-		"notes": {
+		"contactNotes": {
 			"stringLengthTooLong": "The note must be 255 characters or fewer",
 		},
 	}

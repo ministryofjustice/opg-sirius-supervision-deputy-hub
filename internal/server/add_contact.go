@@ -46,7 +46,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				Email:            r.PostFormValue("email"),
 				PhoneNumber:      r.PostFormValue("phone"),
 				OtherPhoneNumber: r.PostFormValue("other-phone"),
-				Notes:            r.PostFormValue("notes"),
+				ContactNotes:     r.PostFormValue("notes"),
 				IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}

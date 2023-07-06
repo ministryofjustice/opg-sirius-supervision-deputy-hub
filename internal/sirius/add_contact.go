@@ -13,7 +13,7 @@ type ContactDetails struct {
 	Email            string `json:"email"`
 	PhoneNumber      string `json:"phoneNumber"`
 	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	Notes            string `json:"notes"`
+	ContactNotes            string `json:"contactNotes"`
 	IsNamedDeputy    string `json:"isNamedDeputy"`
 	IsMainContact    string `json:"isMainContact"`
 }
