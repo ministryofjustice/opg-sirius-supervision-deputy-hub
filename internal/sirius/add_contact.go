@@ -26,7 +26,7 @@ func (c *Client) AddContactDetails(ctx Context, deputyId int, addContactForm Con
 	}
 
 	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
-	fmt.Println(&body)
+
 	req, err := c.newRequest(ctx, http.MethodPost, url, &body)
 
 	if err != nil {

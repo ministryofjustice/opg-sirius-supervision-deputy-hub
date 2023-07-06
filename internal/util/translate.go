@@ -75,14 +75,15 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"phoneNumber": {
 		"stringLengthTooLong": pair{"phoneNumber", "The telephone number must be 255 characters or fewer"},
-		"isEmpty":             pair{"phoneNumber", "Enter a phone number for the deputy contact"},
+		"isEmpty":             pair{"phoneNumber", "Enter a telephone number"},
 	},
 	"workPhoneNumber": {
 		"stringLengthTooLong": pair{"workPhoneNumber", "The telephone number must be 255 characters or fewer"},
 	},
 	"email": {
-		"stringLengthTooLong": pair{"email", "The email must be 255 characters or fewer"},
-		"isEmpty":             pair{"email", "Enter an email for the deputy contact"},
+		"stringLengthTooLong":       pair{"email", "The email must be 255 characters or fewer"},
+		"isEmpty":                   pair{"email", "Enter an email address"},
+		"emailAddressInvalidFormat": pair{"email", "Enter an email address in the correct format, like name@example.com"},
 	},
 	// note
 	"name": {
@@ -111,13 +112,23 @@ var validationMappings = map[string]map[string]pair{
 	},
 	// deputy contact
 	"contactName": {
-		"isEmpty":             pair{"contactName", "Enter a name for the deputy contact"},
+		"stringLengthTooLong": pair{"contactName", "The name must be 255 characters or fewer"},
+		"isEmpty":             pair{"contactName", "Enter a name"},
+	},
+	"jobTitle": {
+		"stringLengthTooLong": pair{"jobTitle", "The job title must be 255 characters or fewer"},	
+	},
+	"otherPhoneNumber": {
+		"stringLengthTooLong": pair{"otherPhoneNumber", "The other telephone number must be 255 characters or fewer"},
+	},
+	"notes": {
+		"stringLengthTooLong": pair{"notes", "The note must be 255 characters or fewer"},
 	},
 	"isMainContact": {
-		"isEmpty":             pair{"isMainContact", "Select whether the deputy contact is the main contact or not"},
+		"isEmpty":             pair{"isMainContact", "Select whether this contact is a main contact"},
 	},
 	"isNamedDeputy": {
-		"isEmpty":             pair{"isNamedDeputy", "Select whether the deputy contact is the named deputy or not"},
+		"isEmpty":             pair{"isNamedDeputy", "Select whether this contact is the named deputy"},
 	},
 	// other
 	"otherImportantInformation": {

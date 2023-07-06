@@ -11,6 +11,9 @@
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    Name: {{ .Event.Contact.Name }}
+                </li> 
                 {{ if .Event.Contact.JobTitle }}
                     <li>
                         Job title: {{ .Event.Contact.JobTitle }}
@@ -22,6 +25,16 @@
                 <li>
                     Telephone: {{ .Event.Contact.PhoneNumber }}
                 </li> 
+                {{ if .Event.Contact.OtherPhoneNumber }}
+                    <li>
+                        Other telephone: {{ .Event.Contact.OtherPhoneNumber }}
+                    </li> 
+                {{ end }}
+                {{ if .Event.Contact.Notes }}
+                    <li>
+                        Notes: {{ .Event.Contact.Notes }}
+                    </li> 
+                {{ end }}
             </ul>
         </div>
     </div>

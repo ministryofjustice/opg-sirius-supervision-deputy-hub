@@ -53,10 +53,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 
 			err := client.AddContactDetails(ctx, deputyId, addContactDetailForm)
 
-			//fmt.Println(err)
-
 			if verr, ok := err.(sirius.ValidationError); ok {
-				fmt.Println(verr.Errors)
 				vars := addContactVars{
 					Path:      r.URL.Path,
 					XSRFToken: ctx.XSRFToken,
