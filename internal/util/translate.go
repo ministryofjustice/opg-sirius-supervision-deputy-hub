@@ -110,6 +110,7 @@ var validationMappings = map[string]map[string]pair{
 		"stringLengthTooLong": pair{"surname", "The deputy surname must be 255 characters or fewer"},
 		"isEmpty":             pair{"surname", "The deputy surname is required and can't be empty"},
 	},
+
 	// deputy contact
 	"contactName": {
 		"stringLengthTooLong": pair{"contactName", "The name must be 255 characters or fewer"},
@@ -121,14 +122,23 @@ var validationMappings = map[string]map[string]pair{
 	"otherPhoneNumber": {
 		"stringLengthTooLong": pair{"otherPhoneNumber", "The other telephone number must be 255 characters or fewer"},
 	},
-	"notes": {
-		"stringLengthTooLong": pair{"notes", "The note must be 255 characters or fewer"},
-	},
+	// "notes": {
+	// 	"stringLengthTooLong": pair{"notes", "The note must be 255 characters or fewer"},
+	// },
 	"isMainContact": {
 		"isEmpty":             pair{"isMainContact", "Select whether this contact is a main contact"},
 	},
 	"isNamedDeputy": {
 		"isEmpty":             pair{"isNamedDeputy", "Select whether this contact is the named deputy"},
+	// task
+	"taskType": {
+		"isEmpty": pair{"taskType", "Select the task type"},
+	},
+	"dueDate": {
+		"isEmpty": pair{"dueDate", "Enter a due date"},
+	},
+	"notes": {
+		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
 	},
 	// other
 	"otherImportantInformation": {

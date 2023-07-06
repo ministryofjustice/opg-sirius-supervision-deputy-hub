@@ -6,7 +6,8 @@
     "@ministryofjustice/frontend": "^1.6.2",
     "accessible-autocomplete": "^2.0.4",
     "govuk-frontend": "^4.3.1",
-    "jquery": "^3.6.1"
+    "jquery": "^3.6.1",
+    "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.9.0"
   },
   "devDependencies": {
     "esbuild": "^0.15.14",
@@ -24,6 +25,7 @@
     "test-sirius": "cd internal/sirius && go test",
     "test-server": "cd internal/server && go test",
     "cypress": "cypress open",
+    "cypress-m1": "export CYPRESS_BASE_URL=http://localhost:8888; cypress open",
     "cypress-headless": "cypress run -b chrome",
     "cypress-for-m1-build": "docker-compose -f docker/docker-compose.ci.yml build deputy-hub json-server",
     "cypress-for-m1-up": "docker-compose -f docker/docker-compose.ci.yml up -d deputy-hub json-server",
