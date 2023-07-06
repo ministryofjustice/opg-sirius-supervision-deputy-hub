@@ -79,4 +79,11 @@ describe("Tasks", () => {
             });
         });
     })
+
+    describe("Task note", () => {
+        it("displays the task note title in the Notes tab correctly", () => {
+            cy.visit("/supervision/deputies/1/notes");
+            cy.contains(".moj-timeline__title", "General enquiry task created");
+        });
+    })
 });

@@ -6,7 +6,7 @@ import (
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyEvents(sirius.Context, sirius.DeputyDetails) (sirius.DeputyEvents, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
 }
 
 type deputyHubEventVars struct {
@@ -24,7 +24,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		}
 
 		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, deputyDetails)
+		deputyEvents, err := client.GetDeputyEvents(ctx, deputyDetails.ID)
 		if err != nil {
 			return err
 		}

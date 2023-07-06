@@ -1701,6 +1701,20 @@ module.exports = function () {
                 "name": "Email received",
                 "createdTime": "20/09/2021 08:50:12",
                 "direction": null
+            },
+            {
+                "personId": 1,
+                "userId": 68,
+                "userDisplayName": "Finance User Testing",
+                "userEmail": "finance.user.testing@opgtest.com",
+                "userPhoneNumber": "12345678",
+                "id": 64,
+                "type": "GE",
+                "noteType": "TASK_CREATED",
+                "description": "Some general enquiry on whether tasks appear correctly in the notes tab",
+                "name": "General enquiry",
+                "createdTime": "19/09/2021 08:50:12",
+                "direction": null
             }
         ],
         "errors": [
