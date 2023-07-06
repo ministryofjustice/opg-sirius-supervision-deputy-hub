@@ -1728,6 +1728,49 @@ module.exports = function () {
                 }
             },
             {
+                "id": "addContactEmpty",
+                "validation_errors": {
+                    "contactName": {
+                        "isEmpty": ""
+                    },
+                    "email": {
+                        "isEmpty": ""
+                    },
+                    "phoneNumber": {
+                        "isEmpty": ""
+                    },
+                    "isMainContact": {
+                        "isEmpty": ""
+                    },
+                    "isNamedDeputy": {
+                        "isEmpty": ""
+                    },
+                }
+            },
+            {
+                "id": "addContactInvalid",
+                "validation_errors": {
+                    "contactName": {
+                        "stringLengthTooLong": ""
+                    },
+                    "jobTitle": {
+                        "stringLengthTooLong": ""
+                    },
+                    "email": {
+                        "emailAddressInvalidFormat": ""
+                    },
+                    "phoneNumber": {
+                        "stringLengthTooLong": ""
+                    },                    
+                    "otherPhoneNumber": {
+                        "stringLengthTooLong": ""
+                    },
+                    "contactNotes": {
+                        "stringLengthTooLong": ""
+                    }
+                }
+            },
+            {
                 "id": "firm",
                 "validation_errors": {
                     "firmName": {
@@ -1826,6 +1869,12 @@ module.exports = function () {
                 "displayName": "Jon Snow",
                 "deleted": false,
                 "email": "jonsnow@opgtest.com"
+            },
+            {
+                "id": "addContact",
+                "name": "Test Contact",
+                "email": "test@email.com",
+                "phoneNumber": "0123456789",
             },
             {
                 "id": "firm",
