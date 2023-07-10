@@ -1,0 +1,157 @@
+{{ template "page" . }}
+{{ define "main" }}
+{{ template "content-header" . }}
+{{ template "error-summary" (rename_errors .Errors) }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+            Create new contact
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="add-contact-form" class="" method="post">
+                <input
+                    type="hidden"
+                    name="xsrfToken"
+                    value="{{ .XSRFToken }}" />
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="deputy">Name (required)</label>
+                    <input
+                        class="govuk-input"
+                        id="f-contactName"
+                        name="name"
+                        type="text"
+                        value="{{ .Form.ContactName }}"
+                         />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="deputy">Job title</label>
+                    <input
+                        class="govuk-input"
+                        id="f-job-title"
+                        name="job-title"
+                        type="text"
+                        value="{{ .Form.JobTitle }}"
+                         />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="email">
+                        Email (required)
+                    </label>
+                    <input
+                        class="govuk-input"
+                        id="f-email"
+                        name="email"
+                        type="text"
+                        value="{{ .Form.Email }}"
+                         />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="phone">
+                        Phone (required)
+                    </label>
+                    <input
+                        class="govuk-input"
+                        id="f-phoneNumber"
+                        name="phone"
+                        type="text"
+                        value="{{ .Form.PhoneNumber }}"
+                         />
+                </div>
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="otherPhone">
+                        Other phone
+                    </label>
+                    <input
+                        class="govuk-input"
+                        id="f-otherPhone"
+                        name="other-phone"
+                        type="text"
+                        value="{{ .Form.OtherPhoneNumber }}"
+                         />
+                </div>
+                <div
+                    class="govuk-character-count"
+                    data-module="govuk-character-count"
+                    data-maxlength="255">
+                    <div class="govuk-form-group" id="f-notes">
+                        <label class="govuk-label" for="notes">
+                            Notes
+                        </label>
+                        {{/* prettier-ignore-start */}}
+                        <textarea
+                            class="govuk-textarea govuk-js-character-count"
+                            id="f-contactNotes"
+                            name="notes"
+                            rows="5"
+                            aria-describedby="note-info note-hint"
+                        >{{ .Form.ContactNotes }}</textarea>
+                        
+                        {{/* prettier-ignore-end */}}
+                        <div
+                            id="note-info"
+                            class="govuk-hint govuk-character-count__message"
+                            aria-live="polite">
+                            You have 255 characters remaining
+                        </div>
+                    </div>
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" id="f-isNamedDeputy">
+                        <legend class="govuk-fieldset__legend">
+                            Named deputy (required)
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="yes" {{ if eq .Form.IsNamedDeputy "yes" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-named-deputy-yes">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="no" {{ if eq .Form.IsNamedDeputy "no" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
+                                No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" id="f-isMainContact">
+                        <legend class="govuk-fieldset__legend">
+                            Main contact (required)
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="yes" {{ if eq .Form.IsMainContact "yes" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-main-contact-yes">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="no" {{ if eq .Form.IsMainContact "no" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
+                                No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save contact
+                    </button>
+                    <a
+                        class="govuk-link"
+                        href="{{ prefix (printf "/%d/contacts" .DeputyDetails.ID) }}">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+{{ end }}

@@ -1,0 +1,41 @@
+{{ define "contact-added" }}
+    <div class="moj-timeline__item" data-cy="contact-added-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">{{ .Event.Contact.Name }} added to team</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+                <li>
+                    Name: {{ .Event.Contact.Name }}
+                </li> 
+                {{ if .Event.Contact.JobTitle }}
+                    <li>
+                        Job title: {{ .Event.Contact.JobTitle }}
+                    </li> 
+                {{ end }}
+                <li>
+                    Email: {{ .Event.Contact.Email }}
+                </li> 
+                <li>
+                    Telephone: {{ .Event.Contact.PhoneNumber }}
+                </li> 
+                {{ if .Event.Contact.OtherPhoneNumber }}
+                    <li>
+                        Other telephone: {{ .Event.Contact.OtherPhoneNumber }}
+                    </li> 
+                {{ end }}
+                {{ if .Event.Contact.Notes }}
+                    <li>
+                        Notes: {{ .Event.Contact.Notes }}
+                    </li> 
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}
