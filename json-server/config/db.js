@@ -1703,7 +1703,7 @@ module.exports = function () {
                 "direction": null
             },
             {
-                "personId": 1,
+                "personId": 3,
                 "userId": 68,
                 "userDisplayName": "Finance User Testing",
                 "userEmail": "finance.user.testing@opgtest.com",

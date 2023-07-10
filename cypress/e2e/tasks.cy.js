@@ -67,7 +67,7 @@ describe("Tasks", () => {
             cy.visit("/supervision/deputies/1/timeline");
 
             cy.get('[data-cy="task-created-event"]').within(() => {
-                cy.contains(".moj-timeline__title", "Assurance visit follow up task created by");
+                cy.contains(".moj-timeline__title", "Assurance visit follow up task created");
                 cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
 
                 cy.get(".moj-timeline__description").get("li")
@@ -82,7 +82,7 @@ describe("Tasks", () => {
 
     describe("Task note", () => {
         it("displays the task note title in the Notes tab correctly", () => {
-            cy.visit("/supervision/deputies/1/notes");
+            cy.visit("/supervision/deputies/3/notes");
             cy.contains(".moj-timeline__title", "General enquiry task created");
         });
     })
