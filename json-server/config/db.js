@@ -1703,6 +1703,20 @@ module.exports = function () {
                 "direction": null
             },
             {
+                "personId": 2,
+                "userId": 68,
+                "userDisplayName": "Finance User Testing",
+                "userEmail": "finance.user.testing@opgtest.com",
+                "userPhoneNumber": "12345678",
+                "id": 66,
+                "type": "NEW DEPUTY",
+                "noteType": "NOTE_ADDED",
+                "description": "Note text entered",
+                "name": "New note title",
+                "createdTime": "20/09/2021 08:50:13",
+                "direction": null
+            },
+            {
                 "personId": 3,
                 "userId": 68,
                 "userDisplayName": "Finance User Testing",
