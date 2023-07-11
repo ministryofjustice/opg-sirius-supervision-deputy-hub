@@ -81,9 +81,11 @@ var validationMappings = map[string]map[string]pair{
 		"stringLengthTooLong": pair{"workPhoneNumber", "The telephone number must be 255 characters or fewer"},
 	},
 	"email": {
-		"stringLengthTooLong":       pair{"email", "The email must be 255 characters or fewer"},
-		"isEmpty":                   pair{"email", "Enter an email address"},
-		"emailAddressInvalidFormat": pair{"email", "Enter an email address in the correct format, like name@example.com"},
+		"stringLengthTooLong":         pair{"email", "The email must be 255 characters or fewer"},
+		"isEmpty":                     pair{"email", "Enter an email address"},
+		"emailAddressInvalidFormat":   pair{"email", "Enter an email address in the correct format, like name@example.com"},
+		"emailAddressInvalidHostname": pair{"email", "The email address is not valid"},
+		"hostnameLocalNameNotAllowed": pair{"email", "The email address is not valid"},
 	},
 	// note
 	"name": {
