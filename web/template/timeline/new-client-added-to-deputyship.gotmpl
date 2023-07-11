@@ -3,7 +3,7 @@
         <div class="moj-timeline__header">
             <h2 class="moj-timeline__title">New client added to deputyship</h2>
             <p class="moj-timeline__byline">
-                {{ printf "by %v (%v)" .User.UserDisplayName .User.UserPhoneNumber }}
+                {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
             </p>
         </div>
 
@@ -17,7 +17,7 @@
                 <li>Sirius ID: {{ .Event.SiriusId }}</li>
                 <li>Order type: {{ .Event.OrderType }}</li>
                 {{ range .Event.Client }}
-                    <li>Client: {{ .ClientName }}</li>
+                    <li>Client: {{ .Name }}</li>
                 {{ end }}
             </ul>
         </div>
