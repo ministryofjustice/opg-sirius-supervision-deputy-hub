@@ -6,6 +6,7 @@
     "/:personId/notes": "/notes",
     "/users/current": "/users",
     "/deputies/:deputyId/ecm": "/ecm",
+    "/successes/deputies/:id/contacts": "/contacts",
     "/deputies/:id/contact-details": "/deputies/:id",
     "/deputies/:id/assurance-visits": "/assuranceVisits/:id",
     "/deputies/:id/assurance-visits/:visitId": "/assuranceVisit/:visitId",
