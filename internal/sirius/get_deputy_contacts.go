@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	
-	"strings"
-	
 )
 
 type apiContact struct {
@@ -53,7 +51,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId, displayContactLimit, s
 	var contactList ContactList
 	var apiContactList ApiContactList
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/contacts?&limit=%d&page=%d", strings.ToLower(deputyType), deputyId, displayContactLimit, search), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts?&limit=%d&page=%d", deputyId, displayContactLimit, search), nil)
 
 	if err != nil {
 		return contactList, AriaSorting{}, err
