@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -38,7 +39,7 @@ func TestGetTaskTypes_PA(t *testing.T) {
 		DeputyType: DeputyType{Handle: "PRO"},
 	}
 
-	expectedResponse := []TaskType{
+	expectedResponse := []model.TaskType{
 		{
 			"AAA",
 			"Pro only",
@@ -75,7 +76,7 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		DeputyType: DeputyType{Handle: "PA"},
 	}
 
-	expectedResponse := []TaskType{
+	expectedResponse := []modelTaskType{
 		{
 			"BBB",
 			"PA only",
@@ -105,7 +106,7 @@ func TestGetTaskTypes_statusError(t *testing.T) {
 
 	taskTypes, err := client.GetTaskTypes(getContext(nil), DeputyDetails{})
 
-	assert.Equal(t, []TaskType(nil), taskTypes)
+	assert.Equal(t, []model.TaskType(nil), taskTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/tasktypes/deputy",
@@ -124,5 +125,5 @@ func TestGetTaskTypes_unauthorised(t *testing.T) {
 	taskTypes, err := client.GetTaskTypes(getContext(nil), DeputyDetails{})
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []TaskType(nil), taskTypes)
+	assert.Equal(t, []model.TaskType(nil), taskTypes)
 }

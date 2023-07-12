@@ -2,22 +2,16 @@ package sirius
 
 import (
 	"encoding/json"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"sort"
 )
 
-type TaskType struct {
-	Handle        string `json:"handle"`
-	Description   string `json:"incomplete"`
-	ProDeputyTask bool   `json:"proDeputyTask"`
-	PaDeputyTask  bool   `json:"paDeputyTask"`
-}
-
 type TaskTypesMap struct {
-	TaskTypes map[string]TaskType `json:"task_types"`
+	TaskTypes map[string]model.TaskType `json:"task_types"`
 }
 
-func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]TaskType, error) {
+func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]model.TaskType, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/tasktypes/deputy", nil)
 
 	if err != nil {
@@ -46,7 +40,7 @@ func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]TaskType, er
 
 	isPro := deputy.DeputyType.Handle == "PRO"
 
-	var deputyTaskTypes []TaskType
+	var deputyTaskTypes []model.TaskType
 	for _, t := range taskTypes.TaskTypes {
 		if t.ProDeputyTask && isPro {
 			deputyTaskTypes = append(deputyTaskTypes, t)

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
@@ -19,7 +20,7 @@ type mockAddTasksClient struct {
 	lastCtx          sirius.Context
 	err              error
 	verr             error
-	taskTypes        []sirius.TaskType
+	taskTypes        []model.TaskType
 	assignees        []sirius.TeamMember
 	selectedAssignee int
 }
@@ -32,7 +33,7 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	return m.verr
 }
 
-func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]sirius.TaskType, error) {
+func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]model.TaskType, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -55,7 +56,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
 		EcmId: 1,
 	}}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC"}}
+	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC"}}
 	client.taskTypes = taskTypes
 	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
@@ -88,7 +89,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
 	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
@@ -123,7 +124,7 @@ func TestAddTask_success_other(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
 	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees

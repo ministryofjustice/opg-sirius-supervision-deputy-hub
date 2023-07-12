@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 
 type AddTasksClient interface {
 	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error
-	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]sirius.TaskType, error)
+	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]model.TaskType, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]sirius.TeamMember, error)
 }
 
@@ -17,7 +18,7 @@ type AddTaskVars struct {
 	Path          string
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
-	TaskTypes     []sirius.TaskType
+	TaskTypes     []model.TaskType
 	Assignees     []sirius.TeamMember
 	TaskType      string
 	DueDate       string

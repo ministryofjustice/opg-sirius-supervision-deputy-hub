@@ -23,4 +23,45 @@
             </div>
         </div>
     </header>
+<table id="tasks-list" class="govuk-table" data-module="moj-sortable-table">
+    <!--<caption class="govuk-table__caption govuk-!-margin-bottom-5 govuk-!-margin-top-5">All open tasks</caption>-->
+    <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="none" width="40%">Task type</th>
+        <th scope="col" class="govuk-table__header" aria-sort="none">Assigned to</th>
+        <th scope="col" class="govuk-table__header" aria-sort="ascending">Due date</th>
+        <th scope="col" class="govuk-table__header">Actions</th>
+    </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+    {{ range .Tasklist.Tasks }}
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell task_type"> {{.}}
+                <details class="govuk-details  govuk-!-margin-top-2  govuk-!-margin-bottom-0">
+                    <summary class="govuk-details__summary">
+                      <span class="govuk-details__summary-text"> Notes </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                       {{.Notes}}
+                    </div>
+                </details>
+            </td>
+
+            <td class="govuk-table__cell assigned_to">
+                <span class="co-name">{{.Assignee.DisplayName}}</span>
+                <span class="secondary team">{{.Assignee.Teams}}</span>
+            </td>
+
+            <td class="govuk-table__cell due_date">
+                <span>{{.DueDate}}</span>
+            </td>
+
+            <td class="govuk-table__cell due_date">
+                <a class="govuk-button govuk-button--secondary" href="/sirius/pa-hub/1-3/tasks/manage-task.html">Manage task</a>
+                <a class="govuk-button govuk-button--secondary" href="/sirius/pa-hub/1-3/tasks/complete-task.html">Mark as complete</a>
+            </td>
+        </tr>
+    {{ end }}
+    </tbody>
+</table>
 {{ end }}
