@@ -17,7 +17,7 @@ type mockContactInformation struct {
 	err     error
 }
 
-func (m *mockContactInformation) AddContactDetails(ctx sirius.Context, deputyId int, contactDetails sirius.ContactDetails) (error) {
+func (m *mockContactInformation) AddContact(ctx sirius.Context, deputyId int, contact sirius.Contact) (error) {
 	m.count += 1
 	m.lastCtx = ctx
 

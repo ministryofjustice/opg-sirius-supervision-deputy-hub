@@ -27,7 +27,6 @@
     "cypress": "cypress open",
     "cypress-m1": "export CYPRESS_BASE_URL=http://localhost:8888; cypress open",
     "cypress-headless": "cypress run -b chrome",
-    "cypress-m1": "export CYPRESS_BASE_URL=http://localhost:8888; cypress open",
     "cypress-build-down": "docker-compose -f docker/docker-compose.ci.yml down",
     "fmt": "prettier --write ."
   },

@@ -31,7 +31,7 @@ func TestAddContact(t *testing.T) {
 		}, nil
 	}
 
-	contactDetails := ContactDetails{
+	contact := Contact{
 		ContactName: "Contact Name",
 		Email:       "Email_address@address.com",
 		PhoneNumber: "11111111",
@@ -39,7 +39,7 @@ func TestAddContact(t *testing.T) {
 
 	deputyId := 76
 
-	err := client.AddContactDetails(getContext(nil), deputyId, contactDetails)
+	err := client.AddContact(getContext(nil), deputyId, contact)
 	assert.Nil(t, err)
 }
 
@@ -54,7 +54,7 @@ func TestAddContactReturnsNewStatusError(t *testing.T) {
 
 	deputyId := 76
 
-	err := client.AddContactDetails(getContext(nil), deputyId, ContactDetails{})
+	err := client.AddContact(getContext(nil), deputyId, Contact{})
 
 	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
 
@@ -75,7 +75,7 @@ func TestAddContactReturnsUnauthorisedClientError(t *testing.T) {
 
 	deputyId := 76
 
-	err := client.AddContactDetails(getContext(nil), deputyId, ContactDetails{})
+	err := client.AddContact(getContext(nil), deputyId, Contact{})
 
 	assert.Equal(t, ErrUnauthorized, err)
 

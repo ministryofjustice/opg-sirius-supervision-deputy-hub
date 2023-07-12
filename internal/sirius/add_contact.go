@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type ContactDetails struct {
+type Contact struct {
 	ContactName      string `json:"contactName"`
 	JobTitle         string `json:"jobTitle"`
 	Email            string `json:"email"`
@@ -18,7 +18,7 @@ type ContactDetails struct {
 	IsMainContact    string `json:"isMainContact"`
 }
 
-func (c *Client) AddContactDetails(ctx Context, deputyId int, addContactForm ContactDetails) error {
+func (c *Client) AddContact(ctx Context, deputyId int, addContactForm Contact) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addContactForm)
 	if err != nil {

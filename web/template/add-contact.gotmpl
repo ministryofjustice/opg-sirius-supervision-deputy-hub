@@ -9,13 +9,13 @@
     </header>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <form id="add-contact-form" class="" method="post">
+            <form id="add-contact-form" method="post">
                 <input
                     type="hidden"
                     name="xsrfToken"
                     value="{{ .XSRFToken }}" />
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="deputy">Name (required)</label>
+                    <label class="govuk-label" for="f-contactName">Name (required)</label>
                     <input
                         class="govuk-input"
                         id="f-contactName"
@@ -25,7 +25,7 @@
                          />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="deputy">Job title</label>
+                    <label class="govuk-label" for="f-job-title">Job title</label>
                     <input
                         class="govuk-input"
                         id="f-job-title"
@@ -35,7 +35,7 @@
                          />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="email">
+                    <label class="govuk-label" for="f-email">
                         Email (required)
                     </label>
                     <input
@@ -47,7 +47,7 @@
                          />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="phone">
+                    <label class="govuk-label" for="f-phoneNumber">
                         Phone (required)
                     </label>
                     <input
@@ -59,7 +59,7 @@
                          />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="otherPhone">
+                    <label class="govuk-label" for="f-otherPhone">
                         Other phone
                     </label>
                     <input
@@ -75,7 +75,7 @@
                     data-module="govuk-character-count"
                     data-maxlength="255">
                     <div class="govuk-form-group" id="f-notes">
-                        <label class="govuk-label" for="notes">
+                        <label class="govuk-label" for="note">
                             Notes
                         </label>
                         {{/* prettier-ignore-start */}}

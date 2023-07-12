@@ -9,7 +9,7 @@ import (
 )
 
 type ContactInformation interface {
-	AddContactDetails(sirius.Context, int, sirius.ContactDetails) (error)
+	AddContact(sirius.Context, int, sirius.Contact) (error)
 }
 
 type addContactVars struct {
@@ -19,7 +19,7 @@ type addContactVars struct {
 	Error         string
 	Errors        sirius.ValidationErrors
 	DeputyId      int
-	Form          sirius.ContactDetails
+	Form          sirius.Contact
 }
 
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
@@ -40,7 +40,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		case http.MethodPost:
-			addContactDetailForm := sirius.ContactDetails{
+			addContactForm := sirius.Contact{
 				ContactName:      r.PostFormValue("name"),
 				JobTitle:         r.PostFormValue("job-title"),
 				Email:            r.PostFormValue("email"),
@@ -51,7 +51,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			err := client.AddContactDetails(ctx, deputyId, addContactDetailForm)
+			err := client.AddContact(ctx, deputyId, addContactForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := addContactVars{
@@ -59,7 +59,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 					XSRFToken: ctx.XSRFToken,
 					Errors:    verr.Errors,
 					DeputyDetails: deputyDetails,
-					Form: addContactDetailForm,
+					Form: addContactForm,
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

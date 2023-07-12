@@ -37,7 +37,7 @@ type Event struct {
 	VisitReportMarkedAs  string         `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated     string         `json:"visitorAllocated"`
 	ReviewedBy           string         `json:"reviewedBy"`
-	Contact              Contact        `json:"deputyContact"`
+	Contact              ContactPerson  `json:"deputyContact"`
 }
 
 type Changes struct {
@@ -53,7 +53,7 @@ type ClientPerson struct {
 	ClientCourtRef string `json:"personCourtRef"`
 }
 
-type Contact struct {
+type ContactPerson struct {
 	Name             string `json:"name"`
 	JobTitle         string `json:"jobTitle"`
 	Email            string `json:"email"`
