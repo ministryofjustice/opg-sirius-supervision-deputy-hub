@@ -28,6 +28,7 @@ type Client interface {
 	AddAssuranceVisit
 	AssuranceVisit
 	ManageAssuranceVisit
+	ContactInformation
 	TasksClient
 	AddTasksClient
 }
@@ -48,6 +49,14 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("",
 		wrap(
 			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
+
+	pageRouter.Handle("/contacts",
+		wrap(
+			renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
+
+	pageRouter.Handle("/contacts/add-contact",
+		wrap(
+			renderTemplateForAddContact(client, templates["add-contact.gotmpl"])))
 
 	pageRouter.Handle("/clients",
 		wrap(
@@ -240,4 +249,8 @@ func staticFileHandler(webDir string) http.Handler {
 		w.Header().Set("Cache-Control", "must-revalidate")
 		h.ServeHTTP(w, r)
 	})
+}
+
+func pointerBool(b bool) *bool {
+	return &b
 }
