@@ -21,7 +21,7 @@ var (
     }`
 )
 
-func TestGetTaskTypes_PA(t *testing.T) {
+func TestGetTaskTypes_PRO(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -32,10 +32,6 @@ func TestGetTaskTypes_PA(t *testing.T) {
 			StatusCode: 200,
 			Body:       r,
 		}, nil
-	}
-
-	deputy := DeputyDetails{
-		DeputyType: DeputyType{Handle: "PRO"},
 	}
 
 	expectedResponse := []TaskType{
@@ -52,13 +48,13 @@ func TestGetTaskTypes_PA(t *testing.T) {
 		},
 	}
 
-	taskTypes, err := client.GetTaskTypes(getContext(nil), deputy)
+	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
 	assert.Equal(t, expectedResponse, taskTypes)
 	assert.Equal(t, nil, err)
 }
 
-func TestGetTaskTypes_PRO(t *testing.T) {
+func TestGetTaskTypes_PA(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -69,10 +65,6 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 			StatusCode: 200,
 			Body:       r,
 		}, nil
-	}
-
-	deputy := DeputyDetails{
-		DeputyType: DeputyType{Handle: "PA"},
 	}
 
 	expectedResponse := []TaskType{
@@ -89,7 +81,7 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		},
 	}
 
-	taskTypes, err := client.GetTaskTypes(getContext(nil), deputy)
+	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PA")
 
 	assert.Equal(t, expectedResponse, taskTypes)
 	assert.Equal(t, nil, err)
@@ -103,7 +95,7 @@ func TestGetTaskTypes_statusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	taskTypes, err := client.GetTaskTypes(getContext(nil), DeputyDetails{})
+	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
 	assert.Equal(t, []TaskType(nil), taskTypes)
 	assert.Equal(t, StatusError{
@@ -121,7 +113,7 @@ func TestGetTaskTypes_unauthorised(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	taskTypes, err := client.GetTaskTypes(getContext(nil), DeputyDetails{})
+	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, []TaskType(nil), taskTypes)

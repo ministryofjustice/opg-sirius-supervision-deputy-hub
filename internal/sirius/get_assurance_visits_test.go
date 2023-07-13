@@ -103,7 +103,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			VisitId:             3,
 			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
 			RequestedDate:       "25/06/2022",
-			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			RequestedBy:         User{ID: 53, Name: "case manager"},
 			DeputyId:            1,
 			CommissionedDate:    "01/01/2022",
 			ReportDueDate:       "07/01/2022",
@@ -113,13 +113,13 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 			Note:                "This is just notes for something to show",
 			VisitorAllocated:    "Jane Janeson",
-			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
+			ReviewedBy:          User{ID: 53, Name: "case manager"},
 		},
 		{
 			VisitId:             4,
 			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
 			RequestedDate:       "25/06/2022",
-			RequestedBy:         User{UserId: 53, UserDisplayName: "case manager"},
+			RequestedBy:         User{ID: 53, Name: "case manager"},
 			DeputyId:            1,
 			CommissionedDate:    "01/01/2022",
 			ReportDueDate:       "07/01/2022",
@@ -129,7 +129,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 			Note:                "",
 			VisitorAllocated:    "Jane Janeson",
-			ReviewedBy:          User{UserId: 53, UserDisplayName: "case manager"},
+			ReviewedBy:          User{ID: 53, Name: "case manager"},
 		},
 	}
 
