@@ -19,9 +19,9 @@
                     <input
                         class="govuk-input"
                         id="f-contactName"
-                        name="name"
+                        name="contact-name"
                         type="text"
-                        value="{{ .Form.ContactName }}"
+                        value="{{ .ContactName }}"
                          />
                 </div>
                 <div class="govuk-form-group">
@@ -31,7 +31,7 @@
                         id="f-job-title"
                         name="job-title"
                         type="text"
-                        value="{{ .Form.JobTitle }}"
+                        value="{{ .JobTitle }}"
                          />
                 </div>
                 <div class="govuk-form-group">
@@ -43,7 +43,7 @@
                         id="f-email"
                         name="email"
                         type="text"
-                        value="{{ .Form.Email }}"
+                        value="{{ .Email }}"
                          />
                 </div>
                 <div class="govuk-form-group">
@@ -53,9 +53,9 @@
                     <input
                         class="govuk-input"
                         id="f-phoneNumber"
-                        name="phone"
+                        name="phone-number"
                         type="text"
-                        value="{{ .Form.PhoneNumber }}"
+                        value="{{ .PhoneNumber }}"
                          />
                 </div>
                 <div class="govuk-form-group">
@@ -65,16 +65,16 @@
                     <input
                         class="govuk-input"
                         id="f-otherPhone"
-                        name="other-phone"
+                        name="other-phone-number"
                         type="text"
-                        value="{{ .Form.OtherPhoneNumber }}"
+                        value="{{ .OtherPhoneNumber }}"
                          />
                 </div>
                 <div
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="255">
-                    <div class="govuk-form-group" id="f-notes">
+                    <div class="govuk-form-group" id="f-contact-notes">
                         <label class="govuk-label" for="note">
                             Notes
                         </label>
@@ -82,10 +82,10 @@
                         <textarea
                             class="govuk-textarea govuk-js-character-count"
                             id="note"
-                            name="notes"
+                            name="contact-notes"
                             rows="5"
                             aria-describedby="note-info note-hint"
-                        >{{ .Form.ContactNotes }}</textarea>
+                        >{{ .ContactNotes }}</textarea>
                         
                         {{/* prettier-ignore-end */}}
                         <div
@@ -103,13 +103,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="yes" {{ if eq .Form.IsNamedDeputy "yes" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="true" {{ if eq .IsNamedDeputy "true" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="no" {{ if eq .Form.IsNamedDeputy "no" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="false" {{ if eq .IsNamedDeputy "false" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
                                 No
                                 </label>
@@ -124,13 +124,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="yes" {{ if eq .Form.IsMainContact "yes" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="true" {{ if eq .IsMainContact "true" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="no" {{ if eq .Form.IsMainContact "no" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="false" {{ if eq .IsMainContact "false" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
                                 No
                                 </label>

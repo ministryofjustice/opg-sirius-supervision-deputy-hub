@@ -13,9 +13,9 @@ type Contact struct {
 	Email            string `json:"email"`
 	PhoneNumber      string `json:"phoneNumber"`
 	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	ContactNotes            string `json:"contactNotes"`
-	IsNamedDeputy    string `json:"isNamedDeputy"`
-	IsMainContact    string `json:"isMainContact"`
+	ContactNotes     string `json:"contactNotes"`
+	IsNamedDeputy    *bool  `json:"isNamedDeputy"`
+	IsMainContact    *bool  `json:"isMainContact"`
 }
 
 func (c *Client) AddContact(ctx Context, deputyId int, addContactForm Contact) error {
