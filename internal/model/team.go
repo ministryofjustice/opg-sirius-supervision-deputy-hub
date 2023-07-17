@@ -8,4 +8,5 @@ type TeamMember struct {
 
 type Team struct {
 	Members []TeamMember
+	Name    string
 }

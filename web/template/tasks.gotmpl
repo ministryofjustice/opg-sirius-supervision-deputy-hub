@@ -5,7 +5,9 @@
 {{ end }}
 {{ template "content-header" . }}
 {{ template "navigation" . }}
-    <header>
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.TasksClient*/ -}}
+
+<header>
         <h1
             class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
             Deputy tasks
@@ -30,7 +32,6 @@
         <th scope="col" class="govuk-table__header" aria-sort="none" width="40%">Task type</th>
         <th scope="col" class="govuk-table__header" aria-sort="none">Assigned to</th>
         <th scope="col" class="govuk-table__header" aria-sort="ascending">Due date</th>
-        <th scope="col" class="govuk-table__header">Actions</th>
     </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -52,7 +53,11 @@
             <td class="govuk-table__cell assigned_to">
                 <span class="co-name">{{.Assignee.DisplayName}}</span>
                 {{ if .Assignee.Teams}}
-                    <span class="secondary team">{{.Assignee.Teams}}</span>
+                    {{ range .Assignee.Teams}}
+                        {{ if .Name}}
+                            <span class="secondary team">{{.Name}}</span>
+                        {{end}}
+                    {{end}}
                 {{ end }}
             </td>
 
