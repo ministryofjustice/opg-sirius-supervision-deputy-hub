@@ -24,7 +24,7 @@ type mockAddTasksClient struct {
 	selectedAssignee int
 }
 
-func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error {
+func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 	m.selectedAssignee = assigneeId
@@ -32,7 +32,7 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	return m.verr
 }
 
-func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]sirius.TaskType, error) {
+func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]sirius.TaskType, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

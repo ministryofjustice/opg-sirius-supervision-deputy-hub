@@ -1,8 +1,8 @@
-{{ define "deputy-information-updated" }}
-    <div class="moj-timeline__item" data-cy="deputy-information-event">
+{{ define "task-created" }}
+    <div class="moj-timeline__item" data-cy="task-created-event">
         <div class="moj-timeline__header">
             <h2 class="moj-timeline__title">
-                Deputy's important information updated
+                {{ .Event.TaskType }} task created
             </h2>
             <p class="moj-timeline__byline">
                 {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
@@ -13,11 +13,15 @@
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
-                {{ range .Event.Changes }}
-                    <li>
-                        {{ printf "%v: %v" (translate "FIELD" .FieldName) (translate "VALUE" .NewValue ) }}
-                    </li>
-                {{ end }}
+                <li>
+                    Assigned to {{ .Event.Assignee }}
+                </li>
+                <li>
+                    Due date {{ .Event.DueDate }}
+                </li>
+                <li>
+                    {{ .Event.Notes }}
+                </li>
             </ul>
         </div>
     </div>
