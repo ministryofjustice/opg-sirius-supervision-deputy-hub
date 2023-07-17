@@ -1927,8 +1927,13 @@ module.exports = function () {
             {
                 "id": "addContact",
                 "name": "Test Contact",
+                "jobTitle": "",
                 "email": "test@email.com",
-                "phoneNumber": "0123456789",
+                "phoneNumber": "01234567",
+                "otherPhoneNumber": "",
+                "notes": "",
+                "isMainContact": true,
+                "isNamedDeputy": true
             },
             {
                 "id": "firm",
