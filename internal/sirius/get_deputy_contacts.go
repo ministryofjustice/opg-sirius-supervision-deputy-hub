@@ -18,13 +18,6 @@ type ApiContact struct {
 	IsNamedDeputy    bool   `json:"isNamedDeputy"`
 }
 
-type ApiContactList struct {
-	Contacts      []ApiContact `json:"contacts"`
-	Pages         Page         `json:"pages"`
-	Metadata      Metadata     `json:"metadata"`
-	TotalContacts int          `json:"total"`
-}
-
 type ContactList struct {
 	Contacts      DeputyContactsDetails
 	Pages         Page
@@ -46,59 +39,40 @@ type DeputyContact struct {
 
 type DeputyContactsDetails []DeputyContact
 
-func (c *Client) GetDeputyContacts(ctx Context, deputyId, displayContactLimit, search int, deputyType, columnBeingSorted, sortOrder string) (ContactList, AriaSorting, error) {
+func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, error) {
 	var contactList ContactList
-	//var apiContactList ApiContactList
 	var apiContacts []ApiContact
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts?&limit=%d&page=%d", deputyId, displayContactLimit, search), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId), nil)
 
 	if err != nil {
-		return contactList, AriaSorting{}, err
+		return contactList, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return contactList, AriaSorting{}, err
+		return contactList, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return contactList, AriaSorting{}, ErrUnauthorized
+		return contactList, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return contactList, AriaSorting{}, newStatusError(resp)
+		return contactList, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&apiContacts); err != nil {
-		return contactList, AriaSorting{}, err
+		return contactList, err
 	}
 
 	var contacts DeputyContactsDetails
 	for _, t := range apiContacts {
-
-		var contact = DeputyContact{
-			Id:               t.Id,
-			Name:             t.Name,
-			JobTitle:         t.JobTitle,
-			Email:            t.Email,
-			PhoneNumber:      t.PhoneNumber,
-			OtherPhoneNumber: t.OtherPhoneNumber,
-			Notes:            t.Notes,
-			IsMainContact:    t.IsMainContact,
-			IsNamedDeputy:    t.IsNamedDeputy,
-		}
-
-		contacts = append(contacts, contact)
+		contacts = append(contacts, DeputyContact(t))
 	}
 	contactList.Contacts = contacts
 
-	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "crec")
-
-	return contactList, aria, err
+	return contactList, err
 }

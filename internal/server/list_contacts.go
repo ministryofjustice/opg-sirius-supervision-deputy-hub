@@ -9,19 +9,16 @@ import (
 )
 
 type DeputyHubContactInformation interface {
-	GetDeputyContacts(sirius.Context, int, int, int, string, string, string) (sirius.ContactList, sirius.AriaSorting, error)
-	// GetPageDetails(sirius.Context, sirius.ContactList, int, int) sirius.PageDetails
+	GetDeputyContacts(sirius.Context, int) (sirius.ContactList, error)
 }
 
 type ListContactsVars struct {
-	Path                 string
-	XSRFToken            string
-	AriaSorting          sirius.AriaSorting
-	DeputyDetails        sirius.DeputyDetails
-	ContactList			 sirius.ContactList
-	PageDetails          sirius.PageDetails
-	SuccessMessage       string
-	Error                string
+	Path           string
+	XSRFToken      string
+	DeputyDetails  sirius.DeputyDetails
+	ContactList    sirius.ContactList
+	SuccessMessage string
+	Error          string
 }
 
 func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Template) Handler {
@@ -32,23 +29,13 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-		urlParams := r.URL.Query()
 
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-		search, _ := strconv.Atoi(r.FormValue("page"))
-		displayContactLimit, _ := strconv.Atoi(r.FormValue("limit"))
-		if displayContactLimit == 0 {
-			displayContactLimit = 25
-		}
 
-		columnBeingSorted, sortOrder := parseUrl(urlParams)
-
-		contactList, ariaSorting, err := client.GetDeputyContacts(ctx, deputyId, displayContactLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		contactList, err := client.GetDeputyContacts(ctx, deputyId)
 		if err != nil {
 			return err
 		}
-
-		// pageDetails := client.GetPageDetails(ctx, contactList, search, displayContactLimit)
 
 		var successMessage string
 		switch r.URL.Query().Get("success") {
@@ -59,13 +46,11 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 		}
 
 		vars := ListContactsVars{
-			Path:                 r.URL.Path,
-			XSRFToken:            ctx.XSRFToken,
-			AriaSorting:          ariaSorting,
-			ContactList:          contactList,
-			// PageDetails:          pageDetails,
-			DeputyDetails:        deputyDetails,
-			SuccessMessage:       successMessage,
+			Path:           r.URL.Path,
+			XSRFToken:      ctx.XSRFToken,
+			ContactList:    contactList,
+			DeputyDetails:  deputyDetails,
+			SuccessMessage: successMessage,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
