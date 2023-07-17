@@ -76,7 +76,7 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		DeputyType: DeputyType{Handle: "PA"},
 	}
 
-	expectedResponse := []modelTaskType{
+	expectedResponse := []model.TaskType{
 		{
 			"BBB",
 			"PA only",

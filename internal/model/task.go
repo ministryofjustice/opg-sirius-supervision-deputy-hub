@@ -1,13 +1,9 @@
 package model
 
-import (
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-)
-
 type Assignee struct {
-	Id          int           `json:"id"`
-	Teams       []sirius.Team `json:"teams,omitempty"`
-	DisplayName string        `json:"displayName"`
+	Id          int    `json:"id"`
+	Teams       []Team `json:"teams,omitempty"`
+	DisplayName string `json:"displayName"`
 }
 
 type Task struct {

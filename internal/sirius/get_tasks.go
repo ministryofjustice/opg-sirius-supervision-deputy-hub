@@ -19,7 +19,7 @@ type TaskList struct {
 func (c *Client) GetTasks(ctx Context, deputyId string) (TaskList, error) {
 	var t TaskList
 
-	requestURL := fmt.Sprintf("/api/v1/deputies/%s/tasks", deputyId)
+	requestURL := fmt.Sprintf("/api/v1/deputies/%s/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)
 	if err != nil {
 		return t, err

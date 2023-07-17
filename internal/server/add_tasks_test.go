@@ -21,7 +21,7 @@ type mockAddTasksClient struct {
 	err              error
 	verr             error
 	taskTypes        []model.TaskType
-	assignees        []sirius.TeamMember
+	assignees        []model.TeamMember
 	selectedAssignee int
 }
 
@@ -40,7 +40,7 @@ func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.Dep
 	return m.taskTypes, m.err
 }
 
-func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaTeam int, details sirius.DeputyDetails) ([]sirius.TeamMember, error) {
+func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaTeam int, details sirius.DeputyDetails) ([]model.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -58,7 +58,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 	}}
 	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	expectedVars := AddTaskVars{
@@ -91,7 +91,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 123}
 	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{
@@ -126,7 +126,7 @@ func TestAddTask_success_other(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 123}
 	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{

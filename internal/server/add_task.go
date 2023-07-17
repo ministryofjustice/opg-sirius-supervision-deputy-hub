@@ -11,7 +11,7 @@ import (
 type AddTasksClient interface {
 	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error
 	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]model.TaskType, error)
-	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]sirius.TeamMember, error)
+	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
 }
 
 type AddTaskVars struct {
@@ -19,7 +19,7 @@ type AddTaskVars struct {
 	XSRFToken     string
 	DeputyDetails sirius.DeputyDetails
 	TaskTypes     []model.TaskType
-	Assignees     []sirius.TeamMember
+	Assignees     []model.TeamMember
 	TaskType      string
 	DueDate       string
 	Notes         string
