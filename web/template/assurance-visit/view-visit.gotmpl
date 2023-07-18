@@ -15,7 +15,7 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Requested by</dt>
             <dd class="govuk-summary-list__value hook_requested_by">
-                {{ .RequestedBy.Name }}
+                {{ .RequestedBy.UserDisplayName }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -82,8 +82,8 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Reviewed by</dt>
             <dd class="govuk-summary-list__value hook_reviewed_by">
-                {{ if .ReviewedBy.Name }}
-                    {{ .ReviewedBy.Name }}
+                {{ if .ReviewedBy.UserDisplayName }}
+                    {{ .ReviewedBy.UserDisplayName }}
                 {{ else }}
                     -
                 {{ end }}

@@ -13,35 +13,11 @@ type TaskType struct {
 	PaDeputyTask  bool   `json:"paDeputyTask"`
 }
 
-type TaskTypeMap map[string]TaskType
-
-type TaskTypes struct {
-	TaskTypes TaskTypeMap `json:"task_types"`
+type TaskTypesMap struct {
+	TaskTypes map[string]TaskType `json:"task_types"`
 }
 
-func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]TaskType, error) {
-	taskTypes, err := c.getTaskTypesMap(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	var deputyTaskTypes []TaskType
-	for _, t := range taskTypes {
-		if t.ProDeputyTask && deputyType == "PRO" {
-			deputyTaskTypes = append(deputyTaskTypes, t)
-		} else if t.PaDeputyTask && deputyType == "PA" {
-			deputyTaskTypes = append(deputyTaskTypes, t)
-		}
-	}
-
-	sort.Slice(deputyTaskTypes, func(i, j int) bool {
-		return deputyTaskTypes[i].Handle < deputyTaskTypes[j].Handle
-	})
-
-	return deputyTaskTypes, err
-}
-
-func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
+func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]TaskType, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/tasktypes/deputy", nil)
 
 	if err != nil {
@@ -63,8 +39,25 @@ func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
 		return nil, newStatusError(resp)
 	}
 
-	var taskTypes TaskTypes
-	err = json.NewDecoder(resp.Body).Decode(&taskTypes)
+	var taskTypes TaskTypesMap
+	if err = json.NewDecoder(resp.Body).Decode(&taskTypes); err != nil {
+		return nil, err
+	}
 
-	return taskTypes.TaskTypes, err
+	isPro := deputy.DeputyType.Handle == "PRO"
+
+	var deputyTaskTypes []TaskType
+	for _, t := range taskTypes.TaskTypes {
+		if t.ProDeputyTask && isPro {
+			deputyTaskTypes = append(deputyTaskTypes, t)
+		} else if t.PaDeputyTask && !isPro {
+			deputyTaskTypes = append(deputyTaskTypes, t)
+		}
+	}
+
+	sort.Slice(deputyTaskTypes, func(i, j int) bool {
+		return deputyTaskTypes[i].Handle < deputyTaskTypes[j].Handle
+	})
+
+	return deputyTaskTypes, err
 }

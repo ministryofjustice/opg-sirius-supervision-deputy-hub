@@ -2,30 +2,25 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"fmt"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestTask(t *testing.T) {
+func TestAddContact(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `{
-	  "id": 1,
-	  "type": "Task Type",
-	  "createdByUser": {
-		"id": 1
-	  },
-      "assignee": {
-		"id": 1
-	  },
-	  "description": "<p>Note text<\/p>",
-	  "createdTime": "26\/06\/2023 00:00:00"
-	}`
+		"contactName":"Contact Name",
+		"email":"Email_address@address.com",
+		"phoneNumber":"11111111"
+		}`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -36,11 +31,19 @@ func TestTask(t *testing.T) {
 		}, nil
 	}
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
+	contact := Contact{
+		ContactName: "Contact Name",
+		Email:       "Email_address@address.com",
+		PhoneNumber: "11111111",
+	}
+
+	deputyId := 76
+
+	err := client.AddContact(getContext(nil), deputyId, contact)
 	assert.Nil(t, err)
 }
 
-func TestAddTaskReturnsNewStatusError(t *testing.T) {
+func TestAddContactReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		_, _ = w.Write([]byte("{}"))
@@ -49,16 +52,20 @@ func TestAddTaskReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
+	deputyId := 76
+
+	err := client.AddContact(getContext(nil), deputyId, Contact{})
+
+	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks",
+		URL:    svr.URL + url,
 		Method: http.MethodPost,
 	}, err)
 }
 
-func TestAddTaskReturnsUnauthorisedClientError(t *testing.T) {
+func TestAddContactReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -66,7 +73,10 @@ func TestAddTaskReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddTask(getContext(nil), 1, "AAAA", "2022-04-02", "test note", 1)
+	deputyId := 76
+
+	err := client.AddContact(getContext(nil), deputyId, Contact{})
 
 	assert.Equal(t, ErrUnauthorized, err)
+
 }

@@ -3,7 +3,7 @@
     "/deputies/pa/:personId/clients*": "/clients",
     "/deputies/pro/:personId/clients*": "/clients",
     "/timeline/:personId": "/timeline",
-    "/deputies/:personId/notes": "/notes?personId=:personId",
+    "/:personId/notes": "/notes",
     "/users/current": "/users",
     "/deputies/:deputyId/ecm": "/ecm",
     "/deputies/:id/contact-details": "/deputies/:id",
