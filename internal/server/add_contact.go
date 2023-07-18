@@ -29,15 +29,6 @@ type addContactVars struct {
 	IsMainContact    string
 }
 
-func convertStringBoolToNullableBoolPointer(stringBool string) *bool {
-	if stringBool == "true" {
-		return pointerBool(true)
-	} else if stringBool == "false" {
-		return pointerBool(false)
-	}
-	return nil
-}
-
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
@@ -63,8 +54,8 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				PhoneNumber:      r.PostFormValue("phone-number"),
 				OtherPhoneNumber: r.PostFormValue("other-phone-number"),
 				ContactNotes:     r.PostFormValue("contact-notes"),
-				IsNamedDeputy:    convertStringBoolToNullableBoolPointer(r.PostFormValue("is-named-deputy")),
-				IsMainContact:    convertStringBoolToNullableBoolPointer(r.PostFormValue("is-main-contact")),
+				IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
+				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
 			err := client.AddContact(ctx, deputyId, addContactForm)
