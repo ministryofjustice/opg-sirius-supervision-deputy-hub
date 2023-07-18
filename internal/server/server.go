@@ -251,7 +251,3 @@ func staticFileHandler(webDir string) http.Handler {
 		h.ServeHTTP(w, r)
 	})
 }
-
-func pointerBool(b bool) *bool {
-	return &b
-}
