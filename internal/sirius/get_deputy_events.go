@@ -9,12 +9,12 @@ import (
 	"time"
 )
 
-type DeputyEventCollection []DeputyEvent
+type DeputyEvents []DeputyEvent
 
 type User struct {
-	UserId          int    `json:"id"`
-	UserDisplayName string `json:"displayName"`
-	UserPhoneNumber string `json:"phoneNumber"`
+	ID          int    `json:"id"`
+	Name        string `json:"displayName"`
+	PhoneNumber string `json:"phoneNumber"`
 }
 
 type Event struct {
@@ -38,6 +38,10 @@ type Event struct {
 	VisitorAllocated     string         `json:"visitorAllocated"`
 	ReviewedBy           string         `json:"reviewedBy"`
 	Contact              ContactPerson  `json:"deputyContact"`
+	TaskType             string         `json:"taskType"`
+	Assignee             string         `json:"assignee"`
+	DueDate              string         `json:"dueDate"`
+	Notes                string         `json:"description"`
 }
 
 type Changes struct {
@@ -47,10 +51,10 @@ type Changes struct {
 }
 
 type ClientPerson struct {
-	ClientName     string `json:"personName"`
-	ClientId       string `json:"personId"`
-	ClientUid      string `json:"personUid"`
-	ClientCourtRef string `json:"personCourtRef"`
+	ID       string `json:"personId"`
+	Uid      string `json:"personUid"`
+	Name     string `json:"personName"`
+	CourtRef string `json:"personCourtRef"`
 }
 
 type ContactPerson struct {
@@ -63,87 +67,109 @@ type ContactPerson struct {
 }
 
 type DeputyEvent struct {
-	TimelineEventId int    `json:"id"`
-	Timestamp       string `json:"timestamp"`
-	EventType       string `json:"eventType"`
-	User            User   `json:"user"`
-	Event           Event  `json:"event"`
-	IsNewEvent      bool
+	ID         int    `json:"id"`
+	Timestamp  string `json:"timestamp"`
+	EventType  string `json:"eventType"`
+	User       User   `json:"user"`
+	Event      Event  `json:"event"`
+	IsNewEvent bool
 }
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEventCollection, error) {
-	var v DeputyEventCollection
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
+	var de DeputyEvents
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)
 
 	if err != nil {
-		return v, err
+		return de, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return v, err
+		return de, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return v, ErrUnauthorized
+		return de, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return v, newStatusError(resp)
+		return de, newStatusError(resp)
 	}
-	err = json.NewDecoder(resp.Body).Decode(&v)
+	err = json.NewDecoder(resp.Body).Decode(&de)
 
-	DeputyEvents := editDeputyEvents(v)
+	var (
+		taskTypes TaskTypeMap
+		terr      error
+	)
+	if includesTaskEvent(de) {
+		taskTypes, terr = c.getTaskTypesMap(ctx)
+		if terr != nil {
+			return nil, terr
+		}
+	}
+
+	DeputyEvents := editDeputyEvents(de, taskTypes)
 
 	return DeputyEvents, err
 
 }
 
-func editDeputyEvents(v DeputyEventCollection) DeputyEventCollection {
-	var list DeputyEventCollection
-	for _, s := range v {
+func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
+	var list DeputyEvents
+	for _, e := range events {
 		event := DeputyEvent{
-			Timestamp:       FormatDateTime(IsoDateTime, s.Timestamp, SiriusDateTime),
-			EventType:       reformatEventType(s.EventType),
-			TimelineEventId: s.TimelineEventId,
-			User:            s.User,
-			Event:           s.Event,
-			IsNewEvent:      calculateIfNewEvent(s.Event.Changes),
+			Timestamp:  FormatDateTime(IsoDateTime, e.Timestamp, SiriusDateTime),
+			EventType:  reformatEventType(e.EventType),
+			ID:         e.ID,
+			User:       e.User,
+			Event:      updateTaskInfo(e.Event, taskTypes),
+			IsNewEvent: isNewEvent(e.Event.Changes),
 		}
 
 		list = append(list, event)
 	}
-	sortTimeLineNewestOneFirst(list)
+	sortByTimelineAsc(list)
 	return list
 }
 
-func calculateIfNewEvent(changes []Changes) bool {
-	var answer bool
-	for _, s := range changes {
-		if s.OldValue != "" {
-			answer = false
-		} else {
-			answer = true
-		}
+func isNewEvent(changes []Changes) bool {
+	var isNew bool
+	for _, c := range changes {
+		isNew = c.OldValue == ""
 	}
-	return answer
+	return isNew
 }
 
 func reformatEventType(s string) string {
 	eventTypeArray := strings.Split(s, "\\")
-	eventTypeArrayLength := len(eventTypeArray)
-	eventTypeName := eventTypeArray[eventTypeArrayLength-1]
-	return eventTypeName
+	return eventTypeArray[len(eventTypeArray)-1]
 }
 
-func sortTimeLineNewestOneFirst(v DeputyEventCollection) DeputyEventCollection {
-	sort.Slice(v, func(i, j int) bool {
-		changeToTimeTypeI, _ := time.Parse(SiriusDateTime, v[i].Timestamp)
-		changeToTimeTypeJ, _ := time.Parse(SiriusDateTime, v[j].Timestamp)
-		return changeToTimeTypeJ.Before(changeToTimeTypeI)
+func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
+	sort.Slice(events, func(i, j int) bool {
+		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
+		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
+		return jTime.Before(iTime)
 	})
-	return v
+	return events
+}
+
+func includesTaskEvent(events DeputyEvents) bool {
+	for _, e := range events {
+		if e.Event.TaskType > "" {
+			return true
+		}
+	}
+	return false
+}
+
+func updateTaskInfo(event Event, taskTypes TaskTypeMap) Event {
+	if event.TaskType > "" {
+		event.TaskType = taskTypes[event.TaskType].Description
+		event.DueDate = FormatDateTime(IsoDateTime, event.DueDate, SiriusDate)
+	}
+	return event
 }
