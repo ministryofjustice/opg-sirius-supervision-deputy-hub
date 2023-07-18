@@ -21,6 +21,6 @@ module.exports = (req, res, next) => {
 };
 
 const getUser = (req) => {
-    return req.headers?.cookie?.match(/user=(?<user>[^;]+);?/)
+    return req.headers?.cookie?.match(/user=(?<user>[^;]+);/)
         ?.groups.user;
 };

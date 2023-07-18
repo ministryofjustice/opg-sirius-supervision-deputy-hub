@@ -20,21 +20,9 @@ describe("Notes", () => {
        });
     });
 
-    describe("Viewing notes", () => {
-        it("should display notes correctly", () => {
-            cy.visit("/supervision/deputies/2/notes");
-            cy.get(
-                ":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title"
-            ).should("contain", "New note title");
-            cy.get(
-                ":nth-last-child(1) > .moj-timeline__description"
-            ).should("contain", "Note text entered");
-        });
-    })
-
     describe("Adding a note", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/2/notes/add-note");
+            cy.visit("/supervision/deputies/1/notes/add-note");
         });
 
         describe("Successfully adding a note", () => {
@@ -67,10 +55,23 @@ describe("Notes", () => {
                 cy.get("#title").type("title");
                 cy.get("#note").type("note");
                 cy.get("#add-note-form").submit();
-                cy.url().should("contain", "/supervision/deputies/2/notes");
+                cy.url().should("contain", "/supervision/deputies/1/notes");
                 cy.get(
                     "body > div > main > div.moj-banner.moj-banner--success > div"
                 ).should("contain", "Note added");
+            });
+
+            it("shows new note on the timeline", () => {
+                cy.get("#title").type("New note title");
+                cy.get("#note").type("Note text entered");
+                cy.get("#add-note-form").submit();
+                cy.url().should("contain", "/supervision/deputies/1/notes");
+                cy.get(
+                    ":nth-last-child(1) > .moj-timeline__header > .moj-timeline__title"
+                ).should("contain", "New note title");
+                cy.get(
+                    ":nth-last-child(1) > .moj-timeline__description"
+                ).should("contain", "Note text entered");
             });
         });
 
@@ -79,7 +80,7 @@ describe("Notes", () => {
                 .should("contain", "Cancel")
                 .click();
             cy.get(".govuk-heading-l").should("contain", "Notes");
-            cy.url().should("contain", "/supervision/deputies/2/notes");
+            cy.url().should("contain", "/supervision/deputies/1/notes");
         });
 
         it("shows error message when submitting invalid data", () => {

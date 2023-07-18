@@ -1626,50 +1626,24 @@ module.exports = function () {
                 },
                 "event": {
                     "class": "Opg\\Core\\Model\\Event\\Deputy\\AssuranceVisitAdded",
-                    "personType": "Deputy",
-                    "personId": "66",
-                    "personUid": "7000-0000-2118",
-                    "personName": "test62f136dbe2b13 Bold",
-                    "changes": [
-                        {
-                            "fieldName": "requestedDate",
-                            "newValue": "06/09/2022",
-                            "type": "string"
-                        },
-                        {
-                            "fieldName": "requestedBy",
-                            "newValue": "Finance User Testing",
-                            "type": "string"
-                        }
-                    ]
-                }
-            },
-            {
-                "id": 397,
-                "hash": "AY",
-                "timestamp": "2021-10-10 15:01:59",
-                "eventType": "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
-                "user": {
-                    "id": 21,
-                    "phoneNumber": "0123456789",
-                    "displayName": "Lay Team 1 - (Supervision)",
-                    "email": "LayTeam1.team@opgtest.com"
-                },
-                "event": {
-                    "isCaseEvent": false,
-                    "isPersonEvent": true,
-                    "taskId": 249,
-                    "taskType": "AVFU",
-                    "dueDate": "2023-07-13 00:00:00",
-                    "description": "This is a note",
-                    "name": "",
-                    "assigneeId": "28",
-                    "assignee": "PA Team Workflow",
-                    "isCaseOwnerTask": false,
-                    "personType": "Deputy",
-                    "personId": "76",
-                    "personUid": "7000-0000-2530",
-                    "personName": "Bobby Deputiser"
+                    "payload": {
+                        "personType": "Deputy",
+                        "personId": "66",
+                        "personUid": "7000-0000-2118",
+                        "personName": "test62f136dbe2b13 Bold",
+                        "changes": [
+                            {
+                                "fieldName": "requestedDate",
+                                "newValue": "06/09/2022",
+                                "type": "string"
+                            },
+                            {
+                                "fieldName": "requestedBy",
+                                "newValue": "Finance User Testing",
+                                "type": "string"
+                            }
+                        ]
+                    }
                 }
             }
         ],
@@ -1700,34 +1674,6 @@ module.exports = function () {
                 "description": "...and here are the notes",
                 "name": "Email received",
                 "createdTime": "20/09/2021 08:50:12",
-                "direction": null
-            },
-            {
-                "personId": 2,
-                "userId": 68,
-                "userDisplayName": "Finance User Testing",
-                "userEmail": "finance.user.testing@opgtest.com",
-                "userPhoneNumber": "12345678",
-                "id": 66,
-                "type": "NEW DEPUTY",
-                "noteType": "NOTE_ADDED",
-                "description": "Note text entered",
-                "name": "New note title",
-                "createdTime": "20/09/2021 08:50:13",
-                "direction": null
-            },
-            {
-                "personId": 3,
-                "userId": 68,
-                "userDisplayName": "Finance User Testing",
-                "userEmail": "finance.user.testing@opgtest.com",
-                "userPhoneNumber": "12345678",
-                "id": 64,
-                "type": "GE",
-                "noteType": "TASK_CREATED",
-                "description": "Some general enquiry on whether tasks appear correctly in the notes tab",
-                "name": "General enquiry",
-                "createdTime": "19/09/2021 08:50:12",
                 "direction": null
             }
         ],
@@ -1929,11 +1875,11 @@ module.exports = function () {
                 "name": "Test Contact",
                 "jobTitle": "",
                 "email": "test@email.com",
-                "phoneNumber": "01234567",
+                "phoneNumber": "0123456789",
                 "otherPhoneNumber": "",
                 "notes": "",
-                "isMainContact": true,
-                "isNamedDeputy": true
+                "isMainContact": "true",
+                "isNamedDeputy": "true"
             },
             {
                 "id": "firm",
