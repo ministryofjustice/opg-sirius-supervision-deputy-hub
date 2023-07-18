@@ -7,19 +7,21 @@ import (
 	"net/http"
 )
 
-type TaskList struct {
-	Tasks      []model.Task `json:"tasks"`
-	TotalTasks int          `json:"total"`
-	Pages      struct {
-		Current int `json:"current"`
-		Total   int `json:"total"`
-	} `json:"pages"`
+type PageInformation struct {
+	Current int `json:"current"`
+	Total   int `json:"total"`
 }
 
-func (c *Client) GetTasks(ctx Context, deputyId string) (TaskList, error) {
+type TaskList struct {
+	Tasks      []model.Task    `json:"tasks"`
+	TotalTasks int             `json:"total"`
+	Pages      PageInformation `json:"pages"`
+}
+
+func (c *Client) GetTasks(ctx Context, deputyId int) (TaskList, error) {
 	var t TaskList
 
-	requestURL := fmt.Sprintf("/api/v1/deputies/%s/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
+	requestURL := fmt.Sprintf("/api/v1/deputies/%d/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)
 	if err != nil {
 		return t, err
@@ -43,6 +45,9 @@ func (c *Client) GetTasks(ctx Context, deputyId string) (TaskList, error) {
 	if err = json.NewDecoder(resp.Body).Decode(&t); err != nil {
 		return t, err
 	}
+
+	fmt.Print("tests")
+	fmt.Println(t)
 
 	return t, err
 }

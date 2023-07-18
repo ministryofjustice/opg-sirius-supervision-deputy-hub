@@ -1,3 +1,4 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTasksClient*/ -}}
 {{ template "page" . }}
 {{ define "main" }}
 {{ if .SuccessMessage }}
@@ -5,7 +6,6 @@
 {{ end }}
 {{ template "content-header" . }}
 {{ template "navigation" . }}
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.TasksClient*/ -}}
 
 <header>
         <h1
@@ -26,7 +26,6 @@
         </div>
     </header>
 <table id="tasks-list" class="govuk-table" data-module="moj-sortable-table">
-    <!--<caption class="govuk-table__caption govuk-!-margin-bottom-5 govuk-!-margin-top-5">All open tasks</caption>-->
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header" aria-sort="none" width="40%">Task type</th>
@@ -35,7 +34,7 @@
     </tr>
     </thead>
     <tbody class="govuk-table__body">
-    {{ range .Tasklist.Tasks }}
+    {{ range .TaskList.Tasks }}
         <tr class="govuk-table__row">
             <td class="govuk-table__cell task_type"> {{ .GetName $.TaskTypes }}
                 {{if .Notes}}

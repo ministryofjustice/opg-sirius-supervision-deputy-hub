@@ -23,6 +23,7 @@ type mockAddTasksClient struct {
 	taskTypes        []model.TaskType
 	assignees        []model.TeamMember
 	selectedAssignee int
+	taskList         sirius.TaskList
 }
 
 func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error {
@@ -45,6 +46,34 @@ func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaT
 	m.lastCtx = ctx
 
 	return m.assignees, m.err
+}
+
+func (m *mockAddTasksClient) GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.taskList, m.err
+}
+
+func TestGetTasks(t *testing.T) {
+	assert := assert.New(t)
+
+	client := &mockAddTasksClient{}
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", nil)
+
+	handler := renderTemplateForAddTask(client, template)
+	err := handler(sirius.DeputyDetails{}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
 }
 
 func TestLoadAddTaskForm(t *testing.T) {
