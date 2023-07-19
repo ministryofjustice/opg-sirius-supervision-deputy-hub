@@ -30,6 +30,7 @@ type Client interface {
 	AssuranceVisit
 	ManageAssuranceVisit
 	ContactInformation
+	ManageContact
 	TasksClient
 	AddTasksClient
 }
@@ -58,6 +59,10 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("/contacts/add-contact",
 		wrap(
 			renderTemplateForAddContact(client, templates["add-contact.gotmpl"])))
+
+	pageRouter.Handle("/contacts/{contactId}",
+		wrap(
+			renderTemplateForManageContact(client, templates["contacts.gotmpl"])))
 
 	pageRouter.Handle("/clients",
 		wrap(
