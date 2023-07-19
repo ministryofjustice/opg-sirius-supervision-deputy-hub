@@ -2072,9 +2072,21 @@ module.exports = function () {
         ],
         "contacts": [
             {
-                "name": "name",
-                "phoneNumber": "telephone",
-                "email": "email"
+                "id": 1,
+                "name": "Minimal Contact",
+                "phoneNumber": "0123456789",
+                "email": "email@test.com"
+            },
+            {
+                "id": 2,
+                "name": "Test Contact",
+                "jobTitle": "Software Tester",
+                "phoneNumber": "0123456789",
+                "otherPhoneNumber": "9876543210",
+                "email": "test@email.com",
+                "notes": "This is a test",
+                "isNamedDeputy": true,
+                "isMainContact": true
             },
 
         ],

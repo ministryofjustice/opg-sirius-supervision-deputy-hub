@@ -56,4 +56,52 @@ describe("Contacts", () => {
             cy.get(".govuk-error-summary__body").should("contain", "The note must be 255 characters or fewer");
         });
     });
+
+    describe("List Contacts", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/3/contacts");
+        })
+
+        it("shows header title and button", () => {
+            cy.get(".govuk-main-wrapper > header").contains("Contacts");
+            cy.get(".govuk-button").contains("Add new contact");
+        });
+
+        it("displays 4 column headings", () => {
+            cy.get(".govuk-table__row").find("th").should("have.length", 4);
+
+            const expected = [
+                "Contact",
+                "Contact details",
+                "Notes",
+                "Action",
+            ];
+
+            cy.get(".govuk-table__head > .govuk-table__row")
+                .children()
+                .each(($el, index) => {
+                    cy.wrap($el).should("contain", expected[index]);
+            });
+        });
+
+        it("should display contact data", () => {
+            cy.get(':nth-child(1) > :nth-child(1) > .name').contains("Minimal Contact");
+            cy.get(':nth-child(1) > :nth-child(2) > .email > a').contains("email@test.com");
+            cy.get(':nth-child(1) > :nth-child(2) > .phone-number').contains("0123456789");
+            cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--secondary').contains("Manage contact");
+            cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
+
+            cy.get(':nth-child(2) > :nth-child(1) > .name').contains("Test Contact");
+            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
+            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
+            cy.get(':nth-child(2) > :nth-child(1) > .job-title').contains("Software Tester");
+            cy.get(':nth-child(2) > :nth-child(2) > .email > a').contains("test@email.com");
+            cy.get(':nth-child(2) > :nth-child(2) > .phone-number').contains("0123456789");
+            cy.get(':nth-child(2) > :nth-child(2) > .other-phone-number').contains("9876543210");
+            cy.get(':nth-child(2) > :nth-child(3) > .notes').contains("This is a test");
+            cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').contains("Manage contact");
+            cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
+        });
+
+    });
 });
