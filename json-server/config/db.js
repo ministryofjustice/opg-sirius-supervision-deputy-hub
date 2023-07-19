@@ -1782,6 +1782,49 @@ module.exports = function () {
                 }
             },
             {
+                "id": "addContactEmpty",
+                "validation_errors": {
+                    "contactName": {
+                        "isEmpty": ""
+                    },
+                    "email": {
+                        "isEmpty": ""
+                    },
+                    "phoneNumber": {
+                        "isEmpty": ""
+                    },
+                    "isMainContact": {
+                        "isEmpty": ""
+                    },
+                    "isNamedDeputy": {
+                        "isEmpty": ""
+                    },
+                }
+            },
+            {
+                "id": "addContactInvalid",
+                "validation_errors": {
+                    "contactName": {
+                        "stringLengthTooLong": ""
+                    },
+                    "jobTitle": {
+                        "stringLengthTooLong": ""
+                    },
+                    "email": {
+                        "emailAddressInvalidFormat": ""
+                    },
+                    "phoneNumber": {
+                        "stringLengthTooLong": ""
+                    },                    
+                    "otherPhoneNumber": {
+                        "stringLengthTooLong": ""
+                    },
+                    "contactNotes": {
+                        "stringLengthTooLong": ""
+                    }
+                }
+            },
+            {
                 "id": "firm",
                 "validation_errors": {
                     "firmName": {
@@ -1881,6 +1924,19 @@ module.exports = function () {
                 "deleted": false,
                 "email": "jonsnow@opgtest.com"
             },
+
+            {
+                "id": "addContact",
+                "name": "Test Contact",
+                "jobTitle": "",
+                "email": "test@email.com",
+                "phoneNumber": "01234567",
+                "otherPhoneNumber": "",
+                "notes": "",
+                "isMainContact": true,
+                "isNamedDeputy": true
+            },
+
             {
                 "id": "firm",
                 "firmId": 2
@@ -2013,6 +2069,26 @@ module.exports = function () {
                 "phoneNumber": "telephone",
                 "email": "email"
             }
+        ],
+        "contacts": [
+            {
+                "id": 1,
+                "name": "Minimal Contact",
+                "phoneNumber": "0123456789",
+                "email": "email@test.com"
+            },
+            {
+                "id": 2,
+                "name": "Test Contact",
+                "jobTitle": "Software Tester",
+                "phoneNumber": "0123456789",
+                "otherPhoneNumber": "9876543210",
+                "email": "test@email.com",
+                "notes": "This is a test",
+                "isNamedDeputy": true,
+                "isMainContact": true
+            },
+
         ],
         "annualBillingInvoice": [
             {
