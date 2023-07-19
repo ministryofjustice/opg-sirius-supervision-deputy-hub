@@ -1,11 +1,14 @@
-describe("Add Contact", () => {
+describe("Contacts", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/3/contacts/add-contact");
     });
 
-    describe("Header", () => {
+    describe("Adding a Contact", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/3/contacts/add-contact");
+        })
+
         it("shows content", () => {
             cy.get(".govuk-main-wrapper > header").contains("Create new contact");
             cy.get("#add-contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
@@ -19,9 +22,7 @@ describe("Add Contact", () => {
             cy.get(".govuk-button").contains("Save contact");
             cy.get(".govuk-button-group > .govuk-link").contains("Cancel");
         });
-    });
 
-    describe("Success submitting add contact form", () => {
         it("should allow me to submit the form", () => {
             cy.setCookie("success-route", "addContact");
             cy.get("#f-contactName").type("Test Contact");
@@ -33,9 +34,7 @@ describe("Add Contact", () => {
             cy.url().should("contain", "/supervision/deputies/3/contacts?success=newContact");
             cy.get(".moj-banner").should("contain", "Contact added");
         });
-    });
 
-    describe("Error submitting empty add contact form", () => {
         it("shows error message when submitting empty data", () => {
             cy.setCookie("fail-route", "addContactEmpty");
             cy.get("#add-contact-form").submit();
@@ -45,9 +44,7 @@ describe("Add Contact", () => {
             cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is a main contact");
             cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is the named deputy");
         });
-    });
 
-    describe("Error submitting invalid add contact form", () => {
         it("shows error message when submitting invalid data", () => {
             cy.setCookie("fail-route", "addContactInvalid");
             cy.get("#add-contact-form").submit();
