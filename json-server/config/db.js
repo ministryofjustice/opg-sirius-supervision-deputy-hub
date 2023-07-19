@@ -2088,7 +2088,6 @@ module.exports = function () {
                 "isNamedDeputy": true,
                 "isMainContact": true
             },
-
         ],
         "annualBillingInvoice": [
             {

@@ -18,13 +18,6 @@ type ApiContact struct {
 	IsNamedDeputy    bool   `json:"isNamedDeputy"`
 }
 
-type ContactList struct {
-	Contacts      DeputyContactsDetails
-	Pages         Page
-	TotalContacts int
-	Metadata      Metadata
-}
-
 type DeputyContact struct {
 	Id               int
 	Name             string
@@ -37,7 +30,7 @@ type DeputyContact struct {
 	IsNamedDeputy    bool
 }
 
-type DeputyContactsDetails []DeputyContact
+type ContactList []DeputyContact
 
 func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, error) {
 	var contactList ContactList
@@ -68,11 +61,9 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 		return contactList, err
 	}
 
-	var contacts DeputyContactsDetails
 	for _, t := range apiContacts {
-		contacts = append(contacts, DeputyContact(t))
+		contactList = append(contactList, DeputyContact(t))
 	}
-	contactList.Contacts = contacts
 
 	return contactList, err
 }
