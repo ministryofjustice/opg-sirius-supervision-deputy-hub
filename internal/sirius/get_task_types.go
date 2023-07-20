@@ -7,24 +7,23 @@ import (
 	"sort"
 )
 
-type TaskTypesMap struct {
-	TaskTypes map[string]model.TaskType `json:"task_types"`
+type TaskTypeMap map[string]model.TaskType
+
+type TaskTypes struct {
+	TaskTypes TaskTypeMap `json:"task_types"`
 }
 
-func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]model.TaskType, error) {
-
-	var taskTypes TaskTypesMap
-	if err = json.NewDecoder(resp.Body).Decode(&taskTypes); err != nil {
+func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]model.TaskType, error) {
+	taskTypes, err := c.getTaskTypesMap(ctx)
+	if err != nil {
 		return nil, err
 	}
 
-	isPro := deputy.DeputyType.Handle == "PRO"
-
 	var deputyTaskTypes []model.TaskType
-	for _, t := range taskTypes.TaskTypes {
-		if t.ProDeputyTask && isPro {
+	for _, t := range taskTypes {
+		if t.ProDeputyTask && deputyType == "PRO" {
 			deputyTaskTypes = append(deputyTaskTypes, t)
-		} else if t.PaDeputyTask && !isPro {
+		} else if t.PaDeputyTask && deputyType == "PA" {
 			deputyTaskTypes = append(deputyTaskTypes, t)
 		}
 	}
@@ -32,6 +31,34 @@ func (c *Client) GetTaskTypes(ctx Context, deputy DeputyDetails) ([]model.TaskTy
 	sort.Slice(deputyTaskTypes, func(i, j int) bool {
 		return deputyTaskTypes[i].Handle < deputyTaskTypes[j].Handle
 	})
+
+	return deputyTaskTypes, err
+}
+
+func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/tasktypes/deputy", nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusUnauthorized {
+		return nil, ErrUnauthorized
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, newStatusError(resp)
+	}
+
+	var taskTypes TaskTypes
+	err = json.NewDecoder(resp.Body).Decode(&taskTypes)
 
 	return taskTypes.TaskTypes, err
 }

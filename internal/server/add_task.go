@@ -9,8 +9,8 @@ import (
 )
 
 type AddTasksClient interface {
-	AddTask(ctx sirius.Context, deputyId int, taskType string, dueDate string, notes string, assigneeId int) error
-	GetTaskTypes(ctx sirius.Context, deputy sirius.DeputyDetails) ([]model.TaskType, error)
+	AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error
+	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
 	GetTasks(sirius.Context, int) (sirius.TaskList, error)
 }
@@ -123,7 +123,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 	}
 }
 
-func getTaskName(handle string, types []sirius.TaskType) string {
+func getTaskName(handle string, types []model.TaskType) string {
 	for _, t := range types {
 		if handle == t.Handle {
 			return t.Description

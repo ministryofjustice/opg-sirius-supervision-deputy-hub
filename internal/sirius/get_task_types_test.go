@@ -35,11 +35,7 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		}, nil
 	}
 
-	deputy := DeputyDetails{
-		DeputyType: DeputyType{Handle: "PRO"},
-	}
 	expectedResponse := []model.TaskType{
-
 		{
 			"AAA",
 			"Pro only",
@@ -70,10 +66,6 @@ func TestGetTaskTypes_PA(t *testing.T) {
 			StatusCode: 200,
 			Body:       r,
 		}, nil
-	}
-
-	deputy := DeputyDetails{
-		DeputyType: DeputyType{Handle: "PA"},
 	}
 
 	expectedResponse := []model.TaskType{

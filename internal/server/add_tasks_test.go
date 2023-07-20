@@ -34,7 +34,7 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	return m.verr
 }
 
-func (m *mockAddTasksClient) GetTaskTypes(ctx sirius.Context, details sirius.DeputyDetails) ([]model.TaskType, error) {
+func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, details string) ([]model.TaskType, error) {
 
 	m.count += 1
 	m.lastCtx = ctx
@@ -86,9 +86,9 @@ func TestLoadAddTaskForm(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
 		EcmId: 1,
 	}}
-	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC"}}
+	taskTypes := []model.TaskType{{Handle: "ABC"}}
 	client.taskTypes = taskTypes
-	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	expectedVars := AddTaskVars{
@@ -119,9 +119,9 @@ func TestAddTask_success_ecm(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{
@@ -154,9 +154,9 @@ func TestAddTask_success_other(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []model.TaskType{model.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []model.TeamMember{model.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{
