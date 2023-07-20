@@ -35,23 +35,24 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []model.TaskType{
+	returnedTypes := []model.TaskType{
 		{
-			"AAA",
-			"Pro only",
-			true,
-			false,
-		}, {
-			"CCC",
-			"Both",
-			true,
-			true,
+			Handle:        "AAA",
+			Description:   "Pro only",
+			ProDeputyTask: true,
+			PaDeputyTask:  false,
+		},
+		{
+			Handle:        "CCC",
+			Description:   "Both",
+			ProDeputyTask: true,
+			PaDeputyTask:  true,
 		},
 	}
 
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
-	assert.Equal(t, expectedResponse, taskTypes)
+	assert.Equal(t, returnedTypes, taskTypes)
 	assert.Equal(t, nil, err)
 }
 
@@ -68,23 +69,24 @@ func TestGetTaskTypes_PA(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []model.TaskType{
+	returnedTypes := []model.TaskType{
 		{
-			"BBB",
-			"PA only",
-			false,
-			true,
-		}, {
-			"CCC",
-			"Both",
-			true,
-			true,
+			Handle:        "BBB",
+			Description:   "PA only",
+			ProDeputyTask: false,
+			PaDeputyTask:  true,
+		},
+		{
+			Handle:        "CCC",
+			Description:   "Both",
+			ProDeputyTask: true,
+			PaDeputyTask:  true,
 		},
 	}
 
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PA")
 
-	assert.Equal(t, expectedResponse, taskTypes)
+	assert.Equal(t, returnedTypes, taskTypes)
 	assert.Equal(t, nil, err)
 }
 
