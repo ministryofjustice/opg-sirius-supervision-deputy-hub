@@ -35,13 +35,10 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
-
 		ctx := getContext(r)
-		//routeVars := mux.Vars(r)
-		//deputyId := routeVars["id"]
 		deputyId := deputyDetails.ID
 
-		taskTypes, err := client.GetTaskTypes(ctx, deputyDetails)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -79,6 +76,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 		} else {
 			var (
 				taskType   = r.PostFormValue("tasktype")
+				typeName   = getTaskName(taskType, taskTypes)
 				dueDate    = r.PostFormValue("duedate")
 				notes      = r.PostFormValue("notes")
 				ecm        = r.PostFormValue("assignedto")
@@ -92,7 +90,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
-			err := client.AddTask(ctx, deputyId, taskType, dueDate, notes, assigneeId)
+			err := client.AddTask(ctx, deputyDetails.ID, taskType, typeName, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars = AddTaskVars{
@@ -120,7 +118,16 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, deputyId))
+			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, deputyDetails.ID))
 		}
 	}
+}
+
+func getTaskName(handle string, types []sirius.TaskType) string {
+	for _, t := range types {
+		if handle == t.Handle {
+			return t.Description
+		}
+	}
+	return ""
 }
