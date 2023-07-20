@@ -4,10 +4,10 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
+	"html/template"
 	"net/http"
 	"net/url"
 	"strconv"
-	"html/template"
 )
 
 type DeputyHubInformation interface {

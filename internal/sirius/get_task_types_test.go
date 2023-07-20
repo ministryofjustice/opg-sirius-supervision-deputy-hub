@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -34,23 +35,24 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []TaskType{
+	returnedTypes := []model.TaskType{
 		{
-			"AAA",
-			"Pro only",
-			true,
-			false,
-		}, {
-			"CCC",
-			"Both",
-			true,
-			true,
+			Handle:        "AAA",
+			Description:   "Pro only",
+			ProDeputyTask: true,
+			PaDeputyTask:  false,
+		},
+		{
+			Handle:        "CCC",
+			Description:   "Both",
+			ProDeputyTask: true,
+			PaDeputyTask:  true,
 		},
 	}
 
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
-	assert.Equal(t, expectedResponse, taskTypes)
+	assert.Equal(t, returnedTypes, taskTypes)
 	assert.Equal(t, nil, err)
 }
 
@@ -67,23 +69,24 @@ func TestGetTaskTypes_PA(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []TaskType{
+	returnedTypes := []model.TaskType{
 		{
-			"BBB",
-			"PA only",
-			false,
-			true,
-		}, {
-			"CCC",
-			"Both",
-			true,
-			true,
+			Handle:        "BBB",
+			Description:   "PA only",
+			ProDeputyTask: false,
+			PaDeputyTask:  true,
+		},
+		{
+			Handle:        "CCC",
+			Description:   "Both",
+			ProDeputyTask: true,
+			PaDeputyTask:  true,
 		},
 	}
 
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PA")
 
-	assert.Equal(t, expectedResponse, taskTypes)
+	assert.Equal(t, returnedTypes, taskTypes)
 	assert.Equal(t, nil, err)
 }
 
@@ -97,7 +100,7 @@ func TestGetTaskTypes_statusError(t *testing.T) {
 
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
-	assert.Equal(t, []TaskType(nil), taskTypes)
+	assert.Equal(t, []model.TaskType(nil), taskTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/tasktypes/deputy",
@@ -116,5 +119,5 @@ func TestGetTaskTypes_unauthorised(t *testing.T) {
 	taskTypes, err := client.GetTaskTypesForDeputyType(getContext(nil), "PRO")
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []TaskType(nil), taskTypes)
+	assert.Equal(t, []model.TaskType(nil), taskTypes)
 }

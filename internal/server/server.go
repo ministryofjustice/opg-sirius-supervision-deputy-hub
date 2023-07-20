@@ -28,7 +28,6 @@ type Client interface {
 	AddAssuranceVisit
 	AssuranceVisit
 	ManageAssuranceVisit
-	TasksClient
 	AddTasksClient
 }
 
@@ -67,7 +66,7 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 
 	pageRouter.Handle("/tasks",
 		wrap(
-			renderTemplateForTasksTab(client, templates["tasks.gotmpl"])))
+			renderTemplateForAddTask(client, templates["tasks.gotmpl"])))
 
 	pageRouter.Handle("/tasks/add-task",
 		wrap(
