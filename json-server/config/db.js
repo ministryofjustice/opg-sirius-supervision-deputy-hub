@@ -2558,7 +2558,76 @@ module.exports = function () {
                 "note": 'Some notes that have been written here'
             }
         ],
-        "tasks": [],
+        "tasks": [
+            {
+                "id": 1,
+                "limit":25,
+                "pages":{"current":1,"total":1},
+                "total":2,
+                "tasks":[
+                    {
+                        "id":190,
+                        "type":"AVFU",
+                        "status":"Not started",
+                        "dueDate":"29\/01\/2021",
+                        "name":"",
+                        "description":"",
+                        "ragRating":1,
+                        "assignee":{"id":61,"displayName":"Spongebob Squarepants"},
+                        "createdTime":"14\/11\/2022 12:02:01",
+                        "caseItems":[],
+                        "persons":[{"id":11,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "clients":[{"id":61,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "caseOwnerTask":false
+                    },
+                    {
+                        "id":183,
+                        "type":"GE",
+                        "status":"Not started",
+                        "dueDate":"29\/11\/2022",
+                        "name":"",
+                        "description":"Notes about the enquiry",
+                        "ragRating":1,
+                        "assignee":{"id":29,"displayName":"PA Team 1 - (Supervision)"},
+                        "createdTime":"14\/11\/2022 12:02:01",
+                        "caseItems":[],
+                        "persons":[{"id":11,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "clients":[{"id":61,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "caseOwnerTask":false
+                    },
+                    {
+                        "id":119,
+                        "type":"CFU",
+                        "status":"Not started",
+                        "dueDate":"30\/12\/2022",
+                        "name":"",
+                        "description":"Test notes about the task",
+                        "ragRating":1,
+                        "assignee":{"id":60,"displayName":"Case manager"},
+                        "createdTime":"14\/11\/2022 12:02:01",
+                        "caseItems":[],
+                        "persons":[{"id":11,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "clients":[{"id":61,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "caseOwnerTask":false
+                    },
+                    {
+                        "id":184,
+                        "type":"AVFU",
+                        "status":"Not started",
+                        "dueDate":"01\/01\/2023",
+                        "name":"",
+                        "description":"",
+                        "ragRating":1,
+                        "assignee":{"id":61,"displayName":"Spongebob Squarepants"},
+                        "createdTime":"14\/11\/2022 12:02:01",
+                        "caseItems":[],
+                        "persons":[{"id":11,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "clients":[{"id":61,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                        "caseOwnerTask":false
+                    },
+                ]
+            },
+        ],
         "tasktypes": {
             "task_types": {
                 "SAP": {
@@ -2597,6 +2666,24 @@ module.exports = function () {
                     "complete": "Assurance visit follow up",
                     "user": true,
                     "category": "deputy",
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "CFU": {
+                    "handle": "CFU",
+                    "incomplete": 'Complaint follow up',
+                    "complete": 'Complaint follow up',
+                    "user": true,
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": true
+                },
+                "GE": {
+                    "handle": "GE",
+                    "incomplete": 'General enquiry',
+                    "complete": 'General enquiry',
+                    "user": true,
                     "ecmTask": false,
                     "proDeputyTask": true,
                     "paDeputyTask": true

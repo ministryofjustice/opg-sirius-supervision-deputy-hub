@@ -2,11 +2,12 @@ package server
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
-	"net/url"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -18,14 +19,14 @@ type mockChangeECMInformation struct {
 	err            error
 	changeECMErr   error
 	DeputyDetails  sirius.DeputyDetails
-	EcmTeamDetails []sirius.TeamMember
+	EcmTeamDetails []model.TeamMember
 	Error          string
 	Errors         sirius.ValidationErrors
 	Success        bool
 	DefaultPaTeam  int
 }
 
-func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]sirius.TeamMember, error) {
+func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]model.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -74,7 +75,7 @@ func TestPostChangeECM(t *testing.T) {
 
 	template := &mockTemplates{}
 
-	w := httptest.NewRecorder() 
+	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{ecmId:26}"))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 

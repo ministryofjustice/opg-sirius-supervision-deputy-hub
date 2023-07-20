@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -47,7 +48,7 @@ func TestGetDeputyTeamUsersReturnedPa(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []TeamMember{
+	expectedResponse := []model.TeamMember{
 		{
 			ID:          92,
 			DisplayName: "PATeam1 User1",
@@ -123,7 +124,7 @@ func TestGetDeputyTeamUsersReturnedPro(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []TeamMember{
+	expectedResponse := []model.TeamMember{
 		{
 			ID:          94,
 			DisplayName: "ProTeam1 User1",
@@ -153,7 +154,7 @@ func TestGetDeputyTeamUsersReturnsNewStatusError(t *testing.T) {
 
 	paDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, DeputyDetails{})
 
-	expectedResponse := []TeamMember([]TeamMember{})
+	expectedResponse := []model.TeamMember([]model.TeamMember{})
 
 	assert.Equal(t, expectedResponse, paDeputyTeam)
 	assert.Equal(t, StatusError{
@@ -173,7 +174,7 @@ func TestGetDeputyTeamUsersReturnsUnauthorisedClientError(t *testing.T) {
 
 	paDeputyTeam, err := client.GetDeputyTeamMembers(getContext(nil), 23, DeputyDetails{})
 
-	expectedResponse := []TeamMember([]TeamMember{})
+	expectedResponse := []model.TeamMember([]model.TeamMember{})
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, paDeputyTeam)
