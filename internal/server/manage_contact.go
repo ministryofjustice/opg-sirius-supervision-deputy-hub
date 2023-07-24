@@ -55,6 +55,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template, isNewCo
 		case http.MethodGet:
 			if !isNewContact {
 				contact, err := client.GetContactById(ctx, deputyId, contactId)
+
 				if err != nil {
 					return err
 				}

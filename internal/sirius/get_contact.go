@@ -37,9 +37,9 @@ func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Conta
 		return contact, ErrUnauthorized
 	}
 
-	//if resp.StatusCode != http.StatusOK {
-	//	return contact, newStatusError(resp)
-	//}
+	if resp.StatusCode != http.StatusOK {
+		return contact, newStatusError(resp)
+	}
 
 	err = json.NewDecoder(resp.Body).Decode(&contact)
 
