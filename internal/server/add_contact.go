@@ -9,7 +9,7 @@ import (
 )
 
 type ContactInformation interface {
-	AddContact(sirius.Context, int, sirius.Contact) error
+	AddContact(sirius.Context, int, sirius.ContactForm) error
 }
 
 type addContactVars struct {
@@ -47,7 +47,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		case http.MethodPost:
-			addContactForm := sirius.Contact{
+			addContactForm := sirius.ContactForm{
 				ContactName:      r.PostFormValue("contact-name"),
 				JobTitle:         r.PostFormValue("job-title"),
 				Email:            r.PostFormValue("email"),

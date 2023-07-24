@@ -23,6 +23,7 @@ type ContactList struct {
 	Pages         Page
 	TotalContacts int
 	Metadata      Metadata
+	DeputyId      int
 }
 
 type DeputyContact struct {
@@ -73,6 +74,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 		contacts = append(contacts, DeputyContact(t))
 	}
 	contactList.Contacts = contacts
+	contactList.DeputyId = deputyId
 
 	return contactList, err
 }

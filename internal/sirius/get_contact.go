@@ -6,22 +6,16 @@ import (
 	"net/http"
 )
 
-//type Contact struct {
-//	Id                  int                 `json:"id"`
-//	AssuranceType       AssuranceTypes      `json:"assuranceType"`
-//	RequestedDate       string              `json:"requestedDate"`
-//	RequestedBy         User                `json:"requestedBy"`
-//	CommissionedDate    string              `json:"commissionedDate"`
-//	ReportDueDate       string              `json:"reportDueDate"`
-//	ReportReceivedDate  string              `json:"reportReceivedDate"`
-//	VisitOutcome        VisitOutcomeTypes   `json:"assuranceVisitOutcome"`
-//	PdrOutcome          PdrOutcomeTypes     `json:"pdrOutcome"`
-//	ReportReviewDate    string              `json:"reportReviewDate"`
-//	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
-//	Note                string              `json:"note"`
-//	VisitorAllocated    string              `json:"visitorAllocated"`
-//	ReviewedBy          User                `json:"reviewedBy"`
-//}
+type Contact struct {
+	ContactName      string `json:"name"`
+	JobTitle         string `json:"jobTitle"`
+	Email            string `json:"email"`
+	PhoneNumber      string `json:"phoneNumber"`
+	OtherPhoneNumber string `json:"otherPhoneNumber"`
+	ContactNotes     string `json:"notes"`
+	IsNamedDeputy    bool   `json:"isNamedDeputy"`
+	IsMainContact    bool   `json:"isMainContact"`
+}
 
 func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Contact, error) {
 	var contact Contact
@@ -43,9 +37,9 @@ func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Conta
 		return contact, ErrUnauthorized
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return contact, newStatusError(resp)
-	}
+	//if resp.StatusCode != http.StatusOK {
+	//	return contact, newStatusError(resp)
+	//}
 
 	err = json.NewDecoder(resp.Body).Decode(&contact)
 
