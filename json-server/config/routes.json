@@ -9,6 +9,7 @@
     "/deputies/:id/contact-details": "/deputies/:id",
     "/deputies/:id/assurance-visits": "/assuranceVisits/:id",
     "/deputies/:id/assurance-visits/:visitId": "/assuranceVisit/:visitId",
+    "/contacts/:id": "/contacts/:id",
     "/firm": "/addFirm",
     "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
     "/reference-data/deputyBooleanType": "/deputyBooleanType",

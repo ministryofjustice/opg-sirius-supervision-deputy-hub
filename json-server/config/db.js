@@ -1782,7 +1782,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "addContactEmpty",
+                "id": "manageContactEmpty",
                 "validation_errors": {
                     "contactName": {
                         "isEmpty": ""
@@ -1802,7 +1802,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "addContactInvalid",
+                "id": "manageContactInvalid",
                 "validation_errors": {
                     "contactName": {
                         "stringLengthTooLong": ""
@@ -1935,6 +1935,18 @@ module.exports = function () {
                 "notes": "",
                 "isMainContact": true,
                 "isNamedDeputy": true
+            },
+
+            {
+                "id": "updateContact",
+                "name": "Test Contact",
+                "jobTitle": "",
+                "email": "test@email.com",
+                "phoneNumber": "01234567",
+                "otherPhoneNumber": "",
+                "notes": "",
+                "isMainContact": false,
+                "isNamedDeputy": false
             },
 
             {
@@ -2072,11 +2084,22 @@ module.exports = function () {
         ],
         "contacts": [
             {
-                "name": "name",
-                "phoneNumber": "telephone",
-                "email": "email"
+                "id": 1,
+                "name": "Minimal Contact",
+                "phoneNumber": "0123456789",
+                "email": "email@test.com"
             },
-
+            {
+                "id": 2,
+                "name": "Test Contact",
+                "jobTitle": "Software Tester",
+                "phoneNumber": "0123456789",
+                "otherPhoneNumber": "9876543210",
+                "email": "test@email.com",
+                "notes": "This is a test",
+                "isNamedDeputy": true,
+                "isMainContact": true,
+            },
         ],
         "annualBillingInvoice": [
             {
