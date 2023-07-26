@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"strconv"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type ChangeECMInformation interface {
-	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]sirius.TeamMember, error)
+	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]model.TeamMember, error)
 	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
 }
 
@@ -18,7 +19,7 @@ type changeECMHubVars struct {
 	Path           string
 	XSRFToken      string
 	DeputyDetails  sirius.DeputyDetails
-	EcmTeamDetails []sirius.TeamMember
+	EcmTeamDetails []model.TeamMember
 	Error          string
 	Errors         sirius.ValidationErrors
 	SuccessMessage string

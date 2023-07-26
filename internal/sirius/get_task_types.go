@@ -2,30 +2,24 @@ package sirius
 
 import (
 	"encoding/json"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"sort"
 )
 
-type TaskType struct {
-	Handle        string `json:"handle"`
-	Description   string `json:"incomplete"`
-	ProDeputyTask bool   `json:"proDeputyTask"`
-	PaDeputyTask  bool   `json:"paDeputyTask"`
-}
-
-type TaskTypeMap map[string]TaskType
+type TaskTypeMap map[string]model.TaskType
 
 type TaskTypes struct {
 	TaskTypes TaskTypeMap `json:"task_types"`
 }
 
-func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]TaskType, error) {
+func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]model.TaskType, error) {
 	taskTypes, err := c.getTaskTypesMap(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var deputyTaskTypes []TaskType
+	var deputyTaskTypes []model.TaskType
 	for _, t := range taskTypes {
 		if t.ProDeputyTask && deputyType == "PRO" {
 			deputyTaskTypes = append(deputyTaskTypes, t)
