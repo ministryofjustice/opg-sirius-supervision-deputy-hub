@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -12,22 +13,20 @@ type AddTasksClient interface {
 	AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
-	GetTasks(sirius.Context, int) (sirius.TaskList, error)
 }
 
 type AddTaskVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
-	TaskTypes      []model.TaskType
-	Assignees      []model.TeamMember
-	TaskList       sirius.TaskList
-	TaskType       string
-	DueDate        string
-	Notes          string
-	Error          string
-	Errors         sirius.ValidationErrors
-	SuccessMessage string
+	Path          string
+	XSRFToken     string
+	DeputyDetails sirius.DeputyDetails
+	TaskTypes     []model.TaskType
+	Assignees     []model.TeamMember
+	TaskType      string
+	DueDate       string
+	Notes         string
+	Error         string
+	Errors        sirius.ValidationErrors
+	IsManageTasks bool
 }
 
 func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
@@ -36,7 +35,8 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
-		deputyId := deputyDetails.ID
+		routeVars := mux.Vars(r)
+		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
 		if err != nil {
@@ -57,21 +57,13 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			Assignees:     assignees,
 		}
 
+		if taskId != 0 {
+			vars.IsManageTasks = true
+		} else {
+			vars.IsManageTasks = false
+		}
+
 		if r.Method == http.MethodGet {
-
-			successMessage := ""
-			if taskName := r.URL.Query().Get("success"); taskName != "" {
-				successMessage = fmt.Sprintf("%s task added", taskName)
-			}
-
-			tasklist, err := client.GetTasks(ctx, deputyId)
-			if err != nil {
-				return err
-			}
-
-			vars.TaskList = tasklist
-			vars.SuccessMessage = successMessage
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		} else {
 			var (

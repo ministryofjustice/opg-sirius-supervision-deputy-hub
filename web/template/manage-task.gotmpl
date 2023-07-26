@@ -1,4 +1,4 @@
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTaskVars*/ -}}
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.ManageTaskVars*/ -}}
 {{ template "page" . }}
 {{ define "main" }}
     {{ template "content-header" . }}
@@ -6,16 +6,15 @@
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
-                <h1
-                    class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                    Add a deputy task
+                <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                    Manage Tasks
                 </h1>
             </header>
 
             <div class="govuk-grid-row">
                 <form
-                    id="add-task-form"
-                    class="add-note govuk-grid-column-one-third"
+                    id="manage-task-form"
+                    class="manage-task govuk-grid-column-one-third"
                     method="post">
                     <input
                         type="hidden"
@@ -24,28 +23,9 @@
 
                     <div class="govuk-form-group">
                         <div class="govuk-form-group">
-                            <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend" id="tasktype">Type of task (required)</legend>
-                                {{ $selectedType := .TaskType }}
-                                <div class="govuk-radios">
-                                    {{ range .TaskTypes }}
-                                        <div class="govuk-radios__item">
-                                            <input class="govuk-radios__input" id="{{.Handle}}" name="tasktype"
-                                                   type="radio"
-                                                   value="{{.Handle}}"
-                                                   {{ if eq .Handle $selectedType }} checked {{ end }}
-                                            >
-                                            <label class="govuk-label govuk-radios__label"
-                                                   for="{{.Handle}}">{{.Description}}</label>
-                                        </div>
-                                    {{ end }}
-                                </div>
-                            </fieldset>
-                        </div>
-                        <div class="govuk-form-group">
                             <label class="govuk-label" for="duedate">Due date (required)</label>
                             <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
-                                   value="{{.DueDate}}" type="date">
+                                   value="{{ .TaskDetails.DueDate }}" type="date">
                         </div>
 
                         <div class="govuk-form-group">
@@ -56,7 +36,7 @@
                                         <input class="govuk-radios__input" id="assignedto-ecm" name="assignedto"
                                                type="radio"
                                                value="{{ .DeputyDetails.ExecutiveCaseManager.EcmId }}"
-                                               checked
+                                                {{ if eq .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}checked{{end}}
                                         >
                                         <label class="govuk-label govuk-radios__label"
                                                for="assignedto-ecm">{{ .DeputyDetails.ExecutiveCaseManager.EcmName }} (Executive Case Manager)</label>
@@ -65,20 +45,21 @@
                                         <input class="govuk-radios__input" id="assignedto-other" name="assignedto"
                                                type="radio"
                                                value="other"
+                                               {{ if ne .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}checked{{end}}
                                         >
                                         <label class="govuk-label govuk-radios__label"
                                                for="assignedto-other">Someone else</label>
                                     </div>
                                 </div>
 
-                                <div id="autocomplete-input" class="hide">
+                                <div id="autocomplete-input" {{ if eq .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}class="hide"{{end}}>
                                     <div class="govuk-radios__conditional">
                                         <div class="autocomplete-wrapper" id="select-ecm-dropdown">
                                             <label class="govuk-label" for="select-ecm">
                                                 Enter a name
                                             </label>
                                             <select id="select-ecm" name="select-assignedto">
-                                                <option value=""></option>
+                                                <option value="{{ .TaskDetails.Assignee.Id}}">{{ .TaskDetails.Assignee.DisplayName}}</option>
                                                 {{ range .Assignees }}
                                                     <option value="{{ .ID }}">{{ .DisplayName }}</option>
                                                 {{ end }}
@@ -104,7 +85,7 @@
                                     name="notes"
                                     rows="10"
                                     aria-describedby="notes-info notes-hint"
-                                >{{.Notes}}</textarea>
+                                >{{.TaskDetails.Notes}}</textarea>
                                 <div
                                     id="notes-info"
                                     class="govuk-hint govuk-character-count__message"
