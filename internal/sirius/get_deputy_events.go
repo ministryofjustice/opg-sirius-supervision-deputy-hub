@@ -41,6 +41,8 @@ type Event struct {
 	Assignee             string         `json:"assignee"`
 	DueDate              string         `json:"dueDate"`
 	Notes                string         `json:"description"`
+	AssigneeId           int            `json:"assigneeId"`
+	OldAssigneeId        int            `json:"oldAssigneeId"`
 }
 
 type Changes struct {

@@ -29,4 +29,7 @@
     {{ if eq .EventType "TaskCreated" }}
         {{ template "task-created" . }}
     {{ end }}
+    {{ if eq .EventType "TaskEdited" }}
+        {{ template "task-updated" . }}
+    {{ end }}
 {{ end }}

@@ -13,6 +13,7 @@ type ManageTasks interface {
 	GetTask(sirius.Context, int) (model.Task, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
 	EditTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
+	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 }
 
 type manageTaskVars struct {
@@ -32,8 +33,12 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-		//deputyId, _ := strconv.Atoi(routeVars["id"])
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
+
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		if err != nil {
+			return err
+		}
 
 		taskDetails, err := client.GetTask(ctx, taskId)
 		if err != nil {
@@ -41,6 +46,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		}
 
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
+		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
 		defaultPATeam := 1
 		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
