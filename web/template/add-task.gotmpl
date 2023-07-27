@@ -25,7 +25,7 @@
                     <div class="govuk-form-group">
                         <div class="govuk-form-group">
                             <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend" id="tasktype">Type of task (required)</legend>
+                                <legend class="govuk-fieldset__legend" id="tasktype">Type of task</legend>
                                 {{ $selectedType := .TaskType }}
                                 <div class="govuk-radios">
                                     {{ range .TaskTypes }}
@@ -43,14 +43,14 @@
                             </fieldset>
                         </div>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="duedate">Due date (required)</label>
+                            <label class="govuk-label" for="duedate">Due date</label>
                             <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
                                    value="{{.DueDate}}" type="date">
                         </div>
 
                         <div class="govuk-form-group">
                             <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend" id="assignedto">Assigned to (required)</legend>
+                                <legend class="govuk-fieldset__legend" id="assignedto">Assigned to</legend>
                                 <div class="govuk-radios">
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="assignedto-ecm" name="assignedto"
@@ -96,7 +96,7 @@
                             data-maxlength="1000">
                             <div class="govuk-form-group">
                                 <label class="govuk-label" for="notes">
-                                    Notes
+                                    Notes (optional)
                                 </label>
                                 <textarea
                                     class="govuk-textarea govuk-js-character-count"
