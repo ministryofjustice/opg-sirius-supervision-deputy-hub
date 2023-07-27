@@ -1938,6 +1938,12 @@ module.exports = function () {
             },
 
             {
+                "id": "addContact",
+                "name": "Test Contact",
+                "email": "test@email.com",
+                "phoneNumber": "0123456789",
+            },
+            {
                 "id": "firm",
                 "firmId": 2
             },
