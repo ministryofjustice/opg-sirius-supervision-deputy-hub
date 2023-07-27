@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -10,8 +11,8 @@ import (
 
 type ManageTasks interface {
 	GetTask(sirius.Context, int) (model.Task, error)
-	//UpdateTask
-	//ReassignTask
+	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
+	EditTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
 }
 
 type manageTaskVars struct {
@@ -23,6 +24,7 @@ type manageTaskVars struct {
 	Errors         sirius.ValidationErrors
 	Success        bool
 	SuccessMessage string
+	Assignees      []model.TeamMember
 }
 
 func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
@@ -40,6 +42,12 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
 
+		defaultPATeam := 1
+		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
+		if err != nil {
+			return err
+		}
+
 		switch r.Method {
 		case http.MethodGet:
 
@@ -48,41 +56,45 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				XSRFToken:     ctx.XSRFToken,
 				DeputyDetails: deputyDetails,
 				TaskDetails:   taskDetails,
+				Assignees:     assignees,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
-		//case http.MethodPost:
-		//	var vars changeFirmVars
-		//	newFirm := r.PostFormValue("select-firm")
-		//	AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
-		//
-		//	if newFirm == "new-firm" {
-		//		return Redirect(fmt.Sprintf("/%d/add-firm", deputyId))
-		//	}
-		//
-		//	AssignToFirmId := 0
-		//	if AssignToExistingFirmStringIdValue != "" {
-		//		AssignToFirmId, err = strconv.Atoi(AssignToExistingFirmStringIdValue)
-		//		if err != nil {
-		//			return err
-		//		}
-		//	}
-		//
-		//	assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
-		//
-		//	if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
-		//		vars = changeFirmVars{
-		//			Path:      r.URL.Path,
-		//			XSRFToken: ctx.XSRFToken,
-		//			Errors:    verr.Errors,
-		//		}
-		//
-		//		return tmpl.ExecuteTemplate(w, "page", vars)
-		//	} else if err != nil {
-		//		return err
-		//	}
-		//	return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))
+		case http.MethodPost:
+			var (
+				dueDate    = r.PostFormValue("duedate")
+				notes      = r.PostFormValue("notes")
+				ecm        = r.PostFormValue("assignedto")
+				assignedTo = r.PostFormValue("select-assignedto")
+			)
+
+			var assigneeId int
+			if ecm == "other" {
+				assigneeId, _ = strconv.Atoi(assignedTo)
+			} else {
+				assigneeId, _ = strconv.Atoi(ecm)
+			}
+
+			err := client.EditTask(ctx, deputyDetails.ID, taskDetails.Id, dueDate, notes, assigneeId)
+
+			if verr, ok := err.(sirius.ValidationError); ok {
+				vars := manageTaskVars{
+					Path:          r.URL.Path,
+					XSRFToken:     ctx.XSRFToken,
+					DeputyDetails: deputyDetails,
+					Assignees:     assignees,
+					TaskDetails:   taskDetails,
+					Errors:        verr.Errors,
+				}
+				w.WriteHeader(http.StatusBadRequest)
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+			if err != nil {
+				return err
+			}
+
+			return Redirect(fmt.Sprintf("/%d/tasks", deputyDetails.ID))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

@@ -59,10 +59,14 @@
                                                 Enter a name
                                             </label>
                                             <select id="select-ecm" name="select-assignedto">
-                                                <option value="{{ .TaskDetails.Assignee.Id}}">{{ .TaskDetails.Assignee.DisplayName}}</option>
-                                                {{ range .Assignees }}
-                                                    <option value="{{ .ID }}">{{ .DisplayName }}</option>
-                                                {{ end }}
+                                                {{ if ne .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}
+                                                    <option value="{{ .TaskDetails.Assignee.Id}}">{{ .TaskDetails.Assignee.DisplayName}}</option>
+                                                {{ else }}
+                                                    <option value=""></option>
+                                                    {{ range .Assignees }}
+                                                        <option value="{{ .ID }}">{{ .DisplayName }}</option>
+                                                    {{ end }}
+                                                {{end}}
                                             </select>
                                         </div>
                                         <br>
