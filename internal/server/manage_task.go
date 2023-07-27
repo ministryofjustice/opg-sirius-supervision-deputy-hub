@@ -12,7 +12,7 @@ import (
 type ManageTasks interface {
 	GetTask(sirius.Context, int) (model.Task, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
-	EditTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
+	UpdateTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 }
 
@@ -82,7 +82,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
-			err := client.EditTask(ctx, deputyDetails.ID, taskDetails.Id, dueDate, notes, assigneeId)
+			err := client.UpdateTask(ctx, deputyDetails.ID, taskDetails.Id, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := manageTaskVars{

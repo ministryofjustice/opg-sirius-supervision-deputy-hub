@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type editTask struct {
+type updateTask struct {
 	CaseOwnerTask bool   `json:"isCaseOwner"`
 	DueDate       string `json:"dueDate"`
 	Notes         string `json:"description"`
@@ -16,9 +16,9 @@ type editTask struct {
 	IsDeputyTask  bool   `json:"isDeputyTask"`
 }
 
-func (c *Client) EditTask(ctx Context, deputyId int, taskId int, dueDate string, notes string, assigneeId int) error {
+func (c *Client) UpdateTask(ctx Context, deputyId int, taskId int, dueDate string, notes string, assigneeId int) error {
 	var body bytes.Buffer
-	err := json.NewEncoder(&body).Encode(editTask{
+	err := json.NewEncoder(&body).Encode(updateTask{
 		DueDate:       FormatDateTime(IsoDate, dueDate, SiriusDate),
 		Notes:         notes,
 		AssigneeId:    assigneeId,
