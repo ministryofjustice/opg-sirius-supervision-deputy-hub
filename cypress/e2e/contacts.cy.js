@@ -92,8 +92,8 @@ describe("Contacts", () => {
             cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
 
             cy.get(':nth-child(2) > :nth-child(1) > .name').contains("Test Contact");
-            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
-            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
+            cy.get(':nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
+            cy.get(':nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
             cy.get(':nth-child(2) > :nth-child(1) > .job-title').contains("Software Tester");
             cy.get(':nth-child(2) > :nth-child(2) > .email > a').contains("test@email.com");
             cy.get(':nth-child(2) > :nth-child(2) > .phone-number').contains("0123456789");
@@ -102,6 +102,5 @@ describe("Contacts", () => {
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').contains("Manage contact");
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
         });
-
     });
 });

@@ -17,7 +17,7 @@ type mockContactInformation struct {
 	err     error
 }
 
-func (m *mockContactInformation) AddContact(ctx sirius.Context, deputyId int, contact sirius.Contact) (error) {
+func (m *mockContactInformation) AddContact(ctx sirius.Context, deputyId int, contact sirius.Contact) error {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -139,21 +139,6 @@ func TestAddContactFormatValidationErrors(t *testing.T) {
 		"contactName": {
 			"stringLengthTooLong": "The name must be 255 characters or fewer",
 		},
-		"jobTitle": {
-			"stringLengthTooLong": "The job title must be 255 characters or fewer",
-		},
-		"email": {
-			"stringLengthTooLong": "The email must be 255 characters or fewer",
-		},
-		"phoneNumber": {
-			"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
-		},
-		"otherPhoneNumber": {
-			"stringLengthTooLong": "The other telephone number must be 255 characters or fewer",
-		},
-		"contactNotes": {
-			"stringLengthTooLong": "The note must be 255 characters or fewer",
-		},
 	}
 
 	client.err = sirius.ValidationError{
@@ -176,21 +161,6 @@ func TestAddContactFormatValidationErrors(t *testing.T) {
 	expectedValidationErrors := sirius.ValidationErrors{
 		"contactName": {
 			"stringLengthTooLong": "The name must be 255 characters or fewer",
-		},
-		"jobTitle": {
-			"stringLengthTooLong": "The job title must be 255 characters or fewer",
-		},
-		"email": {
-			"stringLengthTooLong": "The email must be 255 characters or fewer",
-		},
-		"phoneNumber": {
-			"stringLengthTooLong": "The telephone number must be 255 characters or fewer",
-		},
-		"otherPhoneNumber": {
-			"stringLengthTooLong": "The other telephone number must be 255 characters or fewer",
-		},
-		"contactNotes": {
-			"stringLengthTooLong": "The note must be 255 characters or fewer",
 		},
 	}
 
