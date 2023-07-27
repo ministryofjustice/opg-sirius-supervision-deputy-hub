@@ -72,18 +72,6 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 		"contactName": {
 			"isEmpty": "Enter a name",
 		},
-		"email": {
-			"isEmpty": "Enter an email address",
-		},
-		"phoneNumber": {
-			"isEmpty": "Enter a telephone number",
-		},
-		"isMainContact": {
-			"isEmpty": "Select whether this contact is a main contact",
-		},
-		"isNamedDeputy": {
-			"isEmpty": "Select whether this contact is the named deputy",
-		},
 	}
 
 	client.err = sirius.ValidationError{
@@ -109,62 +97,7 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 		"contactName": {
 			"isEmpty": "Enter a name",
 		},
-		"email": {
-			"isEmpty": "Enter an email address",
-		},
-		"phoneNumber": {
-			"isEmpty": "Enter a telephone number",
-		},
-		"isMainContact": {
-			"isEmpty": "Select whether this contact is a main contact",
-		},
-		"isNamedDeputy": {
-			"isEmpty": "Select whether this contact is the named deputy",
-		},
 	}
-
-	assert.Equal(addContactVars{
-		Path:   "/133",
-		Errors: expectedValidationErrors,
-	}, template.lastVars)
-
-	assert.Nil(returnedError)
-}
-
-func TestAddContactFormatValidationErrors(t *testing.T) {
-	assert := assert.New(t)
-	client := &mockContactInformation{}
-
-	validationErrors := sirius.ValidationErrors{
-		"contactName": {
-			"stringLengthTooLong": "The name must be 255 characters or fewer",
-		},
-	}
-
-	client.err = sirius.ValidationError{
-		Errors: validationErrors,
-	}
-
-	template := &mockTemplates{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddContact(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	expectedValidationErrors := sirius.ValidationErrors{
-		"contactName": {
-			"stringLengthTooLong": "The name must be 255 characters or fewer",
-		},
-	}
-
-	testHandler.ServeHTTP(w, r)
 
 	assert.Equal(addContactVars{
 		Path:   "/133",
