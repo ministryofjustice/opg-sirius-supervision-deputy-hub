@@ -13,6 +13,9 @@
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
+                {{ if ne .Event.OldAssigneeId .Event.AssigneeId}}
+                    <li>Assigned to {{ .Event.Assignee }}</li>
+                {{ end }}
                 {{ range .Event.Changes }}
                     {{if eq .FieldName "dueDate"}}
                         <li>Due date {{ .NewValue }}</li>
@@ -21,9 +24,6 @@
                         <li>{{ .NewValue }}</li>
                     {{end}}
                 {{end}}
-                {{ if ne .Event.OldAssigneeId .Event.AssigneeId}}
-                    <li>Assigned to {{ .Event.Assignee }}</li>
-                {{ end }}
             </ul>
         </div>
     </div>

@@ -111,8 +111,12 @@ var validationMappings = map[string]map[string]pair{
 	"taskType": {
 		"isEmpty": pair{"taskType", "Select the task type"},
 	},
+	"assigneeId": {
+		"notBetween": pair{"assigneeId", "Enter a valid value for assignee"},
+	},
 	"dueDate": {
 		"isEmpty": pair{"dueDate", "Enter a due date"},
+		"error":   pair{"dueDate", "Enter a valid value for due date"},
 	},
 	"notes": {
 		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},

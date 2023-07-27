@@ -32,6 +32,17 @@
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-fieldset__legend" id="assignedto">Assigned to (required)</legend>
                                 <div class="govuk-radios">
+                                    {{ if ne .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}
+                                        <div class="govuk-radios__item">
+                                            <input class="govuk-radios__input" id="assignedto-current-assignee" name="assignedto"
+                                                   type="radio"
+                                                   value="{{ .TaskDetails.Assignee.Id }}"
+                                                   checked
+                                            >
+                                            <label class="govuk-label govuk-radios__label"
+                                                   for="assignedto-current-assignee">{{ .TaskDetails.Assignee.DisplayName }} (Current Assignee)</label>
+                                        </div>
+                                    {{end}}
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="assignedto-ecm" name="assignedto"
                                                type="radio"
@@ -45,28 +56,23 @@
                                         <input class="govuk-radios__input" id="assignedto-other" name="assignedto"
                                                type="radio"
                                                value="other"
-                                               {{ if ne .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}checked{{end}}
                                         >
                                         <label class="govuk-label govuk-radios__label"
                                                for="assignedto-other">Someone else</label>
                                     </div>
                                 </div>
 
-                                <div id="autocomplete-input" {{ if eq .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}class="hide"{{end}}>
+                                <div id="autocomplete-input" class="hide">
                                     <div class="govuk-radios__conditional">
                                         <div class="autocomplete-wrapper" id="select-ecm-dropdown">
                                             <label class="govuk-label" for="select-ecm">
                                                 Enter a name
                                             </label>
                                             <select id="select-ecm" name="select-assignedto">
-                                                {{ if ne .TaskDetails.Assignee.Id .DeputyDetails.ExecutiveCaseManager.EcmId}}
-                                                    <option value="{{ .TaskDetails.Assignee.Id}}">{{ .TaskDetails.Assignee.DisplayName}}</option>
-                                                {{ else }}
-                                                    <option value=""></option>
-                                                    {{ range .Assignees }}
-                                                        <option value="{{ .ID }}">{{ .DisplayName }}</option>
-                                                    {{ end }}
-                                                {{end}}
+                                                <option value=""></option>
+                                                {{ range .Assignees }}
+                                                    <option value="{{ .ID }}">{{ .DisplayName }}</option>
+                                                {{ end }}
                                             </select>
                                         </div>
                                         <br>
