@@ -17,6 +17,7 @@ type Client interface {
 	ErrorHandlerClient
 	DeputyHubInformation
 	DeputyHubClientInformation
+	DeputyHubContactInformation
 	DeputyHubEventInformation
 	DeputyHubNotesInformation
 	EditDeputyHubInformation
