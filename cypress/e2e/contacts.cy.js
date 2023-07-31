@@ -59,11 +59,12 @@ describe("Contacts", () => {
 
     describe("Updating a Contact", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/contacts/2");
+            cy.visit("/supervision/deputies/3/contacts");
+            cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').click();
         })
 
         it("shows content", () => {
-            cy.get(".govuk-main-wrapper > header").contains("Update contact");
+            cy.get(".govuk-main-wrapper > header").contains("Manage contact");
             cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
             cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title");
             cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
@@ -78,14 +79,10 @@ describe("Contacts", () => {
 
         it("should allow me to submit the form", () => {
             cy.setCookie("success-route", "updateContact");
-            cy.get("#f-contactName").type("Test Contact");
-            cy.get("#f-email").type("test@email.com");
-            cy.get("#f-phoneNumber").type("0123456789");
-            cy.get('#is-named-deputy-no').click();
-            cy.get('#is-main-contact-no').click();
+            cy.get("#f-contactName").type("{selectAll}{backspace}John Smith");
             cy.get("#contact-form").submit();
             cy.url().should("contain", "/supervision/deputies/3/contacts?success=updatedContact");
-            cy.get(".moj-banner").should("contain", "Contact updated");
+            cy.get(".moj-banner").should("contain", "John Smith's details updated");
         });
 
         it("shows error message when submitting empty data", () => {

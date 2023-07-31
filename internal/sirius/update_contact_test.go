@@ -2,70 +2,57 @@ package sirius
 
 import (
 	"bytes"
-	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAddContact(t *testing.T) {
+func TestUpdateContact(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `{
-		"contactName":"Contact Name",
-		"email":"Email_address@address.com",
-		"phoneNumber":"11111111"
-		}`
+		"contactName": "John Smith"
+	}`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
 	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
 		return &http.Response{
-			StatusCode: 201,
+			StatusCode: 200,
 			Body:       r,
 		}, nil
 	}
 
-	contact := ContactForm{
-		ContactName: "Contact Name",
-		Email:       "Email_address@address.com",
-		PhoneNumber: "11111111",
+	formData := ContactForm{
+		ContactName: "John Smith",
 	}
 
-	deputyId := 76
-
-	err := client.AddContact(getContext(nil), deputyId, contact)
+	err := client.UpdateContact(getContext(nil), 76, 1, formData)
 	assert.Nil(t, err)
 }
 
-func TestAddContactReturnsNewStatusError(t *testing.T) {
+func TestUpdateContactReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		_, _ = w.Write([]byte("{}"))
 	}))
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyId := 76
-
-	err := client.AddContact(getContext(nil), deputyId, ContactForm{})
-
-	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
-
+	err := client.UpdateContact(getContext(nil), 76, 1, ContactForm{})
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + url,
+		URL:    svr.URL + "/api/v1/deputies/76/contacts/1",
 		Method: http.MethodPost,
 	}, err)
 }
 
-func TestAddContactReturnsUnauthorisedClientError(t *testing.T) {
+func TestUpdateContactReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -73,10 +60,7 @@ func TestAddContactReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyId := 76
-
-	err := client.AddContact(getContext(nil), deputyId, ContactForm{})
+	err := client.UpdateContact(getContext(nil), 76, 1, ContactForm{})
 
 	assert.Equal(t, ErrUnauthorized, err)
-
 }

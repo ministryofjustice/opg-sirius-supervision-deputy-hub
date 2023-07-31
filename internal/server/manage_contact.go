@@ -20,7 +20,6 @@ type ManageContactVars struct {
 	DeputyDetails    sirius.DeputyDetails
 	Error            string
 	Errors           sirius.ValidationErrors
-	Contact          sirius.Contact
 	ErrorNote        string
 	ContactName      string
 	JobTitle         string
@@ -33,27 +32,23 @@ type ManageContactVars struct {
 	IsNewContact     bool
 }
 
-func renderTemplateForManageContact(client ManageContact, tmpl Template, isNewContact bool) Handler {
+func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-		var contactId int
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
-
-		if !isNewContact {
-			contactId, _ = strconv.Atoi(routeVars["contactId"])
-		}
+		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
 		vars := ManageContactVars{
 			Path:          r.URL.Path,
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
-			IsNewContact:  isNewContact,
+			IsNewContact:  contactId == 0,
 		}
 
 		switch r.Method {
 		case http.MethodGet:
-			if !isNewContact {
+			if contactId != 0 {
 				contact, err := client.GetContactById(ctx, deputyId, contactId)
 
 				if err != nil {
@@ -87,12 +82,12 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template, isNewCo
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			if isNewContact {
+			if contactId == 0 {
 				err = client.AddContact(ctx, deputyId, manageContactForm)
 				successVar = "newContact"
 			} else {
 				err = client.UpdateContact(ctx, deputyId, contactId, manageContactForm)
-				successVar = "updatedContact"
+				successVar = "updatedContact&contactName=" + r.PostFormValue("contact-name")
 			}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
