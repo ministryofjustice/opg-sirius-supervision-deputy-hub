@@ -10,12 +10,12 @@ describe("Contacts", () => {
         })
 
         it("shows content", () => {
-            cy.get(".govuk-main-wrapper > header").contains("Create new contact");
-            cy.get("#add-contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
-            cy.get("#add-contact-form > :nth-child(3) > .govuk-label").contains("Job title");
-            cy.get("#add-contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
-            cy.get("#add-contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
-            cy.get("#add-contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
+            cy.get(".govuk-main-wrapper > header").contains("Add new contact");
+            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
+            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title");
+            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
+            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
+            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
             cy.get("#f-contact-notes > .govuk-label").contains("Notes");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy (required)");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact (required)");
