@@ -30,7 +30,6 @@ type Client interface {
 	AssuranceVisit
 	ManageAssuranceVisit
 	ManageContact
-	TasksClient
 	AddTasksClient
 }
 
