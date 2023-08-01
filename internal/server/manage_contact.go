@@ -104,6 +104,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 					ContactNotes:     r.PostFormValue("contact-notes"),
 					IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
 					IsMainContact:    r.PostFormValue("is-main-contact"),
+					IsNewContact:     contactId == 0,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
