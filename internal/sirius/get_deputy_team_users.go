@@ -25,6 +25,7 @@ type apiTeam struct {
 }
 
 func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDetails DeputyDetails) ([]model.TeamMember, error) {
+
 	requestUrl := getRequestURL(deputyDetails, defaultPATeam)
 	req, err := c.newRequest(ctx, http.MethodGet, requestUrl, nil)
 	if err != nil {
