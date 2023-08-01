@@ -19,9 +19,11 @@
                 <li>
                     Due date {{ .Event.DueDate }}
                 </li>
-                <li>
-                    {{ .Event.Notes }}
-                </li>
+                {{ if .Event.Notes }}
+                    <li>
+                        {{ .Event.Notes }}
+                    </li>
+                {{ end }}
             </ul>
         </div>
     </div>
