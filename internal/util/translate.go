@@ -120,7 +120,7 @@ var validationMappings = map[string]map[string]pair{
 		"isEmpty":             pair{"contactName", "Enter a name"},
 	},
 	"jobTitle": {
-		"stringLengthTooLong": pair{"jobTitle", "The job title must be 255 characters or fewer"},	
+		"stringLengthTooLong": pair{"jobTitle", "The job title must be 255 characters or fewer"},
 	},
 	"otherPhoneNumber": {
 		"stringLengthTooLong": pair{"otherPhoneNumber", "The other telephone number must be 255 characters or fewer"},
@@ -129,17 +129,21 @@ var validationMappings = map[string]map[string]pair{
 		"stringLengthTooLong": pair{"contactNotes", "The note must be 255 characters or fewer"},
 	},
 	"isMainContact": {
-		"isEmpty":             pair{"isMainContact", "Select whether this contact is a main contact"},
+		"isEmpty": pair{"isMainContact", "Select whether this contact is a main contact"},
 	},
 	"isNamedDeputy": {
-		"isEmpty":             pair{"isNamedDeputy", "Select whether this contact is the named deputy"},
+		"isEmpty": pair{"isNamedDeputy", "Select whether this contact is the named deputy"},
 	},
 	// task
 	"taskType": {
 		"isEmpty": pair{"taskType", "Select the task type"},
 	},
+	//"assigneeId": {
+	//	"notBetween": pair{"assigneeId", "Enter a name of someone who works on the PA> or <Pro> team"},
+	//},
 	"dueDate": {
 		"isEmpty": pair{"dueDate", "Enter a due date"},
+		"error":   pair{"dueDate", "Enter a valid value for due date"},
 	},
 	"notes": {
 		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
