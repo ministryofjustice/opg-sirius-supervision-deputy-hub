@@ -10,7 +10,6 @@ import (
 
 type TasksClient interface {
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
 	GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error)
 }
 
@@ -19,7 +18,6 @@ type TasksVars struct {
 	XSRFToken      string
 	DeputyDetails  sirius.DeputyDetails
 	TaskTypes      []model.TaskType
-	Assignees      []model.TeamMember
 	TaskList       sirius.TaskList
 	TaskType       string
 	DueDate        string
@@ -39,12 +37,6 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 		deputyId := deputyDetails.ID
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
-		if err != nil {
-			return err
-		}
-
-		defaultPATeam := 1
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {
 			return err
 		}
@@ -69,7 +61,6 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 			XSRFToken:      ctx.XSRFToken,
 			TaskTypes:      taskTypes,
 			DeputyDetails:  deputyDetails,
-			Assignees:      assignees,
 			TaskList:       taskList,
 			SuccessMessage: successMessage,
 		}

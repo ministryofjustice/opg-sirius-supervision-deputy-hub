@@ -54,17 +54,16 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return err
 		}
 
+		vars := manageTaskVars{
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyDetails: deputyDetails,
+			TaskDetails:   taskDetails,
+			Assignees:     assignees,
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-
-			vars := manageTaskVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-				TaskDetails:   taskDetails,
-				Assignees:     assignees,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -82,6 +81,13 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
+			if (dueDate == taskDetails.DueDate) && (notes == taskDetails.Notes) && (assigneeId == taskDetails.Assignee.Id) {
+				vars.Errors = sirius.ValidationErrors{
+					"Manage task": {"": "Change the page"},
+				}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
 			err := client.UpdateTask(ctx, deputyDetails.ID, taskDetails.Id, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
@@ -91,8 +97,11 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 					DeputyDetails: deputyDetails,
 					Assignees:     assignees,
 					TaskDetails:   taskDetails,
-					Errors:        verr.Errors,
+					Errors:        renameErrors(verr.Errors, deputyDetails.DeputyType.Label),
 				}
+
+				fmt.Println("error in manage task")
+				fmt.Println(verr.Errors)
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -106,4 +115,19 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
+}
+
+func renameErrors(errors sirius.ValidationErrors, deputyType string) sirius.ValidationErrors {
+	amendedErrors := make(sirius.ValidationErrors)
+
+	for i, s := range errors {
+		for k, t := range s {
+			if i == "assigneeId" && k == "notBetween" {
+				amendedErrors[i] = map[string]string{k: fmt.Sprintf("Enter a name of someone who works on the %s team", deputyType)}
+			} else {
+				amendedErrors[i] = map[string]string{k: t}
+			}
+		}
+	}
+	return amendedErrors
 }
