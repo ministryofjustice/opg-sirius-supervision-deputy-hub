@@ -36,7 +36,7 @@ describe("Tasks", () => {
 
             cy.get(':nth-child(1) > .task_type').should('contain.text', 'Assurance visit follow up');
             cy.get(':nth-child(1) > .assigned_to').should('contain.text', 'Spongebob Squarepants');
-            cy.get(':nth-child(1) > .due_date').should('contain.text', '29/01/2021');
+            cy.get(':nth-child(1) > .due_date').should('contain.text', '29/01/2026');
             cy.get(':nth-child(1) > .task_type').should('contain.text', 'Notes');
 
             cy.get(':nth-child(4) > .task_type').should('not.contain.text', 'Notes');
@@ -141,7 +141,6 @@ describe("Tasks", () => {
 
             cy.url().should("include", "/supervision/deputies/1/tasks/190");
             cy.get('.govuk-heading-l').should("include.text", 'Manage');
-            cy.get('#duedate').should("contain.value", '2021-01-29');
 
             cy.get('#assignedto-current-assignee').should("be.checked");
             cy.get('#assignedto-ecm').should("not.be.checked");
@@ -162,9 +161,24 @@ describe("Tasks", () => {
             cy.get('.moj-banner--success').should("contain.text", "Assurance visit follow up task updated");
         });
 
+        it("throws validation error if nothing changed when task edited", () => {
+            cy.url().should("include", "/supervision/deputies/1/tasks/190");
+            cy.get('.govuk-heading-l').should("include.text", 'Manage');
+            cy.get('#duedate').type('2024-02-01');
+            cy.contains("button", "Save task").click();
+            cy.get(".govuk-error-summary__title").should(
+                "contain",
+                "There is a problem"
+            );
+            cy.get(".govuk-error-summary__body > .govuk-list").within(() => {
+                cy.contains("li", "Please update the task information");
+            });
+        });
+
         it("shows validation errors", () => {
             cy.setCookie("fail-route", "manageTask");
-            cy.get('#duedate').type('2024-02-01');
+            cy.get('#notes').clear();
+            cy.get('#notes').type('updated notes');
             cy.contains("button", "Save task").click();
 
             cy.get(".govuk-error-summary__title").should(
@@ -172,7 +186,7 @@ describe("Tasks", () => {
                 "There is a problem"
             );
             cy.get(".govuk-error-summary__list").within(() => {
-                cy.contains("li", "Enter a name of someone who works on the PA or Pro team");
+                cy.contains("li", "Enter a name of someone who works on the Public Authority team");
             });
         });
     });
