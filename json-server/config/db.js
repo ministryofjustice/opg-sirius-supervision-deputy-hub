@@ -1663,7 +1663,6 @@ module.exports = function () {
                     "dueDate": "2023-07-13 00:00:00",
                     "description": "This is a note",
                     "name": "",
-                    "assigneeId": "28",
                     "assignee": "PA Team Workflow",
                     "isCaseOwnerTask": false,
                     "personType": "Deputy",
@@ -1671,6 +1670,39 @@ module.exports = function () {
                     "personUid": "7000-0000-2530",
                     "personName": "Bobby Deputiser"
                 }
+            },
+            {
+                "id": 397,
+                "hash": "AY",
+                "timestamp": "2023-10-10 15:01:59",
+                "eventType": "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
+                "user": {
+                    "id": 21,
+                    "phoneNumber": "0123456789",
+                    "displayName": "Lay Team 1 - (Supervision)",
+                    "email": "LayTeam1.team@opgtest.com"
+                },
+                "event": {
+                    "isCaseEvent": false,
+                    "isPersonEvent": true,
+                    "taskId": 198,
+                    "taskType": "AVFU",
+                    "dueDate": "2023-08-12 00:00:00",
+                    "description": "This is a note",
+                    "name": "",
+                    "oldAssigneeName": "PA Team Workflow",
+                    "assignee": "PA Team Workflow",
+                    "isCaseOwnerTask": false,
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "Bobby Deputiser",
+                    "changes":[
+                        {"fieldName":"description", "oldValue":"test", "newValue":"editing and updating task notes", "type":"string"},
+                        {"fieldName":"type","oldValue":"AVR","newValue":"Assurance visit review","type":"string"},
+                        {"fieldName":"dueDate","oldValue":"11\/08\/2023","newValue":"12\/08\/2023","type":"string"}
+                    ]
+                },
             }
         ],
         "notes": [
@@ -1728,6 +1760,20 @@ module.exports = function () {
                 "description": "Some general enquiry on whether tasks appear correctly in the notes tab",
                 "name": "General enquiry",
                 "createdTime": "19/09/2021 08:50:12",
+                "direction": null
+            },
+            {
+                "personId": 3,
+                "userId": 68,
+                "userDisplayName": "Finance User Testing",
+                "userEmail": "finance.user.testing@opgtest.com",
+                "userPhoneNumber": "12345678",
+                "id": 64,
+                "type": "GE",
+                "noteType": "TASK_UPDATED",
+                "description": "editing and updating task notes",
+                "name": "General enquiry",
+                "createdTime": "01/10/2023 08:50:12",
                 "direction": null
             }
         ],
@@ -1913,6 +1959,14 @@ module.exports = function () {
                         "dateFalseFormat": "This must be a real date",
                     },
                 }
+            },
+            {
+                "id": "manageTask",
+                "validation_errors": {
+                    "assigneeId": {
+                        "isEmpty": "Enter a name of someone who works on the PA or Pro team",
+                    },
+                }
             }
         ],
         "successes": [
@@ -1951,6 +2005,9 @@ module.exports = function () {
                 "id": "addAssuranceVisit"
             },
             {
+                "id": "manageTask"
+            },
+            {
                 "id": "allocateToFirm",
                 "deputyId": 76,
                 "firmId": 2
@@ -1966,7 +2023,7 @@ module.exports = function () {
                     "handle": "INVOICE",
                     "label": "Invoice"
                 },
-                "otherImportantInformation": "kate"
+                "otherImportantInformation": "test"
             },
             {
                 "id": "paImportantInformation"
@@ -2652,7 +2709,7 @@ module.exports = function () {
                         "status":"Not started",
                         "dueDate":"29\/01\/2021",
                         "name":"",
-                        "description":"",
+                        "description":"Notes about the task",
                         "ragRating":1,
                         "assignee":{"id":61,"displayName":"Spongebob Squarepants"},
                         "createdTime":"14\/11\/2022 12:02:01",
@@ -2707,6 +2764,21 @@ module.exports = function () {
                         "caseOwnerTask":false
                     },
                 ]
+            },
+            {
+                "id":190,
+                "type":"AVFU",
+                "status":"Not started",
+                "dueDate":"29\/01\/2021",
+                "name":"",
+                "description":"Notes about the task",
+                "ragRating":1,
+                "assignee":{"id":61,"displayName":"Spongebob Squarepants"},
+                "createdTime":"14\/11\/2022 12:02:01",
+                "caseItems":[],
+                "persons":[{"id":11,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                "clients":[{"id":61,"uId":"7000-0000-1870","caseRecNumber":"92902877","salutation":"Maquis","firstname":"Antoine","middlenames":"","surname":"Burgundy","supervisionCaseOwner":{"id":22,"teams":[],"displayName":"Allocations - (Supervision)"}}],
+                "caseOwnerTask":false
             },
         ],
         "tasktypes": {

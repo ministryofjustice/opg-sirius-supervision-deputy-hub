@@ -7,21 +7,9 @@ import (
 	"net/http"
 )
 
-type PageInformation struct {
-	Current int `json:"current"`
-	Total   int `json:"total"`
-}
-
-type TaskList struct {
-	Tasks      []model.Task    `json:"tasks"`
-	TotalTasks int             `json:"total"`
-	Pages      PageInformation `json:"pages"`
-}
-
-func (c *Client) GetTasks(ctx Context, deputyId int) (TaskList, error) {
-	var t TaskList
-
-	requestURL := fmt.Sprintf("/api/v1/deputies/%d/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
+func (c *Client) GetTask(ctx Context, taskId int) (model.Task, error) {
+	var t model.Task
+	requestURL := fmt.Sprintf("/api/v1/tasks/%d", taskId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)
 	if err != nil {
 		return t, err
