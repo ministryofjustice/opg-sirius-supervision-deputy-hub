@@ -37,6 +37,7 @@ type Event struct {
 	VisitReportMarkedAs  string         `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated     string         `json:"visitorAllocated"`
 	ReviewedBy           string         `json:"reviewedBy"`
+	Contact              ContactPerson  `json:"deputyContact"`
 	TaskType             string         `json:"taskType"`
 	Assignee             string         `json:"assignee"`
 	DueDate              string         `json:"dueDate"`
@@ -55,6 +56,15 @@ type ClientPerson struct {
 	Uid      string `json:"personUid"`
 	Name     string `json:"personName"`
 	CourtRef string `json:"personCourtRef"`
+}
+
+type ContactPerson struct {
+	Name             string `json:"name"`
+	JobTitle         string `json:"jobTitle"`
+	Email            string `json:"email"`
+	PhoneNumber      string `json:"phoneNumber"`
+	OtherPhoneNumber string `json:"otherPhoneNumber"`
+	Notes            string `json:"notes"`
 }
 
 type DeputyEvent struct {
