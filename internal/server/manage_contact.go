@@ -12,6 +12,7 @@ type ManageContact interface {
 	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
 	AddContact(sirius.Context, int, sirius.ContactForm) error
 	UpdateContact(sirius.Context, int, int, sirius.ContactForm) error
+	DeleteContact(sirius.Context, int, int) error
 }
 
 type ManageContactVars struct {
@@ -32,7 +33,7 @@ type ManageContactVars struct {
 	IsNewContact     bool
 }
 
-func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
+func renderTemplateForManageContact(client ManageContact, tmpl Template, isDelete bool) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -44,6 +45,10 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			XSRFToken:     ctx.XSRFToken,
 			DeputyDetails: deputyDetails,
 			IsNewContact:  contactId == 0,
+		}
+
+		if isDelete {
+			r.Method = http.MethodDelete
 		}
 
 		switch r.Method {
@@ -104,6 +109,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 					ContactNotes:     r.PostFormValue("contact-notes"),
 					IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
 					IsMainContact:    r.PostFormValue("is-main-contact"),
+					IsNewContact:     contactId == 0,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -114,6 +120,14 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			}
 
 			return Redirect(fmt.Sprintf("/%d/contacts?success=%s", deputyId, successVar))
+		case http.MethodDelete:
+			err := client.DeleteContact(ctx, deputyId, contactId)
+
+			if err != nil {
+				return err
+			}
+
+			return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
