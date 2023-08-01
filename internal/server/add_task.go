@@ -28,7 +28,7 @@ type AddTaskVars struct {
 	IsManageTasks bool
 }
 
-func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
+func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -40,7 +40,6 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return err
 		}
 
-		defaultPATeam := 1
 		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
 		if err != nil {
 			return err

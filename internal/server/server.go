@@ -82,11 +82,11 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 
 	pageRouter.Handle("/tasks/add-task",
 		wrap(
-			renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
+			renderTemplateForAddTask(client, defaultPATeam, templates["add-task.gotmpl"])))
 
 	pageRouter.Handle("/tasks/{taskId}",
 		wrap(
-			renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
+			renderTemplateForManageTasks(client, defaultPATeam, templates["manage-task.gotmpl"])))
 
 	pageRouter.Handle("/manage-team-details",
 		wrap(

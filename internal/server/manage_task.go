@@ -28,7 +28,7 @@ type manageTaskVars struct {
 	Assignees      []model.TeamMember
 }
 
-func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
+func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
@@ -48,8 +48,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
-		defaultPATeam := 1
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPaTeam, deputyDetails)
 		if err != nil {
 			return err
 		}
@@ -83,7 +82,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 
 			if (dueDate == taskDetails.DueDate) && (notes == taskDetails.Notes) && (assigneeId == taskDetails.Assignee.Id) {
 				vars.Errors = sirius.ValidationErrors{
-					"Manage task": {"": "Change the page"},
+					"Manage task": {"": "Please update the task information"},
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

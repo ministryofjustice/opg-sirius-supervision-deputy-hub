@@ -61,11 +61,12 @@ func TestGetTasks(t *testing.T) {
 
 	client := &mockAddTasksClient{}
 	template := &mockTemplates{}
+	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForAddTask(client, template)
+	handler := renderTemplateForAddTask(client, defaultPATeam, template)
 	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
@@ -82,6 +83,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 
 	client := &mockAddTasksClient{}
 	template := &mockTemplates{}
+	defaultPATeam := 23
 
 	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
 		EcmId: 1,
@@ -101,7 +103,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForAddTask(client, template)
+	handler := renderTemplateForAddTask(client, defaultPATeam, template)
 	res := handler(deputy, w, r)
 
 	assert.Nil(res)
@@ -117,6 +119,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 func TestAddTask_success_ecm(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockAddTasksClient{}
+	defaultPATeam := 23
 
 	deputy := sirius.DeputyDetails{ID: 123}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
@@ -140,7 +143,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(deputy, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, nil)(deputy, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -152,6 +155,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 func TestAddTask_success_other(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockAddTasksClient{}
+	defaultPATeam := 23
 
 	deputy := sirius.DeputyDetails{ID: 123}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
@@ -175,7 +179,7 @@ func TestAddTask_success_other(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(deputy, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, nil)(deputy, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -187,6 +191,7 @@ func TestAddTask_success_other(t *testing.T) {
 func TestAddTaskValidationErrors(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockAddTasksClient{}
+	defaultPATeam := 23
 
 	validationErrors := sirius.ValidationErrors{
 		"dueDate": {
@@ -208,7 +213,7 @@ func TestAddTaskValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, template)(sirius.DeputyDetails{}, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

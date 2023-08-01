@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
@@ -44,6 +45,7 @@ func (m *mockManageTasks) GetTaskTypesForDeputyType(ctx sirius.Context, deputyTy
 
 func TestNavigateToManageTask(t *testing.T) {
 	assert := assert.New(t)
+	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
 	task := model.Task{Id: 555}
@@ -60,7 +62,7 @@ func TestNavigateToManageTask(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForManageTasks(client, template)
+	handler := renderTemplateForManageTasks(client, defaultPATeam, template)
 	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
 
 	assert.Nil(err)
@@ -78,9 +80,10 @@ func TestNavigateToManageTask(t *testing.T) {
 
 func TestPostManageTask(t *testing.T) {
 	assert := assert.New(t)
+	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	task := model.Task{Id: 555, Type: "ABC"}
+	task := model.Task{Id: 555, Type: "ABC", DueDate: "2023-11-01"}
 	teamMembers := []model.TeamMember{{ID: 99}}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "TaskDescription"}}
 
@@ -93,14 +96,16 @@ func TestPostManageTask(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/tasks/123", strings.NewReader("{dueDate:'2200/10/20'}"))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
+	form := url.Values{"dueDate": {"2023-11-02"}}
+
+	r, _ := http.NewRequest("POST", "/tasks/123", strings.NewReader(form.Encode()))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	var redirect error
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageTasks(client, template)(deputyDetails, w, r)
+		redirect = renderTemplateForManageTasks(client, defaultPATeam, template)(deputyDetails, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
