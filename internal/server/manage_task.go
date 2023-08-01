@@ -96,11 +96,9 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 					DeputyDetails: deputyDetails,
 					Assignees:     assignees,
 					TaskDetails:   taskDetails,
-					Errors:        renameErrors(verr.Errors, deputyDetails.DeputyType.Label),
+					Errors:        RenameErrors(verr.Errors, deputyDetails.DeputyType.Label),
 				}
 
-				fmt.Println("error in manage task")
-				fmt.Println(verr.Errors)
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -116,7 +114,7 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 	}
 }
 
-func renameErrors(errors sirius.ValidationErrors, deputyType string) sirius.ValidationErrors {
+func RenameErrors(errors sirius.ValidationErrors, deputyType string) sirius.ValidationErrors {
 	amendedErrors := make(sirius.ValidationErrors)
 
 	for i, s := range errors {

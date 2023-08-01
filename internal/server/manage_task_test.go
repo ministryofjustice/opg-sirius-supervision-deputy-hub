@@ -113,3 +113,86 @@ func TestPostManageTask(t *testing.T) {
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(Redirect("/123/tasks?success=manageTaskDescription"), redirect)
 }
+
+func TestRenameErrors(t *testing.T) {
+	tests := []struct {
+		want       sirius.ValidationErrors
+		input      sirius.ValidationErrors
+		name       string
+		deputyType string
+	}{
+		{
+			name:       "does not amend when type not relevant",
+			deputyType: "Professional",
+			want: sirius.ValidationErrors{
+				"firmName": {
+					"stringLengthTooLong": "The firm name must be 255 characters or fewer",
+				},
+				"dueDate": {
+					"dateFalseFormat": "This must be a real date",
+				},
+			},
+			input: sirius.ValidationErrors{
+				"firmName": {
+					"stringLengthTooLong": "The firm name must be 255 characters or fewer",
+				},
+				"dueDate": {
+					"dateFalseFormat": "This must be a real date",
+				},
+			},
+		},
+		{
+			name:       "does not amend when type not relevant and only single validation error",
+			deputyType: "Professional",
+			want: sirius.ValidationErrors{
+				"firmName": {
+					"stringLengthTooLong": "The firm name must be 255 characters or fewer",
+				},
+			},
+			input: sirius.ValidationErrors{
+				"firmName": {
+					"stringLengthTooLong": "The firm name must be 255 characters or fewer",
+				},
+			},
+		},
+		{
+			name:       "only amends specific validation error",
+			deputyType: "Professional",
+			want: sirius.ValidationErrors{
+				"assigneeId": {
+					"notBetween": "Enter a name of someone who works on the Professional team",
+				},
+				"dueDate": {
+					"dateFalseFormat": "This must be a real date",
+				},
+			},
+			input: sirius.ValidationErrors{
+				"assigneeId": {
+					"notBetween": "Original message",
+				},
+				"dueDate": {
+					"dateFalseFormat": "This must be a real date",
+				},
+			},
+		},
+		{
+			name:       "amends if only one validation error",
+			deputyType: "Public Authority",
+			want: sirius.ValidationErrors{
+				"assigneeId": {
+					"notBetween": "Enter a name of someone who works on the Public Authority team",
+				},
+			},
+			input: sirius.ValidationErrors{
+				"assigneeId": {
+					"notBetween": "Original message",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			assert.Equal(t, tt.want, RenameErrors(tt.input, tt.deputyType))
+		})
+	}
+}
