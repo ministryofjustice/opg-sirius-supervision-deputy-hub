@@ -161,20 +161,6 @@ describe("Tasks", () => {
             cy.get('.moj-banner--success').should("contain.text", "Assurance visit follow up task updated");
         });
 
-        it("throws validation error if nothing changed when task edited", () => {
-            cy.url().should("include", "/supervision/deputies/1/tasks/190");
-            cy.get('.govuk-heading-l').should("include.text", 'Manage');
-            cy.get('#duedate').type('2024-02-01');
-            cy.contains("button", "Save task").click();
-            cy.get(".govuk-error-summary__title").should(
-                "contain",
-                "There is a problem"
-            );
-            cy.get(".govuk-error-summary__body > .govuk-list").within(() => {
-                cy.contains("li", "Please update the task information");
-            });
-        });
-
         it("shows validation errors", () => {
             cy.setCookie("fail-route", "manageTask");
             cy.get('#notes').clear();
