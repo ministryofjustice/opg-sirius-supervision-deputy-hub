@@ -63,10 +63,10 @@ describe("Tasks", () => {
             cy.get('label:contains("Someone else")').click();
             cy.get('#select-ecm').should("be.visible");
             cy.get("#select-ecm").type("S");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 2);
-            cy.get("#select-ecm").type("t");
+            cy.get("#select-ecm__listbox").find("li").should("have.length", 3);
+            cy.get("#select-ecm").type("ta");
             cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
-            cy.contains("#select-ecm__listbox", "Steven Toast").click();
+            cy.contains("#select-ecm__listbox", "Eddard Stark").click();
 
             cy.get('label:contains("Notes")').type("Test note for task");
             cy.contains("button", "Save task").click();
@@ -151,10 +151,10 @@ describe("Tasks", () => {
             cy.get('#duedate').type('2024-02-01');
             cy.get('#assignedto-other').check();
             cy.get("#select-ecm").type("S");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 2);
-            cy.get("#select-ecm").type("t");
+            cy.get("#select-ecm__listbox").find("li").should("have.length", 3);
+            cy.get("#select-ecm").type("ta");
             cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
-            cy.contains("#select-ecm__listbox", "Steven Toast").click();
+            cy.contains("#select-ecm__listbox", "Eddard Stark").click();
             cy.get('#notes').clear();
             cy.get('#notes').type('updated notes');
 
