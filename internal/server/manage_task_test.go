@@ -80,9 +80,9 @@ func TestPostManageTask(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	task := model.Task{Id: 555}
+	task := model.Task{Id: 555, Type: "ABC"}
 	teamMembers := []model.TeamMember{{ID: 99}}
-	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{{Handle: "ABC", Description: "TaskDescription"}}
 
 	client := &mockManageTasks{}
 	client.On("GetTask", mock.Anything).Return(task, nil)
@@ -106,5 +106,5 @@ func TestPostManageTask(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/tasks?success=manageTask"), redirect)
+	assert.Equal(Redirect("/123/tasks?success=manageTaskDescription"), redirect)
 }

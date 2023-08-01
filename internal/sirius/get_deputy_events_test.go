@@ -179,12 +179,13 @@ func TestDeputyEventsReturned(t *testing.T) {
 			EventType: "TaskEdited",
 			User:      User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
 			Event: Event{
-				DeputyID:   "78",
-				DeputyName: "Bobby Deputiser",
-				TaskType:   "Assurance visit follow up",
-				Assignee:   "Lay Team 1 - (Supervision)",
-				DueDate:    "01/03/2023",
-				Notes:      "Edited notes for edited task",
+				DeputyID:        "78",
+				DeputyName:      "Bobby Deputiser",
+				TaskType:        "Assurance visit follow up",
+				Assignee:        "Lay Team 1 - (Supervision)",
+				OldAssigneeName: "case manager",
+				DueDate:         "01/03/2023",
+				Notes:           "Edited notes for edited task",
 				Changes: []Changes{
 					{
 						FieldName: "dueDate",
@@ -197,8 +198,6 @@ func TestDeputyEventsReturned(t *testing.T) {
 						NewValue:  "Edited notes for edited task",
 					},
 				},
-				AssigneeId:    21,
-				OldAssigneeId: 60,
 			},
 		},
 		DeputyEvent{
