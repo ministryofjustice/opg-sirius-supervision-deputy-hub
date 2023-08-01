@@ -33,7 +33,7 @@ func TestUpdateTask(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestUpdateTaskReturnsError(t *testing.T) {
+func TestUpdateTaskReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -63,6 +63,24 @@ func TestUpdateTaskReturnsErrorIfNoTaskId(t *testing.T) {
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/tasks/0",
+		Method: http.MethodPut,
+	}, err)
+}
+
+func TestUpdateTaskReturnsUnauthorisedClientError(t *testing.T) {
+	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		_, _ = w.Write([]byte("{}"))
+	}))
+	defer svr.Close()
+
+	client, _ := NewClient(http.DefaultClient, svr.URL)
+
+	err := client.UpdateTask(getContext(nil), 76, 155, "29/03/2030", "updated description", 60)
+
+	assert.Equal(t, StatusError{
+		Code:   http.StatusMethodNotAllowed,
+		URL:    svr.URL + "/api/v1/tasks/155",
 		Method: http.MethodPut,
 	}, err)
 }

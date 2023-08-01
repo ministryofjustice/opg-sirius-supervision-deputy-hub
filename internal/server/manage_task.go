@@ -100,7 +100,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks", deputyDetails.ID))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=manage"+taskDetails.Type, deputyDetails.ID))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

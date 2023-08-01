@@ -5,12 +5,13 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
+	"strings"
 )
 
 type TasksClient interface {
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
-	GetTasks(sirius.Context, int) (sirius.TaskList, error)
+	GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error)
 }
 
 type TasksVars struct {
@@ -49,8 +50,13 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 		}
 
 		successMessage := ""
+
 		if taskName := r.URL.Query().Get("success"); taskName != "" {
-			successMessage = fmt.Sprintf("%s task added", taskName)
+			if strings.Contains(taskName, "manage") {
+				successMessage = fmt.Sprintf("%s task updated", strings.ReplaceAll(taskName, "manage", ""))
+			} else {
+				successMessage = fmt.Sprintf("%s task added", taskName)
+			}
 		}
 
 		taskList, err := client.GetTasks(ctx, deputyId)
