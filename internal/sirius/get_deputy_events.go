@@ -111,13 +111,8 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 			return nil, terr
 		}
 	}
-	fmt.Println("deputy event")
-	fmt.Println(de)
 
 	DeputyEvents := editDeputyEvents(de, taskTypes)
-
-	fmt.Println("deputy event after edit")
-	fmt.Println(DeputyEvents)
 
 	return DeputyEvents, err
 

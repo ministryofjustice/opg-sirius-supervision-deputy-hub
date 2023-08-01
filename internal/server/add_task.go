@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -35,8 +34,6 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
 		if err != nil {
@@ -55,12 +52,6 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			TaskTypes:     taskTypes,
 			DeputyDetails: deputyDetails,
 			Assignees:     assignees,
-		}
-
-		if taskId != 0 {
-			vars.IsManageTasks = true
-		} else {
-			vars.IsManageTasks = false
 		}
 
 		if r.Method == http.MethodGet {
