@@ -3,6 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"strconv"
 )
@@ -23,35 +24,25 @@ type apiTeam struct {
 	} `json:"teamType"`
 }
 
-type TeamMember struct {
-	ID          int
-	DisplayName string
-	CurrentEcm  int
-}
-
-type Team struct {
-	Members []TeamMember
-}
-
-func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDetails DeputyDetails) ([]TeamMember, error) {
+func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDetails DeputyDetails) ([]model.TeamMember, error) {
 	requestUrl := getRequestURL(deputyDetails, defaultPATeam)
 	req, err := c.newRequest(ctx, http.MethodGet, requestUrl, nil)
 	if err != nil {
-		return []TeamMember{}, err
+		return []model.TeamMember{}, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return []TeamMember{}, err
+		return []model.TeamMember{}, err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return []TeamMember{}, ErrUnauthorized
+		return []model.TeamMember{}, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return []TeamMember{}, newStatusError(resp)
+		return []model.TeamMember{}, newStatusError(resp)
 	}
 
 	teamMembers := getTeamMembersByDeputyType(deputyDetails, resp)
@@ -67,18 +58,18 @@ func getRequestURL(deputyDetails DeputyDetails, defaultPATeam int) string {
 	}
 }
 
-func getTeamMembersByDeputyType(deputyDetails DeputyDetails, resp *http.Response) []TeamMember {
+func getTeamMembersByDeputyType(deputyDetails DeputyDetails, resp *http.Response) []model.TeamMember {
 	if deputyDetails.DeputyType.Handle == "PRO" {
 		var v []apiTeam
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return []TeamMember{}
+			return []model.TeamMember{}
 		}
 
-		var members []TeamMember
+		var members []model.TeamMember
 
 		for _, k := range v {
 			for _, m := range k.Members {
-				members = append(members, TeamMember{
+				members = append(members, model.TeamMember{
 					ID:          m.ID,
 					DisplayName: m.DisplayName,
 					CurrentEcm:  deputyDetails.ExecutiveCaseManager.EcmId,
@@ -90,13 +81,13 @@ func getTeamMembersByDeputyType(deputyDetails DeputyDetails, resp *http.Response
 	} else {
 		var v apiTeam
 		if err := json.NewDecoder(resp.Body).Decode(&v); err != nil {
-			return []TeamMember{}
+			return []model.TeamMember{}
 		}
 
-		team := Team{}
+		team := model.Team{}
 
 		for _, m := range v.Members {
-			team.Members = append(team.Members, TeamMember{
+			team.Members = append(team.Members, model.TeamMember{
 				ID:          m.ID,
 				DisplayName: m.DisplayName,
 				CurrentEcm:  deputyDetails.ExecutiveCaseManager.EcmId,

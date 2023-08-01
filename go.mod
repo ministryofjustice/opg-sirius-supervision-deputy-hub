@@ -5,8 +5,8 @@ go 1.18
 require (
 	github.com/gorilla/mux v1.8.0
 	github.com/ministryofjustice/opg-go-common v0.0.0-20220816144329-763497f29f90
-	github.com/stretchr/testify v1.8.1
-	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
+	github.com/stretchr/testify v1.8.4
+	golang.org/x/sync v0.3.0
 )
 
 require (

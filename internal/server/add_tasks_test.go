@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
@@ -19,9 +20,10 @@ type mockAddTasksClient struct {
 	lastCtx          sirius.Context
 	err              error
 	verr             error
-	taskTypes        []sirius.TaskType
-	assignees        []sirius.TeamMember
+	taskTypes        []model.TaskType
+	assignees        []model.TeamMember
 	selectedAssignee int
+	taskList         sirius.TaskList
 }
 
 func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {
@@ -32,18 +34,47 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	return m.verr
 }
 
-func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]sirius.TaskType, error) {
+func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, details string) ([]model.TaskType, error) {
+
 	m.count += 1
 	m.lastCtx = ctx
 
 	return m.taskTypes, m.err
 }
 
-func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaTeam int, details sirius.DeputyDetails) ([]sirius.TeamMember, error) {
+func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaTeam int, details sirius.DeputyDetails) ([]model.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
 	return m.assignees, m.err
+}
+
+func (m *mockAddTasksClient) GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.taskList, m.err
+}
+
+func TestGetTasks(t *testing.T) {
+	assert := assert.New(t)
+
+	client := &mockAddTasksClient{}
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", nil)
+
+	handler := renderTemplateForAddTask(client, template)
+	err := handler(sirius.DeputyDetails{}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
 }
 
 func TestLoadAddTaskForm(t *testing.T) {
@@ -55,9 +86,9 @@ func TestLoadAddTaskForm(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
 		EcmId: 1,
 	}}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC"}}
+	taskTypes := []model.TaskType{{Handle: "ABC"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	expectedVars := AddTaskVars{
@@ -88,9 +119,9 @@ func TestAddTask_success_ecm(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{
@@ -123,9 +154,9 @@ func TestAddTask_success_other(t *testing.T) {
 	client := &mockAddTasksClient{}
 
 	deputy := sirius.DeputyDetails{ID: 123}
-	taskTypes := []sirius.TaskType{sirius.TaskType{Handle: "ABC", Description: "A Big Critical Task"}}
+	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
-	assignees := []sirius.TeamMember{sirius.TeamMember{ID: 1, DisplayName: "Teamster"}}
+	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
 	form := url.Values{

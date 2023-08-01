@@ -23,7 +23,6 @@
             </div>
         </div>
     </header>
-    <h2 class="govuk-heading-m">Key contacts</h2>
     <table class="govuk-table">
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -43,7 +42,7 @@
         </thead>
         <tbody class="govuk-table__body">
             {{ $deputyId := .DeputyDetails.ID }}
-            {{ range .ContactList.Contacts }}
+            {{ range .ContactList }}
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         <span class="name">{{ .Name }}</span>

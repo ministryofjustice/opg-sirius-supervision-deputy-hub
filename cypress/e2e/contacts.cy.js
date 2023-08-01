@@ -10,12 +10,12 @@ describe("Contacts", () => {
         })
 
         it("shows content", () => {
-            cy.get(".govuk-main-wrapper > header").contains("Add new contact");
-            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
-            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title");
-            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
-            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
-            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
+            cy.get(".govuk-main-wrapper > header").contains("Create new contact");
+            cy.get("#add-contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
+            cy.get("#add-contact-form > :nth-child(3) > .govuk-label").contains("Job title");
+            cy.get("#add-contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
+            cy.get("#add-contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
+            cy.get("#add-contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
             cy.get("#f-contact-notes > .govuk-label").contains("Notes");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy (required)");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact (required)");
@@ -131,7 +131,7 @@ describe("Contacts", () => {
                 .children()
                 .each(($el, index) => {
                     cy.wrap($el).should("contain", expected[index]);
-                });
+            });
         });
 
         it("should display contact data", () => {
@@ -142,8 +142,8 @@ describe("Contacts", () => {
             cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
 
             cy.get(':nth-child(2) > :nth-child(1) > .name').contains("Test Contact");
-            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
-            cy.get('.govuk-table__body > :nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
+            cy.get(':nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
+            cy.get(':nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
             cy.get(':nth-child(2) > :nth-child(1) > .job-title').contains("Software Tester");
             cy.get(':nth-child(2) > :nth-child(2) > .email > a').contains("test@email.com");
             cy.get(':nth-child(2) > :nth-child(2) > .phone-number').contains("0123456789");
@@ -152,6 +152,5 @@ describe("Contacts", () => {
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').contains("Manage contact");
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
         });
-
     });
 });

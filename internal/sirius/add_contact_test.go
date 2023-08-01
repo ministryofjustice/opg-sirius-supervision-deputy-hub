@@ -2,11 +2,11 @@ package sirius
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"fmt"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
@@ -30,7 +30,7 @@ func TestAddContact(t *testing.T) {
 			Body:       r,
 		}, nil
 	}
-
+  
 	contact := ContactForm{
 		ContactName: "Contact Name",
 		Email:       "Email_address@address.com",
