@@ -153,4 +153,30 @@ describe("Contacts", () => {
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
         });
     });
+
+    describe("Deleting a Contact", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/3/contacts");
+        })
+
+        it("shows content from list contacts tab and allow me to cancel", () => {
+            cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--warning').click();
+            cy.get(".govuk-heading-l").contains("Delete contact");
+            cy.get("#contact-form > .govuk-heading-m").contains("Do you want to remove");
+            cy.get("#delete-contact-button-group > .govuk-link").contains("Cancel").click();
+            cy.url().should("contain", "/supervision/deputies/3/contacts");
+            cy.get(".moj-banner").should("not.exist");
+        });
+
+        it("shows content from manage contact page and allow me to delete", () => {
+            cy.setCookie("success-route", "deleteContact");
+            cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--secondary').click();
+            cy.get('.govuk-button--warning').click();
+            cy.get(".govuk-heading-l").contains("Delete contact");
+            cy.get("#contact-form > .govuk-heading-m").contains("Do you want to remove");
+            cy.get("#delete-contact-button-group > button").contains("Delete contact").click();
+            cy.url().should("contain", "/supervision/deputies/3/contacts?success=deletedContact&contactName=Minimal%20Contact");
+            cy.get(".moj-banner").should("contain", "'s details removed");
+        });
+    });
 });
