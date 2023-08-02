@@ -32,6 +32,8 @@
                     <h2 class="moj-timeline__title">
                         {{ if eq .NoteType "TASK_CREATED" }}
                             {{ printf "%v task created" .Name }}
+                        {{ else if eq .NoteType "TASK_UPDATED"}}
+                            {{ printf "%v task updated" .Name }}
                         {{ else }}
                             {{ .Name }}
                         {{ end }}
