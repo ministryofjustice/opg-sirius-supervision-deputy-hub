@@ -37,14 +37,13 @@ func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler
 			DeputyDetails: deputyDetails,
 		}
 
+		contact, err := client.GetContactById(ctx, deputyId, contactId)
+		if err != nil {
+			return err
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-			contact, err := client.GetContactById(ctx, deputyId, contactId)
-
-			if err != nil {
-				return err
-			}
-
 			vars.ContactName = contact.ContactName
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
@@ -56,7 +55,7 @@ func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
+			return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact&contactName=%s", deputyId, contact.ContactName))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

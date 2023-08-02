@@ -1,0 +1,72 @@
+package server
+
+import (
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/stretchr/testify/assert"
+)
+
+type mockDeleteContact struct {
+	count   int
+	lastCtx sirius.Context
+	err     error
+}
+
+func (m *mockDeleteContact) GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return sirius.Contact{}, m.err
+}
+
+func (m *mockDeleteContact) DeleteContact(ctx sirius.Context, deputyId int, contactId int) error {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.err
+}
+
+func TestGetDeleteContact(t *testing.T) {
+	assert := assert.New(t)
+
+	client := &mockDeleteContact{}
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", nil)
+
+	handler := renderTemplateForDeleteContact(client, template)
+	err := handler(sirius.DeputyDetails{}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
+}
+
+func TestPostDeleteContact(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeleteContact{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/{contactId}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForDeleteContact(client, nil)(sirius.DeputyDetails{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+	assert.Equal(Redirect("/123/contacts?success=deletedContact&contactName="), returnedError)
+}

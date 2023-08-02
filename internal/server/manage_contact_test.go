@@ -94,6 +94,7 @@ func TestGetManageContact(t *testing.T) {
 		IsNamedDeputy: "false",
 		IsMainContact: "false",
 		IsNewContact:  false,
+		ContactId:     1,
 	}, template.lastVars)
 }
 
@@ -171,8 +172,9 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	}
 
 	assert.Equal(ManageContactVars{
-		Path:   "/133",
-		Errors: expectedValidationErrors,
+		Path:         "/133",
+		Errors:       expectedValidationErrors,
+		IsNewContact: true,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
