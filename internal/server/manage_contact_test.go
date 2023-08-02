@@ -171,8 +171,9 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	}
 
 	assert.Equal(ManageContactVars{
-		Path:   "/133",
-		Errors: expectedValidationErrors,
+		Path:         "/133",
+		Errors:       expectedValidationErrors,
+		IsNewContact: true,
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
