@@ -37,9 +37,9 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 {{ if eq $visit.AssuranceType.Handle "PDR" }}
-                    {{ template "pdr" $visit }}
+                    {{ template "view-pdr" $visit }}
                 {{ else }}
-                    {{ template "assurance-visit" $visit }}
+                    {{ template "view-assurance-visit" $visit }}
                 {{ end }}
             </div>
         </div>

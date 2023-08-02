@@ -41,6 +41,7 @@
             </tr>
         </thead>
         <tbody class="govuk-table__body">
+            {{ $deputyId := .DeputyDetails.ID }}
             {{ range .ContactList }}
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
@@ -58,7 +59,7 @@
                         <span class="notes">{{ .Notes }}</span>
                     </td>
                     <td class="govuk-table__cell">
-                        <a class="govuk-button govuk-button--secondary" href="#">Manage contact</a>
+                        <a class="govuk-button govuk-button--secondary" href="{{ prefix (printf "/%d/contacts/%d" $deputyId .Id) }}">Manage contact</a>
                         <a class="govuk-button govuk-button--warning" href="#">Delete contact</a>
                     </td>
                 </tr>
