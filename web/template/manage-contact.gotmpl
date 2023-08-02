@@ -151,11 +151,12 @@
                         Cancel
                     </a>
                     {{ if eq .IsNewContact false }}
-                        <button
+                        <a
+                            href="{{ prefix (printf "/%d/contacts/%d/delete" .DeputyDetails.ID .ContactId) }}"
                             class="govuk-button govuk-button--warning"
                             data-module="govuk-button">
                             Delete contact
-                        </button>
+                        </a>
                     {{ end }}
                 </div>
             </form>

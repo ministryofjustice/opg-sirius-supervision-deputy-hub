@@ -12,7 +12,6 @@ type ManageContact interface {
 	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
 	AddContact(sirius.Context, int, sirius.ContactForm) error
 	UpdateContact(sirius.Context, int, int, sirius.ContactForm) error
-	DeleteContact(sirius.Context, int, int) error
 }
 
 type ManageContactVars struct {
@@ -22,6 +21,7 @@ type ManageContactVars struct {
 	Error            string
 	Errors           sirius.ValidationErrors
 	ErrorNote        string
+	ContactId        int
 	ContactName      string
 	JobTitle         string
 	Email            string
@@ -33,7 +33,7 @@ type ManageContactVars struct {
 	IsNewContact     bool
 }
 
-func renderTemplateForManageContact(client ManageContact, tmpl Template, isDelete bool) Handler {
+func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
@@ -47,10 +47,6 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template, isDelet
 			IsNewContact:  contactId == 0,
 		}
 
-		if isDelete {
-			r.Method = http.MethodDelete
-		}
-
 		switch r.Method {
 		case http.MethodGet:
 			if contactId != 0 {
@@ -60,6 +56,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template, isDelet
 					return err
 				}
 
+				vars.ContactId = contactId
 				vars.ContactName = contact.ContactName
 				vars.JobTitle = contact.JobTitle
 				vars.Email = contact.Email
@@ -120,14 +117,14 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template, isDelet
 			}
 
 			return Redirect(fmt.Sprintf("/%d/contacts?success=%s", deputyId, successVar))
-		case http.MethodDelete:
-			err := client.DeleteContact(ctx, deputyId, contactId)
-
-			if err != nil {
-				return err
-			}
-
-			return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
+		//case http.MethodDelete:
+		//	err := client.DeleteContact(ctx, deputyId, contactId)
+		//
+		//	if err != nil {
+		//		return err
+		//	}
+		//
+		//	return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
