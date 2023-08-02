@@ -7,27 +7,12 @@ import (
 	"net/http"
 )
 
-type ContactForm struct {
-	ContactName      string `json:"contactName"`
-	JobTitle         string `json:"jobTitle"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	ContactNotes     string `json:"contactNotes"`
-	IsNamedDeputy    string `json:"isNamedDeputy"`
-	IsMainContact    string `json:"isMainContact"`
-}
-
-func (c *Client) AddContact(ctx Context, deputyId int, addContactForm ContactForm) error {
+func (c *Client) DeleteContact(ctx Context, deputyId int, contactId int) error {
 	var body bytes.Buffer
-	err := json.NewEncoder(&body).Encode(addContactForm)
-	if err != nil {
-		return err
-	}
 
-	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
+	url := fmt.Sprintf("/api/v1/deputies/%d/contacts/%d", deputyId, contactId)
 
-	req, err := c.newRequest(ctx, http.MethodPost, url, &body)
+	req, err := c.newRequest(ctx, http.MethodDelete, url, &body)
 
 	if err != nil {
 		return err
