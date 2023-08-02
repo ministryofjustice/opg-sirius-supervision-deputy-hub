@@ -138,9 +138,6 @@ var validationMappings = map[string]map[string]pair{
 	"taskType": {
 		"isEmpty": pair{"taskType", "Select the task type"},
 	},
-	//"assigneeId": {
-	//	"notBetween": pair{"assigneeId", "Enter a name of someone who works on the PA> or <Pro> team"},
-	//},
 	"dueDate": {
 		"isEmpty": pair{"dueDate", "Enter a due date"},
 		"error":   pair{"dueDate", "Enter a valid value for due date"},
