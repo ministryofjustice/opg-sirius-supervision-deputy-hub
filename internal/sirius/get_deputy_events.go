@@ -43,6 +43,7 @@ type Event struct {
 	DueDate              string         `json:"dueDate"`
 	Notes                string         `json:"description"`
 	OldAssigneeName      string         `json:"oldAssigneeName"`
+	TaskCompletedNotes   string         `json:"taskCompletedNotes"`
 }
 
 type Changes struct {

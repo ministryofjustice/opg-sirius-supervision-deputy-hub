@@ -1,8 +1,8 @@
-{{ define "task-updated" }}
+{{ define "task-completed" }}
     <div class="moj-timeline__item" data-cy="task-updated-event">
         <div class="moj-timeline__header">
             <h2 class="moj-timeline__title">
-                {{ .Event.TaskType }} task updated
+                {{ .Event.TaskType }} task completed
             </h2>
             <p class="moj-timeline__byline">
                 {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
@@ -13,19 +13,9 @@
         </p>
         <div class="moj-timeline__description">
             <ul class="govuk-list govuk-list--bullet">
-                {{ if ne .Event.OldAssigneeName .Event.Assignee}}
-                    <li>Assigned to {{ .Event.Assignee }}</li>
+                {{ if .Event.TaskCompletedNotes }}
+                    <li>Notes: {{ .Event.TaskCompletedNotes }}</li>
                 {{ end }}
-                {{ range .Event.Changes }}
-                    {{if eq .FieldName "dueDate"}}
-                        <li>Due date {{ .NewValue }}</li>
-                    {{end}}
-                {{end}}
-                {{ range .Event.Changes }}
-                    {{if eq .FieldName "description"}}
-                        <li>{{ .NewValue }}</li>
-                    {{end}}
-                {{end}}
             </ul>
         </div>
     </div>

@@ -145,6 +145,9 @@ var validationMappings = map[string]map[string]pair{
 	"notes": {
 		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
 	},
+	"taskCompletedNotes": {
+		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
+	},
 	// other
 	"otherImportantInformation": {
 		"stringLengthTooLong": pair{"otherImportantInformation", "The other important information must be 1000 characters or fewer"},

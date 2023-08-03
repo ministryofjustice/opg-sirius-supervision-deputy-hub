@@ -8,8 +8,7 @@ import (
 )
 
 type completeTask struct {
-	Notes         string `json:"description"`
-	IsDeputyTask  bool   `json:"isDeputyTask"`
+	Notes         string `json:"taskCompletedNotes"`
 	CompletedById int    `json:"completedBy"`
 }
 
@@ -18,7 +17,6 @@ func (c *Client) CompleteTask(ctx Context, userId, taskId int, notes string) err
 	err := json.NewEncoder(&body).Encode(completeTask{
 		Notes:         notes,
 		CompletedById: userId,
-		IsDeputyTask:  true,
 	})
 
 	if err != nil {

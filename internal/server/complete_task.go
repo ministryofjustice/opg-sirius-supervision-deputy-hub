@@ -21,6 +21,7 @@ type completeTaskVars struct {
 	XSRFToken      string
 	DeputyDetails  sirius.DeputyDetails
 	TaskDetails    model.Task
+	CompletedNotes string
 	Error          string
 	Errors         sirius.ValidationErrors
 	Success        bool
@@ -75,11 +76,12 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := completeTaskVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					DeputyDetails: deputyDetails,
-					TaskDetails:   taskDetails,
-					Errors:        verr.Errors,
+					Path:           r.URL.Path,
+					XSRFToken:      ctx.XSRFToken,
+					DeputyDetails:  deputyDetails,
+					TaskDetails:    taskDetails,
+					Errors:         verr.Errors,
+					CompletedNotes: notes,
 				}
 
 				w.WriteHeader(http.StatusBadRequest)
@@ -89,7 +91,7 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=complete&type="+taskDetails.Type, deputyDetails.ID))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=complete&taskType=%s", deputyDetails.ID, taskDetails.Type))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
