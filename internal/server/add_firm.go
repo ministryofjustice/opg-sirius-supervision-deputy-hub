@@ -2,11 +2,10 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type FirmInformation interface {
@@ -15,30 +14,21 @@ type FirmInformation interface {
 }
 
 type addFirmVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
-	DeputyId      int
+	AppVars
 }
 
 func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
+		vars := addFirmVars{
+			AppVars: appVars,
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-			vars := addFirmVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyId:      deputyId,
-				DeputyDetails: deputyDetails,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -58,11 +48,7 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 			firmId, err := client.AddFirmDetails(ctx, addFirmDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := addFirmVars{
-					Path:      r.URL.Path,
-					XSRFToken: ctx.XSRFToken,
-					Errors:    verr.Errors,
-				}
+				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 

@@ -2,9 +2,11 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -14,29 +16,25 @@ type TasksClient interface {
 }
 
 type TasksVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
 	TaskTypes      []model.TaskType
 	TaskList       sirius.TaskList
 	TaskType       string
 	DueDate        string
 	Notes          string
-	Error          string
-	Errors         sirius.ValidationErrors
 	SuccessMessage string
+	AppVars
 }
 
 func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
+		routeVars := mux.Vars(r)
+		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		deputyId := deputyDetails.ID
-
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -57,10 +55,8 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 		}
 
 		vars := TasksVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
+			AppVars:        appVars,
 			TaskTypes:      taskTypes,
-			DeputyDetails:  deputyDetails,
 			TaskList:       taskList,
 			SuccessMessage: successMessage,
 		}

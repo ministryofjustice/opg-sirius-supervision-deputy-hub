@@ -12,17 +12,9 @@ import (
 )
 
 type mockAddAssuranceVisitInformation struct {
-	count       int
-	lastCtx     sirius.Context
-	err         error
-	userDetails sirius.UserDetails
-}
-
-func (m *mockAddAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.err
+	count   int
+	lastCtx sirius.Context
+	err     error
 }
 
 func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
@@ -45,7 +37,7 @@ func TestPostAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddAssuranceVisit(client, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

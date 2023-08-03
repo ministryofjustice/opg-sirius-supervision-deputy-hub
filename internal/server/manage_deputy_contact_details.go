@@ -2,11 +2,10 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type DeputyContactDetailsInformation interface {
@@ -14,35 +13,24 @@ type DeputyContactDetailsInformation interface {
 }
 
 type manageDeputyContactDetailsVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
-	DeputyId      int
+	AppVars
 }
 
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
+		vars := manageDeputyContactDetailsVars{AppVars: appVars}
+
 		switch r.Method {
 		case http.MethodGet:
-
-			vars := manageDeputyContactDetailsVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyId:      deputyId,
-				DeputyDetails: deputyDetails,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
 			form := sirius.DeputyContactDetails{
-				DeputySubType:    deputyDetails.DeputySubType.SubType,
+				DeputySubType:    appVars.DeputyDetails.DeputySubType.SubType,
 				DeputyFirstName:  r.PostFormValue("deputy-first-name"),
 				DeputySurname:    r.PostFormValue("deputy-last-name"),
 				OrganisationName: r.PostFormValue("organisation-name"),
@@ -59,13 +47,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 			err := client.UpdateDeputyContactDetails(ctx, deputyId, form)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := manageDeputyContactDetailsVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					DeputyId:      deputyId,
-					DeputyDetails: deputyDetails,
-					Errors:        verr.Errors,
-				}
+				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
 				return err

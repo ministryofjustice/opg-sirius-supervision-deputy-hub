@@ -67,7 +67,7 @@ func TestGetTasks(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddTask(client, defaultPATeam, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -85,26 +85,30 @@ func TestLoadAddTaskForm(t *testing.T) {
 	template := &mockTemplates{}
 	defaultPATeam := 23
 
-	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-		EcmId: 1,
-	}}
 	taskTypes := []model.TaskType{{Handle: "ABC"}}
 	client.taskTypes = taskTypes
 	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
-	expectedVars := AddTaskVars{
+	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
+		EcmId: 1,
+	}}
+	appVars := AppVars{
 		Path:          "/path",
 		DeputyDetails: deputy,
-		TaskTypes:     taskTypes,
-		Assignees:     assignees,
+	}
+
+	expectedVars := AddTaskVars{
+		AppVars:   appVars,
+		TaskTypes: taskTypes,
+		Assignees: assignees,
 	}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddTask(client, defaultPATeam, template)
-	res := handler(deputy, w, r)
+	res := handler(appVars, w, r)
 
 	assert.Nil(res)
 
@@ -121,11 +125,15 @@ func TestAddTask_success_ecm(t *testing.T) {
 	client := &mockAddTasksClient{}
 	defaultPATeam := 23
 
-	deputy := sirius.DeputyDetails{ID: 123}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
 	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
+
+	appVars := AppVars{
+		Path:          "/path",
+		DeputyDetails: sirius.DeputyDetails{ID: 123},
+	}
 
 	form := url.Values{
 		"tasktype":          {"ABC"},
@@ -143,7 +151,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, defaultPATeam, nil)(deputy, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, nil)(appVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -157,7 +165,10 @@ func TestAddTask_success_other(t *testing.T) {
 	client := &mockAddTasksClient{}
 	defaultPATeam := 23
 
-	deputy := sirius.DeputyDetails{ID: 123}
+	appVars := AppVars{
+		Path:          "/path",
+		DeputyDetails: sirius.DeputyDetails{ID: 123},
+	}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
 	client.taskTypes = taskTypes
 	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
@@ -179,7 +190,7 @@ func TestAddTask_success_other(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, defaultPATeam, nil)(deputy, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, nil)(appVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -213,14 +224,15 @@ func TestAddTaskValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+		res = renderTemplateForAddTask(client, defaultPATeam, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
 	assert.Equal(AddTaskVars{
-		Path:   "/133",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(res)
