@@ -2,6 +2,7 @@ package sirius
 
 import (
 	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -173,12 +174,12 @@ func TestDeputyEventsReturned(t *testing.T) {
 		io.NopCloser(bytes.NewReader([]byte(taskTypesJson))))
 
 	expectedResponse := DeputyEvents{
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        369,
 			Timestamp: AmendDateForDST("31/07/2023 08:45:22"),
 			EventType: "TaskEdited",
-			User:      User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
-			Event: Event{
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			Event: model.Event{
 				DeputyID:        "78",
 				DeputyName:      "Bobby Deputiser",
 				TaskType:        "Assurance visit follow up",
@@ -186,7 +187,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 				OldAssigneeName: "case manager",
 				DueDate:         "01/03/2023",
 				Notes:           "Edited notes for edited task",
-				Changes: []Changes{
+				Changes: []model.Changes{
 					{
 						FieldName: "dueDate",
 						OldValue:  "01/03/2015",
@@ -200,26 +201,26 @@ func TestDeputyEventsReturned(t *testing.T) {
 				},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        300,
 			Timestamp: AmendDateForDST("09/09/2021 14:01:59"),
 			EventType: "DeputyLinkedToOrder",
-			User:      User{ID: 41, Name: "system admin", PhoneNumber: "12345678"},
-			Event: Event{
+			User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678"},
+			Event: model.Event{
 				DeputyID:    "76",
 				DeputyName:  "Mx Bob Builder",
 				OrderType:   "pfa",
 				SiriusId:    "7000-0000-1995",
 				OrderNumber: "03305972",
-				Client:      []ClientPerson{{Name: "Test Name", ID: "63", Uid: "7000-0000-1961", CourtRef: "40124126"}},
+				Client:      []model.ClientPerson{{Name: "Test Name", ID: "63", Uid: "7000-0000-1961", CourtRef: "40124126"}},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        397,
 			Timestamp: AmendDateForDST("10/01/2021 15:01:59"),
 			EventType: "TaskCreated",
-			User:      User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
-			Event: Event{
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			Event: model.Event{
 				DeputyID:   "78",
 				DeputyName: "Bobby Deputiser",
 				TaskType:   "Assurance visit follow up",
@@ -280,44 +281,44 @@ func TestReformatEventType(t *testing.T) {
 
 func TestSortByTimelineAsc(t *testing.T) {
 	unsortedData := DeputyEvents{
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        388,
 			Timestamp: "19/10/2020 10:12:08",
 			EventType: "PersonContactDetailsChanged",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        387,
 			Timestamp: "18/10/2020 10:12:08",
 			EventType: "PaDetailsChanged",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        390,
 			Timestamp: "20/09/2020 10:11:08",
 			EventType: "DeputyLinkedToOrder",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        389,
 			Timestamp: "16/10/2020 10:11:08",
 			EventType: "PADeputyCreated",
 		},
 	}
 	expectedResponse := DeputyEvents{
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        388,
 			Timestamp: "19/10/2020 10:12:08",
 			EventType: "PersonContactDetailsChanged",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        387,
 			Timestamp: "18/10/2020 10:12:08",
 			EventType: "PaDetailsChanged",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        389,
 			Timestamp: "16/10/2020 10:11:08",
 			EventType: "PADeputyCreated",
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        390,
 			Timestamp: "20/09/2020 10:11:08",
 			EventType: "DeputyLinkedToOrder",
@@ -328,23 +329,23 @@ func TestSortByTimelineAsc(t *testing.T) {
 
 func TestEditDeputyEvents(t *testing.T) {
 	unsortedData := DeputyEvents{
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        388,
 			Timestamp: "2020-10-18 10:11:08",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PersonContactDetailsChanged",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes: []Changes{
+				Changes: []model.Changes{
 					{
 						FieldName: "mobileNumber",
 						OldValue:  "null",
@@ -356,26 +357,26 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "null",
 					},
 				},
-				Client: []ClientPerson{},
+				Client: []model.ClientPerson{},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        387,
 			Timestamp: "2020-10-18 11:12:08",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PaDetailsChanged",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes: []Changes{
+				Changes: []model.Changes{
 					{
 						FieldName: "Deputy name",
 						OldValue:  "null",
@@ -397,27 +398,27 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "PA Team 1 - (Supervision)",
 					},
 				},
-				Client: []ClientPerson{},
+				Client: []model.ClientPerson{},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        390,
 			Timestamp: "2020-09-20 10:11:08",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "pfa",
 				SiriusId:         "7000-0000-2381",
 				OrderNumber:      "18372470",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes:          []Changes{},
-				Client: []ClientPerson{
+				Changes:          []model.Changes{},
+				Client: []model.ClientPerson{
 					{
 						Name:     "Duke John Fearless",
 						ID:       "72",
@@ -427,45 +428,45 @@ func TestEditDeputyEvents(t *testing.T) {
 				},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        389,
 			Timestamp: "2020-10-16 10:11:08",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PADeputyCreated",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes:          []Changes{},
-				Client:           []ClientPerson{},
+				Changes:          []model.Changes{},
+				Client:           []model.ClientPerson{},
 			},
 		},
 	}
 	expectedResponse := DeputyEvents{
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        387,
 			Timestamp: AmendDateForDST("18/10/2020 11:12:08"),
 			EventType: "PaDetailsChanged",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes: []Changes{
+				Changes: []model.Changes{
 					{
 						FieldName: "Deputy name",
 						OldValue:  "null",
@@ -487,26 +488,26 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "PA Team 1 - (Supervision)",
 					},
 				},
-				Client: []ClientPerson{},
+				Client: []model.ClientPerson{},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        388,
 			Timestamp: AmendDateForDST("18/10/2020 10:11:08"),
 			EventType: "PersonContactDetailsChanged",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes: []Changes{
+				Changes: []model.Changes{
 					{
 						FieldName: "mobileNumber",
 						OldValue:  "null",
@@ -518,47 +519,47 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "null",
 					},
 				},
-				Client: []ClientPerson{},
+				Client: []model.ClientPerson{},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        389,
 			Timestamp: AmendDateForDST("16/10/2020 10:11:08"),
 			EventType: "PADeputyCreated",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "null",
 				SiriusId:         "null",
 				OrderNumber:      "null",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes:          []Changes{},
-				Client:           []ClientPerson{},
+				Changes:          []model.Changes{},
+				Client:           []model.ClientPerson{},
 			},
 		},
-		DeputyEvent{
+		model.DeputyEvent{
 			ID:        390,
 			Timestamp: AmendDateForDST("20/09/2020 10:11:08"),
 			EventType: "DeputyLinkedToOrder",
-			User: User{
+			User: model.User{
 				ID:          51,
 				Name:        "case manager",
 				PhoneNumber: "12345678",
 			},
-			Event: Event{
+			Event: model.Event{
 				OrderType:        "pfa",
 				SiriusId:         "7000-0000-2381",
 				OrderNumber:      "18372470",
 				DeputyID:         "76",
 				DeputyName:       "null",
 				OrganisationName: "null",
-				Changes:          []Changes{},
-				Client: []ClientPerson{
+				Changes:          []model.Changes{},
+				Client: []model.ClientPerson{
 					{
 						Name:     "Duke John Fearless",
 						ID:       "72",
@@ -573,7 +574,7 @@ func TestEditDeputyEvents(t *testing.T) {
 }
 func TestIsNewEvent(t *testing.T) {
 	assert.Equal(t, true, isNewEvent(
-		[]Changes{
+		[]model.Changes{
 			{
 				FieldName: "firm",
 				NewValue:  "new firm name",
@@ -584,7 +585,7 @@ func TestIsNewEvent(t *testing.T) {
 			},
 		}))
 	assert.Equal(t, false, isNewEvent(
-		[]Changes{
+		[]model.Changes{
 			{
 				FieldName: "firm",
 				NewValue:  "a new firm name",
