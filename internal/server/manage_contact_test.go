@@ -50,7 +50,7 @@ func TestGetCreateContact(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForManageContact(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -60,7 +60,9 @@ func TestGetCreateContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
-		Path:         "/path",
+		AppVars: AppVars{
+			Path: "/path",
+		},
 		IsNewContact: true,
 	}, template.lastVars)
 }
@@ -82,7 +84,7 @@ func TestGetManageContact(t *testing.T) {
 	r = mux.SetURLVars(r, vars)
 
 	handler := renderTemplateForManageContact(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -92,7 +94,9 @@ func TestGetManageContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
-		Path:          "/path",
+		AppVars: AppVars{
+			Path: "/path",
+		},
 		IsNamedDeputy: "false",
 		IsMainContact: "false",
 		IsNewContact:  false,
@@ -110,7 +114,7 @@ func TestPostAddContact(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageContact(client, nil)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -128,7 +132,7 @@ func TestPostManageContact(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/{contactId}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageContact(client, nil)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -154,7 +158,7 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 
-	returnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
 		"contactName": {
@@ -163,8 +167,10 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	}
 
 	assert.Equal(ManageContactVars{
-		Path:         "/133",
-		Errors:       expectedValidationErrors,
+		AppVars: AppVars{
+			Path:   "/path",
+			Errors: expectedValidationErrors,
+		},
 		IsNewContact: true,
 	}, template.lastVars)
 
@@ -183,7 +189,7 @@ func TestPostAddContactReturnsNonValidationErrors(t *testing.T) {
 
 	r, _ := http.NewRequest("POST", "/123/contacts", strings.NewReader(""))
 
-	manageContactReturnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	manageContactReturnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 	assert.Equal(client.AddContactErr, manageContactReturnedError)
 }
 
@@ -205,7 +211,7 @@ func TestPostManageContactReturnsNonValidationErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123/contacts/1", strings.NewReader(""))
 	r = mux.SetURLVars(r, vars)
 
-	manageContactReturnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	manageContactReturnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 	assert.Equal(client.UpdateContactErr, manageContactReturnedError)
 }
 
@@ -227,6 +233,6 @@ func TestGetManageContactReturnsNonValidationErrors(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/123/contacts/1", strings.NewReader(""))
 	r = mux.SetURLVars(r, vars)
 
-	getContactByIdReturnedErr := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	getContactByIdReturnedErr := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 	assert.Equal(client.GetContactByIdErr, getContactByIdReturnedErr)
 }

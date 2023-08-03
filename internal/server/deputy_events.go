@@ -10,30 +10,25 @@ type DeputyHubEventInformation interface {
 }
 
 type deputyHubEventVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	DeputyEvents  sirius.DeputyEvents
-	Error         string
+	DeputyEvents sirius.DeputyEvents
+	AppVars
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, deputyDetails.ID)
+		deputyEvents, err := client.GetDeputyEvents(ctx, appVars.DeputyDetails.ID)
 		if err != nil {
 			return err
 		}
 
 		vars := deputyHubEventVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-			DeputyEvents:  deputyEvents,
+			DeputyEvents: deputyEvents,
+			AppVars:      appVars,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

@@ -13,23 +13,19 @@ type DeputyHubContactInformation interface {
 }
 
 type ListContactsVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
-	ContactList    sirius.ContactList
 	SuccessMessage string
-	Error          string
+	ContactList    sirius.ContactList
+	AppVars
 }
 
 func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		contactList, err := client.GetDeputyContacts(ctx, deputyId)
@@ -53,10 +49,8 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 		}
 
 		vars := ListContactsVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
+			AppVars:        appVars,
 			ContactList:    contactList,
-			DeputyDetails:  deputyDetails,
 			SuccessMessage: successMessage,
 		}
 

@@ -44,7 +44,7 @@ func TestGetFirm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddFirm(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -66,7 +66,7 @@ func TestPostAddFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, nil)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, nil)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -91,11 +91,12 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	returnedError := renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
 
 	assert.Equal(addFirmVars{
-		Path:   "/133",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -124,7 +125,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -136,8 +137,9 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 	}
 
 	assert.Equal(addFirmVars{
-		Path:   "/133",
-		Errors: expectedValidationErrors,
+		AppVars: AppVars{
+			Errors: expectedValidationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -167,7 +169,7 @@ func TestAddFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
-			addFirmReturnedError := renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
+			addFirmReturnedError := renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, addFirmReturnedError)
 		})
 	}

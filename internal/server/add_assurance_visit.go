@@ -2,36 +2,28 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type AddAssuranceVisit interface {
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 	AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
 }
 
 type AddAssuranceVisitVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
+	AppVars
 }
 
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := AddAssuranceVisitVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
+			AppVars: appVars,
 		}
 
 		switch r.Method {
@@ -56,12 +48,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			user, err := client.GetUserDetails(ctx)
-			if err != nil {
-				return err
-			}
-
-			err = client.AddAssuranceVisit(ctx, assuranceType, requestedDate, user.ID, deputyId)
+			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, appVars.UserDetails.ID, deputyId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors

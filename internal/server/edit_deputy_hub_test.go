@@ -34,7 +34,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForEditDeputyHub(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -56,7 +56,7 @@ func TestPostEditDeputyHub(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -84,14 +84,15 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	returnedError := renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
 
 	assert.Equal(1, client.count)
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(editDeputyHubVars{
-		Path:   "/133",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -109,7 +110,7 @@ func TestEditDeputyHubHandlesErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	returnedError := renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
 
 	assert.Equal(client.err, returnedError)
 }

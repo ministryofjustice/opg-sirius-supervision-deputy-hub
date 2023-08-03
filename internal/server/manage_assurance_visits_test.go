@@ -17,12 +17,6 @@ type mockManageAssuranceVisitInformation struct {
 	mock.Mock
 }
 
-func (m *mockManageAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	args := m.Called(ctx)
-
-	return args.Get(0).(sirius.UserDetails), args.Error(1)
-}
-
 func (m *mockManageAssuranceVisitInformation) GetVisitOutcomeTypes(ctx sirius.Context) ([]sirius.VisitOutcomeTypes, error) {
 	args := m.Called(ctx)
 
@@ -63,6 +57,7 @@ func TestGetManageAssurance(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
+	appVars := AppVars{DeputyDetails: deputyDetails}
 	visitors := sirius.Visitors{sirius.Visitor{ID: 1, Name: "Mr Visitor"}}
 	visitRagRatingTypes := []sirius.VisitRagRatingTypes{{Handle: "x", Label: "y"}}
 	visitOutcomeTypes := []sirius.VisitOutcomeTypes{{Handle: "x", Label: "w"}}
@@ -84,7 +79,7 @@ func TestGetManageAssurance(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)
-	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
+	err := handler(appVars, w, r)
 
 	assert.Nil(err)
 
@@ -94,7 +89,7 @@ func TestGetManageAssurance(t *testing.T) {
 	assert.Equal(1, visitTemplate.count)
 	assert.Equal("page", visitTemplate.lastName)
 	assert.Equal(ManageAssuranceVisitVars{
-		DeputyDetails:       deputyDetails,
+		AppVars:             appVars,
 		Visitors:            visitors,
 		VisitRagRatingTypes: visitRagRatingTypes,
 		VisitOutcomeTypes:   visitOutcomeTypes,
@@ -123,7 +118,7 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(sirius.DeputyDetails{}, w, r)
+		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -136,6 +131,7 @@ func TestGetManagePDR(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
+	appVars := AppVars{DeputyDetails: deputyDetails}
 	visitors := sirius.Visitors{sirius.Visitor{ID: 1, Name: "Mr Visitor"}}
 	visitRagRatingTypes := []sirius.VisitRagRatingTypes{{Handle: "x", Label: "y"}}
 	visitOutcomeTypes := []sirius.VisitOutcomeTypes{{Handle: "x", Label: "w"}}
@@ -157,7 +153,7 @@ func TestGetManagePDR(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)
-	err := handler(deputyDetails, w, r)
+	err := handler(appVars, w, r)
 
 	assert.Nil(err)
 
@@ -167,7 +163,7 @@ func TestGetManagePDR(t *testing.T) {
 	assert.Equal(1, pdrTemplate.count)
 	assert.Equal("page", pdrTemplate.lastName)
 	assert.Equal(ManageAssuranceVisitVars{
-		DeputyDetails:       deputyDetails,
+		AppVars:             appVars,
 		Visitors:            visitors,
 		VisitRagRatingTypes: visitRagRatingTypes,
 		VisitOutcomeTypes:   visitOutcomeTypes,
@@ -196,7 +192,7 @@ func TestPostManagePDR(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(sirius.DeputyDetails{}, w, r)
+		redirect = renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

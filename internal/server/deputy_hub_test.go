@@ -16,10 +16,8 @@ type mockDeputyHubInformation struct {
 	count               int
 	lastCtx             sirius.Context
 	GetDeputyClientsErr error
-	GetUserDetailsErr   error
 	deputyClientData    sirius.ClientList
 	ariaSorting         sirius.AriaSorting
-	userDetails         sirius.UserDetails
 }
 
 func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
@@ -29,11 +27,13 @@ func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId
 	return m.deputyClientData, m.ariaSorting, m.GetDeputyClientsErr
 }
 
-func (m *mockDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.GetUserDetailsErr
+var testDeputy = sirius.DeputyDetails{
+	ExecutiveCaseManager: sirius.ExecutiveCaseManager{
+		EcmName: "Jon Snow",
+	},
+	Firm: sirius.Firm{
+		FirmName: "defaultPATeam",
+	},
 }
 
 func TestNavigateToDeputyHub(t *testing.T) {
@@ -46,7 +46,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -56,49 +56,49 @@ func TestNavigateToDeputyHub(t *testing.T) {
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnEcmSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=ecm")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "<abbr title='Executive Case Manager'>ECM</abbr> changed to Jon Snow")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnTeamDetailsSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=teamDetails")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "Team details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyContactDetailsSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=deputyDetails")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "Deputy details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilForAnyOtherText(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=otherMessage")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsNilIfNoSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageOnDeputyDetailsSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=deputyDetails")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "Deputy details updated")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageUseExistingFirmSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/76/?success=firm")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "Firm changed to defaultPATeam")
 }
 
 func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageAddFirmSuccess(t *testing.T) {
 	u, _ := url.Parse("http::deputyhub/deputy/76/?success=newFirm")
-	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
+	SuccessMessage := getSuccessFromUrl(u, testDeputy)
 	assert.Equal(t, SuccessMessage, "Firm added")
 }
 
@@ -112,11 +112,6 @@ func TestDeputyHubHandlesErrorsInOtherClientFiles(t *testing.T) {
 				GetDeputyClientsErr: returnedError,
 			},
 		},
-		{
-			Client: &mockDeputyHubInformation{
-				GetUserDetailsErr: returnedError,
-			},
-		},
 	}
 	for k, tc := range tests {
 		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
@@ -125,7 +120,7 @@ func TestDeputyHubHandlesErrorsInOtherClientFiles(t *testing.T) {
 			template := &mockTemplates{}
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
-			deputyHubReturnedError := renderTemplateForDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+			deputyHubReturnedError := renderTemplateForDeputyHub(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, deputyHubReturnedError)
 		})
 	}
