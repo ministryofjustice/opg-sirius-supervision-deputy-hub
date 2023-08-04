@@ -40,12 +40,11 @@ func TestGetChangeECM(t *testing.T) {
 
 	client := &mockChangeECMInformation{}
 	template := &mockTemplates{}
-	defaultPATeam := 23
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForChangeECM(client, defaultPATeam, template)
+	handler := renderTemplateForChangeECM(client, template)
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -64,7 +63,6 @@ func TestGetChangeECM(t *testing.T) {
 func TestPostChangeECM(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockChangeECMInformation{}
-	defaultPATeam := 23
 
 	template := &mockTemplates{}
 
@@ -80,7 +78,7 @@ func TestPostChangeECM(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(AppVars{}, w, r)
+		returnedError = renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -93,7 +91,6 @@ func TestPostChangeECM(t *testing.T) {
 func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockChangeECMInformation{}
-	defaultPATeam := 23
 
 	validationErrors := sirius.ValidationErrors{
 		"Change ECM": {"": "Select an executive case manager"},
@@ -109,7 +106,7 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 
 	expectedValidationError := sirius.ValidationError{
 		Errors: sirius.ValidationErrors{
@@ -125,7 +122,6 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockChangeECMInformation{}
-	defaultPATeam := 23
 
 	template := &mockTemplates{}
 
@@ -133,7 +129,7 @@ func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 	r, _ := http.NewRequest("PUT", "/76/ecm", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 
 	assert.Equal(StatusError(http.StatusMethodNotAllowed), returnedError)
 }
@@ -141,7 +137,6 @@ func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockChangeECMInformation{}
-	defaultPATeam := 23
 
 	template := &mockTemplates{}
 
@@ -155,7 +150,7 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 	form.Add("select-ecm", "26")
 	r.PostForm = form
 
-	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 
 	assert.Equal(StatusError(http.StatusGatewayTimeout), returnedError)
 }

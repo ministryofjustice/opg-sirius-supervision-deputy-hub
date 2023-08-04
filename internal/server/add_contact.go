@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type ContactInformation interface {
@@ -27,8 +25,6 @@ type addContactVars struct {
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := addContactVars{
 			AppVars: appVars,
@@ -49,7 +45,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			err := client.AddContact(ctx, deputyId, addContactForm)
+			err := client.AddContact(ctx, appVars.DeputyId(), addContactForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -69,7 +65,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", deputyId))
+			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", appVars.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

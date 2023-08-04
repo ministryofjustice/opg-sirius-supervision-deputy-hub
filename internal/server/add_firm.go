@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type FirmInformation interface {
@@ -20,8 +18,6 @@ type addFirmVars struct {
 func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := addFirmVars{
 			AppVars: appVars,
@@ -52,12 +48,12 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, firmId)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, appVars.DeputyId(), firmId)
 			if assignDeputyToFirmErr != nil {
 				return assignDeputyToFirmErr
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=newFirm", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=newFirm", appVars.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

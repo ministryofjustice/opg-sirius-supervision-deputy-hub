@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"net/http"
 	"strconv"
 
@@ -27,8 +26,6 @@ type manageDeputyImportantInformationVars struct {
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := manageDeputyImportantInformationVars{AppVars: appVars}
 
@@ -105,7 +102,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				ReportSystem:              reportSystemType,
 			}
 
-			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
+			err = client.UpdateImportantInformation(ctx, appVars.DeputyId(), importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -115,7 +112,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=importantInformation", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=importantInformation", appVars.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

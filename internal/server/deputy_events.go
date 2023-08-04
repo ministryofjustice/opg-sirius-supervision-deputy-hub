@@ -21,7 +21,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		}
 
 		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, appVars.DeputyDetails.ID)
+		deputyEvents, err := client.GetDeputyEvents(ctx, appVars.DeputyId())
 		if err != nil {
 			return err
 		}

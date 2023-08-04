@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
@@ -23,8 +22,6 @@ type changeFirmVars struct {
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		firms, err := client.GetFirms(ctx)
 		if err != nil {
@@ -46,7 +43,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
 
 			if newFirm == "new-firm" {
-				return Redirect(fmt.Sprintf("/%d/add-firm", deputyId))
+				return Redirect(fmt.Sprintf("/%d/add-firm", appVars.DeputyId()))
 			}
 
 			AssignToFirmId := 0
@@ -57,7 +54,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 				}
 			}
 
-			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, appVars.DeputyId(), AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -65,7 +62,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			} else if err != nil {
 				return err
 			}
-			return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=firm", appVars.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

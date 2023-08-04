@@ -87,6 +87,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 	}{
 		"default": {
 			appVars: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 			}},
 			form: url.Values{},
@@ -97,6 +98,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 		},
 		"previous value": {
 			appVars: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
 					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
@@ -110,6 +112,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 		},
 		"form value": {
 			appVars: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
 					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},

@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type AddAssuranceVisit interface {
@@ -19,8 +17,6 @@ type AddAssuranceVisitVars struct {
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := AddAssuranceVisitVars{
 			AppVars: appVars,
@@ -48,14 +44,14 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, appVars.UserDetails.ID, deputyId)
+			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, appVars.UserDetails.ID, appVars.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", deputyId))
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", appVars.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
