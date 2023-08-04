@@ -29,6 +29,9 @@
     {{ if eq .EventType "DeputyContactAdded" }}
         {{ template "contact-added" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyContactEdited" }}
+        {{ template "contact-edited" . }}
+    {{ end }}
     {{ if eq .EventType "TaskCreated" }}
         {{ template "task-created" . }}
     {{ end }}

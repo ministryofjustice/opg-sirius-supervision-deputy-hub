@@ -41,6 +41,13 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 		switch r.URL.Query().Get("success") {
 		case "newContact":
 			successMessage = "Contact added"
+		case "updatedContact":
+			contactName := r.URL.Query().Get("contactName")
+			if contactName == "" {
+				successMessage = ""
+			} else {
+				successMessage = contactName + "'s details updated"
+			}
 		default:
 			successMessage = ""
 		}
