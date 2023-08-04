@@ -1,0 +1,99 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    <div class="govuk-grid-row govuk-!-margin-top-5">
+        <div class="govuk-grid-column-full">
+            <header>
+                <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                    Complete Task
+                </h1>
+            </header>
+
+
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-one-half">
+
+                    <table class="govuk-table">
+                        <caption class="govuk-table__caption govuk-table__caption--m">Task details</caption>
+                        <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Task type</th>
+                            <td class="govuk-table__cell">{{ .TaskDetails.Type }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Notes</th>
+                            <td class="govuk-table__cell">{{ .TaskDetails.Notes }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Due</th>
+                            <td class="govuk-table__cell">{{ .TaskDetails.DueDate }}</td>
+                        </tr>
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">Assigned</th>
+                            <td class="govuk-table__cell">{{ .TaskDetails.Assignee.DisplayName }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+            <div class="govuk-grid-row">
+
+                <form
+                    id="complete-task-form"
+                    class="govuk-grid-column-one-third"
+                    method="post">
+                    <input
+                        type="hidden"
+                        name="xsrfToken"
+                        value="{{ .XSRFToken }}"/>
+                    <div class="govuk-form-group">
+                        <div
+                            class="govuk-character-count"
+                            data-module="govuk-character-count"
+                            data-maxlength="1000">
+                            <div class="govuk-form-group">
+                                <label class="govuk-label" for="notes">
+                                    Notes (optional)
+                                </label>
+                                <textarea
+                                    class="govuk-textarea govuk-js-character-count"
+                                    id="notes"
+                                    name="notes"
+                                    rows="10"
+                                    aria-describedby="notes-info notes-hint"
+                                ></textarea>
+                                <div
+                                    id="notes-info"
+                                    class="govuk-hint govuk-character-count__message"
+                                    aria-live="polite">
+                                    You have 1,000 characters remaining
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="govuk-button-group govuk-!-margin-top-7">
+                        <button
+                            type="submit"
+                            class="govuk-button"
+                            data-module="govuk-button">
+                            Complete task
+                        </button>
+
+                        <a
+                            class="govuk-link"
+                            href="{{ prefix (printf "/%d/tasks" .DeputyDetails.ID) }}">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+{{end}}

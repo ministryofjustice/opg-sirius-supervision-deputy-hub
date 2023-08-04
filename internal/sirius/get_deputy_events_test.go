@@ -85,7 +85,6 @@ func TestDeputyEventsReturned(t *testing.T) {
 			"dueDate": "2023-07-13 00:00:00",
 			"description": "This is a note",
 			"name": "",
-			"assigneeId": "28",
 			"assignee": "PA Team Workflow",
 			"isCaseOwnerTask": false,
 			"personType": "Deputy",
@@ -93,7 +92,52 @@ func TestDeputyEventsReturned(t *testing.T) {
 			"personUid": "7000-0000-2530",
 			"personName": "Bobby Deputiser"
 		  }
-	  }
+	  },
+		{
+			"id": 369,
+			"hash": "A9",
+			"timestamp": "2023-07-31 08:45:22",
+			"eventType": "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
+			"user": {
+			  "id": 21,
+			  "phoneNumber": "0123456789",
+			  "displayName": "Lay Team 1 - (Supervision)",
+			  "email": "LayTeam1.team@opgtest.com"
+			},
+			"event": {
+				"isCaseEvent": false,
+				"isPersonEvent": true,
+				"taskId": 184,
+				"taskType": "AVFU",
+				"dueDate": "2023-03-01 00:00:00",
+				"description": "Edited notes for edited task",
+				"name": "",
+				"assigneeId": 21,
+				"assignee": "Lay Team 1 - (Supervision)",
+				"isCaseOwnerTask": false,
+				"oldAssigneeId": 60,
+				"oldAssigneeName": "case manager",
+				"wasCaseOwnerTask": false,
+				"personType": "Deputy",
+				"personId": "78",
+				"personUid": "7000-0000-2530",
+				"personName": "Bobby Deputiser",
+				"changes": [
+					{
+						"fieldName": "dueDate",
+						"oldValue": "01/03/2015",
+						"newValue": "01/03/2023",
+						"type": "string"
+					},
+					{
+						"fieldName": "description",
+						"oldValue": "OG notes for edited task",
+						"newValue": "Edited notes for edited task",
+						"type": "string"
+					}
+				]
+			}
+		}
 	]
 	`
 	taskTypesJson := `
@@ -129,6 +173,33 @@ func TestDeputyEventsReturned(t *testing.T) {
 		io.NopCloser(bytes.NewReader([]byte(taskTypesJson))))
 
 	expectedResponse := DeputyEvents{
+		DeputyEvent{
+			ID:        369,
+			Timestamp: AmendDateForDST("31/07/2023 08:45:22"),
+			EventType: "TaskEdited",
+			User:      User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			Event: Event{
+				DeputyID:        "78",
+				DeputyName:      "Bobby Deputiser",
+				TaskType:        "Assurance visit follow up",
+				Assignee:        "Lay Team 1 - (Supervision)",
+				OldAssigneeName: "case manager",
+				DueDate:         "01/03/2023",
+				Notes:           "Edited notes for edited task",
+				Changes: []Changes{
+					{
+						FieldName: "dueDate",
+						OldValue:  "01/03/2015",
+						NewValue:  "01/03/2023",
+					},
+					{
+						FieldName: "description",
+						OldValue:  "OG notes for edited task",
+						NewValue:  "Edited notes for edited task",
+					},
+				},
+			},
+		},
 		DeputyEvent{
 			ID:        300,
 			Timestamp: AmendDateForDST("09/09/2021 14:01:59"),
