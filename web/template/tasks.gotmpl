@@ -67,9 +67,6 @@
                 <a class="govuk-button govuk-button--secondary"
                    href="{{ prefix (printf "/%d/tasks/%d" $.DeputyDetails.ID .Id) }}"> Manage task
                 </a>
-                <a class="govuk-button govuk-button--secondary"
-                   href="{{ prefix (printf "/%d/tasks/complete/%d" $.DeputyDetails.ID .Id) }}"> Mark as complete
-                </a>
             </td>
         </tr>
     {{ end }}
