@@ -17,7 +17,6 @@ type mockEditDeputyHubInformation struct {
 	err              error
 	deputyClientData sirius.ClientList
 	ariaSorting      sirius.AriaSorting
-	userDetails      sirius.UserDetails
 }
 
 func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
@@ -34,13 +33,6 @@ func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, depu
 	return m.deputyClientData, m.ariaSorting, m.err
 }
 
-func (m *mockEditDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.err
-}
-
 func TestNavigateToEditDeputyHub(t *testing.T) {
 	assert := assert.New(t)
 
@@ -51,7 +43,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -83,7 +75,7 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -93,8 +85,9 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(editDeputyHubVars{
-		Path:   "/133",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)

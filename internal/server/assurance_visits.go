@@ -1,11 +1,10 @@
 package server
 
 import (
-	"net/http"
-	"strconv"
-
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type AssuranceVisit interface {
@@ -13,18 +12,15 @@ type AssuranceVisit interface {
 }
 
 type AssuranceVisitsVars struct {
-	Path             string
-	XSRFToken        string
-	DeputyDetails    sirius.DeputyDetails
-	Error            string
 	AddVisitDisabled bool
 	SuccessMessage   string
 	AssuranceVisits  []sirius.AssuranceVisits
 	ErrorMessage     string
+	AppVars
 }
 
 func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
@@ -47,11 +43,9 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 		}
 
 		vars := AssuranceVisitsVars{
-			Path:            r.URL.Path,
-			XSRFToken:       ctx.XSRFToken,
-			DeputyDetails:   deputyDetails,
 			SuccessMessage:  successMessage,
 			AssuranceVisits: visits,
+			AppVars:         appVars,
 		}
 
 		vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(visits)

@@ -6,6 +6,7 @@ import (
 	"github.com/ministryofjustice/opg-go-common/logging"
 	"github.com/ministryofjustice/opg-go-common/securityheaders"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"golang.org/x/sync/errgroup"
 	"html/template"
 	"io"
 	"net/http"
@@ -14,7 +15,7 @@ import (
 )
 
 type Client interface {
-	ErrorHandlerClient
+	DeputyHubClient
 	DeputyHubInformation
 	DeputyHubClientInformation
 	DeputyHubContactInformation
@@ -40,7 +41,7 @@ type Template interface {
 }
 
 func New(logger *logging.Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int, defaultPROTeam int) http.Handler {
-	wrap := errorHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam, defaultPROTeam)
+	wrap := wrapHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam, defaultPROTeam)
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/health-check", healthCheck())
@@ -156,7 +157,7 @@ func (e StatusError) Code() int {
 	return int(e)
 }
 
-type Handler func(d sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error
+type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
 
 type errorVars struct {
 	Firstname string
@@ -168,18 +169,53 @@ type errorVars struct {
 	Errors    string
 }
 
-type ErrorHandlerClient interface {
+type AppVars struct {
+	Path          string
+	XSRFToken     string
+	UserDetails   sirius.UserDetails
+	DeputyDetails sirius.DeputyDetails
+	Error         string
+	Errors        sirius.ValidationErrors
+}
+
+type DeputyHubClient interface {
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
 }
 
-func errorHandler(logger *logging.Logger, client ErrorHandlerClient, tmplError Template, prefix, siriusURL string, defaultPATeam int, defaultPROTeam int) func(next Handler) http.Handler {
+func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Template, prefix, siriusURL string, defaultPATeam int, defaultPROTeam int) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
-			deputyDetails, err := client.GetDeputyDetails(getContext(r), defaultPATeam, defaultPROTeam, deputyId)
+			ctx := getContext(r)
+			group, groupCtx := errgroup.WithContext(ctx.Context)
+
+			vars := AppVars{
+				Path:      r.URL.Path,
+				XSRFToken: ctx.XSRFToken,
+			}
+
+			group.Go(func() error {
+				user, err := client.GetUserDetails(ctx.With(groupCtx))
+				if err != nil {
+					return err
+				}
+				vars.UserDetails = user
+				return nil
+			})
+			group.Go(func() error {
+				deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
+				deputy, err := client.GetDeputyDetails(ctx.With(groupCtx), defaultPATeam, defaultPROTeam, deputyId)
+				if err != nil {
+					return err
+				}
+				vars.DeputyDetails = deputy
+				return nil
+			})
+
+			err := group.Wait()
 
 			if err == nil {
-				err = next(deputyDetails, w, r)
+				err = next(vars, w, r)
 			}
 
 			if err != nil {
