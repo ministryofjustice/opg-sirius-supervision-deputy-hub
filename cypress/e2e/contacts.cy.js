@@ -11,14 +11,14 @@ describe("Contacts", () => {
 
         it("shows content", () => {
             cy.get(".govuk-main-wrapper > header").contains("Add new contact");
-            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
-            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title");
-            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
-            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
-            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes");
-            cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy (required)");
-            cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact (required)");
+            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name");
+            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title (optional)");
+            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
+            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
+            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
+            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
+            cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");
             cy.get(".govuk-button-group > .govuk-link").contains("Cancel");
         });
@@ -65,14 +65,14 @@ describe("Contacts", () => {
 
         it("shows content", () => {
             cy.get(".govuk-main-wrapper > header").contains("Manage contact");
-            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name (required)");
-            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title");
-            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email (required)");
-            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone (required)");
-            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes");
-            cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy (required)");
-            cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact (required)");
+            cy.get("#contact-form > :nth-child(2) > .govuk-label").contains("Name");
+            cy.get("#contact-form > :nth-child(3) > .govuk-label").contains("Job title (optional)");
+            cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
+            cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
+            cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
+            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
+            cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");
             cy.get(".govuk-button-group > .govuk-link").contains("Cancel");
         });
