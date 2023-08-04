@@ -24,11 +24,10 @@ type manageTaskVars struct {
 	AppVars
 }
 
-func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Template) Handler {
+func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
@@ -44,7 +43,7 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPaTeam, appVars.DeputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
 		if err != nil {
 			return err
 		}
@@ -81,7 +80,7 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.UpdateTask(ctx, deputyId, taskDetails.Id, dueDate, notes, assigneeId)
+			err := client.UpdateTask(ctx, appVars.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = RenameErrors(verr.Errors, appVars.DeputyDetails.DeputyType.Label)
@@ -93,7 +92,7 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", deputyId, taskDetails.Type))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", appVars.DeputyId(), taskDetails.Type))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

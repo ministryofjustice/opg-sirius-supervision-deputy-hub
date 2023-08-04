@@ -34,6 +34,12 @@ func (m *mockFirmInformation) AssignDeputyToFirm(ctx sirius.Context, deputyId in
 	return m.AssignDeputyToFirmErr
 }
 
+var addFirmAppVars = AppVars{
+	DeputyDetails: sirius.DeputyDetails{
+		ID: 123,
+	},
+}
+
 func TestGetFirm(t *testing.T) {
 	assert := assert.New(t)
 
@@ -44,7 +50,7 @@ func TestGetFirm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddFirm(client, template)
-	err := handler(AppVars{}, w, r)
+	err := handler(addFirmAppVars, w, r)
 
 	assert.Nil(err)
 
@@ -66,7 +72,7 @@ func TestPostAddFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, nil)(AppVars{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, nil)(addFirmAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -95,7 +101,8 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	assert.Equal(addFirmVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			DeputyDetails: addFirmAppVars.DeputyDetails,
+			Errors:        validationErrors,
 		},
 	}, template.lastVars)
 
@@ -125,7 +132,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
+		returnedError = renderTemplateForAddFirm(client, template)(addFirmAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -138,7 +145,8 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	assert.Equal(addFirmVars{
 		AppVars: AppVars{
-			Errors: expectedValidationErrors,
+			DeputyDetails: addFirmAppVars.DeputyDetails,
+			Errors:        expectedValidationErrors,
 		},
 	}, template.lastVars)
 

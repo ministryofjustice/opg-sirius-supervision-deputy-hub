@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type DeputyContactDetailsInformation interface {
@@ -19,8 +17,6 @@ type manageDeputyContactDetailsVars struct {
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := manageDeputyContactDetailsVars{AppVars: appVars}
 
@@ -44,7 +40,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				Email:            r.PostFormValue("email"),
 			}
 
-			err := client.UpdateDeputyContactDetails(ctx, deputyId, form)
+			err := client.UpdateDeputyContactDetails(ctx, appVars.DeputyId(), form)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -53,7 +49,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", appVars.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

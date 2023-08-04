@@ -21,13 +21,13 @@ type changeECMHubVars struct {
 	AppVars
 }
 
-func renderTemplateForChangeECM(client ChangeECMInformation, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, appVars.DeputyDetails)
+		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
 		if err != nil {
 			return err
 		}

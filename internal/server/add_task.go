@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
@@ -26,21 +25,19 @@ type AddTaskVars struct {
 	AppVars
 }
 
-func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Template) Handler {
+func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, appVars.DeputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
 		if err != nil {
 			return err
 		}
@@ -70,7 +67,7 @@ func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Tem
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
-			err := client.AddTask(ctx, appVars.DeputyDetails.ID, taskType, typeName, dueDate, notes, assigneeId)
+			err := client.AddTask(ctx, appVars.DeputyId(), taskType, typeName, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.TaskTypes = taskTypes
@@ -93,7 +90,7 @@ func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Tem
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=add&taskType=%s", deputyId, taskName))
+			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, appVars.DeputyId()))
 		}
 	}
 }

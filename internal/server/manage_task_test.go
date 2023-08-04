@@ -45,7 +45,6 @@ func (m *mockManageTasks) GetTaskTypesForDeputyType(ctx sirius.Context, deputyTy
 
 func TestNavigateToManageTask(t *testing.T) {
 	assert := assert.New(t)
-	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
 	appVars := AppVars{DeputyDetails: deputyDetails}
@@ -63,7 +62,7 @@ func TestNavigateToManageTask(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForManageTasks(client, defaultPATeam, template)
+	handler := renderTemplateForManageTasks(client, template)
 	err := handler(appVars, w, r)
 
 	assert.Nil(err)
@@ -81,7 +80,6 @@ func TestNavigateToManageTask(t *testing.T) {
 
 func TestPostManageTask(t *testing.T) {
 	assert := assert.New(t)
-	defaultPATeam := 23
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
 	appVars := AppVars{DeputyDetails: deputyDetails}
@@ -106,7 +104,7 @@ func TestPostManageTask(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageTasks(client, defaultPATeam, template)(appVars, w, r)
+		redirect = renderTemplateForManageTasks(client, template)(appVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

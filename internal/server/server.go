@@ -1,17 +1,14 @@
 package server
 
 import (
-	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/logging"
 	"github.com/ministryofjustice/opg-go-common/securityheaders"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"golang.org/x/sync/errgroup"
 	"html/template"
 	"io"
 	"net/http"
 	"net/url"
-	"strconv"
 )
 
 type Client interface {
@@ -41,8 +38,8 @@ type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger *logging.Logger, client Client, templates map[string]*template.Template, prefix, siriusPublicURL, webDir string, defaultPATeam int, defaultPROTeam int) http.Handler {
-	wrap := wrapHandler(logger, client, templates["error.gotmpl"], prefix, siriusPublicURL, defaultPATeam, defaultPROTeam)
+func New(logger *logging.Logger, client Client, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {
+	wrap := wrapHandler(logger, client, templates["error.gotmpl"], envVars)
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.Handle("/health-check", healthCheck())
@@ -88,11 +85,11 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 
 	pageRouter.Handle("/tasks/add-task",
 		wrap(
-			renderTemplateForAddTask(client, defaultPATeam, templates["add-task.gotmpl"])))
+			renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
 
 	pageRouter.Handle("/tasks/{taskId}",
 		wrap(
-			renderTemplateForManageTasks(client, defaultPATeam, templates["manage-task.gotmpl"])))
+			renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
 
 	pageRouter.Handle("/tasks/complete/{taskId}",
 		wrap(
@@ -104,7 +101,7 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 
 	pageRouter.Handle("/change-ecm",
 		wrap(
-			renderTemplateForChangeECM(client, defaultPATeam, templates["change-ecm.gotmpl"])))
+			renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
 
 	pageRouter.Handle("/change-firm",
 		wrap(
@@ -134,144 +131,26 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 		wrap(
 			renderTemplateForManageAssuranceVisit(client, templates["manage-assurance-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
 
-	static := staticFileHandler(webDir)
+	static := staticFileHandler(envVars.WebDir)
 	router.PathPrefix("/assets/").Handler(static)
 	router.PathPrefix("/javascript/").Handler(static)
 	router.PathPrefix("/stylesheets/").Handler(static)
 
-	router.NotFoundHandler = notFoundHandler(templates["error.gotmpl"], siriusPublicURL)
+	router.NotFoundHandler = notFoundHandler(templates["error.gotmpl"], envVars.SiriusPublicURL)
 
-	return http.StripPrefix(prefix, securityheaders.Use(router))
-}
-
-type Redirect string
-
-func (e Redirect) Error() string {
-	return "redirect to " + string(e)
-}
-
-func (e Redirect) To() string {
-	return string(e)
-}
-
-type StatusError int
-
-func (e StatusError) Error() string {
-	code := e.Code()
-
-	return fmt.Sprintf("%d %s", code, http.StatusText(code))
-}
-
-func (e StatusError) Code() int {
-	return int(e)
-}
-
-type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
-
-type errorVars struct {
-	Firstname string
-	Surname   string
-	SiriusURL string
-	Path      string
-	Code      int
-	Error     string
-	Errors    string
-}
-
-type AppVars struct {
-	Path          string
-	XSRFToken     string
-	UserDetails   sirius.UserDetails
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
-}
-
-type DeputyHubClient interface {
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
-}
-
-func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Template, prefix, siriusURL string, defaultPATeam int, defaultPROTeam int) func(next Handler) http.Handler {
-	return func(next Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			ctx := getContext(r)
-			group, groupCtx := errgroup.WithContext(ctx.Context)
-
-			vars := AppVars{
-				Path:      r.URL.Path,
-				XSRFToken: ctx.XSRFToken,
-			}
-
-			group.Go(func() error {
-				user, err := client.GetUserDetails(ctx.With(groupCtx))
-				if err != nil {
-					return err
-				}
-				vars.UserDetails = user
-				return nil
-			})
-			group.Go(func() error {
-				deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
-				deputy, err := client.GetDeputyDetails(ctx.With(groupCtx), defaultPATeam, defaultPROTeam, deputyId)
-				if err != nil {
-					return err
-				}
-				vars.DeputyDetails = deputy
-				return nil
-			})
-
-			err := group.Wait()
-
-			if err == nil {
-				err = next(vars, w, r)
-			}
-
-			if err != nil {
-				if err == sirius.ErrUnauthorized {
-					http.Redirect(w, r, siriusURL+"/auth", http.StatusFound)
-					return
-				}
-
-				if redirect, ok := err.(Redirect); ok {
-					http.Redirect(w, r, prefix+redirect.To(), http.StatusFound)
-					return
-				}
-
-				logger.Request(r, err)
-
-				code := http.StatusInternalServerError
-				if status, ok := err.(StatusError); ok {
-					if status.Code() == http.StatusForbidden || status.Code() == http.StatusNotFound {
-						code = status.Code()
-					}
-				}
-
-				w.WriteHeader(code)
-				err = tmplError.ExecuteTemplate(w, "page", errorVars{
-					Firstname: "",
-					Surname:   "",
-					SiriusURL: siriusURL,
-					Path:      "",
-					Code:      code,
-					Error:     err.Error(),
-				})
-
-				if err != nil {
-					logger.Request(r, err)
-					http.Error(w, err.Error(), http.StatusInternalServerError)
-				}
-			}
-		})
-	}
+	return http.StripPrefix(envVars.Prefix, securityheaders.Use(router))
 }
 
 func notFoundHandler(tmplError Template, siriusURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_ = tmplError.ExecuteTemplate(w, "page", errorVars{
-			SiriusURL: siriusURL,
-			Code:      http.StatusNotFound,
-			Error:     "Not Found",
+			Code:  http.StatusNotFound,
+			Error: "Not Found",
+			AppVars: AppVars{
+				EnvironmentVars: EnvironmentVars{
+					SiriusURL: siriusURL,
+				},
+			},
 		})
 	}
 }

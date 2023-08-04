@@ -1,11 +1,8 @@
 package server
 
 import (
-	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
 type DeputyHubContactInformation interface {
@@ -25,10 +22,8 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 		}
 
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		contactList, err := client.GetDeputyContacts(ctx, deputyId)
+		contactList, err := client.GetDeputyContacts(ctx, appVars.DeputyId())
 		if err != nil {
 			return err
 		}

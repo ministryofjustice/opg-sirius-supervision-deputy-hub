@@ -34,7 +34,6 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 		visitId, _ := strconv.Atoi(routeVars["visitId"])
 
 		vars := ManageAssuranceVisitVars{AppVars: appVars}
@@ -43,7 +42,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 
 		group.Go(func() error {
-			visit, err := client.GetAssuranceVisitById(ctx, deputyId, visitId)
+			visit, err := client.GetAssuranceVisitById(ctx, appVars.DeputyId(), visitId)
 			if err != nil {
 				return err
 			}
@@ -129,7 +128,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 				Note:                strings.TrimSpace(r.PostFormValue("note")),
 			}
 
-			err := client.UpdateAssuranceVisit(ctx, manageAssuranceVisitForm, deputyId, visitId)
+			err := client.UpdateAssuranceVisit(ctx, manageAssuranceVisitForm, appVars.DeputyId(), visitId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -143,7 +142,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 				success = "managePDR"
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=%s", deputyId, success))
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=%s", appVars.DeputyId(), success))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

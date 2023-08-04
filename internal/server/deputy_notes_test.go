@@ -35,6 +35,12 @@ func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note 
 	return m.AddNoteErr
 }
 
+var deputyNotesAppVars = AppVars{
+	DeputyDetails: sirius.DeputyDetails{
+		ID: 123,
+	},
+}
+
 func TestGetNotes(t *testing.T) {
 	assert := assert.New(t)
 
@@ -45,7 +51,7 @@ func TestGetNotes(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path?success=true", nil)
 
 	handler := renderTemplateForDeputyHubNotes(client, template)
-	err := handler(AppVars{}, w, r)
+	err := handler(deputyNotesAppVars, w, r)
 
 	assert.Nil(err)
 
@@ -59,6 +65,7 @@ func TestGetNotes(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(deputyHubNotesVars{
 		SuccessMessage: "Note added",
+		AppVars:        deputyNotesAppVars,
 	}, template.lastVars)
 }
 
@@ -73,7 +80,7 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, nil)(AppVars{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(deputyNotesAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -108,7 +115,8 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			DeputyDetails: deputyNotesAppVars.DeputyDetails,
+			Errors:        validationErrors,
 		},
 	}, template.lastVars)
 
@@ -143,7 +151,8 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			DeputyDetails: deputyNotesAppVars.DeputyDetails,
+			Errors:        validationErrors,
 		},
 	}, template.lastVars)
 

@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type EditDeputyHubInformation interface {
@@ -19,8 +17,6 @@ type editDeputyHubVars struct {
 func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := editDeputyHubVars{
 			AppVars: appVars,
@@ -32,7 +28,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 
 		case http.MethodPost:
 			editDeputyDetailForm := sirius.DeputyDetails{
-				ID:                               deputyId,
+				ID:                               appVars.DeputyId(),
 				OrganisationName:                 r.PostFormValue("deputy-name"),
 				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
 				Email:                            r.PostFormValue("email"),
@@ -55,7 +51,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=teamDetails", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=teamDetails", appVars.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
