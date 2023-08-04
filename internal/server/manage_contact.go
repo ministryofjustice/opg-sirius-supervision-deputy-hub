@@ -8,17 +8,20 @@ import (
 	"strconv"
 )
 
-type ContactInformation interface {
-	AddContact(sirius.Context, int, sirius.Contact) error
+type ManageContact interface {
+	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
+	AddContact(sirius.Context, int, sirius.ContactForm) error
+	UpdateContact(sirius.Context, int, int, sirius.ContactForm) error
 }
 
-type addContactVars struct {
+type ManageContactVars struct {
 	Path             string
 	XSRFToken        string
 	DeputyDetails    sirius.DeputyDetails
 	Error            string
 	Errors           sirius.ValidationErrors
-	DeputyId         int
+	ErrorNote        string
+	ContactId        int
 	ContactName      string
 	JobTitle         string
 	Email            string
@@ -27,27 +30,50 @@ type addContactVars struct {
 	ContactNotes     string
 	IsNamedDeputy    string
 	IsMainContact    string
+	IsNewContact     bool
 }
 
-func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
+func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
 	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
+		contactId, _ := strconv.Atoi(routeVars["contactId"])
+
+		vars := ManageContactVars{
+			Path:          r.URL.Path,
+			XSRFToken:     ctx.XSRFToken,
+			DeputyDetails: deputyDetails,
+			IsNewContact:  contactId == 0,
+		}
 
 		switch r.Method {
 		case http.MethodGet:
-			vars := addContactVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyId:      deputyId,
-				DeputyDetails: deputyDetails,
+			if contactId != 0 {
+				contact, err := client.GetContactById(ctx, deputyId, contactId)
+
+				if err != nil {
+					return err
+				}
+
+				vars.ContactId = contactId
+				vars.ContactName = contact.ContactName
+				vars.JobTitle = contact.JobTitle
+				vars.Email = contact.Email
+				vars.PhoneNumber = contact.PhoneNumber
+				vars.OtherPhoneNumber = contact.OtherPhoneNumber
+				vars.ContactNotes = contact.ContactNotes
+				vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
+				vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
+
 		case http.MethodPost:
-			addContactForm := sirius.Contact{
+			var successVar string
+			var err error
+
+			manageContactForm := sirius.ContactForm{
 				ContactName:      r.PostFormValue("contact-name"),
 				JobTitle:         r.PostFormValue("job-title"),
 				Email:            r.PostFormValue("email"),
@@ -58,10 +84,16 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			err := client.AddContact(ctx, deputyId, addContactForm)
+			if contactId == 0 {
+				err = client.AddContact(ctx, deputyId, manageContactForm)
+				successVar = "newContact"
+			} else {
+				err = client.UpdateContact(ctx, deputyId, contactId, manageContactForm)
+				successVar = "updatedContact&contactName=" + r.PostFormValue("contact-name")
+			}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := addContactVars{
+				vars := ManageContactVars{
 					Path:             r.URL.Path,
 					XSRFToken:        ctx.XSRFToken,
 					Errors:           verr.Errors,
@@ -74,6 +106,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 					ContactNotes:     r.PostFormValue("contact-notes"),
 					IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
 					IsMainContact:    r.PostFormValue("is-main-contact"),
+					IsNewContact:     contactId == 0,
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -83,10 +116,17 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", deputyId))
+			return Redirect(fmt.Sprintf("/%d/contacts?success=%s", deputyId, successVar))
+		//case http.MethodDelete:
+		//	err := client.DeleteContact(ctx, deputyId, contactId)
+		//
+		//	if err != nil {
+		//		return err
+		//	}
+		//
+		//	return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
-
 	}
 }

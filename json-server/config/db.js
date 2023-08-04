@@ -1828,7 +1828,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "addContactEmpty",
+                "id": "manageContactEmpty",
                 "validation_errors": {
                     "contactName": {
                         "isEmpty": ""
@@ -1848,7 +1848,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "addContactInvalid",
+                "id": "manageContactInvalid",
                 "validation_errors": {
                     "contactName": {
                         "stringLengthTooLong": ""
@@ -1992,11 +1992,21 @@ module.exports = function () {
             },
 
             {
-                "id": "addContact",
+                "id": "updateContact",
                 "name": "Test Contact",
+                "jobTitle": "",
                 "email": "test@email.com",
-                "phoneNumber": "0123456789",
+                "phoneNumber": "01234567",
+                "otherPhoneNumber": "",
+                "notes": "",
+                "isMainContact": false,
+                "isNamedDeputy": false
             },
+
+            {
+                "id": "deleteContact"
+            },
+
             {
                 "id": "firm",
                 "firmId": 2
