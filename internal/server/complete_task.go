@@ -12,8 +12,7 @@ import (
 type CompleteTask interface {
 	GetTask(sirius.Context, int) (model.Task, error)
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	CompleteTask(sirius.Context, int, int, string) error
+	CompleteTask(sirius.Context, int, string) error
 }
 
 type completeTaskVars struct {
@@ -63,16 +62,7 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 				notes = r.PostFormValue("notes")
 			)
 
-			fmt.Println("notes")
-			fmt.Println(notes)
-
-			userDetails, err := client.GetUserDetails(ctx)
-			if err != nil {
-				return err
-			}
-			fmt.Println("after user details")
-			err = client.CompleteTask(ctx, userDetails.ID, taskDetails.Id, notes)
-			fmt.Println("after complete details")
+			err = client.CompleteTask(ctx, taskDetails.Id, notes)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars := completeTaskVars{

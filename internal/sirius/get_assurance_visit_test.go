@@ -2,6 +2,7 @@ package sirius
 
 import (
 	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -67,7 +68,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 		Id:                  3,
 		AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
 		RequestedDate:       "2022-06-25",
-		RequestedBy:         User{ID: 53, Name: "case manager"},
+		RequestedBy:         model.User{ID: 53, Name: "case manager"},
 		CommissionedDate:    "2022-01-01",
 		ReportDueDate:       "2022-01-07",
 		ReportReceivedDate:  "2022-01-07",
@@ -77,7 +78,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
 		Note:                "This is just to see the notes and it is below 1000 characters",
 		VisitorAllocated:    "Jane Janeson",
-		ReviewedBy:          User{ID: 53, Name: "case manager"},
+		ReviewedBy:          model.User{ID: 53, Name: "case manager"},
 	}
 
 	assuranceVisit, err := client.GetAssuranceVisitById(getContext(nil), 76, 3)

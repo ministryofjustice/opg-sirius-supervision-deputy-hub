@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
@@ -66,7 +67,7 @@ func TestGetManageAssurance(t *testing.T) {
 	visitRagRatingTypes := []sirius.VisitRagRatingTypes{{Handle: "x", Label: "y"}}
 	visitOutcomeTypes := []sirius.VisitOutcomeTypes{{Handle: "x", Label: "w"}}
 	pdrOutcomeTypes := []sirius.PdrOutcomeTypes{{Handle: "x", Label: "z"}}
-	visit := sirius.AssuranceVisit{Id: 1, RequestedDate: "2022-01-02", RequestedBy: sirius.User{ID: 2}}
+	visit := sirius.AssuranceVisit{Id: 1, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceVisitInformation{}
 	client.On("GetAssuranceVisitById", mock.Anything, 0, 0).Return(visit, nil)
@@ -140,7 +141,7 @@ func TestGetManagePDR(t *testing.T) {
 	visitRagRatingTypes := []sirius.VisitRagRatingTypes{{Handle: "x", Label: "y"}}
 	visitOutcomeTypes := []sirius.VisitOutcomeTypes{{Handle: "x", Label: "w"}}
 	pdrOutcomeTypes := []sirius.PdrOutcomeTypes{{Handle: "x", Label: "z"}}
-	visit := sirius.AssuranceVisit{Id: 1, AssuranceType: sirius.AssuranceTypes{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: sirius.User{ID: 2}}
+	visit := sirius.AssuranceVisit{Id: 1, AssuranceType: sirius.AssuranceTypes{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceVisitInformation{}
 	client.On("GetAssuranceVisitById", mock.Anything, 0, 0).Return(visit, nil)

@@ -7,16 +7,14 @@ import (
 	"net/http"
 )
 
-type completeTask struct {
-	Notes         string `json:"taskCompletedNotes"`
-	CompletedById int    `json:"completedBy"`
+type taskCompletedNotes struct {
+	Notes string `json:"taskCompletedNotes"`
 }
 
-func (c *Client) CompleteTask(ctx Context, userId, taskId int, notes string) error {
+func (c *Client) CompleteTask(ctx Context, taskId int, notes string) error {
 	var body bytes.Buffer
-	err := json.NewEncoder(&body).Encode(completeTask{
-		Notes:         notes,
-		CompletedById: userId,
+	err := json.NewEncoder(&body).Encode(taskCompletedNotes{
+		Notes: notes,
 	})
 
 	if err != nil {
