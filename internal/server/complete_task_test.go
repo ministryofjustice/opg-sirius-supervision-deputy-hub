@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -166,71 +167,37 @@ func TestCompleteTaskValidationErrors(t *testing.T) {
 	assert.Nil(returnedError)
 }
 
-func TestCompleteTaskHandlesNonValidationErrorsCompleteTaskFile(t *testing.T) {
+func TestCompleteTaskHandlesErrorsInOtherClientFiles2(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockCompleteTaskClient
+	}{
+		{
+			Client: &mockCompleteTaskClient{
+				GetTaskTypesForDeputyTypeErr: returnedError,
+			},
+		},
+		{
+			Client: &mockCompleteTaskClient{
+				GetTaskErr: returnedError,
+			},
+		},
+		{
+			Client: &mockCompleteTaskClient{
+				CompleteTaskErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k), func(t *testing.T) {
 
-	client := &mockCompleteTaskClient{}
-	client.CompleteTaskErr = sirius.StatusError{Code: 500}
+			client := tc.Client
+			template := &mockTemplates{}
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
+			completeTaskReturnedError := renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, completeTaskReturnedError)
 
-	template := &mockTemplates{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(t, returnedError, client.CompleteTaskErr)
-}
-
-func TestCompleteTaskHandlesErrorsInGetTaskTypesFile(t *testing.T) {
-
-	client := &mockCompleteTaskClient{}
-	client.GetTaskTypesForDeputyTypeErr = sirius.StatusError{Code: 500}
-
-	template := &mockTemplates{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(t, returnedError, client.GetTaskTypesForDeputyTypeErr)
-}
-
-func TestCompleteTaskHandlesErrorsGetTaskFile(t *testing.T) {
-
-	client := &mockCompleteTaskClient{}
-	client.GetTaskErr = sirius.StatusError{Code: 500}
-
-	template := &mockTemplates{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(t, returnedError, client.GetTaskErr)
+		})
+	}
 }
