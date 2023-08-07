@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
@@ -16,28 +15,23 @@ type DeputyHubClientInformation interface {
 }
 
 type ListClientsVars struct {
-	Path                 string
-	XSRFToken            string
 	AriaSorting          sirius.AriaSorting
 	DeputyClientsDetails sirius.DeputyClientDetails
 	ClientList           sirius.ClientList
 	PageDetails          sirius.PageDetails
-	DeputyDetails        sirius.DeputyDetails
-	Error                string
 	ActiveClientCount    int
+	AppVars
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
 		urlParams := r.URL.Query()
 
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 		search, _ := strconv.Atoi(r.FormValue("page"))
 		displayClientLimit, _ := strconv.Atoi(r.FormValue("limit"))
 		if displayClientLimit == 0 {
@@ -46,7 +40,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		clientList, ariaSorting, err := client.GetDeputyClients(ctx, deputyId, displayClientLimit, search, deputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		clientList, ariaSorting, err := client.GetDeputyClients(ctx, appVars.DeputyId(), displayClientLimit, search, appVars.DeputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
@@ -54,14 +48,12 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
 
 		vars := ListClientsVars{
-			Path:                 r.URL.Path,
-			XSRFToken:            ctx.XSRFToken,
 			DeputyClientsDetails: clientList.Clients,
 			ClientList:           clientList,
 			PageDetails:          pageDetails,
-			DeputyDetails:        deputyDetails,
 			AriaSorting:          ariaSorting,
 			ActiveClientCount:    clientList.Metadata.TotalActiveClients,
+			AppVars:              appVars,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

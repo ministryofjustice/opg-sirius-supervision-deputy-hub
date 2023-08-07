@@ -16,7 +16,6 @@ type mockDeputyHubInformation struct {
 	err              error
 	deputyClientData sirius.ClientList
 	ariaSorting      sirius.AriaSorting
-	userDetails      sirius.UserDetails
 }
 
 func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
@@ -24,13 +23,6 @@ func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId
 	m.lastCtx = ctx
 
 	return m.deputyClientData, m.ariaSorting, m.err
-}
-
-func (m *mockDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.err
 }
 
 func TestNavigateToDeputyHub(t *testing.T) {
@@ -43,7 +35,7 @@ func TestNavigateToDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeputyHub(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
