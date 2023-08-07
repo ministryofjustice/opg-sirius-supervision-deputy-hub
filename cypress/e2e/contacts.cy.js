@@ -38,22 +38,24 @@ describe("Contacts", () => {
         it("shows error message when submitting empty data", () => {
             cy.setCookie("fail-route", "manageContactEmpty");
             cy.get("#contact-form").submit();
-            cy.get(".govuk-error-summary__body").should("contain", "Enter a name");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter a telephone number");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter an email address");
-            cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is a main contact");
-            cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is the named deputy");
+            cy.get(".govuk-error-summary__body")
+                .should("contain", "Enter a name")
+                .should("contain", "Enter a telephone number")
+                .should("contain", "Enter an email address")
+                .should("contain", "Select whether this contact is a main contact")
+                .should("contain", "Select whether this contact is the named deputy");
         });
 
         it("shows error message when submitting invalid data", () => {
             cy.setCookie("fail-route", "manageContactInvalid");
             cy.get("#contact-form").submit();
-            cy.get(".govuk-error-summary__body").should("contain", "The name must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The job title must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter an email address in the correct format, like name@example.com");
-            cy.get(".govuk-error-summary__body").should("contain", "The telephone number must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The other telephone number must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The note must be 255 characters or fewer");
+            cy.get(".govuk-error-summary__body")
+                .should("contain", "The name must be 255 characters or fewer")
+                .should("contain", "The job title must be 255 characters or fewer")
+                .should("contain", "Enter an email address in the correct format, like name@example.com")
+                .should("contain", "The telephone number must be 255 characters or fewer")
+                .should("contain", "The other telephone number must be 255 characters or fewer")
+                .should("contain", "The note must be 255 characters or fewer");
         });
     });
 
@@ -88,22 +90,24 @@ describe("Contacts", () => {
         it("shows error message when submitting empty data", () => {
             cy.setCookie("fail-route", "manageContactEmpty");
             cy.get("#contact-form").submit();
-            cy.get(".govuk-error-summary__body").should("contain", "Enter a name");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter a telephone number");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter an email address");
-            cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is a main contact");
-            cy.get(".govuk-error-summary__body").should("contain", "Select whether this contact is the named deputy");
+            cy.get(".govuk-error-summary__body")
+                .should("contain", "Enter a name")
+                .should("contain", "Enter a telephone number")
+                .should("contain", "Enter an email address")
+                .should("contain", "Select whether this contact is a main contact")
+                .should("contain", "Select whether this contact is the named deputy");
         });
 
         it("shows error message when submitting invalid data", () => {
             cy.setCookie("fail-route", "manageContactInvalid");
             cy.get("#contact-form").submit();
-            cy.get(".govuk-error-summary__body").should("contain", "The name must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The job title must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "Enter an email address in the correct format, like name@example.com");
-            cy.get(".govuk-error-summary__body").should("contain", "The telephone number must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The other telephone number must be 255 characters or fewer");
-            cy.get(".govuk-error-summary__body").should("contain", "The note must be 255 characters or fewer");
+            cy.get(".govuk-error-summary__body")
+                .should("contain", "The name must be 255 characters or fewer")
+                .should("contain", "The job title must be 255 characters or fewer")
+                .should("contain", "Enter an email address in the correct format, like name@example.com")
+                .should("contain", "The telephone number must be 255 characters or fewer")
+                .should("contain", "The other telephone number must be 255 characters or fewer")
+                .should("contain", "The note must be 255 characters or fewer");
         });
     });
 
