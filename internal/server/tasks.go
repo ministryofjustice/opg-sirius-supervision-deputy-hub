@@ -5,7 +5,6 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strings"
 )
 
 type TasksClient interface {
@@ -41,14 +40,18 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 			return err
 		}
 
-		successMessage := ""
+		taskType := r.URL.Query().Get("taskType")
 
-		if taskName := r.URL.Query().Get("success"); taskName != "" {
-			if strings.Contains(taskName, "manage") {
-				successMessage = fmt.Sprintf("%s task updated", strings.ReplaceAll(taskName, "manage", ""))
-			} else {
-				successMessage = fmt.Sprintf("%s task added", taskName)
-			}
+		var successMessage string
+		switch r.URL.Query().Get("success") {
+		case "add":
+			successMessage = fmt.Sprintf("%s task added", taskType)
+		case "manage":
+			successMessage = fmt.Sprintf("%s task updated", taskType)
+		case "complete":
+			successMessage = fmt.Sprintf("%s task completed", taskType)
+		default:
+			successMessage = ""
 		}
 
 		taskList, err := client.GetTasks(ctx, deputyId)
