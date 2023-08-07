@@ -167,7 +167,7 @@ func TestCompleteTaskValidationErrors(t *testing.T) {
 	assert.Nil(returnedError)
 }
 
-func TestCompleteTaskHandlesErrorsInOtherClientFiles2(t *testing.T) {
+func TestCompleteTaskHandlesErrorsInOtherClientFiles(t *testing.T) {
 	returnedError := sirius.StatusError{Code: 500}
 	tests := []struct {
 		Client *mockCompleteTaskClient
