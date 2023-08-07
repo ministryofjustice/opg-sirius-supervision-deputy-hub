@@ -3,6 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
@@ -10,7 +11,7 @@ type AssuranceVisit struct {
 	Id                  int                 `json:"id"`
 	AssuranceType       AssuranceTypes      `json:"assuranceType"`
 	RequestedDate       string              `json:"requestedDate"`
-	RequestedBy         User                `json:"requestedBy"`
+	RequestedBy         model.User          `json:"requestedBy"`
 	CommissionedDate    string              `json:"commissionedDate"`
 	ReportDueDate       string              `json:"reportDueDate"`
 	ReportReceivedDate  string              `json:"reportReceivedDate"`
@@ -20,7 +21,7 @@ type AssuranceVisit struct {
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	Note                string              `json:"note"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
-	ReviewedBy          User                `json:"reviewedBy"`
+	ReviewedBy          model.User          `json:"reviewedBy"`
 }
 
 func (c *Client) GetAssuranceVisitById(ctx Context, deputyId int, visitId int) (AssuranceVisit, error) {
