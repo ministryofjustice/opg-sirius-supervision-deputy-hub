@@ -31,7 +31,7 @@ func (e StatusError) Code() int {
 
 type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
 
-type errorVars struct {
+type ErrorVars struct {
 	Code  int
 	Error string
 	AppVars
@@ -47,18 +47,20 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vars, err := NewAppVars(client, r, envVars)
 
+			var errVars ErrorVars
+
 			if err == nil {
 				err = next(*vars, w, r)
 			}
 
 			if err != nil {
 				if err == sirius.ErrUnauthorized {
-					http.Redirect(w, r, vars.SiriusURL+"/auth", http.StatusFound)
+					http.Redirect(w, r, envVars.SiriusURL+"/auth", http.StatusFound)
 					return
 				}
 
 				if redirect, ok := err.(Redirect); ok {
-					http.Redirect(w, r, vars.Prefix+redirect.To(), http.StatusFound)
+					http.Redirect(w, r, envVars.Prefix+redirect.To(), http.StatusFound)
 					return
 				}
 
@@ -72,11 +74,9 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 				}
 
 				w.WriteHeader(code)
-				err = tmplError.ExecuteTemplate(w, "page", errorVars{
-					Code:    code,
-					Error:   err.Error(),
-					AppVars: *vars,
-				})
+				errVars.Code = code
+				errVars.Error = err.Error()
+				err = tmplError.ExecuteTemplate(w, "page", errVars)
 
 				if err != nil {
 					logger.Request(r, err)

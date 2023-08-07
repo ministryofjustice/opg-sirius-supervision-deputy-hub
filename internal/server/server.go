@@ -134,7 +134,7 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 
 func notFoundHandler(tmplError Template, siriusURL string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		_ = tmplError.ExecuteTemplate(w, "page", errorVars{
+		_ = tmplError.ExecuteTemplate(w, "page", ErrorVars{
 			Code:  http.StatusNotFound,
 			Error: "Not Found",
 			AppVars: AppVars{
