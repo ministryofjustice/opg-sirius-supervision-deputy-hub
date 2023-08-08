@@ -34,6 +34,8 @@
                             {{ printf "%v task created" .Name }}
                         {{ else if eq .NoteType "TASK_UPDATED"}}
                             {{ printf "%v task updated" .Name }}
+                        {{ else if eq .NoteType "TASK_COMPLETED"}}
+                            {{ printf "%v task completed" .Name }}
                         {{ else }}
                             {{ .Name }}
                         {{ end }}

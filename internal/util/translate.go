@@ -143,7 +143,10 @@ var validationMappings = map[string]map[string]pair{
 		"error":   pair{"dueDate", "Enter a valid value for due date"},
 	},
 	"notes": {
-		"stringLengthTooLong": pair{"notes", "The note must be must be 1000 characters or fewer"},
+		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
+	},
+	"taskCompletedNotes": {
+		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
 	},
 	// other
 	"otherImportantInformation": {
