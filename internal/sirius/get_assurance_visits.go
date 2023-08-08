@@ -3,13 +3,14 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
 type AssuranceVisits struct {
 	AssuranceType       AssuranceTypes      `json:"assuranceType"`
 	RequestedDate       string              `json:"requestedDate"`
-	RequestedBy         User                `json:"requestedBy"`
+	RequestedBy         model.User          `json:"requestedBy"`
 	VisitId             int                 `json:"id"`
 	CommissionedDate    string              `json:"commissionedDate"`
 	ReportDueDate       string              `json:"reportDueDate"`
@@ -20,7 +21,7 @@ type AssuranceVisits struct {
 	ReportReviewDate    string              `json:"reportReviewDate"`
 	VisitReportMarkedAs VisitRagRatingTypes `json:"assuranceVisitReportMarkedAs"`
 	VisitorAllocated    string              `json:"visitorAllocated"`
-	ReviewedBy          User                `json:"reviewedBy"`
+	ReviewedBy          model.User          `json:"reviewedBy"`
 	DeputyId            int
 }
 

@@ -100,7 +100,7 @@ func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Tem
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, deputyDetails.ID))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=add&taskType=%s", deputyDetails.ID, taskName))
 		}
 	}
 }

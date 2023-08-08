@@ -1,0 +1,22 @@
+{{ define "task-completed" }}
+    <div class="moj-timeline__item" data-cy="task-updated-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">
+                {{ .Event.TaskType }} task completed
+            </h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+                {{ if .Event.TaskCompletedNotes }}
+                    <li>Notes: {{ .Event.TaskCompletedNotes }}</li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}
