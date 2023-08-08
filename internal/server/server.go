@@ -33,6 +33,7 @@ type Client interface {
 	AddTasksClient
 	TasksClient
 	ManageTasks
+	CompleteTask
 }
 
 type Template interface {
@@ -91,6 +92,10 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("/tasks/{taskId}",
 		wrap(
 			renderTemplateForManageTasks(client, defaultPATeam, templates["manage-task.gotmpl"])))
+
+	pageRouter.Handle("/tasks/complete/{taskId}",
+		wrap(
+			renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
 
 	pageRouter.Handle("/manage-team-details",
 		wrap(
