@@ -212,7 +212,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 				OrderType:   "pfa",
 				SiriusId:    "7000-0000-1995",
 				OrderNumber: "03305972",
-				Client:      []model.ClientPerson{{Name: "Test Name", ID: "63", Uid: "7000-0000-1961", CourtRef: "40124126"}},
+				Client:      []model.Client{{Name: "Test Name", ID: "63", Uid: "7000-0000-1961", CourtRef: "40124126"}},
 			},
 		},
 		model.DeputyEvent{
@@ -357,7 +357,7 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "null",
 					},
 				},
-				Client: []model.ClientPerson{},
+				Client: []model.Client{},
 			},
 		},
 		model.DeputyEvent{
@@ -398,7 +398,7 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "PA Team 1 - (Supervision)",
 					},
 				},
-				Client: []model.ClientPerson{},
+				Client: []model.Client{},
 			},
 		},
 		model.DeputyEvent{
@@ -418,7 +418,7 @@ func TestEditDeputyEvents(t *testing.T) {
 				DeputyName:       "null",
 				OrganisationName: "null",
 				Changes:          []model.Changes{},
-				Client: []model.ClientPerson{
+				Client: []model.Client{
 					{
 						Name:     "Duke John Fearless",
 						ID:       "72",
@@ -445,7 +445,7 @@ func TestEditDeputyEvents(t *testing.T) {
 				DeputyName:       "null",
 				OrganisationName: "null",
 				Changes:          []model.Changes{},
-				Client:           []model.ClientPerson{},
+				Client:           []model.Client{},
 			},
 		},
 	}
@@ -488,7 +488,7 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "PA Team 1 - (Supervision)",
 					},
 				},
-				Client: []model.ClientPerson{},
+				Client: []model.Client{},
 			},
 		},
 		model.DeputyEvent{
@@ -519,7 +519,7 @@ func TestEditDeputyEvents(t *testing.T) {
 						NewValue:  "null",
 					},
 				},
-				Client: []model.ClientPerson{},
+				Client: []model.Client{},
 			},
 		},
 		model.DeputyEvent{
@@ -539,7 +539,7 @@ func TestEditDeputyEvents(t *testing.T) {
 				DeputyName:       "null",
 				OrganisationName: "null",
 				Changes:          []model.Changes{},
-				Client:           []model.ClientPerson{},
+				Client:           []model.Client{},
 			},
 		},
 		model.DeputyEvent{
@@ -559,7 +559,7 @@ func TestEditDeputyEvents(t *testing.T) {
 				DeputyName:       "null",
 				OrganisationName: "null",
 				Changes:          []model.Changes{},
-				Client: []model.ClientPerson{
+				Client: []model.Client{
 					{
 						Name:     "Duke John Fearless",
 						ID:       "72",

@@ -65,14 +65,9 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 			err = client.CompleteTask(ctx, taskDetails.Id, notes)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := completeTaskVars{
-					Path:           r.URL.Path,
-					XSRFToken:      ctx.XSRFToken,
-					DeputyDetails:  deputyDetails,
-					TaskDetails:    taskDetails,
-					Errors:         verr.Errors,
-					CompletedNotes: notes,
-				}
+
+				vars.Errors = verr.Errors
+				vars.CompletedNotes = notes
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
