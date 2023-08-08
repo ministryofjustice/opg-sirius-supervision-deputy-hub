@@ -2,10 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type ContactInformation interface {
@@ -13,12 +11,6 @@ type ContactInformation interface {
 }
 
 type addContactVars struct {
-	Path             string
-	XSRFToken        string
-	DeputyDetails    sirius.DeputyDetails
-	Error            string
-	Errors           sirius.ValidationErrors
-	DeputyId         int
 	ContactName      string
 	JobTitle         string
 	Email            string
@@ -27,24 +19,19 @@ type addContactVars struct {
 	ContactNotes     string
 	IsNamedDeputy    string
 	IsMainContact    string
+	AppVars
 }
 
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
+
+		vars := addContactVars{
+			AppVars: app,
+		}
 
 		switch r.Method {
 		case http.MethodGet:
-			vars := addContactVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyId:      deputyId,
-				DeputyDetails: deputyDetails,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		case http.MethodPost:
 			addContactForm := sirius.Contact{
@@ -58,23 +45,18 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			err := client.AddContact(ctx, deputyId, addContactForm)
+			err := client.AddContact(ctx, app.DeputyId(), addContactForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := addContactVars{
-					Path:             r.URL.Path,
-					XSRFToken:        ctx.XSRFToken,
-					Errors:           verr.Errors,
-					DeputyDetails:    deputyDetails,
-					ContactName:      r.PostFormValue("contact-name"),
-					JobTitle:         r.PostFormValue("job-title"),
-					Email:            r.PostFormValue("email"),
-					PhoneNumber:      r.PostFormValue("phone-number"),
-					OtherPhoneNumber: r.PostFormValue("other-phone-number"),
-					ContactNotes:     r.PostFormValue("contact-notes"),
-					IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
-					IsMainContact:    r.PostFormValue("is-main-contact"),
-				}
+				vars.Errors = verr.Errors
+				vars.ContactName = addContactForm.ContactName
+				vars.JobTitle = addContactForm.JobTitle
+				vars.Email = addContactForm.Email
+				vars.PhoneNumber = addContactForm.PhoneNumber
+				vars.OtherPhoneNumber = addContactForm.OtherPhoneNumber
+				vars.ContactNotes = addContactForm.ContactNotes
+				vars.IsNamedDeputy = addContactForm.IsNamedDeputy
+				vars.IsMainContact = addContactForm.IsMainContact
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -83,7 +65,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", deputyId))
+			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

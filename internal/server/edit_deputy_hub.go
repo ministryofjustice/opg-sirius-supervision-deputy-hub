@@ -2,11 +2,8 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
 type EditDeputyHubInformation interface {
@@ -14,34 +11,24 @@ type EditDeputyHubInformation interface {
 }
 
 type editDeputyHubVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
+	AppVars
 }
 
 func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
+
+		vars := editDeputyHubVars{
+			AppVars: app,
+		}
 
 		switch r.Method {
 		case http.MethodGet:
-
-			vars := editDeputyHubVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
 			editDeputyDetailForm := sirius.DeputyDetails{
-				ID:                               deputyId,
+				ID:                               app.DeputyId(),
 				OrganisationName:                 r.PostFormValue("deputy-name"),
 				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
 				Email:                            r.PostFormValue("email"),
@@ -57,16 +44,11 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := editDeputyHubVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					DeputyDetails: deputyDetails,
-					Errors:        verr.Errors,
-				}
+				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=teamDetails", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=teamDetails", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

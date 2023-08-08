@@ -14,29 +14,23 @@ type TasksClient interface {
 }
 
 type TasksVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
 	TaskTypes      []model.TaskType
 	TaskList       sirius.TaskList
 	TaskType       string
 	DueDate        string
 	Notes          string
-	Error          string
-	Errors         sirius.ValidationErrors
 	SuccessMessage string
+	AppVars
 }
 
 func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
 
-		deputyId := deputyDetails.ID
-
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -51,16 +45,14 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 			}
 		}
 
-		taskList, err := client.GetTasks(ctx, deputyId)
+		taskList, err := client.GetTasks(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
 
 		vars := TasksVars{
-			Path:           r.URL.Path,
-			XSRFToken:      ctx.XSRFToken,
+			AppVars:        app,
 			TaskTypes:      taskTypes,
-			DeputyDetails:  deputyDetails,
 			TaskList:       taskList,
 			SuccessMessage: successMessage,
 		}

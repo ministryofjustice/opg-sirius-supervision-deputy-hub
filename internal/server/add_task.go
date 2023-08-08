@@ -15,42 +15,37 @@ type AddTasksClient interface {
 }
 
 type AddTaskVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	TaskTypes     []model.TaskType
-	Assignees     []model.TeamMember
-	TaskType      string
-	DueDate       string
-	Notes         string
-	Error         string
-	Errors        sirius.ValidationErrors
-	IsManageTasks bool
+	TaskTypes      []model.TaskType
+	Assignees      []model.TeamMember
+	TaskType       string
+	DueDate        string
+	Notes          string
+	SuccessMessage string
+	IsManageTasks  bool
+	AppVars
 }
 
-func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPATeam, deputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {
 			return err
 		}
 
 		vars := AddTaskVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			TaskTypes:     taskTypes,
-			DeputyDetails: deputyDetails,
-			Assignees:     assignees,
+			TaskTypes: taskTypes,
+			Assignees: assignees,
+			AppVars:   app,
 		}
 
 		if r.Method == http.MethodGet {
@@ -72,20 +67,15 @@ func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Tem
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
-			err := client.AddTask(ctx, deputyDetails.ID, taskType, typeName, dueDate, notes, assigneeId)
+			err := client.AddTask(ctx, app.DeputyId(), taskType, typeName, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars = AddTaskVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					TaskTypes:     taskTypes,
-					DeputyDetails: deputyDetails,
-					Assignees:     assignees,
-					TaskType:      taskType,
-					DueDate:       dueDate,
-					Notes:         notes,
-					Errors:        verr.Errors,
-				}
+				vars.TaskTypes = taskTypes
+				vars.Assignees = assignees
+				vars.TaskType = taskType
+				vars.DueDate = dueDate
+				vars.Notes = notes
+				vars.Errors = verr.Errors
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -100,7 +90,7 @@ func renderTemplateForAddTask(client AddTasksClient, defaultPATeam int, tmpl Tem
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, deputyDetails.ID))
+			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, app.DeputyId()))
 		}
 	}
 }

@@ -17,25 +17,20 @@ type ManageTasks interface {
 }
 
 type manageTaskVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
 	TaskDetails    model.Task
-	Error          string
-	Errors         sirius.ValidationErrors
 	Success        bool
 	SuccessMessage string
 	Assignees      []model.TeamMember
+	AppVars
 }
 
-func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -48,17 +43,15 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, defaultPaTeam, deputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {
 			return err
 		}
 
 		vars := manageTaskVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-			TaskDetails:   taskDetails,
-			Assignees:     assignees,
+			AppVars:     app,
+			TaskDetails: taskDetails,
+			Assignees:   assignees,
 		}
 
 		switch r.Method {
@@ -87,17 +80,10 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.UpdateTask(ctx, deputyDetails.ID, taskDetails.Id, dueDate, notes, assigneeId)
+			err := client.UpdateTask(ctx, app.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := manageTaskVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					DeputyDetails: deputyDetails,
-					Assignees:     assignees,
-					TaskDetails:   taskDetails,
-					Errors:        RenameErrors(verr.Errors, deputyDetails.DeputyType.Label),
-				}
+				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -106,7 +92,7 @@ func renderTemplateForManageTasks(client ManageTasks, defaultPaTeam int, tmpl Te
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=manage"+taskDetails.Type, deputyDetails.ID))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=manage"+taskDetails.Type, app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
