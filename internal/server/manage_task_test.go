@@ -111,7 +111,7 @@ func TestPostManageTask(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/tasks?success=manageTaskDescription"), redirect)
+	assert.Equal(Redirect("/123/tasks?success=manage&taskType=TaskDescription"), redirect)
 }
 
 func TestRenameErrors(t *testing.T) {

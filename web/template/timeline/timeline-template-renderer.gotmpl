@@ -41,4 +41,7 @@
     {{ if eq .EventType "TaskEdited" }}
         {{ template "task-updated" . }}
     {{ end }}
+    {{ if eq .EventType "TaskCompleted" }}
+        {{ template "task-completed" . }}
+    {{ end }}
 {{ end }}

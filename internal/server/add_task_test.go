@@ -148,7 +148,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	assert.Equal(res, Redirect("/123/tasks?success=A Big Critical Task"))
+	assert.Equal(res, Redirect("/123/tasks?success=add&taskType=A Big Critical Task"))
 	assert.Equal(1, client.selectedAssignee)
 }
 
@@ -184,7 +184,7 @@ func TestAddTask_success_other(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	assert.Equal(res, Redirect("/123/tasks?success=A Big Critical Task"))
+	assert.Equal(res, Redirect("/123/tasks?success=add&taskType=A Big Critical Task"))
 	assert.Equal(2, client.selectedAssignee)
 }
 

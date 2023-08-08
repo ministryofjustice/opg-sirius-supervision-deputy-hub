@@ -117,14 +117,6 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			}
 
 			return Redirect(fmt.Sprintf("/%d/contacts?success=%s", deputyId, successVar))
-		//case http.MethodDelete:
-		//	err := client.DeleteContact(ctx, deputyId, contactId)
-		//
-		//	if err != nil {
-		//		return err
-		//	}
-		//
-		//	return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact", deputyId))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

@@ -1967,6 +1967,14 @@ module.exports = function () {
                         "isEmpty": "Enter a name of someone who works on the Public Authority team",
                     },
                 }
+            },
+            {
+                "id": "completeTask",
+                "validation_errors": {
+                    "notes": {
+                        "stringLengthTooLong": "Notes must be 1000 characters or fewer",
+                    },
+                }
             }
         ],
         "successes": [
@@ -1978,7 +1986,9 @@ module.exports = function () {
                 "deleted": false,
                 "email": "jonsnow@opgtest.com"
             },
-
+            {
+                "id": "completeTask",
+            },
             {
                 "id": "addContact",
                 "name": "Test Contact",

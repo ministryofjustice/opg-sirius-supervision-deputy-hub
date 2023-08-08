@@ -23,6 +23,12 @@ describe("Tasks", () => {
 
            cy.contains(".govuk-link", "Cancel").click();
            cy.url().should("include", "/supervision/deputies/1/tasks");
+
+           cy.contains(".govuk-button", "Mark as complete").first().click();
+           cy.url().should("include", "/supervision/deputies/1/tasks/complete/190");
+
+           cy.contains(".govuk-link", "Cancel").click();
+           cy.url().should("include", "/supervision/deputies/1/tasks");
        });
     });
 
@@ -177,4 +183,36 @@ describe("Tasks", () => {
         });
     });
 
+    describe("Complete a task", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/1/tasks");
+            cy.contains(".govuk-button", "Mark as complete").first().click();
+        });
+        it("displays the task details for task about to be completed and allows notes to be added", () => {
+            cy.setCookie("success-route", "completeTask");
+            cy.get('.govuk-heading-l').should('contain.text',"Complete Task");
+            cy.get(':nth-child(1) > .govuk-table__cell').should('contain.text', "Assurance visit follow up");
+            cy.get(':nth-child(2) > .govuk-table__cell').should('contain.text', "Notes about the task");
+            cy.get(':nth-child(3) > .govuk-table__cell').should('contain.text', "29/01/2026");
+            cy.get(':nth-child(4) > .govuk-table__cell').should('contain.text', "Spongebob Squarepants");
+            cy.get('#notes').type('Notes for the event about to be completed');
+            cy.get('.govuk-button').contains('Complete task').click();
+            cy.get('.moj-banner--success').should('be.visible');
+            cy.get('.moj-banner--success').should('contain.text', 'Assurance visit follow up task completed');
+        });
+        it("shows validation message if notes over 1000 characters", () => {
+            cy.setCookie("fail-route", "completeTask");
+            cy.get('#notes').type('Notes for the event about to be completed');
+            cy.get('.govuk-button').contains('Complete task').click();
+            cy.get('.govuk-error-summary').should('be.visible');
+            cy.get(".govuk-error-summary__title").should(
+                "contain",
+                "There is a problem"
+            );
+            cy.get(".govuk-error-summary__body").should(
+                "contain",
+                "The note must be 1000 characters or fewer"
+            );
+        });
+    })
 });
