@@ -21,6 +21,7 @@ type ManageContactVars struct {
 	Error            string
 	Errors           sirius.ValidationErrors
 	ErrorNote        string
+	ContactId        int
 	ContactName      string
 	JobTitle         string
 	Email            string
@@ -55,6 +56,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 					return err
 				}
 
+				vars.ContactId = contactId
 				vars.ContactName = contact.ContactName
 				vars.JobTitle = contact.JobTitle
 				vars.Email = contact.Email

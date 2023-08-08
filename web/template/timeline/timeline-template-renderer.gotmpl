@@ -32,6 +32,9 @@
     {{ if eq .EventType "DeputyContactEdited" }}
         {{ template "contact-edited" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyContactDeleted" }}
+        {{ template "contact-deleted" . }}
+    {{ end }}
     {{ if eq .EventType "TaskCreated" }}
         {{ template "task-created" . }}
     {{ end }}
