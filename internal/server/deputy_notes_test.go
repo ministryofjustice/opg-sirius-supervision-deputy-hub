@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -13,33 +14,34 @@ import (
 )
 
 type mockDeputyHubNotesInformation struct {
-	count           int
-	lastCtx         sirius.Context
-	err             error
-	addNote         error
-	deputyNotesData sirius.DeputyNoteCollection
-	userDetailsData sirius.UserDetails
+	count             int
+	lastCtx           sirius.Context
+	GetDeputyNotesErr error
+	AddNoteErr        error
+	GetUserDetailsErr error
+	deputyNotesData   sirius.DeputyNoteCollection
+	userDetailsData   sirius.UserDetails
 }
 
 func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteCollection, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyNotesData, m.err
+	return m.deputyNotesData, m.GetDeputyNotesErr
 }
 
 func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note string, deputyId, usedId int, deputyType string) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.addNote
+	return m.AddNoteErr
 }
 
 func (m *mockDeputyHubNotesInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.userDetailsData, m.err
+	return m.userDetailsData, m.GetUserDetailsErr
 }
 
 func TestGetNotes(t *testing.T) {
@@ -101,7 +103,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 			"stringLengthTooLong": "This team type is already in use",
 		},
 	}
-	client.addNote = sirius.ValidationError{
+	client.AddNoteErr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -144,7 +146,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 			"isEmpty": "This team type is already in use",
 		},
 	}
-	client.addNote = sirius.ValidationError{
+	client.AddNoteErr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -173,4 +175,52 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
+}
+
+func TestDeputyNotesHandlesErrorsInOtherClientFilesForPostMethod(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockDeputyHubNotesInformation
+	}{
+		{
+			Client: &mockDeputyHubNotesInformation{
+				GetUserDetailsErr: returnedError,
+			},
+		},
+		{
+			Client: &mockDeputyHubNotesInformation{
+				AddNoteErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+			deputyHubReturnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, deputyHubReturnedError)
+		})
+	}
+}
+
+func TestDeputyHubHandlesErrorsForGetMethod(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubNotesInformation{
+		GetDeputyNotesErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+	returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.GetDeputyNotesErr, returnedError)
+
 }

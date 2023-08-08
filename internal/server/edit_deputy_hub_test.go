@@ -27,20 +27,6 @@ func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, dep
 	return m.err
 }
 
-func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyClientData, m.ariaSorting, m.err
-}
-
-func (m *mockEditDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.err
-}
-
 func TestNavigateToEditDeputyHub(t *testing.T) {
 	assert := assert.New(t)
 
@@ -50,7 +36,7 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHub(client, template)
+	handler := renderTemplateForEditDeputyHub(client, template)
 	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
@@ -98,4 +84,22 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
+}
+
+func TestEditDeputyHubHandlesErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockEditDeputyHubInformation{
+		err: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+	returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.err, returnedError)
 }

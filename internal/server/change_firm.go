@@ -79,7 +79,8 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 				}
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
-			} else if err != nil {
+			}
+			if err != nil {
 				return err
 			}
 			return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))

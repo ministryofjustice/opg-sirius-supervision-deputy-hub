@@ -12,24 +12,25 @@ import (
 )
 
 type mockAddAssuranceVisitInformation struct {
-	count       int
-	lastCtx     sirius.Context
-	err         error
-	userDetails sirius.UserDetails
+	count                int
+	lastCtx              sirius.Context
+	AddAssuranceVisitErr error
+	GetUserDetailsErr    error
+	userDetails          sirius.UserDetails
 }
 
 func (m *mockAddAssuranceVisitInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.userDetails, m.err
+	return m.userDetails, m.GetUserDetailsErr
 }
 
 func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.AddAssuranceVisitErr
 }
 
 func TestPostAssuranceVisit(t *testing.T) {
@@ -53,3 +54,34 @@ func TestPostAssuranceVisit(t *testing.T) {
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Nil(returnedError)
 }
+
+//func TestAddAssuranceVisitInformationHandlesErrorsInOtherClientFiles(t *testing.T) {
+//	returnedError := sirius.StatusError{Code: 500}
+//	tests := []struct {
+//		Client *mockAddAssuranceVisitInformation
+//	}{
+//		{
+//			Client: &mockAddAssuranceVisitInformation{
+//				GetUserDetailsErr: returnedError,
+//			},
+//		},
+//		{
+//			Client: &mockAddAssuranceVisitInformation{
+//				AddAssuranceVisitErr: returnedError,
+//			},
+//		},
+//	}
+//	for k, tc := range tests {
+//		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+//
+//			client := tc.Client
+//			template := &mockTemplates{}
+//
+//			w := httptest.NewRecorder()
+//			r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader("{requestedDate:'2200/10/20', requestedBy:22}"))
+//
+//			addAssuranceVisitReturnedError := renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+//			assert.Equal(t, returnedError, addAssuranceVisitReturnedError)
+//		})
+//	}
+//}

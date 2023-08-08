@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -11,26 +13,27 @@ import (
 )
 
 type mockDeputyHubInformation struct {
-	count            int
-	lastCtx          sirius.Context
-	err              error
-	deputyClientData sirius.ClientList
-	ariaSorting      sirius.AriaSorting
-	userDetails      sirius.UserDetails
+	count               int
+	lastCtx             sirius.Context
+	GetDeputyClientsErr error
+	GetUserDetailsErr   error
+	deputyClientData    sirius.ClientList
+	ariaSorting         sirius.AriaSorting
+	userDetails         sirius.UserDetails
 }
 
 func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyClientData, m.ariaSorting, m.err
+	return m.deputyClientData, m.ariaSorting, m.GetDeputyClientsErr
 }
 
 func (m *mockDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.userDetails, m.err
+	return m.userDetails, m.GetUserDetailsErr
 }
 
 func TestNavigateToDeputyHub(t *testing.T) {
@@ -97,4 +100,33 @@ func TestCreateSuccessAndSuccessMessageForVarsReturnsMessageAddFirmSuccess(t *te
 	u, _ := url.Parse("http::deputyhub/deputy/76/?success=newFirm")
 	SuccessMessage := getSuccessFromUrl(u, "Jon Snow", "defaultPATeam")
 	assert.Equal(t, SuccessMessage, "Firm added")
+}
+
+func TestDeputyHubHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockDeputyHubInformation
+	}{
+		{
+			Client: &mockDeputyHubInformation{
+				GetDeputyClientsErr: returnedError,
+			},
+		},
+		{
+			Client: &mockDeputyHubInformation{
+				GetUserDetailsErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
+			deputyHubReturnedError := renderTemplateForDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, deputyHubReturnedError)
+		})
+	}
 }

@@ -65,6 +65,9 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
+			if err != nil {
+				return err
+			}
 
 			return Redirect(fmt.Sprintf("/%d?success=teamDetails", deputyId))
 
