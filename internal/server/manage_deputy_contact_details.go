@@ -15,10 +15,10 @@ type manageDeputyContactDetailsVars struct {
 }
 
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
-		vars := manageDeputyContactDetailsVars{AppVars: appVars}
+		vars := manageDeputyContactDetailsVars{AppVars: app}
 
 		switch r.Method {
 		case http.MethodGet:
@@ -26,7 +26,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 
 		case http.MethodPost:
 			form := sirius.DeputyContactDetails{
-				DeputySubType:    appVars.DeputyDetails.DeputySubType.SubType,
+				DeputySubType:    app.DeputyDetails.DeputySubType.SubType,
 				DeputyFirstName:  r.PostFormValue("deputy-first-name"),
 				DeputySurname:    r.PostFormValue("deputy-last-name"),
 				OrganisationName: r.PostFormValue("organisation-name"),
@@ -40,7 +40,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				Email:            r.PostFormValue("email"),
 			}
 
-			err := client.UpdateDeputyContactDetails(ctx, appVars.DeputyId(), form)
+			err := client.UpdateDeputyContactDetails(ctx, app.DeputyId(), form)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -49,7 +49,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

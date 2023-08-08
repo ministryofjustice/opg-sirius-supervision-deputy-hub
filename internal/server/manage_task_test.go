@@ -47,7 +47,7 @@ func TestNavigateToManageTask(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	appVars := AppVars{DeputyDetails: deputyDetails}
+	app := AppVars{DeputyDetails: deputyDetails}
 	task := model.Task{Id: 555}
 	teamMembers := []model.TeamMember{{ID: 99}}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}
@@ -63,7 +63,7 @@ func TestNavigateToManageTask(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageTasks(client, template)
-	err := handler(appVars, w, r)
+	err := handler(app, w, r)
 
 	assert.Nil(err)
 
@@ -72,7 +72,7 @@ func TestNavigateToManageTask(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(manageTaskVars{
-		AppVars:     appVars,
+		AppVars:     app,
 		TaskDetails: task,
 		Assignees:   teamMembers,
 	}, template.lastVars)
@@ -82,7 +82,7 @@ func TestPostManageTask(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	appVars := AppVars{DeputyDetails: deputyDetails}
+	app := AppVars{DeputyDetails: deputyDetails}
 	task := model.Task{Id: 555, Type: "ABC", DueDate: "2023-11-01"}
 	teamMembers := []model.TeamMember{{ID: 99}}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "TaskDescription"}}
@@ -105,7 +105,7 @@ func TestPostManageTask(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageTasks(client, template)(appVars, w, r)
+		redirect = renderTemplateForManageTasks(client, template)(app, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

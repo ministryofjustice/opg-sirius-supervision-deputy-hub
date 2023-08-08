@@ -26,18 +26,18 @@ type AddTaskVars struct {
 }
 
 func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {
 			return err
 		}
@@ -45,7 +45,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 		vars := AddTaskVars{
 			TaskTypes: taskTypes,
 			Assignees: assignees,
-			AppVars:   appVars,
+			AppVars:   app,
 		}
 
 		if r.Method == http.MethodGet {
@@ -67,7 +67,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				assigneeId, _ = strconv.Atoi(ecm)
 			}
 
-			err := client.AddTask(ctx, appVars.DeputyId(), taskType, typeName, dueDate, notes, assigneeId)
+			err := client.AddTask(ctx, app.DeputyId(), taskType, typeName, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.TaskTypes = taskTypes
@@ -90,7 +90,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, app.DeputyId()))
 		}
 	}
 }

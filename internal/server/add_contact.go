@@ -23,11 +23,11 @@ type addContactVars struct {
 }
 
 func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		vars := addContactVars{
-			AppVars: appVars,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -45,7 +45,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				IsMainContact:    r.PostFormValue("is-main-contact"),
 			}
 
-			err := client.AddContact(ctx, appVars.DeputyId(), addContactForm)
+			err := client.AddContact(ctx, app.DeputyId(), addContactForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -65,7 +65,7 @@ func renderTemplateForAddContact(client ContactInformation, tmpl Template) Handl
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/contacts?success=newContact", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

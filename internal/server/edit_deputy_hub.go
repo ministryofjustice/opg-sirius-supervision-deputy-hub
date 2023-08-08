@@ -15,11 +15,11 @@ type editDeputyHubVars struct {
 }
 
 func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		vars := editDeputyHubVars{
-			AppVars: appVars,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -28,7 +28,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 
 		case http.MethodPost:
 			editDeputyDetailForm := sirius.DeputyDetails{
-				ID:                               appVars.DeputyId(),
+				ID:                               app.DeputyId(),
 				OrganisationName:                 r.PostFormValue("deputy-name"),
 				OrganisationTeamOrDepartmentName: r.PostFormValue("organisationTeamOrDepartmentName"),
 				Email:                            r.PostFormValue("email"),
@@ -48,7 +48,7 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=teamDetails", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d?success=teamDetails", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

@@ -34,7 +34,7 @@ type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
 type ErrorVars struct {
 	Code  int
 	Error string
-	AppVars
+	EnvironmentVars
 }
 
 type DeputyHubClient interface {
@@ -46,8 +46,6 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vars, err := NewAppVars(client, r, envVars)
-
-			var errVars ErrorVars
 
 			if err == nil {
 				err = next(*vars, w, r)
@@ -74,8 +72,11 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 				}
 
 				w.WriteHeader(code)
-				errVars.Code = code
-				errVars.Error = err.Error()
+				errVars := ErrorVars{
+					Code:            code,
+					Error:           err.Error(),
+					EnvironmentVars: envVars,
+				}
 				err = tmplError.ExecuteTemplate(w, "page", errVars)
 
 				if err != nil {

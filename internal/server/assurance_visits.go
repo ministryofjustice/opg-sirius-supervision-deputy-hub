@@ -18,7 +18,7 @@ type AssuranceVisitsVars struct {
 }
 
 func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		var successMessage string
@@ -33,7 +33,7 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			successMessage = ""
 		}
 
-		visits, err := client.GetAssuranceVisits(ctx, appVars.DeputyId())
+		visits, err := client.GetAssuranceVisits(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
@@ -41,7 +41,7 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 		vars := AssuranceVisitsVars{
 			SuccessMessage:  successMessage,
 			AssuranceVisits: visits,
-			AppVars:         appVars,
+			AppVars:         app,
 		}
 
 		vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(visits)

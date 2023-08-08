@@ -18,7 +18,7 @@ type deputyHubVars struct {
 }
 
 func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
@@ -26,15 +26,15 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		ctx := getContext(r)
 
 		vars := deputyHubVars{
-			AppVars: appVars,
+			AppVars: app,
 		}
 
-		clientList, _, err := client.GetDeputyClients(ctx, appVars.DeputyId(), 25, 1, appVars.DeputyDetails.DeputyType.Handle, "", "")
+		clientList, _, err := client.GetDeputyClients(ctx, app.DeputyId(), 25, 1, app.DeputyDetails.DeputyType.Handle, "", "")
 		if err != nil {
 			return err
 		}
 		vars.ActiveClientCount = clientList.Metadata.TotalActiveClients
-		vars.SuccessMessage = template.HTML(getSuccessFromUrl(r.URL, appVars.DeputyDetails.ExecutiveCaseManager.EcmName, appVars.DeputyDetails.Firm.FirmName))
+		vars.SuccessMessage = template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails.ExecutiveCaseManager.EcmName, app.DeputyDetails.Firm.FirmName))
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

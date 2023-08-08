@@ -91,13 +91,13 @@ func TestLoadAddTaskForm(t *testing.T) {
 	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
 		EcmId: 1,
 	}}
-	appVars := AppVars{
+	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: deputy,
 	}
 
 	expectedVars := AddTaskVars{
-		AppVars:   appVars,
+		AppVars:   app,
 		TaskTypes: taskTypes,
 		Assignees: assignees,
 	}
@@ -106,7 +106,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForAddTask(client, template)
-	res := handler(appVars, w, r)
+	res := handler(app, w, r)
 
 	assert.Nil(res)
 
@@ -127,7 +127,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 	assignees := []model.TeamMember{{ID: 1, DisplayName: "Teamster"}}
 	client.assignees = assignees
 
-	appVars := AppVars{
+	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: sirius.DeputyDetails{ID: 123},
 	}
@@ -148,7 +148,7 @@ func TestAddTask_success_ecm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(appVars, w, r)
+		res = renderTemplateForAddTask(client, nil)(app, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -161,7 +161,7 @@ func TestAddTask_success_other(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockAddTasksClient{}
 
-	appVars := AppVars{
+	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: sirius.DeputyDetails{ID: 123},
 	}
@@ -186,7 +186,7 @@ func TestAddTask_success_other(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(appVars, w, r)
+		res = renderTemplateForAddTask(client, nil)(app, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

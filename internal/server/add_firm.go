@@ -16,11 +16,11 @@ type addFirmVars struct {
 }
 
 func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		vars := addFirmVars{
-			AppVars: appVars,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -48,12 +48,12 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, appVars.DeputyId(), firmId)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, app.DeputyId(), firmId)
 			if assignDeputyToFirmErr != nil {
 				return assignDeputyToFirmErr
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=newFirm", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d?success=newFirm", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

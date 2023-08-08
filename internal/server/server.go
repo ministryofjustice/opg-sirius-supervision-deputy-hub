@@ -127,21 +127,17 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	router.PathPrefix("/javascript/").Handler(static)
 	router.PathPrefix("/stylesheets/").Handler(static)
 
-	router.NotFoundHandler = notFoundHandler(templates["error.gotmpl"], envVars.SiriusPublicURL)
+	router.NotFoundHandler = notFoundHandler(templates["error.gotmpl"], envVars)
 
 	return http.StripPrefix(envVars.Prefix, securityheaders.Use(router))
 }
 
-func notFoundHandler(tmplError Template, siriusURL string) http.HandlerFunc {
+func notFoundHandler(tmplError Template, envVars EnvironmentVars) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_ = tmplError.ExecuteTemplate(w, "page", ErrorVars{
-			Code:  http.StatusNotFound,
-			Error: "Not Found",
-			AppVars: AppVars{
-				EnvironmentVars: EnvironmentVars{
-					SiriusURL: siriusURL,
-				},
-			},
+			Code:            http.StatusNotFound,
+			Error:           "Not Found",
+			EnvironmentVars: envVars,
 		})
 	}
 }

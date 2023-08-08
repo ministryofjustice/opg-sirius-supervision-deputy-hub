@@ -16,14 +16,14 @@ type ListContactsVars struct {
 }
 
 func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
 
-		contactList, err := client.GetDeputyContacts(ctx, appVars.DeputyId())
+		contactList, err := client.GetDeputyContacts(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
@@ -37,7 +37,7 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 		}
 
 		vars := ListContactsVars{
-			AppVars:        appVars,
+			AppVars:        app,
 			ContactList:    contactList,
 			SuccessMessage: successMessage,
 		}

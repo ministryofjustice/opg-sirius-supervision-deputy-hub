@@ -20,7 +20,7 @@ type changeFirmVars struct {
 }
 
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		firms, err := client.GetFirms(ctx)
@@ -30,7 +30,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 
 		vars := changeFirmVars{
 			Firms:   firms,
-			AppVars: appVars,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -43,7 +43,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
 
 			if newFirm == "new-firm" {
-				return Redirect(fmt.Sprintf("/%d/add-firm", appVars.DeputyId()))
+				return Redirect(fmt.Sprintf("/%d/add-firm", app.DeputyId()))
 			}
 
 			AssignToFirmId := 0
@@ -54,7 +54,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 				}
 			}
 
-			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, appVars.DeputyId(), AssignToFirmId)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, app.DeputyId(), AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -62,7 +62,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			} else if err != nil {
 				return err
 			}
-			return Redirect(fmt.Sprintf("/%d?success=firm", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d?success=firm", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

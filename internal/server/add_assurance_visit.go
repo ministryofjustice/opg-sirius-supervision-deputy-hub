@@ -15,11 +15,11 @@ type AddAssuranceVisitVars struct {
 }
 
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		vars := AddAssuranceVisitVars{
-			AppVars: appVars,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -44,14 +44,14 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, appVars.UserDetails.ID, appVars.DeputyId())
+			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
