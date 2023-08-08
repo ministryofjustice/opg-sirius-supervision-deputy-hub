@@ -24,7 +24,7 @@ type ListClientsVars struct {
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
@@ -40,7 +40,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		clientList, ariaSorting, err := client.GetDeputyClients(ctx, appVars.DeputyId(), displayClientLimit, search, appVars.DeputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		clientList, ariaSorting, err := client.GetDeputyClients(ctx, app.DeputyId(), displayClientLimit, search, app.DeputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			PageDetails:          pageDetails,
 			AriaSorting:          ariaSorting,
 			ActiveClientCount:    clientList.Metadata.TotalActiveClients,
-			AppVars:              appVars,
+			AppVars:              app,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

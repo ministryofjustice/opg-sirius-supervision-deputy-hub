@@ -22,26 +22,26 @@ type changeECMHubVars struct {
 }
 
 func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
+		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {
 			return err
 		}
 
 		vars := changeECMHubVars{
 			EcmTeamDetails: ecmTeamDetails,
-			AppVars:        appVars,
+			AppVars:        app,
 		}
 
 		switch r.Method {
 		case http.MethodGet:
 			var successMessage string
 			if r.URL.Query().Get("success") == "true" {
-				successMessage = "new ecm is" + appVars.DeputyDetails.ExecutiveCaseManager.EcmName
+				successMessage = "new ecm is" + app.DeputyDetails.ExecutiveCaseManager.EcmName
 			}
 
 			vars.SuccessMessage = successMessage
@@ -68,7 +68,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 
 			changeECMForm := sirius.ExecutiveCaseManagerOutgoing{EcmId: EcmIdValue}
 
-			err = client.ChangeECM(ctx, changeECMForm, appVars.DeputyDetails)
+			err = client.ChangeECM(ctx, changeECMForm, app.DeputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors

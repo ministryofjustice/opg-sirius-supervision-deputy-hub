@@ -34,7 +34,7 @@ var mockDeputyDetails = sirius.DeputyDetails{
 	ID: 2,
 }
 
-func TestNewWorkflowVars(t *testing.T) {
+func TestNewAppVars(t *testing.T) {
 	client := &mockAppVarsClient{user: mockUserDetails, deputy: mockDeputyDetails}
 	r, _ := http.NewRequest("GET", "/path", nil)
 

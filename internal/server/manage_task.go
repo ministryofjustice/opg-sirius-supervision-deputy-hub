@@ -25,12 +25,12 @@ type manageTaskVars struct {
 }
 
 func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -43,13 +43,13 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
-		assignees, err := client.GetDeputyTeamMembers(ctx, appVars.DefaultPaTeam, appVars.DeputyDetails)
+		assignees, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {
 			return err
 		}
 
 		vars := manageTaskVars{
-			AppVars:     appVars,
+			AppVars:     app,
 			TaskDetails: taskDetails,
 			Assignees:   assignees,
 		}
@@ -80,10 +80,10 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.UpdateTask(ctx, appVars.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
+			err := client.UpdateTask(ctx, app.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = RenameErrors(verr.Errors, appVars.DeputyDetails.DeputyType.Label)
+				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -92,7 +92,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", appVars.DeputyId(), taskDetails.Type))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", app.DeputyId(), taskDetails.Type))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

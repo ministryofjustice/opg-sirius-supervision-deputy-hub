@@ -24,13 +24,13 @@ type TasksVars struct {
 }
 
 func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 		ctx := getContext(r)
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, appVars.DeputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -49,13 +49,13 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 			successMessage = ""
 		}
 
-		taskList, err := client.GetTasks(ctx, appVars.DeputyId())
+		taskList, err := client.GetTasks(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
 
 		vars := TasksVars{
-			AppVars:        appVars,
+			AppVars:        app,
 			TaskTypes:      taskTypes,
 			TaskList:       taskList,
 			SuccessMessage: successMessage,

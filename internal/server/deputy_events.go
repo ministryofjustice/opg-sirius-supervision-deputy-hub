@@ -15,20 +15,20 @@ type deputyHubEventVars struct {
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, appVars.DeputyId())
+		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
 
 		vars := deputyHubEventVars{
 			DeputyEvents: deputyEvents,
-			AppVars:      appVars,
+			AppVars:      app,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

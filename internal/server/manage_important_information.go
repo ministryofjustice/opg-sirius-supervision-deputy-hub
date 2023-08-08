@@ -24,10 +24,10 @@ type manageDeputyImportantInformationVars struct {
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
-		vars := manageDeputyImportantInformationVars{AppVars: appVars}
+		vars := manageDeputyImportantInformationVars{AppVars: app}
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 
@@ -102,7 +102,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				ReportSystem:              reportSystemType,
 			}
 
-			err = client.UpdateImportantInformation(ctx, appVars.DeputyId(), importantInfoForm)
+			err = client.UpdateImportantInformation(ctx, app.DeputyId(), importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -112,7 +112,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=importantInformation", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d?success=importantInformation", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

@@ -24,13 +24,13 @@ type addNoteVars struct {
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
-	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyNotes, err := client.GetDeputyNotes(ctx, appVars.DeputyId())
+			deputyNotes, err := client.GetDeputyNotes(ctx, app.DeputyId())
 			if err != nil {
 				return err
 			}
@@ -43,7 +43,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 			vars := deputyHubNotesVars{
 				DeputyNotes:    deputyNotes,
 				SuccessMessage: successMessage,
-				AppVars:        appVars,
+				AppVars:        app,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
@@ -55,13 +55,13 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				note  = r.PostFormValue("note")
 			)
 
-			err := client.AddNote(ctx, title, note, appVars.DeputyId(), appVars.UserDetails.ID, appVars.DeputyDetails.DeputyType.Handle)
+			err := client.AddNote(ctx, title, note, app.DeputyId(), app.UserDetails.ID, app.DeputyDetails.DeputyType.Handle)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars = addNoteVars{
 					Title:   title,
 					Note:    note,
-					AppVars: appVars,
+					AppVars: app,
 				}
 				vars.Errors = verr.Errors
 
@@ -71,7 +71,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/notes?success=true", appVars.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/notes?success=true", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
