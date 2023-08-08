@@ -53,6 +53,8 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 				County:                           r.PostFormValue("county"),
 				Postcode:                         r.PostFormValue("postcode"),
 			}
+			fmt.Println("deputy id")
+			fmt.Println(deputyId)
 
 			err := client.EditDeputyDetails(ctx, editDeputyDetailForm)
 

@@ -25,7 +25,6 @@ type mockAddTasksClient struct {
 	taskTypes               []model.TaskType
 	assignees               []model.TeamMember
 	selectedAssignee        int
-	taskList                sirius.TaskList
 }
 
 func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {

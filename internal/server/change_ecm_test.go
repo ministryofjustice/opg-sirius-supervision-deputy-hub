@@ -95,40 +95,37 @@ func TestPostChangeECM(t *testing.T) {
 	assert.Equal(returnedError, Redirect("/76?success=ecm"))
 }
 
-//
-//func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockChangeECMInformation{}
-//	defaultPATeam := 23
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"Change ECM": {"": "Select an executive case manager"},
-//	}
-//
-//	client.ChangeECMErr = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(""))
-//	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//	var returnedError error
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//	assert.Equal(changeECMHubVars{
-//		Path:   "/133",
-//		Errors: validationErrors,
-//	}, template.lastVars)
-//
-//	assert.Nil(returnedError)
-//}
+func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockChangeECMInformation{}
+	defaultPATeam := 23
+
+	form := url.Values{}
+	form.Add("select-ecm", "")
+
+	template := &mockTemplates{}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(form.Encode()))
+
+	var returnedError error
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+	})
+	testHandler.ServeHTTP(w, r)
+
+	expectedValidationErrors := sirius.ValidationErrors{
+		"Change ECM": {"": "Select an executive case manager"},
+	}
+
+	testHandler.ServeHTTP(w, r)
+	assert.Equal(changeECMHubVars{
+		Path:   "/76/ecm",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
 
 func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 	assert := assert.New(t)

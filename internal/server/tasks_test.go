@@ -18,7 +18,6 @@ type mockTasksClient struct {
 	GetTaskTypesErr error
 	GetTasksErr     error
 	taskTypes       []model.TaskType
-	teamMembers     []model.TeamMember
 	tasks           sirius.TaskList
 }
 

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -60,7 +61,6 @@ func TestPostChangeFirm(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	form := url.Values{}
 	form.Add("select-existing-firm", "26")
@@ -88,7 +88,6 @@ func TestPostChangeFirmReturnsStatusMethodError(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("PUT", "/76/firm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
 
@@ -105,7 +104,6 @@ func TestPostFirmRedirectsIfNewFirmChosen(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	form := url.Values{}
 	form.Add("select-firm", "new-firm")
 	r.PostForm = form
@@ -151,41 +149,40 @@ func TestPostFirmReturnsValidationErrors(t *testing.T) {
 
 }
 
-//func TestChangeFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
-//	returnedError := sirius.StatusError{Code: 500}
-//	tests := []struct {
-//		Client *mockDeputyChangeFirmInformation
-//	}{
-//		{
-//			Client: &mockDeputyChangeFirmInformation{
-//				GetFirmsErr: returnedError,
-//			},
-//		},
-//		{
-//			Client: &mockDeputyChangeFirmInformation{
-//				AssignDeputyToFirmErr: returnedError,
-//			},
-//		},
-//	}
-//	for k, tc := range tests {
-//		t.Run("scenario "+strconv.Itoa(k), func(t *testing.T) {
-//
-//			client := tc.Client
-//			template := &mockTemplates{}
-//
-//			w := httptest.NewRecorder()
-//			r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
-//			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-//
-//			form := url.Values{}
-//			form.Add("select-existing-firm", "26")
-//			r.PostForm = form
-//
-//			var changeEcmReturnedError error
-//
-//			changeEcmReturnedError = renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
-//
-//			assert.Equal(t, returnedError, changeEcmReturnedError)
-//		})
-//	}
-//}
+func TestChangeFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockDeputyChangeFirmInformation
+	}{
+		{
+			Client: &mockDeputyChangeFirmInformation{
+				GetFirmsErr: returnedError,
+			},
+		},
+		{
+			Client: &mockDeputyChangeFirmInformation{
+				AssignDeputyToFirmErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			form := url.Values{}
+			form.Add("select-firm", "")
+			form.Add("select-existing-firm", "26")
+
+			template := &mockTemplates{}
+
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(form.Encode()))
+			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+			r.PostForm = form
+
+			changeEcmReturnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+
+			assert.Equal(t, returnedError, changeEcmReturnedError)
+		})
+	}
+}

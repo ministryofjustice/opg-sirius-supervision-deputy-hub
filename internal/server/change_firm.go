@@ -77,12 +77,13 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 					XSRFToken: ctx.XSRFToken,
 					Errors:    verr.Errors,
 				}
-
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			if err != nil {
-				return err
+
+			if assignDeputyToFirmErr != nil {
+				return assignDeputyToFirmErr
 			}
+
 			return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))
 
 		default:

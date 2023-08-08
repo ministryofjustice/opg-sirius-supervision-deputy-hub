@@ -67,7 +67,6 @@ func TestPostAssuranceVisit(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	r.PostForm = form
 
 	var returnedError error
@@ -81,6 +80,81 @@ func TestPostAssuranceVisit(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(Redirect("/123/assurance-visits?success=addAssuranceVisit"), returnedError)
+}
+
+func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddAssuranceVisitInformation{}
+
+	form := url.Values{}
+	form.Add("assurance-type", "")
+	form.Add("requested-date", "")
+
+	template := &mockTemplates{}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+	})
+	testHandler.ServeHTTP(w, r)
+
+	expectedErrors := sirius.ValidationErrors{
+		"assurance-type": {
+			"": "Select an assurance type",
+		},
+		"requested-date": {
+			"": "Enter a requested date",
+		},
+	}
+
+	assert.Equal(AddAssuranceVisitVars{
+		Path:   "/123/assurance-visits",
+		Errors: expectedErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
+
+func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddAssuranceVisitInformation{}
+
+	validationErrors := sirius.ValidationErrors{
+		"assurance-type": {
+			"": "Select an assurance type",
+		},
+		"requested-date": {
+			"": "Enter a requested date",
+		},
+	}
+
+	client.AddAssuranceVisitErr = sirius.ValidationError{
+		Errors: validationErrors,
+	}
+
+	template := &mockTemplates{}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(""))
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+	})
+	testHandler.ServeHTTP(w, r)
+
+	assert.Equal(AddAssuranceVisitVars{
+		Path:   "/123/assurance-visits",
+		Errors: validationErrors,
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+
 }
 
 func TestAddAssuranceVisitInformationHandlesErrorsInOtherClientFiles(t *testing.T) {
