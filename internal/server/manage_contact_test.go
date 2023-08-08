@@ -94,6 +94,7 @@ func TestGetManageContact(t *testing.T) {
 		IsNamedDeputy: "false",
 		IsMainContact: "false",
 		IsNewContact:  false,
+		ContactId:     1,
 	}, template.lastVars)
 }
 

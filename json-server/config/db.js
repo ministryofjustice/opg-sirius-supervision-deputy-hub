@@ -2012,6 +2012,11 @@ module.exports = function () {
                 "isMainContact": false,
                 "isNamedDeputy": false
             },
+
+            {
+                "id": "deleteContact"
+            },
+
             {
                 "id": "firm",
                 "firmId": 2
