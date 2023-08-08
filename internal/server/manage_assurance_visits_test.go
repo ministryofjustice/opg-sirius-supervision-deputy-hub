@@ -158,7 +158,7 @@ func TestGetManagePDR(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForManageAssuranceVisit(client, visitTemplate, pdrTemplate)
-	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
+	err := handler(deputyDetails, w, r)
 
 	assert.Nil(err)
 
