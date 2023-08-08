@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -33,14 +35,40 @@ func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context,
 	return m.AddAssuranceVisitErr
 }
 
+func TestGetAddAssuranceVisit(t *testing.T) {
+	assert := assert.New(t)
+
+	client := &mockAddAssuranceVisitInformation{}
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", nil)
+
+	handler := renderTemplateForAddAssuranceVisit(client, template)
+	err := handler(sirius.DeputyDetails{}, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
+}
+
 func TestPostAssuranceVisit(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockAddAssuranceVisitInformation{}
 	template := &mockTemplates{}
 
+	form := url.Values{}
+	form.Add("assurance-type", "ABC")
+	form.Add("requested-date", "2200/10/20")
+
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader("{requestedDate:'2200/10/20', requestedBy:22}"))
+	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	r.PostForm = form
 
 	var returnedError error
 
@@ -52,36 +80,41 @@ func TestPostAssuranceVisit(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Nil(returnedError)
+	assert.Equal(Redirect("/123/assurance-visits?success=addAssuranceVisit"), returnedError)
 }
 
-//func TestAddAssuranceVisitInformationHandlesErrorsInOtherClientFiles(t *testing.T) {
-//	returnedError := sirius.StatusError{Code: 500}
-//	tests := []struct {
-//		Client *mockAddAssuranceVisitInformation
-//	}{
-//		{
-//			Client: &mockAddAssuranceVisitInformation{
-//				GetUserDetailsErr: returnedError,
-//			},
-//		},
-//		{
-//			Client: &mockAddAssuranceVisitInformation{
-//				AddAssuranceVisitErr: returnedError,
-//			},
-//		},
-//	}
-//	for k, tc := range tests {
-//		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
-//
-//			client := tc.Client
-//			template := &mockTemplates{}
-//
-//			w := httptest.NewRecorder()
-//			r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader("{requestedDate:'2200/10/20', requestedBy:22}"))
-//
-//			addAssuranceVisitReturnedError := renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
-//			assert.Equal(t, returnedError, addAssuranceVisitReturnedError)
-//		})
-//	}
-//}
+func TestAddAssuranceVisitInformationHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockAddAssuranceVisitInformation
+	}{
+		{
+			Client: &mockAddAssuranceVisitInformation{
+				GetUserDetailsErr: returnedError,
+			},
+		},
+		{
+			Client: &mockAddAssuranceVisitInformation{
+				AddAssuranceVisitErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+
+			w := httptest.NewRecorder()
+			form := url.Values{}
+			form.Add("assurance-type", "ABC")
+			form.Add("requested-date", "2200/10/20")
+
+			r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
+			r.PostForm = form
+
+			addAssuranceVisitReturnedError := renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, addAssuranceVisitReturnedError)
+		})
+	}
+}

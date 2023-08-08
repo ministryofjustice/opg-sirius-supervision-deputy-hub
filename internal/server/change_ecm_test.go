@@ -185,7 +185,7 @@ func TestChangeECMHandlesErrorsInOtherClientFiles(t *testing.T) {
 		},
 	}
 	for k, tc := range tests {
-		t.Run("scenario "+strconv.Itoa(k), func(t *testing.T) {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
 
 			client := tc.Client
 			template := &mockTemplates{}
