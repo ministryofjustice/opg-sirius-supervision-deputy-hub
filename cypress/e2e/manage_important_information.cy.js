@@ -56,7 +56,7 @@ describe("Manage important Information", () => {
         });
 
         it("allows me to edit and submit the form", () => {
-            cy.setCookie("success-route", "proImportantInformation");
+            cy.setCookie("success-route", "/deputies/1");
             cy.get("#complaints-No").click();
             cy.get("#panel-deputy-no").click();
             cy.get("#annual-billing-Invoice").click();
@@ -142,7 +142,7 @@ describe("Manage important Information", () => {
         });
 
         it("allows me to edit and submit the form", () => {
-            cy.setCookie("success-route", "paImportantInformation");
+            cy.setCookie("success-route", "/deputies/1");
             cy.get("#independent-visitor-charges-No").click();
             cy.get("#bank-charges-No").click();
             cy.get("#apad-Unknown").click();

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -16,14 +17,14 @@ import (
 
 type mockAddTasksClient struct {
 	mock.Mock
-	count            int
-	lastCtx          sirius.Context
-	err              error
-	verr             error
-	taskTypes        []model.TaskType
-	assignees        []model.TeamMember
-	selectedAssignee int
-	taskList         sirius.TaskList
+	count                   int
+	lastCtx                 sirius.Context
+	AddTaskErr              error
+	GetTaskTypesErr         error
+	GetDeputyTeamMembersErr error
+	taskTypes               []model.TaskType
+	assignees               []model.TeamMember
+	selectedAssignee        int
 }
 
 func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {
@@ -31,7 +32,7 @@ func (m *mockAddTasksClient) AddTask(ctx sirius.Context, deputyId int, taskType 
 	m.lastCtx = ctx
 	m.selectedAssignee = assigneeId
 
-	return m.verr
+	return m.AddTaskErr
 }
 
 func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, details string) ([]model.TaskType, error) {
@@ -39,21 +40,14 @@ func (m *mockAddTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, detai
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.taskTypes, m.err
+	return m.taskTypes, m.GetTaskTypesErr
 }
 
 func (m *mockAddTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPaTeam int, details sirius.DeputyDetails) ([]model.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.assignees, m.err
-}
-
-func (m *mockAddTasksClient) GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.taskList, m.err
+	return m.assignees, m.GetDeputyTeamMembersErr
 }
 
 func TestGetTasks(t *testing.T) {
@@ -199,7 +193,7 @@ func TestAddTaskValidationErrors(t *testing.T) {
 		},
 	}
 
-	client.verr = sirius.ValidationError{
+	client.AddTaskErr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -224,4 +218,39 @@ func TestAddTaskValidationErrors(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(res)
+}
+
+func TestAddTasksHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockAddTasksClient
+	}{
+		{
+			Client: &mockAddTasksClient{
+				GetTaskTypesErr: returnedError,
+			},
+		},
+		{
+			Client: &mockAddTasksClient{
+				GetDeputyTeamMembersErr: returnedError,
+			},
+		},
+		{
+			Client: &mockAddTasksClient{
+				AddTaskErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+
+			addTaskReturnedError := renderTemplateForAddTask(client, 23, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, addTaskReturnedError)
+		})
+	}
 }

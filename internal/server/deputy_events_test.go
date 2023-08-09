@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -10,17 +11,17 @@ import (
 )
 
 type mockDeputyHubTimelineInformation struct {
-	count        int
-	lastCtx      sirius.Context
-	err          error
-	deputyEvents sirius.DeputyEvents
+	count              int
+	lastCtx            sirius.Context
+	GetDeputyEventsErr error
+	deputyEvents       sirius.DeputyEvents
 }
 
 func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int) (sirius.DeputyEvents, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyEvents, m.err
+	return m.deputyEvents, m.GetDeputyEventsErr
 }
 
 func TestNavigateToTimeline(t *testing.T) {
@@ -39,4 +40,21 @@ func TestNavigateToTimeline(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestDeputyEventsReturnsErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubTimelineInformation{
+		GetDeputyEventsErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	returnedError := renderTemplateForDeputyHubEvents(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.GetDeputyEventsErr, returnedError)
 }

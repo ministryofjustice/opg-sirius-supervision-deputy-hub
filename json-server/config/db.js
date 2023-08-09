@@ -1977,73 +1977,6 @@ module.exports = function () {
                 }
             }
         ],
-        "successes": [
-            {
-                "id": "ecm",
-                "name": "Jon",
-                "phoneNumber": "1555678",
-                "displayName": "Jon Snow",
-                "deleted": false,
-                "email": "jonsnow@opgtest.com"
-            },
-            {
-                "id": "completeTask",
-            },
-            {
-                "id": "addContact",
-                "name": "Test Contact",
-                "jobTitle": "",
-                "email": "test@email.com",
-                "phoneNumber": "01234567",
-                "otherPhoneNumber": "",
-                "notes": "",
-                "isMainContact": true,
-                "isNamedDeputy": true
-            },
-
-            {
-                "id": "updateContact",
-                "name": "Test Contact",
-                "jobTitle": "",
-                "email": "test@email.com",
-                "phoneNumber": "01234567",
-                "otherPhoneNumber": "",
-                "notes": "",
-                "isMainContact": false,
-                "isNamedDeputy": false
-            },
-            {
-                "id": "firm",
-                "firmId": 2
-            },
-            {
-                "id": "addAssuranceVisit"
-            },
-            {
-                "id": "manageTask"
-            },
-            {
-                "id": "allocateToFirm",
-                "deputyId": 76,
-                "firmId": 2
-            },
-            {
-                "id": "proImportantInformation",
-                "complaints": {
-                    "handle": "NO",
-                    "label": "No"
-                },
-                "panelDeputy": false,
-                "annualBillingInvoice": {
-                    "handle": "INVOICE",
-                    "label": "Invoice"
-                },
-                "otherImportantInformation": "test"
-            },
-            {
-                "id": "paImportantInformation"
-            }
-        ],
         "teams": [
             {
                 "id": 1,
@@ -2231,6 +2164,7 @@ module.exports = function () {
         ],
         "firms": [
             {
+                "id": 1,
                 "FirmName": "name",
                 "AddressLine1": "address-line-1",
                 "AddressLine2": "address-line-2",
@@ -2242,12 +2176,12 @@ module.exports = function () {
                 "Email": "email"
             },
             {
-                "Id": 2,
+                "id": 2,
                 "FirmName": "Nice Firm Corp",
                 "FirmNumber": 1000001
             },
             {
-                "Id": 3,
+                "id": 3,
                 "FirmName": "Great Firm Corp",
                 "FirmNumber": 1000002
             }

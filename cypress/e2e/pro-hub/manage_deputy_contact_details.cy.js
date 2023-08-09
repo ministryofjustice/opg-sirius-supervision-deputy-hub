@@ -57,6 +57,8 @@ describe("Manage Deputy Contact Details", () => {
         });
 
         it("should show success banner on submit", () => {
+            cy.setCookie("success-route", "/contacts/1");
+
             cy.get("form").submit();
 
             cy.contains(".govuk-heading-l", "Deputy details");

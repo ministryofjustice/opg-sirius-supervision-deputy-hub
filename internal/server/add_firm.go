@@ -65,6 +65,9 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 				}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
+			if err != nil {
+				return err
+			}
 
 			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, firmId)
 			if assignDeputyToFirmErr != nil {

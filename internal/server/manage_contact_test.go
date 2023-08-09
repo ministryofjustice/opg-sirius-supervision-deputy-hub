@@ -1,41 +1,43 @@
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
 
 type mockManageContact struct {
-	count   int
-	lastCtx sirius.Context
-	err     error
+	count             int
+	lastCtx           sirius.Context
+	AddContactErr     error
+	GetContactByIdErr error
+	UpdateContactErr  error
 }
 
 func (m *mockManageContact) AddContact(ctx sirius.Context, deputyId int, contact sirius.ContactForm) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.AddContactErr
 }
 
 func (m *mockManageContact) GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return sirius.Contact{}, m.err
+	return sirius.Contact{}, m.GetContactByIdErr
 }
 
 func (m *mockManageContact) UpdateContact(ctx sirius.Context, deputyId int, contactId int, contact sirius.ContactForm) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.UpdateContactErr
 }
 
 func TestGetCreateContact(t *testing.T) {
@@ -145,7 +147,7 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 		},
 	}
 
-	client.err = sirius.ValidationError{
+	client.AddContactErr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -177,4 +179,64 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
+}
+
+func TestPostAddContactReturnsNonValidationErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageContact{
+		AddContactErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+
+	r, _ := http.NewRequest("POST", "/123/contacts", strings.NewReader(""))
+
+	manageContactReturnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	assert.Equal(client.AddContactErr, manageContactReturnedError)
+}
+
+func TestPostManageContactReturnsNonValidationErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageContact{
+		UpdateContactErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	vars := map[string]string{
+		"id":        "123",
+		"contactId": "1",
+	}
+
+	w := httptest.NewRecorder()
+
+	r, _ := http.NewRequest("POST", "/123/contacts/1", strings.NewReader(""))
+	r = mux.SetURLVars(r, vars)
+
+	manageContactReturnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	assert.Equal(client.UpdateContactErr, manageContactReturnedError)
+}
+
+func TestGetManageContactReturnsNonValidationErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageContact{
+		GetContactByIdErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	vars := map[string]string{
+		"id":        "123",
+		"contactId": "1",
+	}
+
+	w := httptest.NewRecorder()
+
+	r, _ := http.NewRequest("GET", "/123/contacts/1", strings.NewReader(""))
+	r = mux.SetURLVars(r, vars)
+
+	getContactByIdReturnedErr := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
+	assert.Equal(client.GetContactByIdErr, getContactByIdReturnedErr)
 }

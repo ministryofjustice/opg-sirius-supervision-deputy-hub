@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -14,30 +15,27 @@ import (
 )
 
 type mockChangeECMInformation struct {
-	count          int
-	lastCtx        sirius.Context
-	err            error
-	changeECMErr   error
-	DeputyDetails  sirius.DeputyDetails
-	EcmTeamDetails []model.TeamMember
-	Error          string
-	Errors         sirius.ValidationErrors
-	Success        bool
-	DefaultPaTeam  int
+	count                   int
+	lastCtx                 sirius.Context
+	GetDeputyTeamMembersErr error
+	ChangeECMErr            error
+	DeputyDetails           sirius.DeputyDetails
+	EcmTeamDetails          []model.TeamMember
+	DefaultPaTeam           int
 }
 
 func (m *mockChangeECMInformation) GetDeputyTeamMembers(ctx sirius.Context, deputyId int, deputyDetails sirius.DeputyDetails) ([]model.TeamMember, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.EcmTeamDetails, m.err
+	return m.EcmTeamDetails, m.GetDeputyTeamMembersErr
 }
 
 func (m *mockChangeECMInformation) ChangeECM(ctx sirius.Context, changeEcmForm sirius.ExecutiveCaseManagerOutgoing, deputyDetails sirius.DeputyDetails) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.changeECMErr
+	return m.ChangeECMErr
 }
 
 func TestGetChangeECM(t *testing.T) {
@@ -102,31 +100,31 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	client := &mockChangeECMInformation{}
 	defaultPATeam := 23
 
-	validationErrors := sirius.ValidationErrors{
+	form := url.Values{}
+	form.Add("select-ecm", "")
+
+	template := &mockTemplates{}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(form.Encode()))
+
+	var returnedError error
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
+	})
+	testHandler.ServeHTTP(w, r)
+
+	expectedValidationErrors := sirius.ValidationErrors{
 		"Change ECM": {"": "Select an executive case manager"},
 	}
 
-	client.err = sirius.ValidationError{
-		Errors: validationErrors,
-	}
+	testHandler.ServeHTTP(w, r)
+	assert.Equal(changeECMHubVars{
+		Path:   "/76/ecm",
+		Errors: expectedValidationErrors,
+	}, template.lastVars)
 
-	template := &mockTemplates{}
-
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-
-	expectedValidationError := sirius.ValidationError{
-		Errors: sirius.ValidationErrors{
-			"Change ECM": {
-				"": "Select an executive case manager",
-			},
-		},
-	}
-
-	assert.Equal(expectedValidationError, returnedError)
+	assert.Nil(returnedError)
 }
 
 func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
@@ -152,7 +150,7 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 
 	template := &mockTemplates{}
 
-	client.changeECMErr = StatusError(http.StatusGatewayTimeout)
+	client.ChangeECMErr = StatusError(http.StatusGatewayTimeout)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{ecmId:26}"))
@@ -165,4 +163,39 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(StatusError(http.StatusGatewayTimeout), returnedError)
+}
+
+func TestChangeECMHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockChangeECMInformation
+	}{
+		{
+			Client: &mockChangeECMInformation{
+				GetDeputyTeamMembersErr: returnedError,
+			},
+		},
+		{
+			Client: &mockChangeECMInformation{
+				ChangeECMErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(""))
+
+			form := url.Values{}
+			form.Add("select-ecm", "26")
+			r.PostForm = form
+
+			changeEcmReturnedError := renderTemplateForChangeECM(client, 23, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, changeEcmReturnedError)
+		})
+	}
 }

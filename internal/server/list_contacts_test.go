@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -39,4 +40,22 @@ func TestNavigateToContactTab(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestListContactsHandlesErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubContactInformation{
+		err: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	returnedError := renderTemplateForContactTab(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.err, returnedError)
+
 }

@@ -59,6 +59,7 @@ describe("Tasks", () => {
         });
 
         it("should add a task successfully", () => {
+            cy.setCookie("success-route", "/tasks/190");
             cy.get('label:contains("Assurance visit review")').click();
             cy.get('label:contains("Due date")').type(new Date().toISOString().split("T")[0]);
 
@@ -143,7 +144,7 @@ describe("Tasks", () => {
             cy.contains(".govuk-button", "Manage task").first().click();
         });
         it("prefills all editable fields and allows them to be changed", () => {
-            cy.setCookie("success-route", "manageTask");
+            cy.setCookie("success-route", "/tasks/190");
 
             cy.url().should("include", "/supervision/deputies/1/tasks/190");
             cy.get('.govuk-heading-l').should("include.text", 'Manage');
@@ -189,7 +190,7 @@ describe("Tasks", () => {
             cy.contains(".govuk-button", "Mark as complete").first().click();
         });
         it("displays the task details for task about to be completed and allows notes to be added", () => {
-            cy.setCookie("success-route", "completeTask");
+            cy.setCookie("success-route", "/tasks/190");
             cy.get('.govuk-heading-l').should('contain.text',"Complete Task");
             cy.get(':nth-child(1) > .govuk-table__cell').should('contain.text', "Assurance visit follow up");
             cy.get(':nth-child(2) > .govuk-table__cell').should('contain.text', "Notes about the task");
