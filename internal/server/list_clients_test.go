@@ -82,8 +82,7 @@ func TestListClientsHandlesErrors(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	returnedError = renderTemplateForClientTab(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForClientTab(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(client.err, returnedError)
 

@@ -54,8 +54,7 @@ func TestDeputyEventsReturnsErrors(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	returnedError = renderTemplateForDeputyHubEvents(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForDeputyHubEvents(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(client.GetDeputyEventsErr, returnedError)
 }

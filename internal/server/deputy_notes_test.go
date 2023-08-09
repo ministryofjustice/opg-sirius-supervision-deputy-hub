@@ -218,8 +218,7 @@ func TestDeputyHubHandlesErrorsForGetMethod(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(client.GetDeputyNotesErr, returnedError)
 

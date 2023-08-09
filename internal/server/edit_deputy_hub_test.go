@@ -119,8 +119,7 @@ func TestEditDeputyHubHandlesErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(client.err, returnedError)
 }

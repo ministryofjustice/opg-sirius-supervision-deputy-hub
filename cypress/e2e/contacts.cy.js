@@ -24,7 +24,7 @@ describe("Contacts", () => {
         });
 
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "addContact");
+            cy.setCookie("success-route", "/contacts/1");
             cy.get("#f-contactName").type("Test Contact");
             cy.get("#f-email").type("test@email.com");
             cy.get("#f-phoneNumber").type("0123456789");
@@ -80,7 +80,7 @@ describe("Contacts", () => {
         });
 
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "updateContact");
+            cy.setCookie("success-route", "/contacts/1");
             cy.get("#f-contactName").type("{selectAll}{backspace}John Smith");
             cy.get("#contact-form").submit();
             cy.url().should("contain", "/supervision/deputies/3/contacts?success=updatedContact");

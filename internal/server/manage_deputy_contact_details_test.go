@@ -117,8 +117,7 @@ func TestDeputyContactDetailsHandlesErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	returnedError = renderTemplateForManageDeputyContactDetails(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForManageDeputyContactDetails(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(client.updateErr, returnedError)
 
