@@ -61,7 +61,6 @@ func TestPostAddFirm(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
@@ -92,16 +91,7 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddFirm(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(addFirmVars{
 		Path:   "/133",
@@ -129,7 +119,6 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 

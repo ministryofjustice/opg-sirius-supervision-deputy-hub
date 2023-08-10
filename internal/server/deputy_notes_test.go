@@ -78,7 +78,6 @@ func TestPostAddNote(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
@@ -111,16 +110,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(2, client.count)
 
@@ -154,19 +144,9 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(2, client.count)
-
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
@@ -216,7 +196,6 @@ func TestDeputyHubHandlesErrorsForGetMethod(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
 

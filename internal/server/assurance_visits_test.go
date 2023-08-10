@@ -333,7 +333,6 @@ func TestAssuranceVisitsReturnsNonValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForAssuranceVisits(client, template)(sirius.DeputyDetails{}, w, r)
 

@@ -131,14 +131,8 @@ func TestPostFirmReturnsValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/firm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(changeFirmVars{
 		Path:   "/76/firm",
@@ -177,7 +171,6 @@ func TestChangeFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
 
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(form.Encode()))
-			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 			r.PostForm = form
 
 			changeEcmReturnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)

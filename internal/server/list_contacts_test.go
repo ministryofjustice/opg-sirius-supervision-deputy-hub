@@ -52,7 +52,6 @@ func TestListContactsHandlesErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForContactTab(client, template)(sirius.DeputyDetails{}, w, r)
 

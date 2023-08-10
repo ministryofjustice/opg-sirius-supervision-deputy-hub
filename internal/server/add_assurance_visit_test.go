@@ -94,13 +94,7 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
 
 	expectedErrors := sirius.ValidationErrors{
 		"assurance-type": {
@@ -140,13 +134,7 @@ func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(""))
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddAssuranceVisit(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(AddAssuranceVisitVars{
 		Path:   "/123/assurance-visits",

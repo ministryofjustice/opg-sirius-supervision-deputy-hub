@@ -118,7 +118,6 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var redirect error
 
@@ -192,7 +191,6 @@ func TestPostManagePDR(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var redirect error
 

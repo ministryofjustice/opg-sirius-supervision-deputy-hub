@@ -105,7 +105,6 @@ func TestPostAddContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
@@ -124,7 +123,6 @@ func TestPostManageContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
@@ -155,16 +153,8 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForManageContact(client, template)(sirius.DeputyDetails{}, w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
 		"contactName": {

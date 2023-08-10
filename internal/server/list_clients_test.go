@@ -80,7 +80,6 @@ func TestListClientsHandlesErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForClientTab(client, template)(sirius.DeputyDetails{}, w, r)
 

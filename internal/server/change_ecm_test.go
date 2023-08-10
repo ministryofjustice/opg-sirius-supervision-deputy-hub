@@ -75,7 +75,6 @@ func TestPostChangeECM(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{ecmId:26}"))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	form := url.Values{}
 	form.Add("select-ecm", "26")
@@ -107,18 +106,12 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader(form.Encode()))
 
-	var returnedError error
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
-	})
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
 		"Change ECM": {"": "Select an executive case manager"},
 	}
 
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(changeECMHubVars{
 		Path:   "/76/ecm",
 		Errors: expectedValidationErrors,
@@ -136,7 +129,6 @@ func TestPutChangeECMReturnsStatusMethodError(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("PUT", "/76/ecm", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	returnedError := renderTemplateForChangeECM(client, defaultPATeam, template)(sirius.DeputyDetails{}, w, r)
 
@@ -154,7 +146,6 @@ func TestPostChangeECMReturnsTimeoutError(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/ecm", strings.NewReader("{ecmId:26}"))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	form := url.Values{}
 	form.Add("select-ecm", "26")
