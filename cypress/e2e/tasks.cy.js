@@ -59,7 +59,6 @@ describe("Tasks", () => {
         });
 
         it("should add a task successfully", () => {
-            cy.setCookie("success-route", "/tasks/190");
             cy.get('label:contains("Assurance visit review")').click();
             cy.get('label:contains("Due date")').type(new Date().toISOString().split("T")[0]);
 

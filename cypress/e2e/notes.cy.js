@@ -64,7 +64,6 @@ describe("Notes", () => {
             });
 
             it("shows success banner with Note added message", () => {
-                cy.setCookie("success-route", "/notes/65");
                 cy.get("#title").type("title");
                 cy.get("#note").type("note");
                 cy.get("#add-note-form").submit();
