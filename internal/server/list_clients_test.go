@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -58,7 +59,6 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
-
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
@@ -68,5 +68,21 @@ func TestParseUrlReturnsEmptyStrings(t *testing.T) {
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
+}
+
+func TestListClientsHandlesErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubClientInformation{
+		err: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
+
+	returnedError := renderTemplateForClientTab(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.err, returnedError)
 
 }

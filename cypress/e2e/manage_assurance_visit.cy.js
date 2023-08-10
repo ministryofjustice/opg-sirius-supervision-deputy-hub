@@ -39,7 +39,7 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("allows user to edit and submit the form", () => {
-            cy.setCookie("success-route", "manageAssuranceVisit");
+            cy.setCookie("success-route", "/assuranceVisits/2");
             cy.get("#f-commissioned-date").type("2021-02-01");
             cy.get("#manage-assurance-visit-form").submit();
             cy.url().should("contain", "/supervision/deputies/3/assurance-visits");
@@ -80,7 +80,7 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("allows user to edit and submit the form", () => {
-            cy.setCookie("success-route", "manageAssuranceVisit");
+            cy.setCookie("success-route", "/assuranceVisits/2");
             cy.get("#f-report-due-date").type("2021-02-01");
             cy.get("#manage-assurance-visit-form").submit();
             cy.url().should("contain", "/supervision/deputies/2/assurance-visits");
