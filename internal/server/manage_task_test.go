@@ -100,7 +100,6 @@ func TestPostManageTask(t *testing.T) {
 	form := url.Values{"dueDate": {"2023-11-02"}}
 
 	r, _ := http.NewRequest("POST", "/tasks/123", strings.NewReader(form.Encode()))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	var redirect error
 
 	testHandler := mux.NewRouter()

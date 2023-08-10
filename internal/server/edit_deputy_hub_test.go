@@ -12,12 +12,9 @@ import (
 )
 
 type mockEditDeputyHubInformation struct {
-	count            int
-	lastCtx          sirius.Context
-	err              error
-	deputyClientData sirius.ClientList
-	ariaSorting      sirius.AriaSorting
-	userDetails      sirius.UserDetails
+	count   int
+	lastCtx sirius.Context
+	err     error
 }
 
 func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
@@ -25,20 +22,6 @@ func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, dep
 	m.lastCtx = ctx
 
 	return m.err
-}
-
-func (m *mockEditDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (sirius.ClientList, sirius.AriaSorting, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.deputyClientData, m.ariaSorting, m.err
-}
-
-func (m *mockEditDeputyHubInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetails, m.err
 }
 
 func TestNavigateToEditDeputyHub(t *testing.T) {
@@ -50,13 +33,37 @@ func TestNavigateToEditDeputyHub(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHub(client, template)
+	handler := renderTemplateForEditDeputyHub(client, template)
 	err := handler(sirius.DeputyDetails{}, w, r)
 
 	assert.Nil(err)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestPostEditDeputyHub(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockEditDeputyHubInformation{}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+	assert.Equal(returnedError, Redirect("/133?success=teamDetails"))
 }
 
 func TestEditDeputyValidationErrors(t *testing.T) {
@@ -77,19 +84,9 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(1, client.count)
-
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(editDeputyHubVars{
@@ -98,4 +95,21 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
+}
+
+func TestEditDeputyHubHandlesErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockEditDeputyHubInformation{
+		err: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	returnedError := renderTemplateForEditDeputyHub(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.err, returnedError)
 }

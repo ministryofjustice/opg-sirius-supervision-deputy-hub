@@ -4,6 +4,8 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -11,31 +13,25 @@ import (
 )
 
 type mockTasksClient struct {
-	count       int
-	lastCtx     sirius.Context
-	err         error
-	taskTypes   []model.TaskType
-	teamMembers []model.TeamMember
-	tasks       sirius.TaskList
+	count           int
+	lastCtx         sirius.Context
+	GetTaskTypesErr error
+	GetTasksErr     error
+	taskTypes       []model.TaskType
+	tasks           sirius.TaskList
 }
 
 func (m *mockTasksClient) GetTaskTypesForDeputyType(ctx sirius.Context, deputyId string) ([]model.TaskType, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.taskTypes, m.err
-}
-
-func (m *mockTasksClient) GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error) {
-	m.count += 1
-
-	return m.teamMembers, m.err
+	return m.taskTypes, m.GetTaskTypesErr
 }
 
 func (m *mockTasksClient) GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error) {
 	m.count += 1
 
-	return m.tasks, m.err
+	return m.tasks, m.GetTasksErr
 }
 
 func TestNavigateTasksTab(t *testing.T) {
@@ -54,4 +50,34 @@ func TestNavigateTasksTab(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
+}
+
+func TestTasksHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockTasksClient
+	}{
+		{
+			Client: &mockTasksClient{
+				GetTaskTypesErr: returnedError,
+			},
+		},
+		{
+			Client: &mockTasksClient{
+				GetTasksErr: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
+
+			addFirmReturnedError := renderTemplateForTasks(client, template)(sirius.DeputyDetails{}, w, r)
+			assert.Equal(t, returnedError, addFirmReturnedError)
+		})
+	}
 }

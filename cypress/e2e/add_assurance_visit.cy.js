@@ -17,7 +17,7 @@ describe("Add Assurance Visit", () => {
 
     describe("Success submitting assurance visit form", () => {
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "addAssuranceVisit");
+            cy.setCookie("success-route", "/assuranceVisits/1");
             cy.get("#assurance-pdr").check();
             cy.get("#f-requested-date").type("2021-02-01");
             cy.get("#add-assurance-visit-form").submit();

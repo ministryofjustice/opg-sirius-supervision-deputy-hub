@@ -55,7 +55,7 @@ describe("Change Firm", () => {
         });
 
         it("will redirect and show success banner when deputy allocated to firm", () => {
-            cy.setCookie("success-route", "allocateToFirm");
+            cy.setCookie("success-route", "/firms/1");
             cy.get("#f-existing-firm").click();
             cy.get("#select-existing-firm-dropdown > .govuk-label").should(
                 "contain",
@@ -72,7 +72,7 @@ describe("Change Firm", () => {
         });
 
         it("will allow searching based on firm id", () => {
-            cy.setCookie("success-route", "allocateToFirm");
+            cy.setCookie("success-route", "/firms/1");
             cy.get("#f-existing-firm").click();
             cy.get("#select-existing-firm-dropdown > .govuk-label").should(
                 "contain",

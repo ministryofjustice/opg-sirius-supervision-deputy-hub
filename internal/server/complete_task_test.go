@@ -116,7 +116,6 @@ func TestPostCompleteTask(t *testing.T) {
 	w := httptest.NewRecorder()
 	form := url.Values{"taskCompletedNotes": {"some notes"}}
 	r, _ := http.NewRequest("POST", "/path", strings.NewReader(form.Encode()))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var redirect error
 
@@ -148,16 +147,7 @@ func TestCompleteTaskValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
 
 	assert.Equal(completeTaskVars{
 		Path:   "/111",
