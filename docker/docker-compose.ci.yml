@@ -11,7 +11,7 @@ services:
       PORT: 8888
       SIRIUS_URL: http://json-server:3000
       PREFIX: /supervision/deputies
-      FEATURES: tasks
+      FEATURES: tasks,contacts
 
   json-server:
     build:
@@ -31,7 +31,7 @@ services:
       - LHCI_GITHUB_APP_TOKEN
 
   cypress:
-    platform: linux/amd64
+    platform: linux/arm64
     build:
       context: ..
       dockerfile: ./docker/cypress/Dockerfile

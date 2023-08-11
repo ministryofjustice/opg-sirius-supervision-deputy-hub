@@ -1,0 +1,13 @@
+{{ define "contact-removed-as-main" }}
+    <div class="moj-timeline__item" data-cy="contact-removed-as-main-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">{{ .Event.Contact.Name }} removed as a Main contact</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+    </div>
+{{ end }}
