@@ -3,28 +3,21 @@ version: "3.6"
 services:
   deputy-hub:
     platform: linux/amd64
+    image: deputy-hub:dev-latest
     build:
-      context: ..
-      dockerfile: ./docker/sirius-deputy-hub/Dockerfile
       target: dev
     ports:
       - '2345:2345'
-      - '8888:1234'
+      - 8888:8888
     volumes:
-      - ..:/app:rw,delegated
-      - /app/web/static
+      - .:/app:rw,delegated
     environment:
       SIRIUS_URL: http://json-server:3000
       SIRIUS_PUBLIC_URL: http://localhost:8080
-      FIRM_HUB_HOST: http://localhost:8887
-      PREFIX: /supervision/deputies
-      FEATURES: tasks
+
+  yarn:
+    command: watch
 
   json-server:
-    build:
-      context: ..
-      dockerfile: ./docker/json-server/Dockerfile
     volumes:
-      - ../json-server/config:/app/config
-    ports:
-      - '3000:3000'
+      - ./json-server/config:/app/config
