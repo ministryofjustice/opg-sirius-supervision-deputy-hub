@@ -31,4 +31,38 @@ describe("Timeline", () => {
                 .should("contain", "Client: Duke John Fearless");
         });
     });
+
+    it("displays deputy contact timeline events", () => {
+        cy.visit("/supervision/deputies/1/timeline");
+
+        let events = [
+            {
+                name: "contact-added-event",
+                title: "Mr Deputy Contact added as a contact",
+                description: "Name: Mr Deputy Contact"
+            },
+            {
+                name: "contact-edited-event",
+                title: "Mr Deputy Contact's details updated",
+                description: "Name: Mr Deputy Contact"
+            },
+            {
+                name: "contact-set-as-main-event",
+                title: "Main contact set to Mr Deputy Contact"
+            },
+            {
+                name: "contact-removed-as-main-event",
+                title: "Mr Deputy Contact removed as a Main contact"
+            }
+        ]
+
+        events.forEach((event) => {
+            cy.get('[data-cy="' + event.name + '"]').within(() => {
+                cy.get(".moj-timeline__title").should("contain.text", event.title)
+                if ("description" in event) {
+                    cy.get(".moj-timeline__description").contains(event.description)
+                }
+            })
+        })
+    });
 });
