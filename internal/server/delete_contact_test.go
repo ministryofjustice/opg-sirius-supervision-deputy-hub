@@ -12,23 +12,24 @@ import (
 )
 
 type mockDeleteContact struct {
-	count   int
-	lastCtx sirius.Context
-	err     error
+	count               int
+	lastCtx             sirius.Context
+	getContactByIdError error
+	deleteContactError  error
 }
 
 func (m *mockDeleteContact) GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return sirius.Contact{}, m.err
+	return sirius.Contact{}, m.getContactByIdError
 }
 
 func (m *mockDeleteContact) DeleteContact(ctx sirius.Context, deputyId int, contactId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.err
+	return m.deleteContactError
 }
 
 func TestGetDeleteContact(t *testing.T) {
@@ -58,7 +59,6 @@ func TestPostDeleteContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 

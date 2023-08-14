@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -28,31 +29,41 @@ func TestDeleteContact(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestDeleteContactReturnsNewStatusError(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	}))
-	defer svr.Close()
+func TestDeleteContactReturnsError(t *testing.T) {
+	tests := []struct {
+		statusCode    int
+		isClientError bool
+		expectedErr   error
+	}{
+		{
+			http.StatusMethodNotAllowed,
+			false,
+			nil,
+		},
+		{
+			http.StatusUnauthorized,
+			true,
+			ErrUnauthorized,
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+			svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(tc.statusCode)
+			}))
 
-	client, _ := NewClient(http.DefaultClient, svr.URL)
+			defer svr.Close()
+			client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.DeleteContact(getContext(nil), 76, 1)
-	assert.Equal(t, StatusError{
-		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/contacts/1",
-		Method: http.MethodDelete,
-	}, err)
-}
-
-func TestDeleteContactReturnsUnauthorisedClientError(t *testing.T) {
-	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusUnauthorized)
-	}))
-	defer svr.Close()
-
-	client, _ := NewClient(http.DefaultClient, svr.URL)
-
-	err := client.DeleteContact(getContext(nil), 76, 1)
-
-	assert.Equal(t, ErrUnauthorized, err)
+			err := client.DeleteContact(getContext(nil), 76, 1)
+			if tc.isClientError {
+				assert.Equal(t, err, tc.expectedErr)
+			} else {
+				assert.Equal(t, err, StatusError{
+					Code:   tc.statusCode,
+					URL:    svr.URL + "/api/v1/deputies/76/contacts/1",
+					Method: "DELETE"})
+			}
+		})
+	}
 }

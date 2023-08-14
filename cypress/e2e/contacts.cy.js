@@ -183,7 +183,7 @@ describe("Contacts", () => {
         });
 
         it("shows content from manage contact page and allow me to delete", () => {
-            cy.setCookie("success-route", "deleteContact");
+            cy.setCookie("success-route", "/contacts/1");
             cy.get(':nth-child(1) > :nth-child(4) > .govuk-button--secondary').click();
             cy.get('.govuk-button--warning').click();
             cy.get(".govuk-heading-l").contains("Delete contact");
