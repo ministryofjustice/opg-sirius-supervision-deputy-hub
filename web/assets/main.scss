@@ -39,3 +39,9 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 .autocomplete__wrapper {
     font-family: "GDS Transport", arial, sans-serif;
 }
+
+#delete-contact-button-group {
+    max-width: 75ch;
+    border-top: 1px solid #b1b4b6;
+    padding-top: 1em;
+}
