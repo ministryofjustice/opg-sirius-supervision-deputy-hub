@@ -39,7 +39,6 @@ func (c *Client) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, erro
 		return 0, err
 	}
 
-	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusUnauthorized {
 		return 0, ErrUnauthorized
 	}
@@ -56,7 +55,6 @@ func (c *Client) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, erro
 				Errors: v.ValidationErrors,
 			}
 		}
-
 		return 0, newStatusError(resp)
 	}
 

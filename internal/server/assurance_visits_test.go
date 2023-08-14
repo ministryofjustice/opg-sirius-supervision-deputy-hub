@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -320,4 +321,20 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestAssuranceVisitsReturnsNonValidationErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageAssuranceVisit{
+		assuranceVisitsError: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+
+	returnedError := renderTemplateForAssuranceVisits(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.assuranceVisitsError, returnedError)
 }

@@ -41,7 +41,6 @@ func (c *Client) AddTask(ctx Context, deputyId int, taskType string, typeName st
 		return err
 	}
 	defer resp.Body.Close()
-
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}

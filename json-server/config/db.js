@@ -1703,6 +1703,102 @@ module.exports = function () {
                         {"fieldName":"dueDate","oldValue":"11\/08\/2023","newValue":"12\/08\/2023","type":"string"}
                     ]
                 },
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactAdded",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactEdited",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    },
+                    "changes": [
+                        {
+                            "fieldName": "name",
+                            "oldValue": "Miss Deputy Contact",
+                            "newValue": "Mr Deputy Contact",
+                            "type": "string"
+                        },
+                    ]
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsMain",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsMain",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
             }
         ],
         "notes": [
@@ -1977,78 +2073,6 @@ module.exports = function () {
                 }
             }
         ],
-        "successes": [
-            {
-                "id": "ecm",
-                "name": "Jon",
-                "phoneNumber": "1555678",
-                "displayName": "Jon Snow",
-                "deleted": false,
-                "email": "jonsnow@opgtest.com"
-            },
-            {
-                "id": "completeTask",
-            },
-            {
-                "id": "addContact",
-                "name": "Test Contact",
-                "jobTitle": "",
-                "email": "test@email.com",
-                "phoneNumber": "01234567",
-                "otherPhoneNumber": "",
-                "notes": "",
-                "isMainContact": true,
-                "isNamedDeputy": true
-            },
-
-            {
-                "id": "updateContact",
-                "name": "Test Contact",
-                "jobTitle": "",
-                "email": "test@email.com",
-                "phoneNumber": "01234567",
-                "otherPhoneNumber": "",
-                "notes": "",
-                "isMainContact": false,
-                "isNamedDeputy": false
-            },
-
-            {
-                "id": "deleteContact"
-            },
-
-            {
-                "id": "firm",
-                "firmId": 2
-            },
-            {
-                "id": "addAssuranceVisit"
-            },
-            {
-                "id": "manageTask"
-            },
-            {
-                "id": "allocateToFirm",
-                "deputyId": 76,
-                "firmId": 2
-            },
-            {
-                "id": "proImportantInformation",
-                "complaints": {
-                    "handle": "NO",
-                    "label": "No"
-                },
-                "panelDeputy": false,
-                "annualBillingInvoice": {
-                    "handle": "INVOICE",
-                    "label": "Invoice"
-                },
-                "otherImportantInformation": "test"
-            },
-            {
-                "id": "paImportantInformation"
-            }
-        ],
         "teams": [
             {
                 "id": 1,
@@ -2236,6 +2260,7 @@ module.exports = function () {
         ],
         "firms": [
             {
+                "id": 1,
                 "FirmName": "name",
                 "AddressLine1": "address-line-1",
                 "AddressLine2": "address-line-2",
@@ -2247,12 +2272,12 @@ module.exports = function () {
                 "Email": "email"
             },
             {
-                "Id": 2,
+                "id": 2,
                 "FirmName": "Nice Firm Corp",
                 "FirmNumber": 1000001
             },
             {
-                "Id": 3,
+                "id": 3,
                 "FirmName": "Great Firm Corp",
                 "FirmNumber": 1000002
             }

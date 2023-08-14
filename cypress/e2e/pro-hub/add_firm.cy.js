@@ -73,7 +73,7 @@ describe("Firm", () => {
         });
 
         it("allows me to fill in and submit the firm form", () => {
-            cy.setCookie("success-route", "firm");
+            cy.setCookie("success-route", "/firms/2");
             cy.get("#f-firmName").type("The Firm Name");
             cy.get("#add-firm-form").submit();
             cy.get(".moj-banner").should("contain", "Firm added");

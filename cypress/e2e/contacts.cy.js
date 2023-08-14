@@ -4,6 +4,16 @@ describe("Contacts", () => {
         cy.setCookie("XSRF-TOKEN", "abcde");
     });
 
+    describe("Navigation", () => {
+        it("should navigate to Contacts tab", () => {
+            cy.visit("/supervision/deputies/3");
+            cy.get(".moj-sub-navigation__list").contains("Contacts").click();
+
+            cy.url().should("include", "/supervision/deputies/3/contacts");
+            cy.get(".govuk-heading-l").contains("Contacts");
+        });
+    })
+
     describe("Adding a Contact", () => {
         beforeEach(() => {
             cy.visit("/supervision/deputies/3/contacts/add-contact");
@@ -24,7 +34,7 @@ describe("Contacts", () => {
         });
 
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "addContact");
+            cy.setCookie("success-route", "/contacts/1");
             cy.get("#f-contactName").type("Test Contact");
             cy.get("#f-email").type("test@email.com");
             cy.get("#f-phoneNumber").type("0123456789");
@@ -80,7 +90,7 @@ describe("Contacts", () => {
         });
 
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "updateContact");
+            cy.setCookie("success-route", "/contacts/1");
             cy.get("#f-contactName").type("{selectAll}{backspace}John Smith");
             cy.get("#contact-form").submit();
             cy.url().should("contain", "/supervision/deputies/3/contacts?success=updatedContact");

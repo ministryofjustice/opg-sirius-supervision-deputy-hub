@@ -35,7 +35,7 @@ describe("Change ECM", () => {
         });
 
         it("allows me to fill in and submit the ecm form", () => {
-            cy.setCookie("success-route", "ecm");
+            cy.setCookie("success-route", "/deputies/1");
             cy.get("#select-ecm").type("S");
             cy.contains("#select-ecm__listbox", "Jon Snow").click();
             cy.get("form").submit();

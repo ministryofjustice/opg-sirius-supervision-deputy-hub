@@ -67,6 +67,9 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
+			if err != nil {
+				return err
+			}
 
 			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", deputyId))
 		default:

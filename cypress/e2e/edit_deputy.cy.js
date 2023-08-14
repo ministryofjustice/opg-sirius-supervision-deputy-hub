@@ -14,7 +14,6 @@ describe("Edit deputy tab", () => {
 
     it("the success banner shows on success", () => {
         cy.visit("/supervision/deputies/1/manage-team-details");
-
         cy.get("#f-team").focus().clear();
         cy.get("#f-team").type("New Team Name");
         cy.get("form").submit();

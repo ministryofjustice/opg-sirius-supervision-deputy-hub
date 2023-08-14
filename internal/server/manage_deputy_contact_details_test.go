@@ -50,7 +50,6 @@ func TestPostManageDeputyDetails(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var redirect error
 
@@ -81,7 +80,6 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
@@ -93,7 +91,6 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 	testHandler.ServeHTTP(w, r)
 
 	assert.Equal(1, client.count)
-
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(manageDeputyContactDetailsVars{
@@ -103,4 +100,21 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
+}
+
+func TestDeputyContactDetailsHandlesErrors(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockManageDeputyContactDetailsInformation{
+		updateErr: sirius.StatusError{Code: 500},
+	}
+
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
+
+	returnedError := renderTemplateForManageDeputyContactDetails(client, template)(sirius.DeputyDetails{}, w, r)
+
+	assert.Equal(client.updateErr, returnedError)
+
 }
