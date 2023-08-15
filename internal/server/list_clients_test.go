@@ -43,7 +43,7 @@ func TestNavigateToClientTab(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForClientTab(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -81,7 +81,7 @@ func TestListClientsHandlesErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
 
-	returnedError := renderTemplateForClientTab(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForClientTab(client, template)(AppVars{}, w, r)
 
 	assert.Equal(client.err, returnedError)
 

@@ -2,49 +2,35 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type DeputyHubNotesInformation interface {
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
-	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 }
 
 type deputyHubNotesVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
 	DeputyNotes    sirius.DeputyNoteCollection
-	Error          string
-	Errors         sirius.ValidationErrors
 	SuccessMessage string
+	AppVars
 }
 
 type addNoteVars struct {
-	Path          string
-	XSRFToken     string
-	Title         string
-	Note          string
-	Error         string
-	Errors        sirius.ValidationErrors
-	DeputyDetails sirius.DeputyDetails
+	Title string
+	Note  string
+	AppVars
 }
 
 func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		switch r.Method {
 		case http.MethodGet:
 
-			deputyNotes, err := client.GetDeputyNotes(ctx, deputyId)
+			deputyNotes, err := client.GetDeputyNotes(ctx, app.DeputyId())
 			if err != nil {
 				return err
 			}
@@ -55,11 +41,9 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 			}
 
 			vars := deputyHubNotesVars{
-				Path:           r.URL.Path,
-				XSRFToken:      ctx.XSRFToken,
-				DeputyDetails:  deputyDetails,
 				DeputyNotes:    deputyNotes,
 				SuccessMessage: successMessage,
+				AppVars:        app,
 			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
@@ -71,22 +55,15 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				note  = r.PostFormValue("note")
 			)
 
-			userId, err := client.GetUserDetails(ctx)
-			if err != nil {
-				return err
-			}
-
-			err = client.AddNote(ctx, title, note, deputyId, userId.ID, deputyDetails.DeputyType.Handle)
+			err := client.AddNote(ctx, title, note, app.DeputyId(), app.UserDetails.ID, app.DeputyDetails.DeputyType.Handle)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars = addNoteVars{
-					Path:          r.URL.Path,
-					XSRFToken:     ctx.XSRFToken,
-					Title:         title,
-					Note:          note,
-					Errors:        verr.Errors,
-					DeputyDetails: deputyDetails,
+					Title:   title,
+					Note:    note,
+					AppVars: app,
 				}
+				vars.Errors = verr.Errors
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -94,7 +71,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/notes?success=true", deputyId))
+			return Redirect(fmt.Sprintf("/%d/notes?success=true", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

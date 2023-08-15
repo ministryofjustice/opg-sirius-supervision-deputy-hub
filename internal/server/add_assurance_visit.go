@@ -2,36 +2,24 @@ package server
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
-
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
 type AddAssuranceVisit interface {
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 	AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
 }
 
 type AddAssuranceVisitVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
+	AppVars
 }
 
 func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
 		vars := AddAssuranceVisitVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
+			AppVars: app,
 		}
 
 		switch r.Method {
@@ -56,12 +44,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			user, err := client.GetUserDetails(ctx)
-			if err != nil {
-				return err
-			}
-
-			err = client.AddAssuranceVisit(ctx, assuranceType, requestedDate, user.ID, deputyId)
+			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -71,7 +54,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", deputyId))
+			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
