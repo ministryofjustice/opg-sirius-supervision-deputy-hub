@@ -60,9 +60,6 @@ func TestGetCreateContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
-		AppVars: AppVars{
-			Path: "/path",
-		},
 		IsNewContact: true,
 	}, template.lastVars)
 }
@@ -94,9 +91,6 @@ func TestGetManageContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
-		AppVars: AppVars{
-			Path: "/path",
-		},
 		IsNamedDeputy: "false",
 		IsMainContact: "false",
 		IsNewContact:  false,
@@ -168,7 +162,6 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 
 	assert.Equal(ManageContactVars{
 		AppVars: AppVars{
-			Path:   "/path",
 			Errors: expectedValidationErrors,
 		},
 		IsNewContact: true,

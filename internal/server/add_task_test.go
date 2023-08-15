@@ -209,7 +209,7 @@ func TestAddTaskValidationErrors(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	res := renderTemplateForAddTask(client, defaultPATeam, template)(AppVars{}, w, r)
+	res := renderTemplateForAddTask(client, template)(AppVars{}, w, r)
 
 	assert.Equal(AddTaskVars{
 		AppVars: AppVars{
@@ -249,7 +249,7 @@ func TestAddTasksHandlesErrorsInOtherClientFiles(t *testing.T) {
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 
-			addTaskReturnedError := renderTemplateForAddTask(client, 23, template)(AppVars{}, w, r)
+			addTaskReturnedError := renderTemplateForAddTask(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, addTaskReturnedError)
 		})
 	}

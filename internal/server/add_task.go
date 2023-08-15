@@ -90,7 +90,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				}
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success="+taskName, app.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=add&taskType=%s", app.DeputyId(), taskName))
 		}
 	}
 }

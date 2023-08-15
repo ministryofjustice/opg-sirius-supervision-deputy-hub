@@ -115,8 +115,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			DeputyDetails: deputyNotesAppVars.DeputyDetails,
-			Errors:        validationErrors,
+			Errors: validationErrors,
 		},
 	}, template.lastVars)
 
@@ -151,8 +150,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			DeputyDetails: deputyNotesAppVars.DeputyDetails,
-			Errors:        validationErrors,
+			Errors: validationErrors,
 		},
 	}, template.lastVars)
 

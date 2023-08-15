@@ -16,7 +16,6 @@ type mockAddAssuranceVisitInformation struct {
 	count                int
 	lastCtx              sirius.Context
 	AddAssuranceVisitErr error
-	err                  error
 }
 
 func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
@@ -64,7 +63,7 @@ func TestPostAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssuranceVisit(client, template)(AppVars{}, w, r)
+		returnedError = renderTemplateForAddAssuranceVisit(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -98,7 +97,6 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 
 	assert.Equal(AddAssuranceVisitVars{
 		AppVars{
-			Path:   "/123/assurance-visits",
 			Errors: expectedErrors,
 		},
 	}, template.lastVars)
@@ -131,7 +129,6 @@ func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.
 
 	assert.Equal(AddAssuranceVisitVars{
 		AppVars{
-			Path:   "/123/assurance-visits",
 			Errors: validationErrors,
 		},
 	}, template.lastVars)

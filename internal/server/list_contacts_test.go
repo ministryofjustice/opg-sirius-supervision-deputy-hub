@@ -53,7 +53,7 @@ func TestListContactsHandlesErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
 
-	returnedError := renderTemplateForContactTab(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForContactTab(client, template)(AppVars{}, w, r)
 
 	assert.Equal(client.err, returnedError)
 

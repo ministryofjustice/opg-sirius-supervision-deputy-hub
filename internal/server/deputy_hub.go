@@ -25,17 +25,13 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 
 		ctx := getContext(r)
 
-		vars := deputyHubVars{
-			AppVars: app,
-		}
-
 		clientList, _, err := client.GetDeputyClients(ctx, app.DeputyId(), 25, 1, app.DeputyDetails.DeputyType.Handle, "", "")
 		if err != nil {
 			return err
 		}
 
 		vars := deputyHubVars{
-			AppVars:           appVars,
+			AppVars:           app,
 			ActiveClientCount: clientList.Metadata.TotalActiveClients,
 			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
 		}

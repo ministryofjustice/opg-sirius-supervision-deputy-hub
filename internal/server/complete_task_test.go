@@ -58,7 +58,7 @@ func TestGetCompleteTask(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForCompleteTask(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -72,9 +72,9 @@ func TestGetCompleteTask(t *testing.T) {
 func TestLoadCompleteTaskForm(t *testing.T) {
 	assert := assert.New(t)
 
-	deputy := sirius.DeputyDetails{ID: 1, ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-		EcmId: 1,
-	}}
+	app := AppVars{
+		DeputyDetails: testDeputy,
+	}
 	taskDetails := model.Task{}
 
 	client := &mockCompleteTaskClient{}
@@ -84,7 +84,7 @@ func TestLoadCompleteTaskForm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForCompleteTask(client, template)
-	res := handler(deputy, w, r)
+	res := handler(app, w, r)
 
 	assert.Nil(res)
 
@@ -94,16 +94,17 @@ func TestLoadCompleteTaskForm(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(completeTaskVars{
-		Path:          "/path",
-		DeputyDetails: deputy,
-		TaskDetails:   taskDetails,
+		AppVars:     app,
+		TaskDetails: taskDetails,
 	}, template.lastVars)
 }
 
 func TestPostCompleteTask(t *testing.T) {
 	assert := assert.New(t)
 
-	deputy := sirius.DeputyDetails{ID: 123}
+	app := AppVars{
+		DeputyDetails: testDeputy,
+	}
 	taskDetails := model.Task{Type: "ABC"}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "TaskDescription"}}
 
@@ -121,7 +122,7 @@ func TestPostCompleteTask(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForCompleteTask(client, template)(deputy, w, r)
+		redirect = renderTemplateForCompleteTask(client, template)(app, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -147,11 +148,12 @@ func TestCompleteTaskValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	returnedError := renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForCompleteTask(client, template)(AppVars{}, w, r)
 
 	assert.Equal(completeTaskVars{
-		Path:   "/111",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -185,7 +187,7 @@ func TestCompleteTaskHandlesErrorsInOtherClientFiles(t *testing.T) {
 			template := &mockTemplates{}
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-			completeTaskReturnedError := renderTemplateForCompleteTask(client, template)(sirius.DeputyDetails{}, w, r)
+			completeTaskReturnedError := renderTemplateForCompleteTask(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, completeTaskReturnedError)
 
 		})

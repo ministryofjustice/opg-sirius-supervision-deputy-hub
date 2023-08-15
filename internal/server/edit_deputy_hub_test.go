@@ -49,21 +49,21 @@ func TestPostEditDeputyHub(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
 	var returnedError error
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
+		returnedError = renderTemplateForEditDeputyHub(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(returnedError, Redirect("/133?success=teamDetails"))
+	assert.Equal(returnedError, Redirect("/123?success=teamDetails"))
 }
 
 func TestEditDeputyValidationErrors(t *testing.T) {

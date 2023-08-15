@@ -109,7 +109,6 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 
 	assert.Equal(changeECMHubVars{
 		AppVars: AppVars{
-			Path:   "/76/ecm",
 			Errors: expectedValidationErrors,
 		},
 	}, template.lastVars)
@@ -180,7 +179,7 @@ func TestChangeECMHandlesErrorsInOtherClientFiles(t *testing.T) {
 			form.Add("select-ecm", "26")
 			r.PostForm = form
 
-			changeEcmReturnedError := renderTemplateForChangeECM(client, 23, template)(AppVars{}, w, r)
+			changeEcmReturnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, changeEcmReturnedError)
 		})
 	}

@@ -35,9 +35,7 @@ func (m *mockFirmInformation) AssignDeputyToFirm(ctx sirius.Context, deputyId in
 }
 
 var addFirmAppVars = AppVars{
-	DeputyDetails: sirius.DeputyDetails{
-		ID: 123,
-	},
+	DeputyDetails: testDeputy,
 }
 
 func TestGetFirm(t *testing.T) {
@@ -101,8 +99,7 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	assert.Equal(addFirmVars{
 		AppVars: AppVars{
-			DeputyDetails: addFirmAppVars.DeputyDetails,
-			Errors:        validationErrors,
+			Errors: validationErrors,
 		},
 	}, template.lastVars)
 
@@ -145,7 +142,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 
 	assert.Equal(addFirmVars{
 		AppVars: AppVars{
-			DeputyDetails: addFirmAppVars.DeputyDetails,
+			DeputyDetails: testDeputy,
 			Errors:        expectedValidationErrors,
 		},
 	}, template.lastVars)

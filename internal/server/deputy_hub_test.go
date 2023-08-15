@@ -28,7 +28,9 @@ func (m *mockDeputyHubInformation) GetDeputyClients(ctx sirius.Context, deputyId
 }
 
 var testDeputy = sirius.DeputyDetails{
+	ID: 123,
 	ExecutiveCaseManager: sirius.ExecutiveCaseManager{
+		EcmId:   1,
 		EcmName: "Jon Snow",
 	},
 	Firm: sirius.Firm{

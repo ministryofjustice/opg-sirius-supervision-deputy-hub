@@ -60,7 +60,7 @@ func TestPostChangeFirm(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/123/firm", strings.NewReader(""))
 
 	form := url.Values{}
 	form.Add("select-existing-firm", "26")
@@ -70,14 +70,14 @@ func TestPostChangeFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/firm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
+		returnedError = renderTemplateForChangeFirm(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(returnedError, Redirect("/76?success=firm"))
+	assert.Equal(returnedError, Redirect("/123?success=firm"))
 }
 
 func TestPostChangeFirmReturnsStatusMethodError(t *testing.T) {
@@ -136,7 +136,6 @@ func TestPostFirmReturnsValidationErrors(t *testing.T) {
 
 	assert.Equal(changeFirmVars{
 		AppVars: AppVars{
-			Path:   "/76/firm",
 			Errors: validationErrors,
 		},
 	}, template.lastVars)
