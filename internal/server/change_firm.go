@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
@@ -14,42 +13,28 @@ type DeputyChangeFirmInformation interface {
 }
 
 type changeFirmVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
-	FirmDetails    []sirius.FirmForList
-	Error          string
-	Errors         sirius.ValidationErrors
+	Firms          []sirius.FirmForList
 	Success        bool
 	SuccessMessage string
+	AppVars
 }
 
 func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
-
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		firmDetails, err := client.GetFirms(ctx)
+		firms, err := client.GetFirms(ctx)
 		if err != nil {
 			return err
 		}
 
+		vars := changeFirmVars{
+			Firms:   firms,
+			AppVars: app,
+		}
+
 		switch r.Method {
 		case http.MethodGet:
-
-			if err != nil {
-				return err
-			}
-
-			vars := changeFirmVars{
-				Path:          r.URL.Path,
-				XSRFToken:     ctx.XSRFToken,
-				DeputyDetails: deputyDetails,
-				FirmDetails:   firmDetails,
-			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -58,7 +43,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
 
 			if newFirm == "new-firm" {
-				return Redirect(fmt.Sprintf("/%d/add-firm", deputyId))
+				return Redirect(fmt.Sprintf("/%d/add-firm", app.DeputyId()))
 			}
 
 			AssignToFirmId := 0
@@ -69,14 +54,10 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 				}
 			}
 
-			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, deputyId, AssignToFirmId)
+			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, app.DeputyId(), AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
-				vars = changeFirmVars{
-					Path:      r.URL.Path,
-					XSRFToken: ctx.XSRFToken,
-					Errors:    verr.Errors,
-				}
+				vars.Errors = verr.Errors
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
@@ -84,7 +65,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 				return assignDeputyToFirmErr
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=firm", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=firm", app.DeputyId()))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)

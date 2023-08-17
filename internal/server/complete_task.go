@@ -16,25 +16,20 @@ type CompleteTask interface {
 }
 
 type completeTaskVars struct {
-	Path           string
-	XSRFToken      string
-	DeputyDetails  sirius.DeputyDetails
 	TaskDetails    model.Task
 	CompletedNotes string
-	Error          string
-	Errors         sirius.ValidationErrors
-	Success        bool
 	SuccessMessage string
+	AppVars
 }
 
 func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, deputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
 		if err != nil {
 			return err
 		}
@@ -47,10 +42,8 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
 		vars := completeTaskVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
-			TaskDetails:   taskDetails,
+			AppVars:     app,
+			TaskDetails: taskDetails,
 		}
 
 		switch r.Method {
@@ -76,7 +69,7 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/tasks?success=complete&taskType=%s", deputyDetails.ID, taskDetails.Type))
+			return Redirect(fmt.Sprintf("/%d/tasks?success=complete&taskType=%s", app.DeputyId(), taskDetails.Type))
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
