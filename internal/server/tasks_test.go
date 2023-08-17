@@ -44,7 +44,7 @@ func TestNavigateTasksTab(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForTasks(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -76,7 +76,7 @@ func TestTasksHandlesErrorsInOtherClientFiles(t *testing.T) {
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
 
-			addFirmReturnedError := renderTemplateForTasks(client, template)(sirius.DeputyDetails{}, w, r)
+			addFirmReturnedError := renderTemplateForTasks(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, addFirmReturnedError)
 		})
 	}

@@ -18,9 +18,7 @@ type mockDeputyHubNotesInformation struct {
 	lastCtx           sirius.Context
 	GetDeputyNotesErr error
 	AddNoteErr        error
-	GetUserDetailsErr error
 	deputyNotesData   sirius.DeputyNoteCollection
-	userDetailsData   sirius.UserDetails
 }
 
 func (m *mockDeputyHubNotesInformation) GetDeputyNotes(ctx sirius.Context, deputyId int) (sirius.DeputyNoteCollection, error) {
@@ -37,11 +35,10 @@ func (m *mockDeputyHubNotesInformation) AddNote(ctx sirius.Context, title, note 
 	return m.AddNoteErr
 }
 
-func (m *mockDeputyHubNotesInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.userDetailsData, m.GetUserDetailsErr
+var deputyNotesAppVars = AppVars{
+	DeputyDetails: sirius.DeputyDetails{
+		ID: 123,
+	},
 }
 
 func TestGetNotes(t *testing.T) {
@@ -54,7 +51,7 @@ func TestGetNotes(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path?success=true", nil)
 
 	handler := renderTemplateForDeputyHubNotes(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(deputyNotesAppVars, w, r)
 
 	assert.Nil(err)
 
@@ -67,8 +64,8 @@ func TestGetNotes(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(deputyHubNotesVars{
-		Path:           "/path",
 		SuccessMessage: "Note added",
+		AppVars:        deputyNotesAppVars,
 	}, template.lastVars)
 }
 
@@ -83,7 +80,7 @@ func TestPostAddNote(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, nil)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeputyHubNotes(client, nil)(deputyNotesAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -110,15 +107,16 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(AppVars{}, w, r)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:   "/123",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -144,14 +142,16 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(AppVars{}, w, r)
 
-	assert.Equal(2, client.count)
+	assert.Equal(1, client.count)
+
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
-		Path:   "/123",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -162,11 +162,6 @@ func TestDeputyNotesHandlesErrorsInOtherClientFilesForPostMethod(t *testing.T) {
 	tests := []struct {
 		Client *mockDeputyHubNotesInformation
 	}{
-		{
-			Client: &mockDeputyHubNotesInformation{
-				GetUserDetailsErr: returnedError,
-			},
-		},
 		{
 			Client: &mockDeputyHubNotesInformation{
 				AddNoteErr: returnedError,
@@ -180,7 +175,7 @@ func TestDeputyNotesHandlesErrorsInOtherClientFilesForPostMethod(t *testing.T) {
 			template := &mockTemplates{}
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-			deputyHubReturnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+			deputyHubReturnedError := renderTemplateForDeputyHubNotes(client, template)(AppVars{}, w, r)
 			assert.Equal(t, returnedError, deputyHubReturnedError)
 		})
 	}
@@ -197,7 +192,7 @@ func TestDeputyHubHandlesErrorsForGetMethod(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
 
-	returnedError := renderTemplateForDeputyHubNotes(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForDeputyHubNotes(client, template)(AppVars{}, w, r)
 
 	assert.Equal(client.GetDeputyNotesErr, returnedError)
 

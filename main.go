@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -29,15 +28,11 @@ func main() {
 			log.Printf("error loading location '%s': %v\n", tz, err)
 		}
 	}
-	port := getEnv("PORT", "1234")
-	webDir := getEnv("WEB_DIR", "web")
-	siriusURL := getEnv("SIRIUS_URL", "http://localhost:8080")
-	siriusPublicURL := getEnv("SIRIUS_PUBLIC_URL", "")
-	prefix := getEnv("PREFIX", "")
-	DefaultPaTeam := getEnv("DEFAULT_PA_TEAM", "23")
-	DefaultProTeam := getEnv("DEFAULT_PRO_TEAM", "28")
-	firmHubURL := getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm"
-	features := strings.Split(getEnv("FEATURES", ""), ",")
+
+	envVars, err := server.NewEnvironmentVars()
+	if err != nil {
+		logger.Fatal(err)
+	}
 
 	layouts, _ := template.
 		New("").
@@ -55,46 +50,36 @@ func main() {
 				return false
 			},
 			"prefix": func(s string) string {
-				return prefix + s
+				return envVars.Prefix + s
 			},
 			"sirius": func(s string) string {
-				return siriusPublicURL + s
+				return envVars.SiriusPublicURL + s
 			},
 			"firmhub": func(s string) string {
-				return firmHubURL + s
+				return envVars.FirmHubURL + s
 			},
 			"translate":       util.Translate,
 			"rename_errors":   util.RenameErrors,
-			"feature_flagged": util.IsFeatureFlagged(features),
+			"feature_flagged": util.IsFeatureFlagged(envVars.Features),
 			"is_last":         util.IsLast,
 		}).
-		ParseGlob(webDir + "/template/*/*.gotmpl")
+		ParseGlob(envVars.WebDir + "/template/*/*.gotmpl")
 
-	files, _ := filepath.Glob(webDir + "/template/*.gotmpl")
+	files, _ := filepath.Glob(envVars.WebDir + "/template/*.gotmpl")
 	tmpls := map[string]*template.Template{}
 
 	for _, file := range files {
 		tmpls[filepath.Base(file)] = template.Must(template.Must(layouts.Clone()).ParseFiles(file))
 	}
 
-	client, err := sirius.NewClient(http.DefaultClient, siriusURL)
+	client, err := sirius.NewClient(http.DefaultClient, envVars.SiriusURL)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
-	defaultPATeam, err := strconv.Atoi(DefaultPaTeam)
-	if err != nil {
-		logger.Print("Error converting DEFAULT_PA_TEAM to int")
-	}
-
-	defaultPROTeam, err := strconv.Atoi(DefaultProTeam)
-	if err != nil {
-		logger.Print("Error converting DEFAULT_PRO_TEAM to int")
-	}
-
 	server := &http.Server{
-		Addr:    ":" + port,
-		Handler: server.New(logger, client, tmpls, prefix, siriusPublicURL, webDir, defaultPATeam, defaultPROTeam),
+		Addr:    ":" + envVars.Port,
+		Handler: server.New(logger, client, tmpls, envVars),
 	}
 
 	go func() {
@@ -103,7 +88,7 @@ func main() {
 		}
 	}()
 
-	logger.Print("Running at :" + port)
+	logger.Print("Running at :" + envVars.Port)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
@@ -117,12 +102,4 @@ func main() {
 	if err := server.Shutdown(tc); err != nil {
 		logger.Print(err)
 	}
-}
-
-func getEnv(key, def string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
-
-	return def
 }
