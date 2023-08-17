@@ -1,7 +1,6 @@
 node_modules
 package-lock.json
-test-results/*.xml
-test-results/*.txt
+test-results
 tmp/
 web/static
 
@@ -9,6 +8,7 @@ web/static
 cypress/logs
 cypress/screenshots
 cypress/videos
+cypress/downloads
 
 # binaries
 /main
@@ -17,3 +17,6 @@ cypress/videos
 .idea
 
 .DS_Store
+.cache
+.gocache
+.trivy-cache

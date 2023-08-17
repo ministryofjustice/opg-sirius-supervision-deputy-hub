@@ -19,30 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-      - uses: unfor19/install-aws-cli-action@v1
-
-      - name: Resolve GO mod cache
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      - name: Resolve GO Dependencies
-        run: |
-          go mod download
-      - name: Setup gotestsum
-        uses: autero1/action-gotestsum@v2.0.0
-        with:
-          gotestsum_version: 1.6.4
-
-      - run: mkdir -p /tmp/test-results
 
       - name: Run Tests
-        run: |
-          curl -sSL "https://github.com/gotestyourself/gotestsum/releases/download/v1.6.4/gotestsum_1.6.4_darwin_amd64.tar.gz" | tar -xz -C /usr/local/bin gotestsum
-          gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
+        run: make unit-test
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -57,7 +36,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run linting
-        uses: golangci/golangci-lint-action@v3
+        run: make go-lint
 
   acceptance-test:
     name: Acceptance Testing
@@ -66,12 +45,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run pa11y
-        run: |
-          docker-compose -f docker/docker-compose.ci.yml run --entrypoint="pa11y-ci" puppeteer
+        run: make pa11y
 
       - name: Run Lighthouse
-        run: |
-          docker-compose -f docker/docker-compose.ci.yml run --entrypoint="lhci autorun" puppeteer
+        run: make lighthouse
 
   cypress:
     name: Cypress
@@ -80,8 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run cypress
-        run: |
-          docker-compose -f docker/docker-compose.ci.yml run cypress
+        run: make cypress
       - name: Store screenshots
         uses: actions/upload-artifact@v3
         if: failure()
@@ -117,8 +93,7 @@ jobs:
       - uses: unfor19/install-aws-cli-action@v1
 
       - name: Build Container
-        run: |
-          docker-compose -f docker/docker-compose.ci.yml build deputy-hub
+        run: make build
 
       - name: Bump version
         id: bump_version
@@ -132,6 +107,15 @@ jobs:
           RELEASE_BRANCHES: main
           WITH_V: true
           DRY_RUN: ${{ github.actor == 'renovate[bot]' }}
+
+      - name: Run Trivy vulnerability scanner
+        run: make scan
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'test-results/trivy.sarif'
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -149,35 +133,14 @@ jobs:
         with:
           registries: 311462405659
 
-      - name: Tag Container
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: sirius/sirius-deputy-hub
-        run: |
-          docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ steps.login-ecr.outputs.registry }}/sirius/sirius-deputy-hub:${{ steps.bump_version.outputs.tag }}
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'test-results/trivy-results.sarif'
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        if: always()
-        with:
-          sarif_file: 'test-results/trivy-results.sarif'
-
       - name: Push Container
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           DEPUTY_HUB_ECR_REPOSITORY: sirius/sirius-deputy-hub
         run: |
+          docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:latest
-            docker tag sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
             # We want all of the tags pushed
             docker push --all-tags $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY
           else
