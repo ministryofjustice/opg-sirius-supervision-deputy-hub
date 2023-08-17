@@ -17,8 +17,9 @@ services:
       FIRM_HUB_HOST: http://localhost:8887
       PREFIX: /supervision/deputies
       FEATURES: tasks,contacts
-    yarn:
-      command: watch
+
+  yarn:
+    command: watch
 
   json-server:
     volumes:
