@@ -9,4 +9,6 @@ COPY json-server .
 
 RUN yarn install
 
+RUN apk add --no-cache curl
+
 ENTRYPOINT ["yarn", "serve"]
