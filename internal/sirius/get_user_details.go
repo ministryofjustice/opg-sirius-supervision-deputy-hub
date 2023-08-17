@@ -3,6 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 )
 
 type UserDetails struct {
@@ -11,14 +12,18 @@ type UserDetails struct {
 	Username string   `json:"displayName"`
 }
 
-func (d UserDetails) IsFinanceManager() bool {
-	for _, role := range d.Roles {
+func (u UserDetails) IsFinanceManager() bool {
+	for _, role := range u.Roles {
 		if role == "Finance Manager" {
 			return true
 		}
 	}
 
 	return false
+}
+
+func (u UserDetails) GetRoles() string {
+	return strings.Join(u.Roles, ",")
 }
 
 func (c *Client) GetUserDetails(ctx Context) (UserDetails, error) {
