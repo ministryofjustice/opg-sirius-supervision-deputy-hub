@@ -1,0 +1,13 @@
+{{ define "contact-set-as-main" }}
+    <div class="moj-timeline__item" data-cy="contact-set-as-main-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">Main contact set to {{ .Event.Contact.Name }}</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+    </div>
+{{ end }}

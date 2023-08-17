@@ -1703,6 +1703,102 @@ module.exports = function () {
                         {"fieldName":"dueDate","oldValue":"11\/08\/2023","newValue":"12\/08\/2023","type":"string"}
                     ]
                 },
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactAdded",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactEdited",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    },
+                    "changes": [
+                        {
+                            "fieldName": "name",
+                            "oldValue": "Miss Deputy Contact",
+                            "newValue": "Mr Deputy Contact",
+                            "type": "string"
+                        },
+                    ]
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsMain",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 377,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsMain",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
             }
         ],
         "notes": [

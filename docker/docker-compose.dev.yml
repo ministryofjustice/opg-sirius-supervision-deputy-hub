@@ -14,9 +14,11 @@ services:
     environment:
       SIRIUS_URL: http://json-server:3000
       SIRIUS_PUBLIC_URL: http://localhost:8080
-
-  yarn:
-    command: watch
+      FIRM_HUB_HOST: http://localhost:8887
+      PREFIX: /supervision/deputies
+      FEATURES: tasks,contacts 
+    yarn:
+      command: watch
 
   json-server:
     volumes:

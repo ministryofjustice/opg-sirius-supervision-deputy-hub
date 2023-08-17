@@ -4,6 +4,16 @@ describe("Contacts", () => {
         cy.setCookie("XSRF-TOKEN", "abcde");
     });
 
+    describe("Navigation", () => {
+        it("should navigate to Contacts tab", () => {
+            cy.visit("/supervision/deputies/3");
+            cy.get(".moj-sub-navigation__list").contains("Contacts").click();
+
+            cy.url().should("include", "/supervision/deputies/3/contacts");
+            cy.get(".govuk-heading-l").contains("Contacts");
+        });
+    })
+
     describe("Adding a Contact", () => {
         beforeEach(() => {
             cy.visit("/supervision/deputies/3/contacts/add-contact");
