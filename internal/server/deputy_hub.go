@@ -25,7 +25,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 
 		ctx := getContext(r)
 
-		clientList, _, err := client.GetDeputyClients(ctx, app.DeputyId(), 25, 1, app.DeputyDetails.DeputyType.Handle, "", "")
+		clientList, _, err := client.GetDeputyClients(ctx, app.DeputyId(), 25, 1, app.DeputyType(), "", "")
 		if err != nil {
 			return err
 		}

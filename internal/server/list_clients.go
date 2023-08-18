@@ -40,7 +40,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		clientList, ariaSorting, err := client.GetDeputyClients(ctx, app.DeputyId(), displayClientLimit, search, app.DeputyDetails.DeputyType.Handle, columnBeingSorted, sortOrder)
+		clientList, ariaSorting, err := client.GetDeputyClients(ctx, app.DeputyId(), displayClientLimit, search, app.DeputyType(), columnBeingSorted, sortOrder)
 		if err != nil {
 			return err
 		}
