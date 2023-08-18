@@ -1,10 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
 {{ template "content-header" . }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+    {{ if eq .DeputyType "PA" }}
         {{ template "manage-pa-important-information" . }}
     {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+    {{ if eq .DeputyType "PRO" }}
         {{ template "manage-pro-important-information" . }}
     {{ end }}
 {{ end }}

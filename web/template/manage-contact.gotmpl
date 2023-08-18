@@ -96,7 +96,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="govuk-form-group">
+                <div class="govuk-form-group {{ if ne .DeputyType "PA" }}hide{{ end }}">
                     <fieldset class="govuk-fieldset" id="f-isNamedDeputy">
                         <legend class="govuk-fieldset__legend">
                             Named deputy
