@@ -7,7 +7,7 @@
     "accessible-autocomplete": "^2.0.4",
     "govuk-frontend": "^4.3.1",
     "jquery": "^3.6.1",
-    "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.9.0"
+    "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.14.0"
   },
   "devDependencies": {
     "esbuild": "^0.18.0",
@@ -27,8 +27,11 @@
     "cypress": "cypress open",
     "cypress-m1": "export CYPRESS_BASE_URL=http://localhost:8888; cypress open",
     "cypress-headless": "cypress run -b chrome",
-    "cypress-build-down": "docker-compose -f docker/docker-compose.ci.yml down",
-    "fmt": "prettier --write ."
+    "cypress-build-down": "docker compose down",
+    "lint": "prettier --check .",
+    "prettier": "prettier --write .",
+    "fmt": "prettier --write .",
+    "watch": "yarn build:js --watch=forever"
   },
   "resolutions": {
     "colors": "1.4.0"

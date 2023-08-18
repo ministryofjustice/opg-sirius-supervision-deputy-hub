@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
 )
@@ -15,46 +14,22 @@ type ManageProDeputyImportantInformation interface {
 	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
 	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
 	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
 }
 
 type manageDeputyImportantInformationVars struct {
-	Path                      string
-	XSRFToken                 string
-	DeputyDetails             sirius.DeputyDetails
-	Error                     string
-	Errors                    sirius.ValidationErrors
-	DeputyId                  int
 	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
 	DeputyBooleanTypes        []sirius.DeputyBooleanTypes
 	DeputyReportSystemTypes   []sirius.DeputyReportSystemTypes
-	IsFinanceManager          bool
+	AppVars
 }
 
 func renderTemplateForImportantInformation(client ManageProDeputyImportantInformation, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
 
-		vars := manageDeputyImportantInformationVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyId:      deputyId,
-			DeputyDetails: deputyDetails,
-		}
+		vars := manageDeputyImportantInformationVars{AppVars: app}
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)
-
-		group.Go(func() error {
-			userDetails, err := client.GetUserDetails(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-
-			vars.IsFinanceManager = userDetails.IsFinanceManager()
-			return nil
-		})
 
 		group.Go(func() error {
 			annualBillingInvoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(ctx.With(groupCtx))
@@ -108,14 +83,14 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 
 			annualBillingInvoice := r.PostFormValue("annual-billing")
 			if annualBillingInvoice == "" {
-				annualBillingInvoice = vars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label
+				annualBillingInvoice = vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label
 			}
 			if annualBillingInvoice == "" {
 				annualBillingInvoice = "Unknown"
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
-				DeputyType:                vars.DeputyDetails.DeputyType.Handle,
+				DeputyType:                vars.AppVars.DeputyDetails.DeputyType.Handle,
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
 				AnnualBillingInvoice:      annualBillingInvoice,
@@ -127,7 +102,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				ReportSystem:              reportSystemType,
 			}
 
-			err = client.UpdateImportantInformation(ctx, deputyId, importantInfoForm)
+			err = client.UpdateImportantInformation(ctx, app.DeputyId(), importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
@@ -137,7 +112,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d?success=importantInformation", deputyId))
+			return Redirect(fmt.Sprintf("/%d?success=importantInformation", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

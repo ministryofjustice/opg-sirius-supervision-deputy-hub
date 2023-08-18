@@ -41,16 +41,11 @@ func (m *mockManageDeputyImportantInformation) UpdateImportantInformation(ctx si
 	return args.Error(0)
 }
 
-func (m *mockManageDeputyImportantInformation) GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error) {
-	args := m.Called(ctx)
-
-	return args.Get(0).(sirius.UserDetails), args.Error(1)
-}
-
 func TestGetManageImportantInformation(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
+	app := AppVars{DeputyDetails: deputyDetails}
 	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "x", Label: "y"}}
 	booleanTypes := []sirius.DeputyBooleanTypes{{Handle: "x", Label: "w"}}
 	reportTypes := []sirius.DeputyReportSystemTypes{{Handle: "x", Label: "z"}}
@@ -67,7 +62,7 @@ func TestGetManageImportantInformation(t *testing.T) {
 	r, _ := http.NewRequest("GET", "", nil)
 
 	handler := renderTemplateForImportantInformation(client, template)
-	err := handler(sirius.DeputyDetails{ID: 123}, w, r)
+	err := handler(app, w, r)
 
 	assert.Nil(err)
 
@@ -77,24 +72,24 @@ func TestGetManageImportantInformation(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(manageDeputyImportantInformationVars{
-		DeputyDetails:             deputyDetails,
+		AppVars:                   app,
 		AnnualBillingInvoiceTypes: invoiceTypes,
 		DeputyBooleanTypes:        booleanTypes,
 		DeputyReportSystemTypes:   reportTypes,
-		IsFinanceManager:          true,
 	}, template.lastVars)
 }
 
 func TestPostManageImportantInformation(t *testing.T) {
 	testCases := map[string]struct {
-		deputyDetails               sirius.DeputyDetails
+		app                         AppVars
 		form                        url.Values
 		importantInformationDetails sirius.ImportantInformationDetails
 	}{
 		"default": {
-			deputyDetails: sirius.DeputyDetails{
+			app: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
-			},
+			}},
 			form: url.Values{},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
@@ -102,12 +97,13 @@ func TestPostManageImportantInformation(t *testing.T) {
 			},
 		},
 		"previous value": {
-			deputyDetails: sirius.DeputyDetails{
+			app: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
 					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
 				},
-			},
+			}},
 			form: url.Values{},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
@@ -115,12 +111,13 @@ func TestPostManageImportantInformation(t *testing.T) {
 			},
 		},
 		"form value": {
-			deputyDetails: sirius.DeputyDetails{
+			app: AppVars{DeputyDetails: sirius.DeputyDetails{
+				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
 					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
 				},
-			},
+			}},
 			form: url.Values{"annual-billing": {"new-value"}},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
@@ -150,7 +147,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			testHandler := mux.NewRouter()
 			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				redirect = renderTemplateForImportantInformation(client, template)(tc.deputyDetails, w, r)
+				redirect = renderTemplateForImportantInformation(client, template)(tc.app, w, r)
 			})
 
 			testHandler.ServeHTTP(w, r)

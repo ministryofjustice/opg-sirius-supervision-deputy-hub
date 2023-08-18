@@ -45,7 +45,7 @@ func TestNavigateToChangeFirm(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForChangeFirm(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -60,7 +60,7 @@ func TestPostChangeFirm(t *testing.T) {
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/123/firm", strings.NewReader(""))
 
 	form := url.Values{}
 	form.Add("select-existing-firm", "26")
@@ -70,14 +70,14 @@ func TestPostChangeFirm(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/firm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForChangeFirm(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(returnedError, Redirect("/76?success=firm"))
+	assert.Equal(returnedError, Redirect("/123?success=firm"))
 }
 
 func TestPostChangeFirmReturnsStatusMethodError(t *testing.T) {
@@ -89,7 +89,7 @@ func TestPostChangeFirmReturnsStatusMethodError(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("PUT", "/76/firm", strings.NewReader(""))
 
-	returnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
 
 	assert.Equal(StatusError(http.StatusMethodNotAllowed), returnedError)
 }
@@ -108,7 +108,7 @@ func TestPostFirmRedirectsIfNewFirmChosen(t *testing.T) {
 	form.Add("select-firm", "new-firm")
 	r.PostForm = form
 
-	returnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
 
 	assert.Equal(Redirect("/0/add-firm"), returnedError)
 }
@@ -132,11 +132,12 @@ func TestPostFirmReturnsValidationErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(""))
 
-	returnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+	returnedError := renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
 
 	assert.Equal(changeFirmVars{
-		Path:   "/76/firm",
-		Errors: validationErrors,
+		AppVars: AppVars{
+			Errors: validationErrors,
+		},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -173,7 +174,7 @@ func TestChangeFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
 			r, _ := http.NewRequest("POST", "/76/firm", strings.NewReader(form.Encode()))
 			r.PostForm = form
 
-			changeEcmReturnedError := renderTemplateForChangeFirm(client, template)(sirius.DeputyDetails{}, w, r)
+			changeEcmReturnedError := renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
 
 			assert.Equal(t, returnedError, changeEcmReturnedError)
 		})

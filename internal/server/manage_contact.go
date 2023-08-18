@@ -31,19 +31,18 @@ type ManageContactVars struct {
 	IsNamedDeputy    string
 	IsMainContact    string
 	IsNewContact     bool
+	AppVars
 }
 
 func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
 		vars := ManageContactVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
+			AppVars: appVars,
 			IsNewContact:  contactId == 0,
 		}
 
@@ -66,7 +65,6 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
 				vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
 			}
-
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
@@ -93,21 +91,16 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars := ManageContactVars{
-					Path:             r.URL.Path,
-					XSRFToken:        ctx.XSRFToken,
-					Errors:           verr.Errors,
-					DeputyDetails:    deputyDetails,
-					ContactName:      r.PostFormValue("contact-name"),
-					JobTitle:         r.PostFormValue("job-title"),
-					Email:            r.PostFormValue("email"),
-					PhoneNumber:      r.PostFormValue("phone-number"),
-					OtherPhoneNumber: r.PostFormValue("other-phone-number"),
-					ContactNotes:     r.PostFormValue("contact-notes"),
-					IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
-					IsMainContact:    r.PostFormValue("is-main-contact"),
-					IsNewContact:     contactId == 0,
-				}
+				vars.Errors = verr.Errors
+				vars.ContactName = manageContactForm.ContactName
+				vars.JobTitle = manageContactForm.JobTitle
+				vars.Email = manageContactForm.Email
+				vars.PhoneNumber = manageContactForm.PhoneNumber
+				vars.OtherPhoneNumber = manageContactForm.OtherPhoneNumber
+				vars.ContactNotes = manageContactForm.ContactNotes
+				vars.IsNamedDeputy = manageContactForm.IsNamedDeputy
+				vars.IsMainContact = manageContactForm.IsMainContact
+				vars.IsNewContact = contactId == 0
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
