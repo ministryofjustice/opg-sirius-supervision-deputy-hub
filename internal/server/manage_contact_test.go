@@ -162,9 +162,7 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 	}
 
 	assert.Equal(ManageContactVars{
-		AppVars: AppVars{
-			Errors: expectedValidationErrors,
-		},
+		Errors:       expectedValidationErrors,
 		IsNewContact: true,
 	}, template.lastVars)
 
