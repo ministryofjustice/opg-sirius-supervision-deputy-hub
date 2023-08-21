@@ -42,7 +42,7 @@ func TestGetDeleteContact(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForDeleteContact(client, template)
-	err := handler(sirius.DeputyDetails{}, w, r)
+	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
 
@@ -64,7 +64,7 @@ func TestPostDeleteContact(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/{contactId}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeleteContact(client, nil)(sirius.DeputyDetails{}, w, r)
+		returnedError = renderTemplateForDeleteContact(client, nil)(AppVars{}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)

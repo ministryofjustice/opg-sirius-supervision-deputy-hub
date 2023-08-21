@@ -15,26 +15,24 @@ type DeleteContact interface {
 
 // Could just use ErrorVars?
 type DeleteContactVars struct {
-	Path          string
-	XSRFToken     string
-	DeputyDetails sirius.DeputyDetails
-	Error         string
-	Errors        sirius.ValidationErrors
-	ErrorNote     string
-	ContactName   string
+	Path        string
+	XSRFToken   string
+	Error       string
+	Errors      sirius.ValidationErrors
+	ErrorNote   string
+	ContactName string
+	AppVars
 }
 
 func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler {
-	return func(deputyDetails sirius.DeputyDetails, w http.ResponseWriter, r *http.Request) error {
+	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
 		vars := DeleteContactVars{
-			Path:          r.URL.Path,
-			XSRFToken:     ctx.XSRFToken,
-			DeputyDetails: deputyDetails,
+			AppVars: appVars,
 		}
 
 		contact, err := client.GetContactById(ctx, deputyId, contactId)
