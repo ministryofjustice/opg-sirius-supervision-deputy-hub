@@ -38,6 +38,12 @@
     {{ if eq .EventType "DeputyContactRemovedAsMain" }}
         {{ template "contact-removed-as-main" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyContactSetAsNamed" }}
+        {{ template "contact-set-as-named" . }}
+    {{ end }}
+    {{ if eq .EventType "DeputyContactRemovedAsNamed" }}
+        {{ template "contact-removed-as-named" . }}
+    {{ end }}
     {{ if eq .EventType "TaskCreated" }}
         {{ template "task-created" . }}
     {{ end }}

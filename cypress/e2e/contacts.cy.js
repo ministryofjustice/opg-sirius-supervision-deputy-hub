@@ -173,5 +173,5 @@ describe("Contacts", () => {
             cy.visit("/supervision/deputies/3/contacts/add-contact");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").should("not.be.visible");
         });
-    })
+    });
 });
