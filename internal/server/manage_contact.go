@@ -15,12 +15,6 @@ type ManageContact interface {
 }
 
 type ManageContactVars struct {
-	Path             string
-	XSRFToken        string
-	DeputyDetails    sirius.DeputyDetails
-	Error            string
-	Errors           sirius.ValidationErrors
-	ErrorNote        string
 	ContactId        int
 	ContactName      string
 	JobTitle         string
@@ -42,8 +36,8 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
 		vars := ManageContactVars{
-			AppVars: appVars,
-			IsNewContact:  contactId == 0,
+			AppVars:      appVars,
+			IsNewContact: contactId == 0,
 		}
 
 		switch r.Method {

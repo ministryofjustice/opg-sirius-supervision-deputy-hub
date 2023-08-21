@@ -15,11 +15,6 @@ type DeleteContact interface {
 
 // Could just use ErrorVars?
 type DeleteContactVars struct {
-	Path        string
-	XSRFToken   string
-	Error       string
-	Errors      sirius.ValidationErrors
-	ErrorNote   string
 	ContactName string
 	AppVars
 }
