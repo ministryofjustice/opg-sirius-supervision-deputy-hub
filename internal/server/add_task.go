@@ -32,7 +32,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 		}
 		ctx := getContext(r)
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyType())
 		if err != nil {
 			return err
 		}

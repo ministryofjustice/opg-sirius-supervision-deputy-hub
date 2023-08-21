@@ -55,7 +55,7 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 				note  = r.PostFormValue("note")
 			)
 
-			err := client.AddNote(ctx, title, note, app.DeputyId(), app.UserDetails.ID, app.DeputyDetails.DeputyType.Handle)
+			err := client.AddNote(ctx, title, note, app.DeputyId(), app.UserDetails.ID, app.DeputyType())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars = addNoteVars{

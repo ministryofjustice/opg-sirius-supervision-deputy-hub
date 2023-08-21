@@ -6,17 +6,17 @@ describe("Contacts", () => {
 
     describe("Navigation", () => {
         it("should navigate to Contacts tab", () => {
-            cy.visit("/supervision/deputies/3");
+            cy.visit("/supervision/deputies/1");
             cy.get(".moj-sub-navigation__list").contains("Contacts").click();
 
-            cy.url().should("include", "/supervision/deputies/3/contacts");
+            cy.url().should("include", "/supervision/deputies/1/contacts");
             cy.get(".govuk-heading-l").contains("Contacts");
         });
     })
 
     describe("Adding a Contact", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/contacts/add-contact");
+            cy.visit("/supervision/deputies/1/contacts/add-contact");
         })
 
         it("shows content", () => {
@@ -41,7 +41,7 @@ describe("Contacts", () => {
             cy.get('#is-named-deputy-no').click();
             cy.get('#is-main-contact-no').click();
             cy.get("#contact-form").submit();
-            cy.url().should("contain", "/supervision/deputies/3/contacts?success=newContact");
+            cy.url().should("contain", "/supervision/deputies/1/contacts?success=newContact");
             cy.get(".moj-banner").should("contain", "Contact added");
         });
 
@@ -71,7 +71,7 @@ describe("Contacts", () => {
 
     describe("Updating a Contact", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/contacts");
+            cy.visit("/supervision/deputies/1/contacts");
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').click();
         })
 
@@ -93,7 +93,7 @@ describe("Contacts", () => {
             cy.setCookie("success-route", "/contacts/1");
             cy.get("#f-contactName").type("{selectAll}{backspace}John Smith");
             cy.get("#contact-form").submit();
-            cy.url().should("contain", "/supervision/deputies/3/contacts?success=updatedContact");
+            cy.url().should("contain", "/supervision/deputies/1/contacts?success=updatedContact");
             cy.get(".moj-banner").should("contain", "John Smith's details updated");
         });
 
@@ -123,7 +123,7 @@ describe("Contacts", () => {
 
     describe("List Contacts", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/contacts");
+            cy.visit("/supervision/deputies/1/contacts");
         })
 
         it("shows header title and button", () => {
@@ -165,6 +165,13 @@ describe("Contacts", () => {
             cy.get(':nth-child(2) > :nth-child(3) > .notes').contains("This is a test");
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--secondary').contains("Manage contact");
             cy.get(':nth-child(2) > :nth-child(4) > .govuk-button--warning').contains("Delete contact");
+        });
+    });
+
+    describe("Named deputy contact", () => {
+        it("should not display 'Named Deputy' radio buttons for Pro deputies", () => {
+            cy.visit("/supervision/deputies/3/contacts/add-contact");
+            cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").should("not.be.visible");
         });
     });
 });

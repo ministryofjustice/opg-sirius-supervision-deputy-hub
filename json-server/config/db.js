@@ -1400,7 +1400,7 @@ module.exports = function () {
         },
         "timeline": [
             {
-                "id": 392,
+                "id": 1,
                 "hash": "AW",
                 "timestamp": "2021-09-09 14:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
@@ -1434,7 +1434,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 377,
+                "id": 2,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\Person\\DeputyContactDetailsChanged",
@@ -1468,7 +1468,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 388,
+                "id": 3,
                 "hash": "AS",
                 "timestamp": "2022-03-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
@@ -1501,7 +1501,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 387,
+                "id": 4,
                 "hash": "AR",
                 "timestamp": "2022-03-22 15:56:53",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
@@ -1534,7 +1534,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 402,
+                "id": 5,
                 "hash": "AY",
                 "timestamp": "2021-11-24 14:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\DeputyAllocated",
@@ -1554,7 +1554,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 394,
+                "id": 6,
                 "hash": "AY",
                 "timestamp": "2021-09-09 14:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged",
@@ -1596,7 +1596,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 395,
+                "id": 7,
                 "hash": "AY",
                 "timestamp": "2021-10-10 15:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Client\\PADeputyCreated",
@@ -1614,7 +1614,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 396,
+                "id": 8,
                 "hash": "AY",
                 "timestamp": "2021-10-10 15:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Deputy\\AssuranceVisitAdded",
@@ -1645,7 +1645,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 397,
+                "id": 9,
                 "hash": "AY",
                 "timestamp": "2021-10-10 15:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
@@ -1672,7 +1672,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 397,
+                "id": 10,
                 "hash": "AY",
                 "timestamp": "2023-10-10 15:01:59",
                 "eventType": "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
@@ -1705,7 +1705,7 @@ module.exports = function () {
                 },
             },
             {
-                "id": 377,
+                "id": 11,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactAdded",
@@ -1727,7 +1727,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 377,
+                "id": 12,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactEdited",
@@ -1757,7 +1757,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": 377,
+                "id": 13,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsMain",
@@ -1779,10 +1779,54 @@ module.exports = function () {
                 }
             },
             {
-                "id": 377,
+                "id": 14,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsMain",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 15,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsNamed",
+                "user": {
+                    "id": 51,
+                    "phoneNumber": "12345678",
+                    "displayName": "case manager",
+                    "email": "case.manager@opgtest.com"
+                },
+                "event": {
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "pro dept",
+                    "personCourtRef": null,
+                    "deputyContact": {
+                        "name": "Mr Deputy Contact"
+                    }
+                }
+            },
+            {
+                "id": 16,
+                "hash": "AS",
+                "timestamp": "2022-04-22 15:57:11",
+                "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsNamed",
                 "user": {
                     "id": 51,
                     "phoneNumber": "12345678",
