@@ -28,6 +28,7 @@ type Client interface {
 	AssuranceVisit
 	ManageAssuranceVisit
 	ManageContact
+	DeleteContact
 	AddTasksClient
 	TasksClient
 	ManageTasks
@@ -62,6 +63,10 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("/contacts/{contactId}",
 		wrap(
 			renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+
+	pageRouter.Handle("/contacts/{contactId}/delete",
+		wrap(
+			renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
 
 	pageRouter.Handle("/clients",
 		wrap(

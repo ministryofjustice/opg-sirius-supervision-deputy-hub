@@ -15,6 +15,7 @@ type ManageContact interface {
 }
 
 type ManageContactVars struct {
+	ContactId        int
 	ContactName      string
 	JobTitle         string
 	Email            string
@@ -35,8 +36,8 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
 		vars := ManageContactVars{
-			AppVars: appVars,
-			IsNewContact:  contactId == 0,
+			AppVars:      appVars,
+			IsNewContact: contactId == 0,
 		}
 
 		switch r.Method {
@@ -48,6 +49,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 					return err
 				}
 
+				vars.ContactId = contactId
 				vars.ContactName = contact.ContactName
 				vars.JobTitle = contact.JobTitle
 				vars.Email = contact.Email
