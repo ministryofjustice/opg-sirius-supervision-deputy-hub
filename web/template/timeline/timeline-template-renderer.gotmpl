@@ -50,4 +50,7 @@
     {{ if eq .EventType "TaskCompleted" }}
         {{ template "task-completed" . }}
     {{ end }}
+    {{ if eq .EventType "TaskReassigned" }}
+        {{ template "task-reassigned" . }}
+    {{ end }}
 {{ end }}
