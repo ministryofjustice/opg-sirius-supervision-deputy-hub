@@ -1,3 +1,5 @@
+import "cypress-axe";
+
 const navTabs = [
     ["Deputy details", "/supervision/deputies/1"],
     ["Contacts", "/supervision/deputies/1/contacts"],

@@ -28,7 +28,7 @@ $govuk-assets-path: "/supervision/deputies/assets/";
   display: flex;
   justify-content: space-between;
   padding: 1em 0 0.5em;
-  border-bottom: 1px solid #b1b4b6;
+  border-bottom: 1px solid $govuk-border-colour;
   margin-bottom: 2em;
 }
 
@@ -42,6 +42,6 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 
 #delete-contact-button-group {
     max-width: 75ch;
-    border-top: 1px solid #b1b4b6;
+    border-top: 1px solid $govuk-border-colour;
     padding-top: 1em;
 }
