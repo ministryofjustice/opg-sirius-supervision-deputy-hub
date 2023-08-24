@@ -10,11 +10,13 @@
     "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.16.0"
   },
   "devDependencies": {
+    "axe-core": "^4.7.2",
+    "cypress": "^12.0.0",
+    "cypress-axe": "^1.4.0",
+    "cypress-failed-log": "^2.10.0",
     "esbuild": "^0.18.0",
     "prettier": "^2.7.1",
-    "sass": "^1.38.1",
-    "cypress": "^12.0.0",
-    "cypress-failed-log": "^2.10.0"
+    "sass": "^1.38.1"
   },
   "scripts": {
     "build": "yarn build:js && yarn build:css && yarn build:images",

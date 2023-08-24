@@ -29,14 +29,6 @@ scan: setup-directories
 	docker compose run --rm trivy image --format table --exit-code 0 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
 	docker compose run --rm trivy image --format sarif --output /test-results/trivy.sarif --exit-code 1 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
 
-pa11y: setup-directories
-	docker compose up -d --wait deputy-hub
-	docker compose run --entrypoint="pa11y-ci" puppeteer
-
-lighthouse: setup-directories
-	docker compose up -d --wait deputy-hub
-	docker compose run --entrypoint="lhci autorun" puppeteer
-
 cypress: setup-directories
 	docker compose up -d --wait deputy-hub
 	docker compose run --rm cypress
