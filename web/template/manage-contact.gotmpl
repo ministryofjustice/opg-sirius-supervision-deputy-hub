@@ -4,7 +4,7 @@
 {{ template "error-summary" (rename_errors .Errors) }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-            {{ if eq .IsNewContact true }}Add new contact{{ else }}Manage contact{{ end }}
+            {{ if .IsNewContact }}Add new contact{{ else }}Manage contact{{ end }}
         </h1>
     </header>
     <div class="govuk-grid-row">
@@ -103,13 +103,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="true" {{ if eq .IsNamedDeputy "true" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-named-deputy-yes" name="is-named-deputy" type="radio" value="true" {{ if .IsNamedDeputy }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="false" {{ if eq .IsNamedDeputy "false" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="false" {{ if not .IsNamedDeputy }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
                                 No
                                 </label>
@@ -124,13 +124,13 @@
                         </legend>
                         <div class="govuk-radios">
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="true" {{ if eq .IsMainContact "true" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-main-contact-yes" name="is-main-contact" type="radio" value="true" {{ if .IsMainContact }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-yes">
                                 Yes
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="false" {{ if eq .IsMainContact "false" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="false" {{ if not .IsMainContact }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
                                 No
                                 </label>
@@ -150,7 +150,7 @@
                         href="{{ prefix (printf "/%d/contacts" .DeputyDetails.ID) }}">
                         Cancel
                     </a>
-                    {{ if eq .IsNewContact false }}
+                    {{ if not .IsNewContact }}
                         <a
                             href="{{ prefix (printf "/%d/contacts/%d/delete" .DeputyDetails.ID .ContactId) }}"
                             class="govuk-button govuk-button--warning"

@@ -22,8 +22,8 @@ type ManageContactVars struct {
 	PhoneNumber      string
 	OtherPhoneNumber string
 	ContactNotes     string
-	IsNamedDeputy    string
-	IsMainContact    string
+	IsNamedDeputy    bool
+	IsMainContact    bool
 	IsNewContact     bool
 	AppVars
 }
@@ -56,8 +56,8 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				vars.PhoneNumber = contact.PhoneNumber
 				vars.OtherPhoneNumber = contact.OtherPhoneNumber
 				vars.ContactNotes = contact.ContactNotes
-				vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
-				vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
+				vars.IsNamedDeputy = contact.IsNamedDeputy
+				vars.IsMainContact = contact.IsMainContact
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -72,8 +72,8 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				PhoneNumber:      r.PostFormValue("phone-number"),
 				OtherPhoneNumber: r.PostFormValue("other-phone-number"),
 				ContactNotes:     r.PostFormValue("contact-notes"),
-				IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
-				IsMainContact:    r.PostFormValue("is-main-contact"),
+				IsNamedDeputy:    r.PostFormValue("is-named-deputy") == "true",
+				IsMainContact:    r.PostFormValue("is-main-contact") == "true",
 			}
 
 			if contactId == 0 {
