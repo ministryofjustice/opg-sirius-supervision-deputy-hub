@@ -6,9 +6,9 @@
             <title>
                 {{ if .Error }}
                     Page not found
-                {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                {{ else if eq .DeputyType "PA" }}
                     OPG Sirius Deputy Hub - Sirius
-                {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                {{ else if eq .DeputyType "PRO" }}
                     OPG Sirius Professional Deputy Hub - Sirius
                 {{ end }}
             </title>
@@ -52,9 +52,9 @@
         <body
             {{ if .Error }}
                 class="govuk-template__body sirius-pahub"
-            {{ else if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+            {{ else if eq .DeputyType "PRO" }}
                 class="govuk-template__body sirius-prohub"
-            {{ else if eq .DeputyDetails.DeputyType.Handle "PA" }}
+            {{ else if eq .DeputyType "PA" }}
                 class="govuk-template__body sirius-pahub"
             {{ end }}>
 
