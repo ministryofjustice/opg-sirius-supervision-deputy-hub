@@ -31,7 +31,11 @@ scan: setup-directories
 
 cypress: setup-directories
 	docker compose up -d --wait deputy-hub
-	docker compose run --rm cypress
+	docker compose run --rm cypress run --env grepUntagged=true
+
+axe: setup-directories
+	docker compose up -d --wait deputy-hub
+	docker compose run --rm cypress run --env grepTags="@axe"
 
 up:
 	docker compose up --build -d deputy-hub
