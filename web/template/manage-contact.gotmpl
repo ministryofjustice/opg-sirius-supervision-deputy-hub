@@ -109,7 +109,7 @@
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="false" {{ if eq .IsNamedDeputy "false" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-named-deputy-no" name="is-named-deputy" type="radio" value="false" {{ if ne .IsNamedDeputy "true" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-named-deputy-no">
                                 No
                                 </label>
@@ -130,7 +130,7 @@
                                 </label>
                             </div>
                             <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="false" {{ if eq .IsMainContact "false" }} checked="true"{{ end }}>
+                                <input class="govuk-radios__input" id="is-main-contact-no" name="is-main-contact" type="radio" value="false" {{ if ne .IsMainContact "true" }} checked="true"{{ end }}>
                                 <label class="govuk-label govuk-radios__label" for="is-main-contact-no">
                                 No
                                 </label>
