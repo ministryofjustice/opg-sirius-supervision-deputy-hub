@@ -29,7 +29,7 @@
       display: flex;
       justify-content: space-between;
       padding: 0.5em 0 0.5em;
-      border-bottom: 1px solid #b1b4b6;
+      border-bottom: 1px solid $govuk-border-colour;
       margin-bottom: 2em;
     }
 
@@ -64,18 +64,18 @@
   span.rag {
     font-weight: bold;
     &.green {
-      color: #28a197;
+      color: govuk-colour("green");
     }
     &.amber {
-      color: #f47738;
+      color: govuk-colour("orange");
     }
     &.red {
-      color: #d4351c;
+      color: govuk-colour("red");
     }
   }
 
   span.secondary {
-    color: #505a5f;
+    color: $govuk-secondary-text-colour;
     font-size: 16px;
     font-size: 1rem;
     line-height: 1.25;
@@ -117,7 +117,7 @@
         }
 
         &.secondary {
-          color: #505a5f;
+          color: $govuk-secondary-text-colour;
           font-size: 16px;
           font-size: 1rem;
           line-height: 1.25;
@@ -128,7 +128,7 @@
       }
     }
     td.overdue span {
-      border-left: 5px solid #d4351c;
+      border-left: 5px solid govuk-colour("red");
       padding-left: 5px;
       font-weight: bold;
     }
@@ -142,7 +142,7 @@
       background: url("/public/images/flag.svg") no-repeat 3px 3px;
       padding-left: 20px;
       font-weight: bold;
-      color: #d4351c;
+      color: govuk-colour("red");
       font-size: 16px;
       font-size: 1rem;
     }
@@ -156,13 +156,13 @@
     span.rag {
       font-weight: bold;
       &.green {
-        color: #28a197 !important;
+        color: govuk-colour("green") !important;
       }
       &.amber {
-        color: #f47738 !important;
+        color: govuk-colour("orange") !important;
       }
       &.red {
-        color: #d4351c !important;
+        color: govuk-colour("red") !important;
       }
     }
   }
