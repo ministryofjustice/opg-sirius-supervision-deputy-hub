@@ -29,7 +29,7 @@
       display: flex;
       justify-content: space-between;
       padding: 1em 0 0.5em;
-      border-bottom: 1px solid #b1b4b6;
+      border-bottom: 1px solid $govuk-border-colour;
       margin-bottom: 2em;
     }
 
@@ -45,7 +45,7 @@
       justify-content: flex-start;
       margin-bottom: 2em;
       padding-bottom: 2em;
-      border-bottom: 1px solid #b1b4b6;
+      border-bottom: 1px solid $govuk-border-colour;
 
       .data-item-container {
         padding-right: 3em;
@@ -114,7 +114,7 @@
         }
 
         &.secondary {
-          color: #505a5f;
+          color: $govuk-secondary-text-colour;
           font-size: 16px;
           font-size: 1rem;
           line-height: 1.25;
@@ -125,7 +125,7 @@
       }
     }
     td.overdue span {
-      border-left: 5px solid #d4351c;
+      border-left: 5px solid govuk-colour("red");
       padding-left: 5px;
       font-weight: bold;
     }
@@ -139,7 +139,7 @@
       background: url("/public/images/flag.svg") no-repeat 3px 3px;
       padding-left: 20px;
       font-weight: bold;
-      color: #d4351c;
+      color: govuk-colour("red");
       font-size: 16px;
       font-size: 1rem;
     }
@@ -147,13 +147,13 @@
     span.rag {
       font-weight: bold;
       &.green {
-        color: #28a197 !important;
+        color: govuk-colour("green") !important;
       }
       &.amber {
-        color: #f47738 !important;
+        color: govuk-colour("orange") !important;
       }
       &.red {
-        color: #d4351c !important;
+        color: govuk-colour("red") !important;
       }
     }
   }
@@ -177,7 +177,7 @@
 
     dl {
       margin: 0;
-      color: #505a5f;
+      color: $govuk-secondary-text-colour;
       font-size: 1rem;
       line-height: 1.25;
 
@@ -223,7 +223,7 @@
   position: relative;
   padding: 0 0 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid #b1b4b6;
+  border-bottom: 1px solid $govuk-border-colour;
 }
 
 .filters-accordion__heading {
@@ -239,7 +239,7 @@
   text-align: left;
   padding: 0;
   cursor: pointer;
-  color: #1d70b8;
+  color: $govuk-brand-colour;
 }
 .filters-accordion__title {
   font-size: 19px;
@@ -251,7 +251,7 @@
   top: 20px;
   left: 2px;
   width: 20px;
-  fill: #0b0c0c;
+  fill: $govuk-link-active-colour;
 }
 
 [aria-expanded="true"] ~ .filters-accordion__icon--up {
@@ -269,7 +269,7 @@
 
 .filters-accordion__filter {
   position: relative;
-  background: #fff;
+  background: govuk-colour("white");
   padding: 13px 0px 10px 0px;
 }
 
@@ -285,7 +285,7 @@
   font-size: 16px;
   line-height: 1.25;
   padding-left: 33px;
-  background: url("/public/images/icon-search.svg") #fff no-repeat -5px -3px;
+  background: url("/public/images/icon-search.svg") govuk-colour("white") no-repeat -5px -3px;
 }
 
 .filters-accordion__container-inner {
@@ -297,7 +297,7 @@
   max-height: 200px;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #fff;
+  background-color: govuk-colour("white");
 }
 
 .filters-accordion.js-closed .filters-accordion__filter,
@@ -315,15 +315,15 @@
 
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
 a[href^="mailto:"] {
-  color: #4c2c92;
+  color: $govuk-link-visited-colour;
   &:hover {
-    color: #003078;
+    color: $govuk-link-hover-colour;
   }
 }
 
 assurance-visit {
   header {
-    border-top: 1px solid #b1b4b6;
+    border-top: 1px solid $govuk-border-colour;
   }
 }
 
