@@ -3,7 +3,7 @@
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ template "pa-deputy-details" . }}
     {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+    {{ if eq .DeputyType "PRO" }}
         {{ template "pro-deputy-details" . }}
     {{ end }}
 {{ end }}

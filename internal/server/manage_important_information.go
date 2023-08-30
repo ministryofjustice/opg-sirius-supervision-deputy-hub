@@ -90,7 +90,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
-				DeputyType:                vars.AppVars.DeputyDetails.DeputyType.Handle,
+				DeputyType:                vars.AppVars.DeputyType(),
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
 				AnnualBillingInvoice:      annualBillingInvoice,
