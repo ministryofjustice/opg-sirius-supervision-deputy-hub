@@ -62,6 +62,10 @@ describe("Timeline", () => {
                 name: "contact-removed-as-named-event",
                 title: "Mr Deputy Contact removed as the Named deputy"
             },
+                name: "task-reassigned-event",
+                title: "PDR report due task reassigned",
+                description: "Assigned to Pro Team 2 - (Supervision)"
+            }
         ]
 
         events.forEach((event) => {

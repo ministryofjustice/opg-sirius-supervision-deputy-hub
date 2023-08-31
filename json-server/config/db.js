@@ -1706,6 +1706,35 @@ module.exports = function () {
             },
             {
                 "id": 11,
+                "id": 398,
+                "hash": "AY",
+                "timestamp": "2023-10-10 15:01:59",
+                "eventType": "Opg\\Core\\Model\\Event\\Task\\TaskReassigned",
+                "user": {
+                    "id": 21,
+                    "phoneNumber": "0123456789",
+                    "displayName": "Lay Team 1 - (Supervision)",
+                    "email": "LayTeam1.team@opgtest.com"
+                },
+                "event": {
+                    "isCaseEvent": false,
+                    "isPersonEvent": true,
+                    "taskId": 198,
+                    "taskType": "PRD",
+                    "dueDate": "2023-08-12 00:00:00",
+                    "description": "This is a note",
+                    "name": "",
+                    "oldAssigneeName": "PA Team Workflow",
+                    "assignee": "Pro Team 2 - (Supervision)",
+                    "isCaseOwnerTask": false,
+                    "personType": "Deputy",
+                    "personId": "1",
+                    "personUid": "7000-0000-2530",
+                    "personName": "Bobby Deputiser"
+                },
+            },
+            {
+                "id": 377,
                 "hash": "AS",
                 "timestamp": "2022-04-22 15:57:11",
                 "eventType": "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactAdded",
@@ -2929,6 +2958,15 @@ module.exports = function () {
                     "ecmTask": false,
                     "proDeputyTask": true,
                     "paDeputyTask": true
+                },
+                "PRD": {
+                    "handle": "PRD",
+                    "incomplete": "PDR report due",
+                    "complete": "PDR report due",
+                    "user": true,
+                    "ecmTask": false,
+                    "proDeputyTask": true,
+                    "paDeputyTask": false
                 }
             }
         }
