@@ -1,6 +1,10 @@
 package util
 
-import "github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+import (
+	"time"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+)
 
 var translationMappings = map[string]string{
 	"FIELD.firstname":                 "First name",
@@ -44,6 +48,8 @@ type pair struct {
 	k string
 	v string
 }
+
+var currentDate = time.Now().Format("02/01/2006")
 
 var validationMappings = map[string]map[string]pair{
 	// firm
@@ -151,6 +157,15 @@ var validationMappings = map[string]map[string]pair{
 	// other
 	"otherImportantInformation": {
 		"stringLengthTooLong": pair{"otherImportantInformation", "The other important information must be 1000 characters or fewer"},
+	},
+	"reportDueDate": {
+		"error": pair{"reportDueDate", "Visit report due date - This must be a future date"},
+	},
+	"reportReceivedDate": {
+		"invalid-lte": pair{"reportReceivedDate", "Report received date - This must be on or before " + currentDate},
+	},
+	"reportReviewDate": {
+		"invalid-lte": pair{"reportReviewDate", "Report review date - This must be on or before " + currentDate},
 	},
 }
 

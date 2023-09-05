@@ -38,6 +38,37 @@ describe("Manage an Assurance Visit", () => {
             cy.get("#visit-report-marked-as-Red").should("be.checked");
         });
 
+        it("form keeps data if validation error", () => {
+            cy.setCookie("fail-route", "updateAssuranceVisit");
+            cy.get("#f-commissioned-date").type("2021-02-01");
+            cy.get('#visitor-allocated').select("John Johnson");
+            cy.get("#f-report-due-date").type("2021-02-02");
+            cy.get("#f-report-received-date").type("2021-02-03");
+            cy.get('#visit-outcome-Successful').click();
+            cy.get("#f-report-review-date").type("2021-02-04");
+            cy.get('#visit-report-marked-as-Green').click();
+            cy.get('#note').type("This is a test note");
+
+            cy.get("#manage-assurance-visit-form").submit();
+            cy.get('.govuk-error-summary').should('be.visible');
+            cy.get(".govuk-error-summary__title").should(
+                "contain",
+                "There is a problem"
+            );
+            cy.get(".govuk-error-summary__body").should(
+                "contain",
+                "Report due date must be in the future"
+            );
+            cy.get("#f-commissioned-date").should("have.value", "2021-02-01");
+            cy.get('#visitor-allocated').should("have.value", "John Johnson");
+            cy.get("#f-report-due-date").should("have.value","2021-02-02");
+            cy.get("#f-report-received-date").should("have.value","2021-02-03");
+            cy.get('#visit-outcome-Successful').should("be.checked");
+            cy.get("#f-report-review-date").should("have.value","2021-02-04");
+            cy.get('#visit-report-marked-as-Green').should("be.checked");
+            cy.get('#note').contains("This is a test note");
+        });
+
         it("allows user to edit and submit the form", () => {
             cy.setCookie("success-route", "/assuranceVisits/2");
             cy.get("#f-commissioned-date").type("2021-02-01");
