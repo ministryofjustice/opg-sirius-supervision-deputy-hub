@@ -28,7 +28,7 @@
     "test-sirius": "cd internal/sirius && go test",
     "test-server": "cd internal/server && go test",
     "cypress": "cypress open",
-    "cypress-m1": "export CYPRESS_BASE_URL=http://localhost:8888; cypress open",
+    "cypress-m1": "cypress open -c baseUrl=http://localhost:8888",
     "cypress-headless": "cypress run -b chrome",
     "cypress-build-down": "docker compose down",
     "lint": "prettier --check .",
