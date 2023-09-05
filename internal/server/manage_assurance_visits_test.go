@@ -207,16 +207,16 @@ func TestParseVisitForm(t *testing.T) {
 	assert := assert.New(t)
 
 	visitForm := sirius.AssuranceVisitDetails{
-		"2020-01-01",
-		"2020-01-02",
-		"2020-01-03",
-		"Cancelled",
-		"Cancelled",
-		"2020-01-04",
-		"Successful",
-		"John Johnson",
-		1,
-		"Test notes",
+		CommissionedDate:    "2020-01-01",
+		ReportDueDate:       "2020-01-02",
+		ReportReceivedDate:  "2020-01-03",
+		VisitOutcome:        "Cancelled",
+		PdrOutcome:          "Cancelled",
+		ReportReviewDate:    "2020-01-04",
+		VisitReportMarkedAs: "Successful",
+		VisitorAllocated:    "John Johnson",
+		ReviewedBy:          1,
+		Note:                "Test notes",
 	}
 
 	assert.Equal(parseVisitForm(visitForm), sirius.AssuranceVisit{
