@@ -30,7 +30,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		routeVars := mux.Vars(r)
 		taskId, _ := strconv.Atoi(routeVars["taskId"])
 
-		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyDetails.DeputyType.Handle)
+		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyType())
 		if err != nil {
 			return err
 		}
