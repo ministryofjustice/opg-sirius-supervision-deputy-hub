@@ -22,6 +22,10 @@ func (a AppVars) DeputyId() int {
 	return a.DeputyDetails.ID
 }
 
+func (a AppVars) DeputyType() string {
+	return a.DeputyDetails.DeputyType.Handle
+}
+
 type AppVarsClient interface {
 	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
 	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)

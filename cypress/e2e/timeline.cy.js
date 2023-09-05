@@ -55,6 +55,14 @@ describe("Timeline", () => {
                 title: "Mr Deputy Contact removed as a Main contact"
             },
             {
+                name: "contact-set-as-named-event",
+                title: "Named deputy set to Mr Deputy Contact"
+            },
+            {
+                name: "contact-removed-as-named-event",
+                title: "Mr Deputy Contact removed as the Named deputy"
+            },
+            {
                 name: "task-reassigned-event",
                 title: "PDR report due task reassigned",
                 description: "Assigned to Pro Team 2 - (Supervision)"
