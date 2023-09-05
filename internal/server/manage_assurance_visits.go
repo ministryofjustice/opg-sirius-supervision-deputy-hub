@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
@@ -28,6 +29,21 @@ type ManageAssuranceVisitVars struct {
 	Visit               sirius.AssuranceVisit
 	ErrorNote           string
 	AppVars
+}
+
+func parseVisitForm(visitForm sirius.AssuranceVisitDetails) sirius.AssuranceVisit {
+	return sirius.AssuranceVisit{
+		CommissionedDate:    visitForm.CommissionedDate,
+		VisitorAllocated:    visitForm.VisitorAllocated,
+		ReportDueDate:       visitForm.ReportDueDate,
+		ReportReceivedDate:  visitForm.ReportReceivedDate,
+		VisitOutcome:        sirius.VisitOutcomeTypes{Label: visitForm.VisitOutcome},
+		PdrOutcome:          sirius.PdrOutcomeTypes{Label: visitForm.PdrOutcome},
+		ReportReviewDate:    visitForm.ReportReviewDate,
+		VisitReportMarkedAs: sirius.VisitRagRatingTypes{Label: visitForm.VisitReportMarkedAs},
+		ReviewedBy:          model.User{ID: visitForm.ReviewedBy},
+		Note:                visitForm.Note,
+	}
 }
 
 func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmpl Template, pdrTmpl Template) Handler {
@@ -133,6 +149,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors
 				vars.ErrorNote = r.PostFormValue("note")
+				vars.Visit = parseVisitForm(manageAssuranceVisitForm)
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
