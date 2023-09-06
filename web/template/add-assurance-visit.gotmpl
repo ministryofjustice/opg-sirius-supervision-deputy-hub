@@ -14,7 +14,7 @@
                        name="xsrfToken"
                        value="{{ .XSRFToken }}" />
 
-                {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+                {{ if eq .DeputyType "PRO" }}
                     <div class="govuk-form-group">
                         <fieldset class="govuk-fieldset" aria-describedby="assurance-type" id="f-assurance-type">
                             <legend class="govuk-fieldset__legend">

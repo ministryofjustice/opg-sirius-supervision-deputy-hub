@@ -1,8 +1,8 @@
 {{ define "content-header" }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+    {{ if eq .DeputyType "PA" }}
         {{ template "pa-deputy-header" . }}
     {{ end }}
-    {{ if eq .DeputyDetails.DeputyType.Handle "PRO" }}
+    {{ if eq .DeputyType "PRO" }}
         {{ template "pro-deputy-header" . }}
     {{ end }}
 {{ end }}
