@@ -202,3 +202,35 @@ func TestPostManagePDR(t *testing.T) {
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(Redirect("/123/assurance-visits?success=managePDR"), redirect)
 }
+
+func TestParseVisitForm(t *testing.T) {
+	assert := assert.New(t)
+
+	visitForm := sirius.AssuranceVisitDetails{
+		CommissionedDate:    "2020-01-01",
+		ReportDueDate:       "2020-01-02",
+		ReportReceivedDate:  "2020-01-03",
+		VisitOutcome:        "Cancelled",
+		PdrOutcome:          "Cancelled",
+		ReportReviewDate:    "2020-01-04",
+		VisitReportMarkedAs: "Successful",
+		VisitorAllocated:    "John Johnson",
+		ReviewedBy:          1,
+		Note:                "Test notes",
+	}
+
+	expectedVisit := sirius.AssuranceVisit{
+		CommissionedDate:    "2020-01-01",
+		ReportDueDate:       "2020-01-02",
+		ReportReceivedDate:  "2020-01-03",
+		VisitOutcome:        sirius.VisitOutcomeTypes{Label: "Cancelled"},
+		PdrOutcome:          sirius.PdrOutcomeTypes{Label: "Cancelled"},
+		ReportReviewDate:    "2020-01-04",
+		VisitReportMarkedAs: sirius.VisitRagRatingTypes{Label: "Successful"},
+		Note:                "Test notes",
+		VisitorAllocated:    "John Johnson",
+		ReviewedBy:          model.User{ID: 1},
+	}
+
+	assert.Equal(expectedVisit, parseVisitForm(visitForm))
+}
