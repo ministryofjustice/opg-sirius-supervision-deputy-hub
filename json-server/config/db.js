@@ -1962,6 +1962,14 @@ module.exports = function () {
                 }
             },
             {
+                "id": "updateAssuranceVisit",
+                "validation_errors": {
+                    "report-due-date": {
+                        "": "Report due date must be in the future"
+                    }
+                }
+            },
+            {
                 "id": "notes",
                 "validation_errors": {
                     "name": {
