@@ -219,7 +219,7 @@ func TestParseVisitForm(t *testing.T) {
 		Note:                "Test notes",
 	}
 
-	assert.Equal(parseVisitForm(visitForm), sirius.AssuranceVisit{
+	expectedVisit := sirius.AssuranceVisit{
 		CommissionedDate:    "2020-01-01",
 		ReportDueDate:       "2020-01-02",
 		ReportReceivedDate:  "2020-01-03",
@@ -230,5 +230,7 @@ func TestParseVisitForm(t *testing.T) {
 		Note:                "Test notes",
 		VisitorAllocated:    "John Johnson",
 		ReviewedBy:          model.User{ID: 1},
-	})
+	}
+
+	assert.Equal(expectedVisit, parseVisitForm(visitForm))
 }
