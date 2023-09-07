@@ -19,12 +19,16 @@
                         Job title: {{ .Event.Contact.JobTitle }}
                     </li> 
                 {{ end }}
-                <li>
-                    Email: {{ .Event.Contact.Email }}
-                </li> 
-                <li>
-                    Telephone: {{ .Event.Contact.PhoneNumber }}
-                </li> 
+                {{ if .Event.Contact.Email }}
+                    <li>
+                        Email: {{ .Event.Contact.Email }}
+                    </li>
+                {{ end }}
+                {{ if .Event.Contact.PhoneNumber }}
+                    <li>
+                        Telephone: {{ .Event.Contact.PhoneNumber }}
+                    </li>
+                {{ end }}
                 {{ if .Event.Contact.OtherPhoneNumber }}
                     <li>
                         Other telephone: {{ .Event.Contact.OtherPhoneNumber }}
