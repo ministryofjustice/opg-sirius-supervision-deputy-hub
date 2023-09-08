@@ -22,6 +22,16 @@ func (u UserDetails) IsFinanceManager() bool {
 	return false
 }
 
+func (u UserDetails) IsSystemManager() bool {
+	for _, role := range u.Roles {
+		if role == "System Admin" {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (u UserDetails) GetRoles() string {
 	return strings.Join(u.Roles, ",")
 }
