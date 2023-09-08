@@ -40,6 +40,7 @@ module.exports = function () {
                 "id": 1,
                 "uId": "7000-0000-2530",
                 "normalizedUid": 700000002530,
+                "displayName": "Test Organisation",
                 "errorMessages": [],
                 "researchOptOut": false,
                 "workPhoneNumber": {
@@ -1966,6 +1967,14 @@ module.exports = function () {
                 "validation_errors": {
                     "report-due-date": {
                         "": "Report due date must be in the future"
+                    }
+                }
+            },
+            {
+                "id": "deleteDeputy",
+                "validation_errors": {
+                    "deputy": {
+                        "canDelete": "Deputy is not set to error or inactive status on all cases or is a feePayer, removal is prohibited"
                     }
                 }
             },

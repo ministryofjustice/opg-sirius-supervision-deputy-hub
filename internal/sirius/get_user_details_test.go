@@ -84,4 +84,12 @@ func TestUserDetails(t *testing.T) {
 	t.Run("without Finance Manager", func(t *testing.T) {
 		assert.False(t, UserDetails{Roles: []string{"OPG User", "Case Manager"}}.IsFinanceManager())
 	})
+
+	t.Run("with System Admin", func(t *testing.T) {
+		assert.True(t, UserDetails{Roles: []string{"OPG User", "System Admin"}}.IsSystemManager())
+	})
+
+	t.Run("without System Admin", func(t *testing.T) {
+		assert.False(t, UserDetails{Roles: []string{"OPG User", "Finance Manager"}}.IsSystemManager())
+	})
 }
