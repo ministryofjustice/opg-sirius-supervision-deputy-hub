@@ -60,12 +60,17 @@ document.querySelectorAll(".min-date-today")
     input.setAttribute("min", new Date().toISOString().split('T')[0]);
 });
 
+function onHomePage() {
+    const homePageUrlRegex = new RegExp('\\/\\d+\\/*$');
+    return homePageUrlRegex.test(window.location.pathname);
+}
+
 function storeBackSessionVars(backIndex, href) {
     if (backIndex !== null && location.href === href) {
         sessionStorage.setItem("backIndex", (parseInt(backIndex) - 1).toString());
     }
 
-    if (backIndex === null || href === null || location.href !== href) {
+    if (backIndex === null || href === null || location.href !== href || onHomePage()) {
         sessionStorage.setItem("backIndex", "-1");
         sessionStorage.setItem("href", location.href);
     }
