@@ -29,6 +29,7 @@ type Client interface {
 	ManageAssuranceVisit
 	ManageContact
 	DeleteContact
+	DeleteDeputy
 	AddTasksClient
 	TasksClient
 	ManageTasks
@@ -111,6 +112,10 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 	pageRouter.Handle("/change-firm",
 		wrap(
 			renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
+
+	pageRouter.Handle("/delete-deputy",
+		wrap(
+			renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
 
 	pageRouter.Handle("/add-firm",
 		wrap(
