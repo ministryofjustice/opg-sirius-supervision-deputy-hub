@@ -16,7 +16,7 @@
                     href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if and (not .UserDetails.IsSystemManager) .DeputyDetails.CanDelete }} hide{{end}}"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
                     data-module="govuk-button">
                     Delete deputy
                 </a>
@@ -110,7 +110,7 @@
                             {{ .DeputyDetails.County }} <br />
                         {{ end }}
                         {{ if ne .DeputyDetails.Postcode ""}}
-                            {{ .DeputyDetails.Postcode }} 
+                            {{ .DeputyDetails.Postcode }}
                         {{ end }}
                     </dd>
                 </div>
