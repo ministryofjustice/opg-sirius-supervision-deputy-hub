@@ -1,0 +1,49 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ if .SuccessMessage }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ if and .DeputyDetails.DeputyNumber (eq .SuccessMessage "")}}
+        <header>
+            <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+                Delete deputy
+            </h1>
+        </header>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <form id="contact-form" method="post">
+                    <input
+                        type="hidden"
+                        name="xsrfToken"
+                        value="{{ .XSRFToken }}" />
+                    <p class="govuk-body govuk-!-margin-bottom-5">
+                        Are you sure you want to permanently delete
+                        {{ if ne .DeputyDetails.DisplayName "" }}
+                            {{ .DeputyDetails.DisplayName }}
+                        {{ end }}
+                        ?
+                    </p>
+                    <p class="govuk-body govuk-!-margin-bottom-5">
+                        All information about this deputy will be deleted from Sirius.
+                    </p>
+                    <div class="govuk-button-group govuk-!-margin-top-7" id="delete-contact-button-group">
+                        <button
+                            data-cy="delete-deputy"
+                            type="submit"
+                            class="govuk-button govuk-button--warning"
+                            data-module="govuk-button">
+                            Delete deputy
+                        </button>
+                        <a
+                            class="govuk-link"
+                            href="{{ prefix (printf "/%d" .DeputyDetails.ID) }}">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {{ end }}
+{{ end }}
