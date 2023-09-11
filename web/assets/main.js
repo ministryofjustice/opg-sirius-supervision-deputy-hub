@@ -61,7 +61,7 @@ document.querySelectorAll(".min-date-today")
 });
 
 function onHomePage() {
-    const homePageUrlRegex = new RegExp('\\/\\d+\\/*$');
+    const homePageUrlRegex = new RegExp('^(supervision/deputies)?\\/\\d+\\/*$');
     return homePageUrlRegex.test(window.location.pathname);
 }
 
