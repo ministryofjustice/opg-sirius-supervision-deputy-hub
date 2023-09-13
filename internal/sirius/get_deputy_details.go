@@ -54,6 +54,8 @@ type DeputyDetails struct {
 	DeputyFirstName                  string                     `json:"firstname"`
 	DeputySurname                    string                     `json:"surname"`
 	DeputyCasrecId                   int                        `json:"deputyCasrecId"`
+	DisplayName                      string                     `json:"displayName"`
+	CanDelete                        bool                       `json:"canDelete"`
 	DeputyNumber                     int                        `json:"deputyNumber"`
 	DeputySubType                    DeputySubType              `json:"deputySubType"`
 	DeputyStatus                     string                     `json:"deputyStatus"`
