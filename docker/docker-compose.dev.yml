@@ -16,7 +16,7 @@ services:
       SIRIUS_PUBLIC_URL: http://localhost:8080
       FIRM_HUB_HOST: http://localhost:8887
       PREFIX: /supervision/deputies
-      FEATURES: tasks,contacts
+      FEATURES: tasks
 
   yarn:
     command: watch
