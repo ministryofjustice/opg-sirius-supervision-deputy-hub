@@ -8,7 +8,7 @@ import (
 )
 
 type DeputyHubInformation interface {
-	GetDeputyClients(sirius.Context, int, int, int, string, string, string) (sirius.ClientList, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
 }
 
 type deputyHubVars struct {
@@ -25,14 +25,26 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 
 		ctx := getContext(r)
 
-		clientList, _, err := client.GetDeputyClients(ctx, app.DeputyId(), 25, 1, app.DeputyType(), "", "")
+		var selectedOrderStatuses []string
+
+		params := sirius.ClientListParams{
+			app.DeputyId(),
+			25,
+			1,
+			app.DeputyType(),
+			"",
+			"",
+			selectedOrderStatuses,
+		}
+
+		clientList, _, err := client.GetDeputyClients(ctx, params)
 		if err != nil {
 			return err
 		}
 
 		vars := deputyHubVars{
 			AppVars:           app,
-			ActiveClientCount: clientList.Metadata.TotalActiveClients,
+			ActiveClientCount: clientList.Metadata.TotalClients,
 			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
 		}
 

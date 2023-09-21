@@ -86,7 +86,7 @@ func TestDeputyClientReturned(t *testing.T) {
       "total": 1
     },
     "metadata": {
-      "totalActiveClients": 1
+      "totalClients": 1
     },
     "total": 1
   } `
@@ -124,13 +124,13 @@ func TestDeputyClientReturned(t *testing.T) {
 			PageCurrent: 1,
 			PageTotal:   1,
 		},
-		Metadata:     Metadata{TotalActiveClients: 1},
+		Metadata:     Metadata{TotalClients: 1},
 		TotalClients: 1,
 	}
 
 	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), 1, 25, 1, "PA", "", "")
 
-	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
+	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalClients)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
