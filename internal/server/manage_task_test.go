@@ -243,6 +243,31 @@ func TestGetAssigneeFromId(t *testing.T) {
 }
 
 func TestRetainFormData(t *testing.T) {
+	var teams []model.Team
+	var updatedTask model.Task
+	var isCurrentAssignee bool
+
+	initialTask := model.Task{
+		Id:      1,
+		Type:    "Deputy",
+		DueDate: "01-02-2023",
+		Name:    "Test Task",
+		Assignee: model.Assignee{
+			Id:          1,
+			Teams:       teams,
+			DisplayName: "Barry Scott",
+		},
+		CreatedTime:   "01-01-2023",
+		CaseOwnerTask: false,
+		Notes:         "",
+	}
+
+	assignees := []model.TeamMember{
+		{ID: 1, DisplayName: "Barry Scott"},
+		{ID: 2, DisplayName: "Phil Swift"},
+		{ID: 3, DisplayName: "Cathy Mitchell"},
+	}
+
 	tests := []struct {
 		name                      string
 		task                      model.Task
@@ -253,55 +278,16 @@ func TestRetainFormData(t *testing.T) {
 		expectedIsCurrentAssignee bool
 	}{
 		{
-			name: "No change",
-			task: model.Task{
-				Id:      1,
-				Type:    "Deputy",
-				DueDate: "01-02-2023",
-				Name:    "Test Task",
-				Assignee: model.Assignee{
-					Id:          1,
-					Teams:       []model.Team{},
-					DisplayName: "Barry Scott",
-				},
-				CreatedTime:   "01-01-2023",
-				CaseOwnerTask: false,
-				Notes:         "",
-			},
-			dueDate:    "01-02-2023",
-			notes:      "",
-			assigneeId: 1,
-			expectedTask: model.Task{
-				Id:      1,
-				Type:    "Deputy",
-				DueDate: "01-02-2023",
-				Name:    "Test Task",
-				Assignee: model.Assignee{
-					Id:          1,
-					Teams:       []model.Team{},
-					DisplayName: "Barry Scott",
-				},
-				CreatedTime:   "01-01-2023",
-				CaseOwnerTask: false,
-				Notes:         "",
-			},
+			name:                      "No change",
+			task:                      initialTask,
+			dueDate:                   "01-02-2023",
+			notes:                     "",
+			assigneeId:                1,
+			expectedTask:              initialTask,
 			expectedIsCurrentAssignee: true,
 		}, {
-			name: "Change all",
-			task: model.Task{
-				Id:      1,
-				Type:    "Deputy",
-				DueDate: "01-02-2023",
-				Name:    "Test Task",
-				Assignee: model.Assignee{
-					Id:          1,
-					Teams:       []model.Team{},
-					DisplayName: "Barry Scott",
-				},
-				CreatedTime:   "01-01-2023",
-				CaseOwnerTask: false,
-				Notes:         "",
-			},
+			name:       "Change all",
+			task:       initialTask,
 			dueDate:    "02-02-2023",
 			notes:      "This is a test task :)",
 			assigneeId: 2,
@@ -312,7 +298,7 @@ func TestRetainFormData(t *testing.T) {
 				Name:    "Test Task",
 				Assignee: model.Assignee{
 					Id:          2,
-					Teams:       []model.Team{},
+					Teams:       teams,
 					DisplayName: "Phil Swift",
 				},
 				CreatedTime:   "01-01-2023",
@@ -322,15 +308,6 @@ func TestRetainFormData(t *testing.T) {
 			expectedIsCurrentAssignee: false,
 		},
 	}
-
-	assignees := []model.TeamMember{
-		{ID: 1, DisplayName: "Barry Scott"},
-		{ID: 2, DisplayName: "Phil Swift"},
-		{ID: 3, DisplayName: "Cathy Mitchell"},
-	}
-
-	var updatedTask model.Task
-	var isCurrentAssignee bool
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
