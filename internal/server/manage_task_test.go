@@ -242,7 +242,7 @@ func TestGetAssigneeFromId(t *testing.T) {
 	}
 }
 
-func testRetainFormData(t *testing.T) {
+func TestRetainFormData(t *testing.T) {
 	tests := []struct {
 		name                      string
 		task                      model.Task
