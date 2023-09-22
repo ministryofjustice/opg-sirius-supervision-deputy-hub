@@ -114,9 +114,9 @@ func getAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
 	}
 
 	return model.Assignee{
-		id,
-		teams,
-		assignee.DisplayName,
+		Id:          id,
+		Teams:       teams,
+		DisplayName: assignee.DisplayName,
 	}
 }
 
