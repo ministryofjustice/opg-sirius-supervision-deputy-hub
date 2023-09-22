@@ -72,9 +72,10 @@ func TestNavigateToManageTask(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(manageTaskVars{
-		AppVars:     app,
-		TaskDetails: task,
-		Assignees:   teamMembers,
+		AppVars:           app,
+		TaskDetails:       task,
+		Assignees:         teamMembers,
+		IsCurrentAssignee: true,
 	}, template.lastVars)
 }
 
