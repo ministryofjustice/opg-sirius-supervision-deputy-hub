@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
@@ -193,6 +194,149 @@ func TestRenameErrors(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			assert.Equal(t, tt.want, RenameErrors(tt.input, tt.deputyType))
+		})
+	}
+}
+
+func TestGetAssigneeFromId(t *testing.T) {
+	teamMembers := []model.TeamMember{
+		{ID: 1, DisplayName: "Barry Scott"},
+		{ID: 2, DisplayName: "Phil Swift"},
+		{ID: 3, DisplayName: "Cathy Mitchell"},
+	}
+
+	var teams []model.Team
+
+	tests := []struct {
+		id               int
+		expectedAssignee model.Assignee
+	}{
+		{
+			id: 1,
+			expectedAssignee: model.Assignee{
+				Id:          1,
+				Teams:       teams,
+				DisplayName: "Barry Scott",
+			},
+		}, {
+			id: 2,
+			expectedAssignee: model.Assignee{
+				Id:          2,
+				Teams:       teams,
+				DisplayName: "Phil Swift",
+			},
+		}, {
+			id: 3,
+			expectedAssignee: model.Assignee{
+				Id:          3,
+				Teams:       teams,
+				DisplayName: "Cathy Mitchell",
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("%d", tt.id), func(t *testing.T) {
+			assert.Equal(t, tt.expectedAssignee, GetAssigneeFromId(tt.id, teamMembers))
+		})
+	}
+}
+
+func testRetainFormData(t *testing.T) {
+	tests := []struct {
+		name                      string
+		task                      model.Task
+		dueDate                   string
+		notes                     string
+		assigneeId                int
+		expectedTask              model.Task
+		expectedIsCurrentAssignee bool
+	}{
+		{
+			name: "No change",
+			task: model.Task{
+				Id:      1,
+				Type:    "Deputy",
+				DueDate: "01-02-2023",
+				Name:    "Test Task",
+				Assignee: model.Assignee{
+					Id:          1,
+					Teams:       []model.Team{},
+					DisplayName: "Barry Scott",
+				},
+				CreatedTime:   "01-01-2023",
+				CaseOwnerTask: false,
+				Notes:         "",
+			},
+			dueDate:    "01-02-2023",
+			notes:      "",
+			assigneeId: 1,
+			expectedTask: model.Task{
+				Id:      1,
+				Type:    "Deputy",
+				DueDate: "01-02-2023",
+				Name:    "Test Task",
+				Assignee: model.Assignee{
+					Id:          1,
+					Teams:       []model.Team{},
+					DisplayName: "Barry Scott",
+				},
+				CreatedTime:   "01-01-2023",
+				CaseOwnerTask: false,
+				Notes:         "",
+			},
+			expectedIsCurrentAssignee: true,
+		}, {
+			name: "Change all",
+			task: model.Task{
+				Id:      1,
+				Type:    "Deputy",
+				DueDate: "01-02-2023",
+				Name:    "Test Task",
+				Assignee: model.Assignee{
+					Id:          1,
+					Teams:       []model.Team{},
+					DisplayName: "Barry Scott",
+				},
+				CreatedTime:   "01-01-2023",
+				CaseOwnerTask: false,
+				Notes:         "",
+			},
+			dueDate:    "02-02-2023",
+			notes:      "This is a test task :)",
+			assigneeId: 2,
+			expectedTask: model.Task{
+				Id:      1,
+				Type:    "Deputy",
+				DueDate: "02-02-2023",
+				Name:    "Test Task",
+				Assignee: model.Assignee{
+					Id:          2,
+					Teams:       []model.Team{},
+					DisplayName: "Phil Swift",
+				},
+				CreatedTime:   "01-01-2023",
+				CaseOwnerTask: false,
+				Notes:         "This is a test task :)",
+			},
+			expectedIsCurrentAssignee: false,
+		},
+	}
+
+	assignees := []model.TeamMember{
+		{ID: 1, DisplayName: "Barry Scott"},
+		{ID: 2, DisplayName: "Phil Swift"},
+		{ID: 3, DisplayName: "Cathy Mitchell"},
+	}
+
+	var updatedTask model.Task
+	var isCurrentAssignee bool
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			updatedTask, isCurrentAssignee = RetainFormData(tt.task, assignees, tt.dueDate, tt.notes, tt.assigneeId)
+			assert.Equal(t, tt.expectedTask, updatedTask)
+			assert.Equal(t, tt.expectedIsCurrentAssignee, isCurrentAssignee)
 		})
 	}
 }

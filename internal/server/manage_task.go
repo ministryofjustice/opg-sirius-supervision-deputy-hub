@@ -86,7 +86,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
-				vars.TaskDetails, vars.IsCurrentAssignee = retainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
+				vars.TaskDetails, vars.IsCurrentAssignee = RetainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -103,7 +103,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 	}
 }
 
-func getAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
+func GetAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
 	var teams []model.Team
 	var assignee model.TeamMember
 
@@ -120,13 +120,13 @@ func getAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
 	}
 }
 
-func retainFormData(task model.Task, assignees []model.TeamMember, dueDate string, notes string, assigneeId int) (model.Task, bool) {
+func RetainFormData(task model.Task, assignees []model.TeamMember, dueDate string, notes string, assigneeId int) (model.Task, bool) {
 	isCurrentAssignee := true
 	task.DueDate = dueDate
 	task.Notes = notes
 
 	if task.Assignee.Id != assigneeId {
-		task.Assignee = getAssigneeFromId(assigneeId, assignees)
+		task.Assignee = GetAssigneeFromId(assigneeId, assignees)
 		isCurrentAssignee = false
 	}
 	return task, isCurrentAssignee
