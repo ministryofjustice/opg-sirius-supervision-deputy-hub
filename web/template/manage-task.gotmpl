@@ -40,7 +40,7 @@
                                                    checked
                                             >
                                             <label class="govuk-label govuk-radios__label"
-                                                   for="assignedto-current-assignee">{{ .TaskDetails.Assignee.DisplayName }} (Current Assignee)</label>
+                                                   for="assignedto-current-assignee">{{ .TaskDetails.Assignee.DisplayName }} {{ if .IsCurrentAssignee }}(Current Assignee){{ end }}</label>
                                         </div>
                                     {{end}}
                                     <div class="govuk-radios__item">
