@@ -17,10 +17,11 @@ type ManageTasks interface {
 }
 
 type manageTaskVars struct {
-	TaskDetails    model.Task
-	Success        bool
-	SuccessMessage string
-	Assignees      []model.TeamMember
+	TaskDetails       model.Task
+	Success           bool
+	SuccessMessage    string
+	Assignees         []model.TeamMember
+	IsCurrentAssignee bool
 	AppVars
 }
 
@@ -49,9 +50,10 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		}
 
 		vars := manageTaskVars{
-			AppVars:     app,
-			TaskDetails: taskDetails,
-			Assignees:   assignees,
+			AppVars:           app,
+			TaskDetails:       taskDetails,
+			Assignees:         assignees,
+			IsCurrentAssignee: true,
 		}
 
 		switch r.Method {
@@ -84,6 +86,7 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
+				vars.TaskDetails, vars.IsCurrentAssignee = retainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
 
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
@@ -98,6 +101,35 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
+}
+
+func getAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
+	var teams []model.Team
+	var assignee model.TeamMember
+
+	for _, teamMember := range teamMembers {
+		if teamMember.ID == id {
+			assignee = teamMember
+		}
+	}
+
+	return model.Assignee{
+		Id:          id,
+		Teams:       teams,
+		DisplayName: assignee.DisplayName,
+	}
+}
+
+func retainFormData(task model.Task, assignees []model.TeamMember, dueDate string, notes string, assigneeId int) (model.Task, bool) {
+	isCurrentAssignee := true
+	task.DueDate = dueDate
+	task.Notes = notes
+
+	if task.Assignee.Id != assigneeId {
+		task.Assignee = getAssigneeFromId(assigneeId, assignees)
+		isCurrentAssignee = false
+	}
+	return task, isCurrentAssignee
 }
 
 func RenameErrors(errors sirius.ValidationErrors, deputyType string) sirius.ValidationErrors {
