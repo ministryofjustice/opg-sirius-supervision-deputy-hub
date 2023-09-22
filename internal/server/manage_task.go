@@ -85,6 +85,10 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
 
+				vars.TaskDetails.DueDate = dueDate
+				vars.TaskDetails.Notes = notes
+				vars.TaskDetails.Assignee = getAssigneeFromId(assigneeId, assignees)
+
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -97,6 +101,23 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
+	}
+}
+
+func getAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
+	var teams []model.Team
+	var assignee model.TeamMember
+
+	for _, teamMember := range teamMembers {
+		if teamMember.ID == id {
+			assignee = teamMember
+		}
+	}
+
+	return model.Assignee{
+		id,
+		teams,
+		assignee.DisplayName,
 	}
 }
 
