@@ -2,7 +2,7 @@
     {{ if .DeputyDetails.ExecutiveCaseManager.IsDefault }}
         {{ template "default-ecm-banner" .DeputyDetails }}
     {{ end }}
-    <a id="f-back-button" class="govuk-back-link">Back</a>
+    <a href="#" id="f-back-button" class="govuk-back-link">Back</a>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {{ if eq .DeputyDetails.DeputySubType.SubType "PERSON" }}
