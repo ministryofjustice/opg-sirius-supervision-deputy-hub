@@ -6,7 +6,10 @@
   <ul class="moj-filter-tags">
       {{ range .OrderStatusOptions }}
           {{ if .IsIn $.SelectedOrderStatuses }}
-            <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "order-status" .Handle }}" class="moj-filter__tag"><span class="govuk-visually-hidden">Remove this filter</span> {{ .Label }}</a></li>
+            <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "order-status" .Handle }}&sort={{ $.ColumnBeingSorted }}:{{ $.SortOrder}}"
+                class="moj-filter__tag"><span class="govuk-visually-hidden">
+                Remove this filter</span> {{ .Label }}
+            </a></li>
           {{ end }}
       {{ end }}
   </ul>

@@ -92,11 +92,7 @@ export default class ManageFilters {
                 return
             }
             if (filter.checked || filter.type !== "checkbox") {
-                if (url.includes("?")) {
-                    url += "&" + filter.name + "=" + filter.value
-                } else {
-                    url += "?" + filter.name + "=" + filter.value
-                }
+                url += "&" + filter.name + "=" + filter.value
             }
         });
         window.location.href = url;

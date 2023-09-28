@@ -19,7 +19,10 @@
             <h2 class="govuk-heading-s">Selected filters</h2>
           </div>
           <div class="moj-filter__heading-action">
-            <p><a href="{{ .UrlBuilder.GetClearFiltersUrl }}" data-module="clear-filters" class="govuk-link govuk-link--no-visited-state">Clear filters</a></p>
+            <p><a href="{{ .UrlBuilder.GetClearFiltersUrl }}&sort={{ .ColumnBeingSorted }}:{{ .SortOrder }}"
+                data-module="clear-filters" class="govuk-link govuk-link--no-visited-state">
+                Clear filters
+            </a></p>
           </div>
         </div>
       </div>

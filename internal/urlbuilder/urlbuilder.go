@@ -6,11 +6,14 @@ import (
 )
 
 type UrlBuilder struct {
+	OriginalPath    string
+	SortBy          string
+	SelectedPerPage int
 	SelectedFilters []Filter
 }
 
-func (ub UrlBuilder) buildUrl(filters []Filter) string {
-	url := "clients"
+func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
+	url := fmt.Sprintf("%s?limit=%d&page=%d", ub.OriginalPath, perPage, page)
 	for _, filter := range filters {
 		for _, value := range filter.SelectedValues {
 			if value != "" {
@@ -22,7 +25,7 @@ func (ub UrlBuilder) buildUrl(filters []Filter) string {
 }
 
 func (ub UrlBuilder) GetClearFiltersUrl() string {
-	return ub.buildUrl([]Filter{})
+	return ub.buildUrl(1, ub.SelectedPerPage, []Filter{})
 }
 
 func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string, error) {
@@ -52,5 +55,5 @@ func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string,
 		}
 	}
 
-	return ub.buildUrl(retainedFilters), nil
+	return ub.buildUrl(1, ub.SelectedPerPage, retainedFilters), nil
 }

@@ -133,11 +133,15 @@ type ClientListParams struct {
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
-	var filter string
 
-	filter = params.CreateFilter()
+	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.DisplayClientLimit, params.Search)
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&filter=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.DisplayClientLimit, params.Search, filter), nil)
+	filter := params.CreateFilter()
+	if filter != "" {
+		url = fmt.Sprintf("%s&filter=%s", url, filter)
+	}
+
+	req, err := c.newRequest(ctx, http.MethodGet, url, nil)
 
 	if err != nil {
 		return clientList, AriaSorting{}, err

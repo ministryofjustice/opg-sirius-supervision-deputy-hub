@@ -23,6 +23,9 @@ type ListClientsVars struct {
 	ClientList            sirius.ClientList
 	PageDetails           sirius.PageDetails
 	ActiveClientCount     int
+	ColumnBeingSorted     string
+	SortOrder             string
+	DisplayClientLimit    int
 	SelectedOrderStatuses []string
 	OrderStatuses         []OrderStatus
 	AppliedFilters        []string
@@ -39,6 +42,9 @@ type FilterByOrderStatus struct {
 
 func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
+		OriginalPath:    "clients",
+		SortBy:          vars.SortBy,
+		SelectedPerPage: vars.DisplayClientLimit,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
 		},
@@ -147,13 +153,13 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		params := sirius.ClientListParams{
-			app.DeputyId(),
-			displayClientLimit,
-			search,
-			app.DeputyType(),
-			columnBeingSorted,
-			sortOrder,
-			selectedOrderStatuses,
+			DeputyId:           app.DeputyId(),
+			DisplayClientLimit: displayClientLimit,
+			Search:             search,
+			DeputyType:         app.DeputyType(),
+			ColumnBeingSorted:  columnBeingSorted,
+			SortOrder:          sortOrder,
+			OrderStatuses:      selectedOrderStatuses,
 		}
 
 		clientList, ariaSorting, err := client.GetDeputyClients(ctx, params)
@@ -170,6 +176,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			PageDetails:          pageDetails,
 			AriaSorting:          ariaSorting,
 			ActiveClientCount:    clientList.Metadata.TotalClients,
+			ColumnBeingSorted:    columnBeingSorted,
+			SortOrder:            sortOrder,
+			DisplayClientLimit:   displayClientLimit,
 			AppVars:              app,
 		}
 
@@ -182,12 +191,12 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		vars.OrderStatusOptions = []model.RefData{
 			{
-				"ACTIVE",
-				"Active",
+				Handle: "ACTIVE",
+				Label:  "Active",
 			},
 			{
-				"CLOSED",
-				"Closed",
+				Handle: "CLOSED",
+				Label:  "Closed",
 			},
 		}
 
