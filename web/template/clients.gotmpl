@@ -3,9 +3,9 @@
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ template "navigation" . }}
-    <header>
+    <header class="govuk-!-padding-top-3">
         <h1
-            class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+            class="govuk-heading-l govuk-!-margin-bottom-0  govuk-!-margin-top-0">
             Clients
         </h1>
         <div class="moj-button-menu">
@@ -21,30 +21,14 @@
             </div>
         </div>
     </header>
-    <div id="overview">
-        <div class="data-item-container ">
-            <span class="data-item govuk-heading-xl govuk-!-margin-bottom-0">{{.ActiveClientCount}}</span>
-            <p class="data-item govuk-body">Active cases</p>
-        </div>
 
-        <div id="team3-unassigned" class="data-item-container ">
-            <span class="data-item data-item-number govuk-heading-xl govuk-!-margin-bottom-0"></span>
-            <span class="data-item govuk-body"></span>
-        </div>
-
-        <div class="data-item-container ">
-            <span class="data-item govuk-heading-xl govuk-!-margin-bottom-0"></span>
-            <span class="data-item govuk-body"></span>
-        </div>
-    </div>
         <section data-module="filters">
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div id="filters-column" class="govuk-grid-column-one-quarter">
                 {{ template "filters" . }}
             </div>
-            <div id="table-column" class="govuk-grid-column-full">
+            <div id="table-column" class="govuk-grid-column-three-quarters">
                 <form action="{{ prefix (printf "/%d/clients" .DeputyDetails.ID) }}" method="GET" id="pagination-form">
-
                     <div>
                         {{ template "pagination" . }}
                     </div>

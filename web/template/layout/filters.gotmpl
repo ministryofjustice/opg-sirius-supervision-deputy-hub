@@ -18,17 +18,16 @@
           <div class="moj-filter__heading-title">
             <h2 class="govuk-heading-s">Selected filters</h2>
           </div>
-        </div>
-        <div class="moj-filter__heading-action">
-          <a href="{{ .UrlBuilder.GetClearFiltersUrl }}" data-module="clear-filters" class="govuk-link govuk-link--no-visited-state">Clear filters</a>
+          <div class="moj-filter__heading-action">
+            <p><a href="{{ .UrlBuilder.GetClearFiltersUrl }}" data-module="clear-filters" class="govuk-link govuk-link--no-visited-state">Clear filters</a></p>
+          </div>
         </div>
       </div>
 
       <div id="task-type-tags-section" class="moj-filter-tags-list">
         {{ if not .AppliedFilters }}
-          <p class="govuk-heading-s govuk-!-margin-bottom-0">No filters selected</p>
+          <p class="govuk-body govuk-!-margin-bottom-0">No filters selected</p>
         {{ end }}
-
         {{ if .HasFilterBy . "order-status" }}{{ template "order-status-filter-applied" . }}{{ end }}
 
       </div>

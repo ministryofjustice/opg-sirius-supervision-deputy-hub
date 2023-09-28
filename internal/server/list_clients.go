@@ -174,6 +174,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
+		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
 
 		vars.UrlBuilder = vars.CreateUrlBuilder()
