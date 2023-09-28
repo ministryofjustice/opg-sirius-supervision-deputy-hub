@@ -103,7 +103,7 @@ type Page struct {
 }
 
 type Metadata struct {
-	TotalActiveClients int `json:"totalActiveClients"`
+	TotalClients int `json:"totalClients"`
 }
 
 type ApiClientList struct {
@@ -120,11 +120,28 @@ type ClientList struct {
 	Metadata     Metadata
 }
 
-func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, search int, deputyType, columnBeingSorted, sortOrder string) (ClientList, AriaSorting, error) {
+type ClientListParams struct {
+	DeputyId           int
+	DisplayClientLimit int
+	Search             int
+	DeputyType         string
+	ColumnBeingSorted  string
+	SortOrder          string
+	OrderStatuses      []string
+}
+
+func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(deputyType), deputyId, displayClientLimit, search), nil)
+	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.DisplayClientLimit, params.Search)
+
+	filter := params.CreateFilter()
+	if filter != "" {
+		url = fmt.Sprintf("%s&filter=%s", url, filter)
+	}
+
+	req, err := c.newRequest(ctx, http.MethodGet, url, nil)
 
 	if err != nil {
 		return clientList, AriaSorting{}, err
@@ -184,20 +201,28 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 	clientList.Metadata = apiClientList.Metadata
 
 	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(sortOrder, columnBeingSorted, "crec")
+	aria.SurnameAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "surname")
+	aria.ReportDueAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "reportdue")
+	aria.CRECAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "crec")
 
-	switch columnBeingSorted {
+	switch params.ColumnBeingSorted {
 	case "reportdue":
-		reportDueScoreSort(clients, sortOrder)
+		reportDueScoreSort(clients, params.SortOrder)
 	case "crec":
-		crecScoreSort(clients, sortOrder)
+		crecScoreSort(clients, params.SortOrder)
 	default:
-		alphabeticalSort(clients, sortOrder)
+		alphabeticalSort(clients, params.SortOrder)
 	}
 
 	return clientList, aria, err
+}
+
+func (p ClientListParams) CreateFilter() string {
+	var filter string
+	for _, s := range p.OrderStatuses {
+		filter += "order-status:" + s + ","
+	}
+	return strings.TrimRight(filter, ",")
 }
 
 /*
