@@ -371,7 +371,7 @@ module.exports = function () {
         "clients": {
             "limit": 25,
             "metadata": {
-                "totalClients": 3
+                "totalActiveClients": 3
             },
             "pages": {
                 "current": 1,
