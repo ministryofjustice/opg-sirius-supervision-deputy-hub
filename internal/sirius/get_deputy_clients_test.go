@@ -86,7 +86,7 @@ func TestDeputyClientReturned(t *testing.T) {
       "total": 1
     },
     "metadata": {
-      "totalClients": 1
+      "totalActiveClients": 1
     },
     "total": 1
   } `
