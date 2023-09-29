@@ -42,7 +42,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 
 		vars := deputyHubVars{
 			AppVars:           app,
-			ActiveClientCount: clientList.Metadata.TotalClients,
+			ActiveClientCount: clientList.Metadata.TotalActiveClients,
 			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
 		}
 

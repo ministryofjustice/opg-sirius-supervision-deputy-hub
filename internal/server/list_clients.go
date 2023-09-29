@@ -175,7 +175,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			ClientList:           clientList,
 			PageDetails:          pageDetails,
 			AriaSorting:          ariaSorting,
-			ActiveClientCount:    clientList.Metadata.TotalClients,
 			ColumnBeingSorted:    columnBeingSorted,
 			SortOrder:            sortOrder,
 			DisplayClientLimit:   displayClientLimit,

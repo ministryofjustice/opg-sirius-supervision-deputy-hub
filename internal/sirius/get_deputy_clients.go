@@ -103,7 +103,7 @@ type Page struct {
 }
 
 type Metadata struct {
-	TotalClients int `json:"totalClients"`
+	TotalActiveClients int `json:"totalActiveClients"`
 }
 
 type ApiClientList struct {
