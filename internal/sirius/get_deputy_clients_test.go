@@ -124,7 +124,7 @@ func TestDeputyClientReturned(t *testing.T) {
 			PageCurrent: 1,
 			PageTotal:   1,
 		},
-		Metadata:     Metadata{TotalClients: 1},
+		Metadata:     Metadata{TotalActiveClients: 1},
 		TotalClients: 1,
 	}
 
@@ -138,7 +138,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		[]string{},
 	})
 
-	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalClients)
+	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
 	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
