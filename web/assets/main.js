@@ -2,6 +2,7 @@ import GOVUKFrontend from "govuk-frontend/govuk/all.js";
 import MojBannerAutoHide from "./javascript/moj-banner-auto-hide";
 import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
+import ManageFilters from "./javascript/manage-filters";
 
 GOVUKFrontend.initAll();
 
@@ -58,6 +59,11 @@ if (document.querySelector("#f-button-disabled")) {
 document.querySelectorAll(".min-date-today")
     .forEach(function(input) {
     input.setAttribute("min", new Date().toISOString().split('T')[0]);
+});
+
+const manageFilters = document.querySelectorAll('[data-module="filters"]');
+manageFilters.forEach(function (manageFilter) {
+    new ManageFilters(manageFilter);
 });
 
 function onHomePage() {
