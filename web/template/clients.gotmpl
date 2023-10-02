@@ -28,7 +28,14 @@
                 {{ template "filters" . }}
             </div>
             <div id="table-column" class="govuk-grid-column-three-quarters">
-                <form action="{{ prefix (printf "/%d/clients" .DeputyDetails.ID) }}" method="GET" id="pagination-form">
+                <form action="{{ .UrlBuilder.OriginalPath }}" method="GET" id="pagination-form">
+                    <input type="hidden" name="sort" value="{{ $.ColumnBeingSorted }}:{{ $.SortOrder}}" />
+                    {{ range .UrlBuilder.SelectedFilters }}
+                        {{ $name := .Name }}
+                        {{ range  $i, $value := .SelectedValues }}
+                            <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
+                        {{ end }}
+                    {{ end }}
                     <div>
                         {{ template "pagination" . }}
                     </div>
