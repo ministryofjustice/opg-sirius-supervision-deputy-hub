@@ -113,6 +113,11 @@
                                             -
                                         {{ end }}
                                     </span>
+                        <span class="secondary rem-warning">
+                            {{ if .HasActiveREMWarning }}
+                                REM Warning
+                            {{ end }}
+                        </span>
                     </td>
                     <td class="govuk-table__cell">
                         {{ if .AccommodationType }}
