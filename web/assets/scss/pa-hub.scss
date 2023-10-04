@@ -327,5 +327,10 @@ assurance-visit {
   }
 }
 
-
-
+span.rem-warning {
+  font-weight: bold;
+  color: govuk-colour(red) !important;
+  background: url("#{$moj-assets-path}images/flag.svg") no-repeat 3px 3px;
+  padding-left: 20px;
+  line-height: normal !important;
+}

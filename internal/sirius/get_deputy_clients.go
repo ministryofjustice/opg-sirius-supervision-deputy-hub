@@ -66,6 +66,7 @@ type apiClient struct {
 	Orders               apiOrders               `json:"orders"`
 	OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
 	LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
+	HasActiveREMWarning  bool                    `json:"HasActiveREMWarning"`
 }
 
 type Order struct {
@@ -87,6 +88,7 @@ type DeputyClient struct {
 	SupervisionLevel     string
 	OldestReport         reportReturned
 	LatestCompletedVisit latestCompletedVisit
+	HasActiveREMWarning  bool
 }
 
 type DeputyClientDetails []DeputyClient
@@ -173,6 +175,7 @@ func (c *Client) GetDeputyClients(ctx Context, deputyId, displayClientLimit, sea
 					t.LatestCompletedVisit.VisitUrgency.Label,
 					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 				},
+				HasActiveREMWarning: t.HasActiveREMWarning,
 			}
 			clients = append(clients, client)
 		}
