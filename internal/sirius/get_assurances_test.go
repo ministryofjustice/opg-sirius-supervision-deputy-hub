@@ -12,18 +12,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAssuranceVisitsReturned(t *testing.T) {
+func TestAssurancesReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `{
-		"assuranceVisits":
+		"assurances":
 			[
 				{
 					"id":3,
 					"assuranceType": {
 					  "handle": "VISIT",
-					  "label": "Visit",
+					  "label": "Assurance",
 					  "deprecated": null
 					},
 					"requestedDate":"2022-06-25T12:16:34+00:00",
@@ -41,7 +41,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					},
 					"pdrOutcome": null,
 					"reportReviewDate": "2022-02-02T00:00:00+00:00",
-					"assuranceVisitReportMarkedAs": {
+					"reportMarkedAs": {
 					  "handle": "RED",
 					  "label": "Red",
 					  "deprecated": null
@@ -75,7 +75,7 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 					  "deprecated": null
 					},
 					"reportReviewDate": "2022-02-02T00:00:00+00:00",
-					"assuranceVisitReportMarkedAs": {
+					"reportMarkedAs": {
 					  "handle": "RED",
 					  "label": "Red",
 					  "deprecated": null
@@ -99,48 +99,48 @@ func TestAssuranceVisitsReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []AssuranceVisits{
+	expectedResponse := []model.Assurance{
 		{
-			VisitId:             3,
-			AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-			RequestedDate:       "25/06/2022",
-			RequestedBy:         model.User{ID: 53, Name: "case manager"},
-			DeputyId:            1,
-			CommissionedDate:    "01/01/2022",
-			ReportDueDate:       "07/01/2022",
-			ReportReceivedDate:  "07/01/2022",
-			VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
-			ReportReviewDate:    "02/02/2022",
-			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-			Note:                "This is just notes for something to show",
-			VisitorAllocated:    "Jane Janeson",
-			ReviewedBy:          model.User{ID: 53, Name: "case manager"},
+			Id:                 3,
+			Type:               model.AssuranceType{Handle: "VISIT", Label: "Assurance"},
+			RequestedDate:      "25/06/2022",
+			RequestedBy:        model.User{ID: 53, Name: "case manager"},
+			DeputyId:           1,
+			CommissionedDate:   "01/01/2022",
+			ReportDueDate:      "07/01/2022",
+			ReportReceivedDate: "07/01/2022",
+			VisitOutcome:       model.VisitOutcomeType{Label: "Cancelled", Handle: "CANCELLED"},
+			ReportReviewDate:   "02/02/2022",
+			ReportMarkedAs:     model.RagRatingType{Label: "Red", Handle: "RED"},
+			Note:               "This is just notes for something to show",
+			VisitorAllocated:   "Jane Janeson",
+			ReviewedBy:         model.User{ID: 53, Name: "case manager"},
 		},
 		{
-			VisitId:             4,
-			AssuranceType:       AssuranceTypes{Handle: "PDR", Label: "PDR"},
-			RequestedDate:       "25/06/2022",
-			RequestedBy:         model.User{ID: 53, Name: "case manager"},
-			DeputyId:            1,
-			CommissionedDate:    "01/01/2022",
-			ReportDueDate:       "07/01/2022",
-			ReportReceivedDate:  "07/01/2022",
-			PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
-			ReportReviewDate:    "02/02/2022",
-			VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-			Note:                "",
-			VisitorAllocated:    "Jane Janeson",
-			ReviewedBy:          model.User{ID: 53, Name: "case manager"},
+			Id:                 4,
+			Type:               model.AssuranceType{Handle: "PDR", Label: "PDR"},
+			RequestedDate:      "25/06/2022",
+			RequestedBy:        model.User{ID: 53, Name: "case manager"},
+			DeputyId:           1,
+			CommissionedDate:   "01/01/2022",
+			ReportDueDate:      "07/01/2022",
+			ReportReceivedDate: "07/01/2022",
+			PdrOutcome:         model.PdrOutcomeType{Label: "Received", Handle: "RECEIVED"},
+			ReportReviewDate:   "02/02/2022",
+			ReportMarkedAs:     model.RagRatingType{Label: "Red", Handle: "RED"},
+			Note:               "",
+			VisitorAllocated:   "Jane Janeson",
+			ReviewedBy:         model.User{ID: 53, Name: "case manager"},
 		},
 	}
 
-	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 1)
+	assurances, err := client.GetAssurances(getContext(nil), 1)
 
-	assert.Equal(t, expectedResponse, assuranceVisits)
+	assert.Equal(t, expectedResponse, assurances)
 	assert.Equal(t, nil, err)
 }
 
-func TestGetAssuranceVisitsReturnsNewStatusError(t *testing.T) {
+func TestGetAssurancesReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -148,19 +148,19 @@ func TestGetAssuranceVisitsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 76)
+	assurances, err := client.GetAssurances(getContext(nil), 76)
 
-	expectedResponse := []AssuranceVisits(nil)
+	expectedResponse := []model.Assurance(nil)
 
-	assert.Equal(t, expectedResponse, assuranceVisits)
+	assert.Equal(t, expectedResponse, assurances)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/assurance-visits",
+		URL:    svr.URL + "/api/v1/deputies/76/assurances",
 		Method: http.MethodGet,
 	}, err)
 }
 
-func TestGetAssuranceVisitsReturnsUnauthorisedClientError(t *testing.T) {
+func TestGetAssurancesReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -168,10 +168,10 @@ func TestGetAssuranceVisitsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	assuranceVisits, err := client.GetAssuranceVisits(getContext(nil), 76)
+	assurances, err := client.GetAssurances(getContext(nil), 76)
 
-	expectedResponse := []AssuranceVisits(nil)
+	expectedResponse := []model.Assurance(nil)
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, expectedResponse, assuranceVisits)
+	assert.Equal(t, expectedResponse, assurances)
 }

@@ -7,17 +7,17 @@ import (
 	"net/http"
 )
 
-type CreateAssuranceVisit struct {
-	AssuranceType string `json:"assuranceType"`
+type CreateAssurance struct {
+	Type          string `json:"assuranceType"`
 	RequestedDate string `json:"requestedDate"`
 	RequestedBy   int    `json:"requestedBy"`
 }
 
-func (c *Client) AddAssuranceVisit(ctx Context, assuranceType string, requestedDate string, userId, deputyId int) error {
+func (c *Client) AddAssurance(ctx Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	var body bytes.Buffer
 
-	err := json.NewEncoder(&body).Encode(CreateAssuranceVisit{
-		AssuranceType: assuranceType,
+	err := json.NewEncoder(&body).Encode(CreateAssurance{
+		Type:          assuranceType,
 		RequestedDate: requestedDate,
 		RequestedBy:   userId,
 	})
@@ -25,7 +25,7 @@ func (c *Client) AddAssuranceVisit(ctx Context, assuranceType string, requestedD
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/assurance-visits", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/assurances", deputyId), &body)
 
 	if err != nil {
 		return err

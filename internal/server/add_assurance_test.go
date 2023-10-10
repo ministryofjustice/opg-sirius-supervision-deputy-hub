@@ -12,29 +12,29 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockAddAssuranceVisitInformation struct {
-	count                int
-	lastCtx              sirius.Context
-	AddAssuranceVisitErr error
+type mockAddAssuranceClient struct {
+	count           int
+	lastCtx         sirius.Context
+	AddAssuranceErr error
 }
 
-func (m *mockAddAssuranceVisitInformation) AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
+func (m *mockAddAssuranceClient) AddAssurance(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.AddAssuranceVisitErr
+	return m.AddAssuranceErr
 }
 
-func TestGetAddAssuranceVisit(t *testing.T) {
+func TestGetAddAssurance(t *testing.T) {
 	assert := assert.New(t)
 
-	client := &mockAddAssuranceVisitInformation{}
+	client := &mockAddAssuranceClient{}
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForAddAssuranceVisit(client, template)
+	handler := renderTemplateForAddAssurance(client, template)
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -46,9 +46,9 @@ func TestGetAddAssuranceVisit(t *testing.T) {
 	assert.Equal("page", template.lastName)
 }
 
-func TestPostAssuranceVisit(t *testing.T) {
+func TestPostAssurance(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockAddAssuranceVisitInformation{}
+	client := &mockAddAssuranceClient{}
 	template := &mockTemplates{}
 
 	form := url.Values{}
@@ -63,7 +63,7 @@ func TestPostAssuranceVisit(t *testing.T) {
 
 	testHandler := mux.NewRouter()
 	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssuranceVisit(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
+		returnedError = renderTemplateForAddAssurance(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
@@ -72,9 +72,9 @@ func TestPostAssuranceVisit(t *testing.T) {
 	assert.Equal(Redirect("/123/assurance-visits?success=addAssuranceVisit"), returnedError)
 }
 
-func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) {
+func TestAddAssuranceHandlesValidationErrorsGeneratedWithinFile(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockAddAssuranceVisitInformation{}
+	client := &mockAddAssuranceClient{}
 
 	form := url.Values{}
 	form.Add("assurance-type", "")
@@ -84,7 +84,7 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
 
-	returnedError := renderTemplateForAddAssuranceVisit(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForAddAssurance(client, template)(AppVars{}, w, r)
 
 	expectedErrors := sirius.ValidationErrors{
 		"assurance-type": {
@@ -95,7 +95,7 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 		},
 	}
 
-	assert.Equal(AddAssuranceVisitVars{
+	assert.Equal(AddAssuranceVars{
 		AppVars{
 			Errors: expectedErrors,
 		},
@@ -104,9 +104,9 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 	assert.Nil(returnedError)
 }
 
-func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.T) {
+func TestAddAssuranceHandlesValidationErrorsReturnedFromSiriusCall(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockAddAssuranceVisitInformation{}
+	client := &mockAddAssuranceClient{}
 
 	validationErrors := sirius.ValidationErrors{
 		"assurance-type": {
@@ -117,7 +117,7 @@ func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.
 		},
 	}
 
-	client.AddAssuranceVisitErr = sirius.ValidationError{
+	client.AddAssuranceErr = sirius.ValidationError{
 		Errors: validationErrors,
 	}
 
@@ -125,9 +125,9 @@ func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(""))
 
-	returnedError := renderTemplateForAddAssuranceVisit(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForAddAssurance(client, template)(AppVars{}, w, r)
 
-	assert.Equal(AddAssuranceVisitVars{
+	assert.Equal(AddAssuranceVars{
 		AppVars{
 			Errors: validationErrors,
 		},

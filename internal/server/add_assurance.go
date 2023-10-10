@@ -6,19 +6,19 @@ import (
 	"net/http"
 )
 
-type AddAssuranceVisit interface {
-	AddAssuranceVisit(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
+type AddAssuranceClient interface {
+	AddAssurance(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
 }
 
-type AddAssuranceVisitVars struct {
+type AddAssuranceVars struct {
 	AppVars
 }
 
-func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template) Handler {
+func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
-		vars := AddAssuranceVisitVars{
+		vars := AddAssuranceVars{
 			AppVars: app,
 		}
 
@@ -44,7 +44,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
+			err := client.AddAssurance(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = verr.Errors

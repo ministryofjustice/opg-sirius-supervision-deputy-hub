@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -34,7 +35,7 @@ func TestGetPdrOutcomeTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []PdrOutcomeTypes{
+	expectedResponse := []model.PdrOutcomeType{
 		{
 			"RECEIVED",
 			"Received",
@@ -61,7 +62,7 @@ func TestGetPdrOutcomeTypesReturnsNewStatusError(t *testing.T) {
 
 	pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(getContext(nil))
 
-	assert.Equal(t, []PdrOutcomeTypes(nil), pdrOutcomeTypes)
+	assert.Equal(t, []model.PdrOutcomeType(nil), pdrOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/pdrOutcome",
@@ -80,5 +81,5 @@ func TestGetPdrOutcomeTypesReturnsUnauthorisedClientError(t *testing.T) {
 	pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []PdrOutcomeTypes(nil), pdrOutcomeTypes)
+	assert.Equal(t, []model.PdrOutcomeType(nil), pdrOutcomeTypes)
 }

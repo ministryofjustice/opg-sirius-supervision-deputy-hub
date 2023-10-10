@@ -1,3 +1,4 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AssurancesVars*/ -}}
 {{ template "page" . }}
 
 {{ define "main" }}
@@ -33,26 +34,26 @@
         {{ template "warning-banner" .ErrorMessage }}
     </div>
 
-    {{ range $i, $visit := .AssuranceVisits }}
+    {{ range $i, $assurance := .Assurances }}
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
-                {{ if eq $visit.AssuranceType.Handle "PDR" }}
-                    {{ template "view-pdr" $visit }}
+                {{ if eq $assurance.Type.Handle "PDR" }}
+                    {{ template "view-pdr" $assurance }}
                 {{ else }}
-                    {{ template "view-assurance-visit" $visit }}
+                    {{ template "view-assurance-visit" $assurance }}
                 {{ end }}
             </div>
         </div>
         {{ if eq $i 0 }}
             <div class="moj-button-menu__wrapper">
                 <a
-                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $visit.DeputyId $visit.VisitId) }}"
+                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $assurance.DeputyId $assurance.Id) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary"
                     id="hook-manage-a-visit"
                     data-module="govuk-button">
-                    {{ if eq $visit.AssuranceType.Label "PDR" }}
+                    {{ if eq $assurance.Type.Label "PDR" }}
                         Manage PDR
                     {{ else }}
                         Manage assurance visit
@@ -60,7 +61,7 @@
                 </a>
             </div>
         {{ end }}
-        {{ if not (is_last $i $.AssuranceVisits) }}
+        {{ if not (is_last $i $.Assurances) }}
             <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
         {{ end }}
     {{ end }}

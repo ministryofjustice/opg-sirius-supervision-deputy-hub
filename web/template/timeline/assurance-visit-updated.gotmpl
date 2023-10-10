@@ -28,6 +28,8 @@
                         Report review date:
                     {{ else if eq .FieldName "assuranceVisitReportMarkedAs" }}
                         Report marked as:
+                    {{ else if eq .FieldName "reportMarkedAs" }}
+                        Report marked as:
                     {{ else if eq .FieldName "visitorAllocated" }}
                         Visitor:
                     {{ else if eq .FieldName "reviewedBy" }}

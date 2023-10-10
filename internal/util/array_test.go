@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"testing"
 )
 
@@ -21,7 +21,7 @@ func TestIsLast(t *testing.T) {
 		{
 			"Empty sirius typed array",
 			0,
-			[]sirius.AssuranceVisits{},
+			[]model.Assurance{},
 			false,
 		},
 		{

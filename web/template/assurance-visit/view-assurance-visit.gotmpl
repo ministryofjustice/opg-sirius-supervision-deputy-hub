@@ -1,9 +1,10 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model.Assurance*/ -}}
 {{ define "view-assurance-visit" }}
     <dl id="assurance-visit-details" class="govuk-summary-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Assurance type</dt>
             <dd class="govuk-summary-list__value hook_assurance_type">
-                {{ .AssuranceType.Label }}
+                {{ .Type.Label }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
@@ -92,8 +93,8 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Report marked as</dt>
             <dd class="govuk-summary-list__value hook_report_marked_as">
-                {{ if .VisitReportMarkedAs.Label }}
-                    {{ .VisitReportMarkedAs.Label }}
+                {{ if .ReportMarkedAs.Label }}
+                    {{ .ReportMarkedAs.Label }}
                 {{ else }}
                     -
                 {{ end }}

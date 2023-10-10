@@ -2416,7 +2416,7 @@ module.exports = function () {
                             "deprecated": null
                         },
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "GREEN",
                             "label": "Green"
                         },
@@ -2458,7 +2458,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2517,7 +2517,7 @@ module.exports = function () {
                         "assuranceVisitOutcome": null,
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2571,7 +2571,7 @@ module.exports = function () {
                         "assuranceVisitOutcome": null,
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2634,7 +2634,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": null,
+                        "reportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
                         "note": 'Some notes that have been written here'
@@ -2673,7 +2673,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": null,
+                        "reportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
                         "note": 'Some notes that have been written here'
@@ -2780,7 +2780,7 @@ module.exports = function () {
                 "assuranceVisitOutcome": null,
                 "pdrOutcome": null,
                 "reportReviewDate": null,
-                "assuranceVisitReportMarkedAs": {
+                "reportMarkedAs": {
                     "handle": "RED",
                     "label": "Red",
                     "deprecated": null
@@ -2823,7 +2823,7 @@ module.exports = function () {
                     "deprecated": null
                 },
                 "reportReviewDate": null,
-                "assuranceVisitReportMarkedAs": {
+                "reportMarkedAs": {
                     "handle": "RED",
                     "label": "Red",
                     "deprecated": null

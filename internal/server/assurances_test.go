@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -10,35 +11,35 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockManageAssuranceVisit struct {
-	count                int
-	lastCtx              sirius.Context
-	assuranceVisits      []sirius.AssuranceVisits
-	assuranceVisitsError error
+type mockGetAssurancesClient struct {
+	count      int
+	lastCtx    sirius.Context
+	assurances []model.Assurance
+	err        error
 }
 
-func (m *mockManageAssuranceVisit) GetAssuranceVisits(ctx sirius.Context, deputyId int) ([]sirius.AssuranceVisits, error) {
+func (m *mockGetAssurancesClient) GetAssurances(ctx sirius.Context, deputyId int) ([]model.Assurance, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.assuranceVisits, m.assuranceVisitsError
+	return m.assurances, m.err
 }
 
-func TestGetManageAssuranceVisits_latestNotReviewed(t *testing.T) {
+func TestGetAssurances_LatestNotReviewed(t *testing.T) {
 	assert := assert.New(t)
 
-	client := &mockManageAssuranceVisit{}
+	client := &mockGetAssurancesClient{}
 	template := &mockTemplates{}
 
-	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{AssuranceType: sirius.AssuranceTypes{
+	client.assurances = append(client.assurances, model.Assurance{Type: model.AssuranceType{
 		Handle: "VISIT",
-		Label:  "Visit",
+		Label:  "Assurance",
 	}})
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForAssuranceVisits(client, template)
+	handler := renderTemplateForAssurances(client, template)
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -46,40 +47,42 @@ func TestGetManageAssuranceVisits_latestNotReviewed(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(template.lastVars.(AssuranceVisitsVars).ErrorMessage, "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled")
-	assert.True(template.lastVars.(AssuranceVisitsVars).AddVisitDisabled)
+	assert.Equal(template.lastVars.(AssurancesVars).ErrorMessage, "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled")
+	assert.True(template.lastVars.(AssurancesVars).AddVisitDisabled)
 }
 
-func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
+func TestGetAssurances_LatestReviewed(t *testing.T) {
 	assert := assert.New(t)
 
-	client := &mockManageAssuranceVisit{}
+	client := &mockGetAssurancesClient{
+		assurances: []model.Assurance{
+			{
+				ReportReviewDate: "01/01/2022",
+				ReportMarkedAs: model.RagRatingType{
+					Label:  "RED",
+					Handle: "RED",
+				},
+				Type: model.AssuranceType{
+					Handle: "VISIT",
+					Label:  "Assurance",
+				},
+			},
+			{
+				ReportReviewDate: "01/01/2021",
+				Type: model.AssuranceType{
+					Handle: "VISIT",
+					Label:  "Assurance",
+				},
+			},
+		},
+	}
+
 	template := &mockTemplates{}
-
-	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2022",
-		VisitReportMarkedAs: sirius.VisitRagRatingTypes{
-			Label:  "RED",
-			Handle: "RED",
-		},
-		AssuranceType: sirius.AssuranceTypes{
-			Handle: "VISIT",
-			Label:  "Visit",
-		},
-	})
-
-	client.assuranceVisits = append(client.assuranceVisits, sirius.AssuranceVisits{
-		ReportReviewDate: "01/01/2021",
-		AssuranceType: sirius.AssuranceTypes{
-			Handle: "VISIT",
-			Label:  "Visit",
-		},
-	})
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "", nil)
 
-	handler := renderTemplateForAssuranceVisits(client, template)
+	handler := renderTemplateForAssurances(client, template)
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -87,35 +90,35 @@ func TestGetManageAssuranceVisits_latestReviewed(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 
-	assert.Equal(template.lastVars.(AssuranceVisitsVars).ErrorMessage, "")
-	assert.False(template.lastVars.(AssuranceVisitsVars).AddVisitDisabled)
+	assert.Equal(template.lastVars.(AssurancesVars).ErrorMessage, "")
+	assert.False(template.lastVars.(AssurancesVars).AddVisitDisabled)
 }
 
 func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 	tests := []struct {
 		name               string
-		visits             []sirius.AssuranceVisits
+		assurances         []model.Assurance
 		want               bool
 		wantedErrorMessage string
 	}{
 		{
-			"No visits",
-			[]sirius.AssuranceVisits{},
+			"No assurances",
+			[]model.Assurance{},
 			false,
 			"",
 		},
 		{
 			name: "Latest visit is reviewed",
-			visits: []sirius.AssuranceVisits{
+			assurances: []model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 				{},
@@ -125,10 +128,10 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			name: "Latest PDR visit is reviewed",
-			visits: []sirius.AssuranceVisits{
+			assurances: []model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -140,21 +143,21 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest visit has no review date",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 				{
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 			},
@@ -163,9 +166,9 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest PDR visit has no review date",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -177,12 +180,12 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest visit has no RAG",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 				{},
@@ -192,17 +195,17 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest visit not reviewed but previous one is",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{},
 				{
 					ReportReviewDate: "01/01/2022",
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 			},
@@ -211,13 +214,13 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest PDR visit not reviewed but previous one is",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -231,15 +234,15 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest visit is cancelled",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					VisitOutcome: sirius.VisitOutcomeTypes{
+					VisitOutcome: model.VisitOutcomeType{
 						Label:  "Cancelled",
 						Handle: "CANCELLED",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 				{},
@@ -249,17 +252,17 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest PDR visit is not received",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					PdrOutcome: sirius.PdrOutcomeTypes{
+					PdrOutcome: model.PdrOutcomeType{
 						Label:  "Not received",
 						Handle: "NOT_RECEIVED",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -271,15 +274,15 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest visit is not cancelled",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					VisitOutcome: sirius.VisitOutcomeTypes{
+					VisitOutcome: model.VisitOutcomeType{
 						Label:  "Successful",
 						Handle: "SUCCESSFUL",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "VISIT",
-						Label:  "Visit",
+						Label:  "Assurance",
 					},
 				},
 				{},
@@ -289,17 +292,17 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 		},
 		{
 			"Latest PDR visit is not cancelled",
-			[]sirius.AssuranceVisits{
+			[]model.Assurance{
 				{
-					PdrOutcome: sirius.PdrOutcomeTypes{
+					PdrOutcome: model.PdrOutcomeType{
 						Label:  "Successful",
 						Handle: "SUCCESSFUL",
 					},
-					AssuranceType: sirius.AssuranceTypes{
+					Type: model.AssuranceType{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					VisitReportMarkedAs: sirius.VisitRagRatingTypes{
+					ReportMarkedAs: model.RagRatingType{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -312,7 +315,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, gotErrorMessage := isAddVisitDisabled(tt.visits)
+			got, gotErrorMessage := isAddVisitDisabled(tt.assurances)
 			if got != tt.want {
 				t.Errorf("isAddVisitDisabled() = %v, want %v", got, tt.want)
 			}
@@ -323,10 +326,10 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 	}
 }
 
-func TestAssuranceVisitsReturnsNonValidationErrors(t *testing.T) {
+func TestGetAssurancesReturnsNonValidationErrors(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockManageAssuranceVisit{
-		assuranceVisitsError: sirius.StatusError{Code: 500},
+	client := &mockGetAssurancesClient{
+		err: sirius.StatusError{Code: 500},
 	}
 
 	template := &mockTemplates{}
@@ -334,7 +337,7 @@ func TestAssuranceVisitsReturnsNonValidationErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 
-	returnedError := renderTemplateForAssuranceVisits(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForAssurances(client, template)(AppVars{}, w, r)
 
-	assert.Equal(client.assuranceVisitsError, returnedError)
+	assert.Equal(client.err, returnedError)
 }
