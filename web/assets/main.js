@@ -9,9 +9,9 @@ MojBannerAutoHide(document.querySelector(".app-main-class"));
 
 document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
 
-if (document.querySelector("#select-ecm")) {
+if (document.querySelector("#f-select-ecm")) {
     accessibleAutocomplete.enhanceSelectElement({
-        selectElement: document.querySelector("#select-ecm"),
+        selectElement: document.querySelector("#f-select-ecm"),
         defaultValue: "",
     });
 }
