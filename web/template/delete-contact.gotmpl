@@ -1,10 +1,13 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}Delete contact{{ end }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" (rename_errors .Errors) }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-            Delete contact
+            {{ block "page-name" . }}{{ end }}
         </h1>
     </header>
     <div class="govuk-grid-row">

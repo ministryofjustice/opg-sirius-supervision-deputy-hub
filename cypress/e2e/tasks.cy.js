@@ -65,14 +65,14 @@ describe("Tasks", () => {
             cy.get('.govuk-radios:has(label:contains("PA Team 1 - (Supervision) (Executive Case Manager)"))')
                 .find('input')
                 .should("be.checked");
-            cy.get('#select-ecm').should("be.hidden");
+            cy.get('#f-select-ecm').should("be.hidden");
             cy.get('label:contains("Someone else")').click();
-            cy.get('#select-ecm').should("be.visible");
-            cy.get("#select-ecm").type("S");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 3);
-            cy.get("#select-ecm").type("ta");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
-            cy.contains("#select-ecm__listbox", "Eddard Stark").click();
+            cy.get('#f-select-ecm').should("be.visible");
+            cy.get("#f-select-ecm").type("S");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 3);
+            cy.get("#f-select-ecm").type("ta");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 1);
+            cy.contains("#f-select-ecm__listbox", "Eddard Stark").click();
 
             cy.get('label:contains("Notes")').type("Test note for task");
             cy.contains("button", "Save task").click();
@@ -151,17 +151,17 @@ describe("Tasks", () => {
             cy.get('#assignedto-current-assignee').should("be.checked");
             cy.get('#assignedto-ecm').should("not.be.checked");
             cy.get('#assignedto-other').should("not.be.checked");
-            cy.get('#notes').should("contain.text", "Notes about the task");
+            cy.get('#f-2-note').should("contain.text", "Notes about the task");
 
             cy.get('#duedate').type('2024-02-01');
             cy.get('#assignedto-other').check();
-            cy.get("#select-ecm").type("S");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 3);
-            cy.get("#select-ecm").type("ta");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
-            cy.contains("#select-ecm__listbox", "Eddard Stark").click();
-            cy.get('#notes').clear();
-            cy.get('#notes').type('updated notes');
+            cy.get("#f-select-ecm").type("S");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 3);
+            cy.get("#f-select-ecm").type("ta");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 1);
+            cy.contains("#f-select-ecm__listbox", "Eddard Stark").click();
+            cy.get('#f-2-note').clear();
+            cy.get('#f-2-note').type('updated notes');
 
             cy.contains("button", "Save task").click();
             cy.get('.moj-banner--success').should("contain.text", "Assurance visit follow up task updated");
@@ -169,8 +169,8 @@ describe("Tasks", () => {
 
         it("shows validation errors", () => {
             cy.setCookie("fail-route", "manageTask");
-            cy.get('#notes').clear();
-            cy.get('#notes').type('updated notes');
+            cy.get('#f-2-note').clear();
+            cy.get('#f-2-note').type('updated notes');
             cy.contains("button", "Save task").click();
 
             cy.get(".govuk-error-summary__title").should(
@@ -195,14 +195,14 @@ describe("Tasks", () => {
             cy.get(':nth-child(2) > .govuk-table__cell').should('contain.text', "Notes about the task");
             cy.get(':nth-child(3) > .govuk-table__cell').should('contain.text', "29/01/2026");
             cy.get(':nth-child(4) > .govuk-table__cell').should('contain.text', "Spongebob Squarepants");
-            cy.get('#notes').type('Notes for the event about to be completed');
+            cy.get('#f-notes').type('Notes for the event about to be completed');
             cy.get('.govuk-button').contains('Complete task').click();
             cy.get('.moj-banner--success').should('be.visible');
             cy.get('.moj-banner--success').should('contain.text', 'Assurance visit follow up task completed');
         });
         it("shows validation message if notes over 1000 characters", () => {
             cy.setCookie("fail-route", "completeTask");
-            cy.get('#notes').type('Notes for the event about to be completed');
+            cy.get('#f-notes').type('Notes for the event about to be completed');
             cy.get('.govuk-button').contains('Complete task').click();
             cy.get('.govuk-error-summary').should('be.visible');
             cy.get(".govuk-error-summary__title").should(

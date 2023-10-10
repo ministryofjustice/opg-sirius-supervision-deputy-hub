@@ -26,7 +26,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
             cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
             cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");
@@ -82,7 +82,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
             cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
             cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");

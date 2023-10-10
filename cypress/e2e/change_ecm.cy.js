@@ -22,10 +22,10 @@ describe("Change ECM", () => {
         });
 
         it("has a drop down populated with members of the PA Deputy Team", () => {
-            cy.get("#select-ecm").type("S");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 3);
-            cy.get("#select-ecm").type("now");
-            cy.get("#select-ecm__listbox").find("li").should("have.length", 1);
+            cy.get("#f-select-ecm").type("S");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 3);
+            cy.get("#f-select-ecm").type("now");
+            cy.get("#f-select-ecm__listbox").find("li").should("have.length", 1);
         });
 
         it("directs me back to deputy details page if I press cancel", () => {
@@ -36,8 +36,8 @@ describe("Change ECM", () => {
 
         it("allows me to fill in and submit the ecm form", () => {
             cy.setCookie("success-route", "/deputies/1");
-            cy.get("#select-ecm").type("S");
-            cy.contains("#select-ecm__listbox", "Jon Snow").click();
+            cy.get("#f-select-ecm").type("S");
+            cy.contains("#f-select-ecm__listbox", "Jon Snow").click();
             cy.get("form").submit();
             cy.get("h1").should("contain", "Deputy details");
             cy.get(".moj-banner--success").should("contain", "ECM changed to");
@@ -45,7 +45,7 @@ describe("Change ECM", () => {
 
         it("displays warning when no ecm chosen and form submitted", () => {
             cy.setCookie("fail-route", "ecm");
-            cy.get("#select-ecm").type("S");
+            cy.get("#f-select-ecm").type("S");
             cy.get("form").submit();
             cy.get(".govuk-error-summary").should("contain", "There is a problem");
             cy.get(".govuk-list > li > a").should(

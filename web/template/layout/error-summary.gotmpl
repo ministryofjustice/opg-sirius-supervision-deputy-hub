@@ -13,7 +13,7 @@
                 <ul class="govuk-list govuk-error-summary__list">
                     {{ range $k, $v := (rename_errors .) }}
                         {{ range $v }}
-                            <li><a href="#f-{{ $k }}">{{ . }}</a></li>
+                            <li><a class="govuk-link" href="#f-{{ $k }}">{{ . }}</a></li>
                         {{ end }}
                     {{ end }}
                 </ul>

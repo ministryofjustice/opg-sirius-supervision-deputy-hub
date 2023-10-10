@@ -167,6 +167,9 @@ var validationMappings = map[string]map[string]pair{
 	"reportReviewDate": {
 		"invalid-lte": pair{"reportReviewDate", "Report review date - This must be on or before " + currentDate},
 	},
+	"Change ECM": {
+		"": pair{"select-ecm", "Select an executive case manager"},
+	},
 }
 
 func RenameErrors(siriusError sirius.ValidationErrors) sirius.ValidationErrors {

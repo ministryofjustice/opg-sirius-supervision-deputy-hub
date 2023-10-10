@@ -1,13 +1,17 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}Add a note{{ end }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
-<div class="govuk-grid-row govuk-!-margin-top-5">
+    {{ template "content-header" . }}
+    {{ $RenamedErrors := (rename_errors .Errors) }}
+    {{ template "error-summary" $RenamedErrors }}
+    <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
                 <h1
                     class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                    Add a note
+                    {{ block "page-name" . }}{{ end }}
                 </h1>
             </header>
 
@@ -21,37 +25,37 @@
                         name="xsrfToken"
                         value="{{ .XSRFToken }}" />
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="title">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "1-title" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-1-title">
                             Title (required)
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "1-title") }}
                         <input
-                            class="govuk-input"
-                            id="title"
+                            class="govuk-input{{ if index $RenamedErrors "1-title" }} govuk-input--error{{ end }}"
+                            id="f-1-title"
                             name="title"
                             type="text"
-                            {{ if .Errors }}value="{{ .Title }}"{{ end }} />
+                            {{ if $RenamedErrors }}value="{{ .Title }}"{{ end }} />
                     </div>
 
                     <div
                         class="govuk-character-count"
                         data-module="govuk-character-count"
                         data-maxlength="1000">
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="note">
+                        <div class="govuk-form-group{{ if index $RenamedErrors "2-note" }} govuk-form-group--error{{ end }}">
+                            <label class="govuk-label" for="f-2-note">
                                 Note (required)
                             </label>
-                            {{/* prettier-ignore-start */}}
+                            {{ template "error-message" (index $RenamedErrors "2-note") }}
                             <textarea
-                                class="govuk-textarea govuk-js-character-count"
-                                id="note"
+                                class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "2-note" }} govuk-input--error{{ end }}"
+                                id="f-2-note"
                                 name="note"
                                 rows="10"
-                                aria-describedby="note-info note-hint"
-                            >{{ if .Errors }}{{ .Note }}{{ end }}</textarea>
-                            {{/* prettier-ignore-end */}}
+                                aria-describedby="f-2-note-info"
+                            >{{ if $RenamedErrors }}{{ .Note }}{{ end }}</textarea>
                             <div
-                                id="note-info"
+                                id="f-2-note-info"
                                 class="govuk-hint govuk-character-count__message"
                                 aria-live="polite">
                                 You have 1000 characters remaining
