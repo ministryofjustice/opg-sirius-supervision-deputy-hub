@@ -98,6 +98,18 @@
                                         {{ else }}
                                             -
                                         {{ end }}
+                                        {{ if .Surname }}
+                                            {{ .Surname }}
+                                        {{ else }}
+                                            -
+                                        {{ end }}
+                                    </a>
+                                    <span class="secondary court_ref">
+                                        {{ if .CourtRef }}
+                                            {{ .CourtRef }}
+                                        {{ else }}
+                                            -
+                                        {{ end }}
                                     </span>
                                     <span class="secondary rem-warning">
                                         {{ if .HasActiveREMWarning }}
