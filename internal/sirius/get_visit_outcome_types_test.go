@@ -41,16 +41,16 @@ func TestGetVisitOutcomeTypes(t *testing.T) {
 
 	expectedResponse := []model.VisitOutcomeType{
 		{
-			"SUCCESSFUL",
-			"Successful",
+			Handle: "SUCCESSFUL",
+			Label:  "Successful",
 		},
 		{
-			"ABORTED",
-			"Aborted",
+			Handle: "ABORTED",
+			Label:  "Aborted",
 		},
 		{
-			"CANCELLED",
-			"Cancelled",
+			Handle: "CANCELLED",
+			Label:  "Cancelled",
 		},
 	}
 

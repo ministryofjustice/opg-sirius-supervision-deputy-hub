@@ -41,16 +41,16 @@ func TestGetRagRatingTypes(t *testing.T) {
 
 	expectedResponse := []model.RagRatingType{
 		{
-			"RED",
-			"Red",
+			Handle: "RED",
+			Label:  "Red",
 		},
 		{
-			"AMBER",
-			"Amber",
+			Handle: "AMBER",
+			Label:  "Amber",
 		},
 		{
-			"GREEN",
-			"Green",
+			Handle: "GREEN",
+			Label:  "Green",
 		},
 	}
 

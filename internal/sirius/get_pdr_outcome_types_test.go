@@ -37,12 +37,12 @@ func TestGetPdrOutcomeTypes(t *testing.T) {
 
 	expectedResponse := []model.PdrOutcomeType{
 		{
-			"RECEIVED",
-			"Received",
+			Handle: "RECEIVED",
+			Label:  "Received",
 		},
 		{
-			"NOT_RECEIVED",
-			"Not received",
+			Handle: "NOT_RECEIVED",
+			Label:  "Not received",
 		},
 	}
 
