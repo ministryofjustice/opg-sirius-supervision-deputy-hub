@@ -1,10 +1,14 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}{{ if eq .IsNewContact true }}Add new contact{{ else }}Manage contact{{ end }}{{ end }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+    {{ $RenamedErrors := (rename_errors .Errors) }}
+    {{ template "error-summary" $RenamedErrors }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-            {{ if eq .IsNewContact true }}Add new contact{{ else }}Manage contact{{ end }}
+            {{ block "page-name" . }}{{ end }}
         </h1>
     </header>
     <div class="govuk-grid-row">
@@ -14,10 +18,11 @@
                     type="hidden"
                     name="xsrfToken"
                     value="{{ .XSRFToken }}" />
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index $RenamedErrors "contactName" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-contactName">Name</label>
+                    {{ template "error-message" (index $RenamedErrors "contactName") }}
                     <input
-                        class="govuk-input"
+                        class="govuk-input{{ if index $RenamedErrors "contactName" }} govuk-input--error{{ end }}"
                         id="f-contactName"
                         name="contact-name"
                         type="text"
@@ -74,22 +79,20 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="255">
-                    <div class="govuk-form-group" id="f-contact-notes">
-                        <label class="govuk-label" for="note">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "contactNotes" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-contactNotes">
                             Notes (optional)
                         </label>
-                        {{/* prettier-ignore-start */}}
+                        {{ template "error-message" (index $RenamedErrors "contactNotes") }}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count"
-                            id="note"
+                            class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "contactNotes" }} govuk-input--error{{ end }}"
+                            id="f-contactNotes"
                             name="contact-notes"
                             rows="5"
-                            aria-describedby="note-info note-hint"
+                            aria-describedby="f-contactNotes-info note-hint"
                         >{{ .ContactNotes }}</textarea>
-
-                        {{/* prettier-ignore-end */}}
                         <div
-                            id="note-info"
+                            id="f-contactNotes-info"
                             class="govuk-hint govuk-character-count__message"
                             aria-live="polite">
                             You have 255 characters remaining

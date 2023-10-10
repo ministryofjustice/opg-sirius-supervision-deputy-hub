@@ -1,21 +1,25 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}Manage deputy contact details{{ end }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+    {{ $RenamedErrors := (rename_errors .Errors) }}
+    {{ template "error-summary" $RenamedErrors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
                 <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                    Manage deputy contact details
+                    {{ block "page-name" . }}{{ end }}
                 </h1>
             </header>
 
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-half">
                     <p class="govuk-body govuk-!-margin-bottom-5">
-                        <a 
-                            href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}">Change the deputy&apos;s firm
-                        </a> if they&apos;ve moved to a different organisation
+                        <a class="govuk-link" href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}">
+                            Change the deputy&apos;s firm</a>
+                        if they&apos;ve moved to a different organisation
                     </p>
 
                     <form
@@ -29,30 +33,32 @@
                             value="{{ .XSRFToken }}" />
 
                         {{ if eq .DeputyDetails.DeputySubType.SubType "PERSON" }}
-                            <div class="govuk-form-group">
+                            <div class="govuk-form-group{{ if index $RenamedErrors "firstname" }} govuk-form-group--error{{ end }}">
                                 <label
                                     class="govuk-label"
-                                    for="deputy-first-name">
+                                    for="f-firstname">
                                     Deputy first name (required)
                                 </label>
+                                {{ template "error-message" (index $RenamedErrors "firstname") }}
                                 <input
-                                    class="govuk-input"
-                                    id="deputy-first-name"
+                                    class="govuk-input{{ if index $RenamedErrors "firstname" }} govuk-input--error{{ end }}"
+                                    id="f-firstname"
                                     name="deputy-first-name"
                                     type="text"
                                     value="{{ .DeputyDetails.DeputyFirstName }}"
                                     required />
                             </div>
 
-                            <div class="govuk-form-group">
+                            <div class="govuk-form-group{{ if index $RenamedErrors "surname" }} govuk-form-group--error{{ end }}">
                                 <label
                                     class="govuk-label"
-                                    for="deputy-last-name">
+                                    for="f-surname">
                                     Deputy last name (required)
                                 </label>
+                                {{ template "error-message" (index $RenamedErrors "surname") }}
                                 <input
-                                    class="govuk-input"
-                                    id="deputy-last-name"
+                                    class="govuk-input{{ if index $RenamedErrors "dueDate" }} govuk-input--error{{ end }}"
+                                    id="f-surname"
                                     name="deputy-last-name"
                                     type="text"
                                     value="{{ .DeputyDetails.DeputySurname }}"

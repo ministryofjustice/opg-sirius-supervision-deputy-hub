@@ -5,7 +5,9 @@
         <div class="govuk-grid-column-full">
 
           <header>
-            <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">Manage important information</h1>
+            <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
+                {{ block "page-name" . }}{{ end }}
+            </h1>
           </header>
           <div class="govuk-grid-row">
 
@@ -92,7 +94,6 @@
                         <label class="govuk-label" for="other-info-note">
                             Other important information
                         </label>
-                        {{/* prettier-ignore-start */}}
                         <textarea
                             class="govuk-textarea govuk-js-character-count"
                             id="other-info-note"
@@ -100,7 +101,6 @@
                             rows="5"
                             aria-describedby="other-important-information"
                             >{{.DeputyDetails.DeputyImportantInformation.OtherImportantInformation}}</textarea>
-                        {{/* prettier-ignore-end */}}
                         <div
                             id="other-info-note-info"
                             class="govuk-hint govuk-character-count__message"
