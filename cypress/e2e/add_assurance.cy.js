@@ -2,7 +2,7 @@ describe("Add Assurance Visit", () => {
     beforeEach(() => {
         cy.setCookie("Other", "other");
         cy.setCookie("XSRF-TOKEN", "abcde");
-        cy.visit("/supervision/deputies/3/add-assurance-visit");
+        cy.visit("/supervision/deputies/3/add-assurance");
     });
 
     describe("Header", () => {
@@ -17,19 +17,19 @@ describe("Add Assurance Visit", () => {
 
     describe("Success submitting assurance visit form", () => {
         it("should allow me to submit the form", () => {
-            cy.setCookie("success-route", "/assuranceVisits/1");
+            cy.setCookie("success-route", "/assurances/1");
             cy.get("#assurance-pdr").check();
             cy.get("#f-requested-date").type("2021-02-01");
-            cy.get("#add-assurance-visit-form").submit();
-            cy.url().should("contain", "/supervision/deputies/3/assurance-visits");
+            cy.get("#add-assurance-form").submit();
+            cy.url().should("contain", "/supervision/deputies/3/assurances");
             cy.get(".moj-banner").should("contain", "Assurance process updated");
         });
     });
 
     describe("Error submitting assurance visit form", () => {
         it("shows error message when submitting invalid data", () => {
-        cy.setCookie("fail-route", "addAssuranceVisit");
-        cy.get("#add-assurance-visit-form").submit();
+        cy.setCookie("fail-route", "addAssurance");
+        cy.get("#add-assurance-form").submit();
         cy.get(".govuk-error-summary__body").should(
             "contain",
             "Enter a requested date"

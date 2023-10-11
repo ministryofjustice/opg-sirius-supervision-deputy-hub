@@ -1,6 +1,6 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model.Assurance*/ -}}
-{{ define "view-pdr" }}
-    <dl id="assurance-visit-details" class="govuk-summary-list">
+{{ define "view-visit" }}
+    <dl id="assurance-details" class="govuk-summary-list">
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Assurance type</dt>
             <dd class="govuk-summary-list__value hook_assurance_type">
@@ -19,9 +19,29 @@
                 {{ .RequestedBy.Name }}
             </dd>
         </div>
-        {{ $nullDateValue:="01/01/0001" }}
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">PDR due date</dt>
+            <dt class="govuk-summary-list__key">Commissioned date</dt>
+            <dd class="govuk-summary-list__value hook_commissioned_date">
+                {{ $nullDateValue:="01/01/0001" }}
+                {{ if ne .CommissionedDate $nullDateValue }}
+                    {{ .CommissionedDate }}
+                {{ else }}
+                    -
+                {{ end }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Visitor</dt>
+            <dd class="govuk-summary-list__value hook_visitor">
+                {{ if .VisitorAllocated }}
+                    {{ .VisitorAllocated }}
+                {{ else }}
+                    -
+                {{ end }}
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">Report due date</dt>
             <dd class="govuk-summary-list__value hook_report_due_date">
                 {{ if ne .ReportDueDate $nullDateValue }}
                     {{ .ReportDueDate }}
@@ -31,7 +51,7 @@
             </dd>
         </div>
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">PDR received date</dt>
+            <dt class="govuk-summary-list__key">Report received date</dt>
             <dd class="govuk-summary-list__value hook_report_received_date">
                 {{ if ne .ReportReceivedDate $nullDateValue }}
                     {{ .ReportReceivedDate }}
@@ -43,15 +63,15 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Outcome</dt>
             <dd class="govuk-summary-list__value hook_outcome">
-                {{ if .PdrOutcome.Label }}
-                    {{ .PdrOutcome.Label }}
+                {{ if .VisitOutcome.Label }}
+                    {{ .VisitOutcome.Label }}
                 {{ else }}
                     -
                 {{ end }}
             </dd>
         </div>
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">PDR reviewed date</dt>
+            <dt class="govuk-summary-list__key">Report reviewed date</dt>
             <dd class="govuk-summary-list__value hook_report_reviewed_date">
                 {{ if ne .ReportReviewDate $nullDateValue }}
                     {{ .ReportReviewDate }}
@@ -71,7 +91,7 @@
             </dd>
         </div>
         <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">PDR marked as</dt>
+            <dt class="govuk-summary-list__key">Report marked as</dt>
             <dd class="govuk-summary-list__value hook_report_marked_as">
                 {{ if .ReportMarkedAs.Label }}
                     {{ .ReportMarkedAs.Label }}

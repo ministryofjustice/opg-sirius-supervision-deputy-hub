@@ -19,7 +19,7 @@
                     {{ else }}
                         id="hook-add-a-visit"
                     {{ end }}
-                    href="{{ prefix (printf "/%d/add-assurance-visit" .DeputyDetails.ID) }}"
+                    href="{{ prefix (printf "/%d/add-assurance" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary"
@@ -40,14 +40,14 @@
                 {{ if eq $assurance.Type.Handle "PDR" }}
                     {{ template "view-pdr" $assurance }}
                 {{ else }}
-                    {{ template "view-assurance-visit" $assurance }}
+                    {{ template "view-visit" $assurance }}
                 {{ end }}
             </div>
         </div>
         {{ if eq $i 0 }}
             <div class="moj-button-menu__wrapper">
                 <a
-                    href="{{ prefix (printf "/%d/manage-assurance-visit/%d" $assurance.DeputyId $assurance.Id) }}"
+                    href="{{ prefix (printf "/%d/manage-assurance/%d" $assurance.DeputyId $assurance.Id) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary"

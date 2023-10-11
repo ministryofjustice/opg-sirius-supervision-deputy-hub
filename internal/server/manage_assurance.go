@@ -154,12 +154,12 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			success := "manageAssuranceVisit"
+			success := "manageVisit"
 			if vars.Assurance.Type.Handle == "PDR" {
 				success = "managePDR"
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=%s", app.DeputyId(), success))
+			return Redirect(fmt.Sprintf("/%d/assurances?success=%s", app.DeputyId(), success))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

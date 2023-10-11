@@ -54,7 +54,7 @@ func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Han
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/assurance-visits?success=addAssuranceVisit", app.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/assurances?success=addAssurance", app.DeputyId()))
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}

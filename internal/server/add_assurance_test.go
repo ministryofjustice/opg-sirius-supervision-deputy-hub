@@ -56,20 +56,20 @@ func TestPostAssurance(t *testing.T) {
 	form.Add("requested-date", "2200/10/20")
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
+	r, _ := http.NewRequest("POST", "/123/assurances", strings.NewReader(form.Encode()))
 	r.PostForm = form
 
 	var returnedError error
 
 	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visits", func(w http.ResponseWriter, r *http.Request) {
+	testHandler.HandleFunc("/{id}/assurances", func(w http.ResponseWriter, r *http.Request) {
 		returnedError = renderTemplateForAddAssurance(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/assurance-visits?success=addAssuranceVisit"), returnedError)
+	assert.Equal(Redirect("/123/assurances?success=addAssurance"), returnedError)
 }
 
 func TestAddAssuranceHandlesValidationErrorsGeneratedWithinFile(t *testing.T) {
@@ -82,7 +82,7 @@ func TestAddAssuranceHandlesValidationErrorsGeneratedWithinFile(t *testing.T) {
 
 	template := &mockTemplates{}
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(form.Encode()))
+	r, _ := http.NewRequest("POST", "/123/assurances", strings.NewReader(form.Encode()))
 
 	returnedError := renderTemplateForAddAssurance(client, template)(AppVars{}, w, r)
 
@@ -123,7 +123,7 @@ func TestAddAssuranceHandlesValidationErrorsReturnedFromSiriusCall(t *testing.T)
 
 	template := &mockTemplates{}
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits", strings.NewReader(""))
+	r, _ := http.NewRequest("POST", "/123/assurances", strings.NewReader(""))
 
 	returnedError := renderTemplateForAddAssurance(client, template)(AppVars{}, w, r)
 

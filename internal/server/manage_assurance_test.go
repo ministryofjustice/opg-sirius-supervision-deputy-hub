@@ -116,19 +116,19 @@ func TestPostManageAssurance(t *testing.T) {
 	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
+	r, _ := http.NewRequest("POST", "/123/assurances/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
 
 	var redirect error
 
 	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
+	testHandler.HandleFunc("/{id}/assurances/{visitId}", func(w http.ResponseWriter, r *http.Request) {
 		redirect = renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/assurance-visits?success=manageAssuranceVisit"), redirect)
+	assert.Equal(Redirect("/123/assurances?success=manageVisit"), redirect)
 }
 
 func TestGetManagePDR(t *testing.T) {
@@ -188,19 +188,19 @@ func TestPostManagePDR(t *testing.T) {
 	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123/assurance-visits/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
+	r, _ := http.NewRequest("POST", "/123/assurances/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
 
 	var redirect error
 
 	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurance-visits/{visitId}", func(w http.ResponseWriter, r *http.Request) {
+	testHandler.HandleFunc("/{id}/assurances/{visitId}", func(w http.ResponseWriter, r *http.Request) {
 		redirect = renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
 	})
 
 	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/assurance-visits?success=managePDR"), redirect)
+	assert.Equal(Redirect("/123/assurances?success=managePDR"), redirect)
 }
 
 func TestParseVisitForm(t *testing.T) {

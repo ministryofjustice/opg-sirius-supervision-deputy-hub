@@ -1957,7 +1957,7 @@ module.exports = function () {
                 "detail": "blah"
             },
             {
-                "id": "addAssuranceVisit",
+                "id": "addAssurance",
                 "validation_errors": {
                     "requested-date": {
                         "": "Enter a requested date"
@@ -1965,7 +1965,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "updateAssuranceVisit",
+                "id": "updateAssurance",
                 "validation_errors": {
                     "report-due-date": {
                         "": "Report due date must be in the future"
@@ -2374,14 +2374,14 @@ module.exports = function () {
                 "FirmNumber": 1000002
             }
         ],
-        "assuranceVisits": [
+        "assurances": [
             {
                 "id": 1,
-                "assuranceVisits": []
+                "assurances": []
             },
             {
                 "id": 2,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 36,
                         "assuranceType": {
@@ -2486,7 +2486,7 @@ module.exports = function () {
             },
             {
                 "id": 3,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 35,
                         "assuranceType": {
@@ -2599,7 +2599,7 @@ module.exports = function () {
             },
             {
                 "id": 4,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 1,
                         "assuranceType": {
@@ -2749,7 +2749,7 @@ module.exports = function () {
                 "label": "Not received"
             }
         ],
-        "assuranceVisit": [
+        "assurance": [
             {
                 "id": 35,
                 "assuranceType": {

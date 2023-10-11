@@ -21,10 +21,10 @@
         {{ template "deputy-allocated-to-firm" . }}
     {{ end }}
     {{ if eq .EventType "AssuranceVisitAdded" }}
-        {{ template "assurance-visit-added" . }}
+        {{ template "assurance-added" . }}
     {{ end }}
     {{ if eq .EventType "AssuranceVisitUpdated" }}
-        {{ template "assurance-visit-updated" . }}
+        {{ template "assurance-updated" . }}
     {{ end }}
     {{ if eq .EventType "DeputyContactAdded" }}
         {{ template "contact-added" . }}

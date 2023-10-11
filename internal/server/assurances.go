@@ -24,9 +24,9 @@ func renderTemplateForAssurances(client GetAssurancesClient, tmpl Template) Hand
 
 		var successMessage string
 		switch r.URL.Query().Get("success") {
-		case "addAssuranceVisit":
+		case "addAssurance":
 			successMessage = "Assurance process updated"
-		case "manageAssuranceVisit":
+		case "manageVisit":
 			successMessage = "Assurance visit updated"
 		case "managePDR":
 			successMessage = "PDR updated"

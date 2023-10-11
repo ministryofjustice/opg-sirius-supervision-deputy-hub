@@ -129,17 +129,17 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 		wrap(
 			renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
 
-	pageRouter.Handle("/assurance-visits",
+	pageRouter.Handle("/assurances",
 		wrap(
-			renderTemplateForAssurances(client, templates["assurance-visits.gotmpl"])))
+			renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
 
-	pageRouter.Handle("/add-assurance-visit",
+	pageRouter.Handle("/add-assurance",
 		wrap(
-			renderTemplateForAddAssurance(client, templates["add-assurance-visit.gotmpl"])))
+			renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
 
-	pageRouter.Handle("/manage-assurance-visit/{visitId}",
+	pageRouter.Handle("/manage-assurance/{visitId}",
 		wrap(
-			renderTemplateForManageAssurance(client, templates["manage-assurance-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
+			renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
 
 	static := staticFileHandler(envVars.WebDir)
 	router.PathPrefix("/assets/").Handler(static)
