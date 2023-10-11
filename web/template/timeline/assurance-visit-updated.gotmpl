@@ -1,5 +1,5 @@
-{{ define "assurance-visit-updated" }}
-    <div class="moj-timeline__item" data-cy="assurance-visit-updated-event">
+{{ define "assurance-updated" }}
+    <div class="moj-timeline__item" data-cy="assurance-updated-event">
         <div class="moj-timeline__header">
             <h2 class="moj-timeline__title">Assurance process updated</h2>
             <p class="moj-timeline__byline">
@@ -27,6 +27,8 @@
                     {{ else if eq .FieldName "reportReviewDate" }}
                         Report review date:
                     {{ else if eq .FieldName "assuranceVisitReportMarkedAs" }}
+                        Report marked as:
+                    {{ else if eq .FieldName "reportMarkedAs" }}
                         Report marked as:
                     {{ else if eq .FieldName "visitorAllocated" }}
                         Visitor:

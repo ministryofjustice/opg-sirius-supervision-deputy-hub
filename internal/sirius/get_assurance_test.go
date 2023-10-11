@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAssuranceVisitReturned(t *testing.T) {
+func TestAssuranceReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -20,7 +20,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				"id":3,
 				"assuranceType": {
 				  "handle": "VISIT",
-				  "label": "Visit",
+				  "label": "Assurance",
 				  "deprecated": null
 				},
 				"requestedDate":"2022-06-25T12:16:34+00:00",
@@ -42,7 +42,7 @@ func TestAssuranceVisitReturned(t *testing.T) {
 				  "deprecated": null
 				},
 				"reportReviewDate": "2022-02-02T00:00:00+00:00",
-				"assuranceVisitReportMarkedAs": {
+				"reportMarkedAs": {
 				  "handle": "RED",
 				  "label": "Red",
 				  "deprecated": null
@@ -64,30 +64,30 @@ func TestAssuranceVisitReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := AssuranceVisit{
-		Id:                  3,
-		AssuranceType:       AssuranceTypes{Handle: "VISIT", Label: "Visit"},
-		RequestedDate:       "2022-06-25",
-		RequestedBy:         model.User{ID: 53, Name: "case manager"},
-		CommissionedDate:    "2022-01-01",
-		ReportDueDate:       "2022-01-07",
-		ReportReceivedDate:  "2022-01-07",
-		VisitOutcome:        VisitOutcomeTypes{Label: "Cancelled", Handle: "CANCELLED"},
-		PdrOutcome:          PdrOutcomeTypes{Label: "Received", Handle: "RECEIVED"},
-		ReportReviewDate:    "2022-02-02",
-		VisitReportMarkedAs: VisitRagRatingTypes{Label: "Red", Handle: "RED"},
-		Note:                "This is just to see the notes and it is below 1000 characters",
-		VisitorAllocated:    "Jane Janeson",
-		ReviewedBy:          model.User{ID: 53, Name: "case manager"},
+	expectedResponse := model.Assurance{
+		Id:                 3,
+		Type:               model.AssuranceType{Handle: "VISIT", Label: "Assurance"},
+		RequestedDate:      "2022-06-25",
+		RequestedBy:        model.User{ID: 53, Name: "case manager"},
+		CommissionedDate:   "2022-01-01",
+		ReportDueDate:      "2022-01-07",
+		ReportReceivedDate: "2022-01-07",
+		VisitOutcome:       model.VisitOutcomeType{Label: "Cancelled", Handle: "CANCELLED"},
+		PdrOutcome:         model.PdrOutcomeType{Label: "Received", Handle: "RECEIVED"},
+		ReportReviewDate:   "2022-02-02",
+		ReportMarkedAs:     model.RagRatingType{Label: "Red", Handle: "RED"},
+		Note:               "This is just to see the notes and it is below 1000 characters",
+		VisitorAllocated:   "Jane Janeson",
+		ReviewedBy:         model.User{ID: 53, Name: "case manager"},
 	}
 
-	assuranceVisit, err := client.GetAssuranceVisitById(getContext(nil), 76, 3)
+	assurance, err := client.GetAssuranceById(getContext(nil), 76, 3)
 
-	assert.Equal(t, expectedResponse, assuranceVisit)
+	assert.Equal(t, expectedResponse, assurance)
 	assert.Equal(t, nil, err)
 }
 
-func TestGetAssuranceVisitReturnsNewStatusError(t *testing.T) {
+func TestGetAssuranceReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -95,19 +95,19 @@ func TestGetAssuranceVisitReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	assuranceVisit, err := client.GetAssuranceVisitById(getContext(nil), 76, 1)
+	assurance, err := client.GetAssuranceById(getContext(nil), 76, 1)
 
-	expectedResponse := AssuranceVisit{}
+	expectedResponse := model.Assurance{}
 
-	assert.Equal(t, expectedResponse, assuranceVisit)
+	assert.Equal(t, expectedResponse, assurance)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/assurance-visits/1",
+		URL:    svr.URL + "/api/v1/deputies/76/assurances/1",
 		Method: http.MethodGet,
 	}, err)
 }
 
-func TestGetAssuranceVisitReturnsUnauthorisedClientError(t *testing.T) {
+func TestGetAssuranceReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -115,10 +115,10 @@ func TestGetAssuranceVisitReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	assuranceVisit, err := client.GetAssuranceVisitById(getContext(nil), 76, 1)
+	assurance, err := client.GetAssuranceById(getContext(nil), 76, 1)
 
-	expectedResponse := AssuranceVisit{}
+	expectedResponse := model.Assurance{}
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, expectedResponse, assuranceVisit)
+	assert.Equal(t, expectedResponse, assurance)
 }

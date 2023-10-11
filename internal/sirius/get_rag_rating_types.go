@@ -2,16 +2,12 @@ package sirius
 
 import (
 	"encoding/json"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
-type VisitRagRatingTypes struct {
-	Handle string `json:"handle"`
-	Label  string `json:"label"`
-}
-
-func (c *Client) GetVisitRagRatingTypes(ctx Context) ([]VisitRagRatingTypes, error) {
-	var v []VisitRagRatingTypes
+func (c *Client) GetRagRatingTypes(ctx Context) ([]model.RagRatingType, error) {
+	var v []model.RagRatingType
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/ragRating", nil)
 	if err != nil {
