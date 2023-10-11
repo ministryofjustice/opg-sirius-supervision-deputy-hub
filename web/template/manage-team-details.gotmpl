@@ -1,33 +1,38 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}Manage team details{{ end }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+    {{ $RenamedErrors := (rename_errors .Errors) }}
+    {{ template "error-summary" $RenamedErrors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
                 <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                    Manage team details
+                    {{ block "page-name" . }}{{ end }}
                 </h1>
             </header>
             <div class="govuk-grid-row">
                 <form class="govuk-grid-column-one-half" method="post">
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "organisationName" }} govuk-form-group--error{{ end }}">
                         <input
                             type="hidden"
                             name="xsrfToken"
                             value="{{ .XSRFToken }}" />
-                        <label class="govuk-label" for="deputy-name">
+                        <label class="govuk-label" for="f-organisationName">
                             Deputy name (required)
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "organisationName") }}
                         <input
-                            class="govuk-input"
-                            id="f-deputy-name"
+                            class="govuk-input{{ if index $RenamedErrors "organisationName" }} govuk-input--error{{ end }}"
+                            id="f-organisationName"
                             name="deputy-name"
                             type="text"
                             value="{{ .DeputyDetails.OrganisationName }}" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="telephone">
+                        <label class="govuk-label" for="f-telephone">
                             Telephone number
                         </label>
                         <input
@@ -38,7 +43,7 @@
                             value="{{ .DeputyDetails.PhoneNumber }}" />
                     </div>
                     <div class="govuk-form-group">
-                        <label class="govuk-label" for="email">
+                        <label class="govuk-label" for="f-email">
                             Email address
                         </label>
                         <input
@@ -54,7 +59,7 @@
                             Address
                         </legend>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="team">
+                            <label class="govuk-label" for="f-team">
                                 Team or department name
                             </label>
                             <input
@@ -65,10 +70,8 @@
                                 value="{{ .DeputyDetails.OrganisationTeamOrDepartmentName }}" />
                         </div>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="team">
+                            <label class="govuk-label" for="f-address-line-1">
                                 Building and street
-                            </label>
-                            <label class="govuk-label" for="address-line-1">
                                 <span class="govuk-visually-hidden">
                                     line 1 of 3
                                 </span>
@@ -82,7 +85,7 @@
                                 value="{{ .DeputyDetails.AddressLine1 }}" />
                         </div>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="address-line-2">
+                            <label class="govuk-label" for="f-address-line-2">
                                 <span class="govuk-visually-hidden">
                                     Building and street line 2 of 3
                                 </span>
@@ -96,7 +99,7 @@
                                 value="{{ .DeputyDetails.AddressLine2 }}" />
                         </div>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="address-line-3">
+                            <label class="govuk-label" for="f-address-line-3">
                                 <span class="govuk-visually-hidden">
                                     Building and street line 3 of 3
                                 </span>
@@ -112,7 +115,7 @@
                         <div class="govuk-form-group">
                             <label
                                 class="govuk-label govuk-!-width-two-thirds"
-                                for="town">
+                                for="f-town">
                                 Town or city
                             </label>
                             <input
@@ -125,7 +128,7 @@
                         <div class="govuk-form-group">
                             <label
                                 class="govuk-label govuk-!-width-two-thirds"
-                                for="county">
+                                for="f-county">
                                 County
                             </label>
                             <input
@@ -136,7 +139,7 @@
                                 value="{{ .DeputyDetails.County }}" />
                         </div>
                         <div class="govuk-form-group">
-                            <label class="govuk-label" for="postcode">
+                            <label class="govuk-label" for="f-postcode">
                                 Postcode
                             </label>
                             <input

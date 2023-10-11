@@ -2021,12 +2021,6 @@ module.exports = function () {
                     "contactName": {
                         "isEmpty": ""
                     },
-                    "email": {
-                        "isEmpty": ""
-                    },
-                    "phoneNumber": {
-                        "isEmpty": ""
-                    },
                     "isMainContact": {
                         "isEmpty": ""
                     },

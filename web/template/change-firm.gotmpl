@@ -1,14 +1,16 @@
 {{ template "page" . }}
-{{ define "main" }}
-{{ template "content-header" . }}
-{{ template "navigation" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
-<div class="govuk-grid-row govuk-!-margin-top-5">
-        <div class="govuk-grid-column-full">
 
+{{ define "page-name" }}Change firm{{ end }}
+
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
+    {{ template "error-summary" (rename_errors .Errors) }}
+    <div class="govuk-grid-row govuk-!-margin-top-5">
+        <div class="govuk-grid-column-full">
             <header>
                 <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                    Change firm
+                    {{ block "page-name" . }}{{ end }}
                 </h1>
             </header>
             <div class="govuk-grid-row">
@@ -41,7 +43,7 @@
                                             value="existing-firm" />
                                       <label
                                           class="govuk-label govuk-radios__label"
-                                          for="existing-firm">
+                                          for="f-existing-firm">
                                           Use an existing firm
                                       </label>
                                   </div>

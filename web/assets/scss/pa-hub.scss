@@ -206,18 +206,15 @@
   }
 
   #overview {
-      display: flex;
-      justify-content: flex-start;
-      margin-bottom: 2em;
-      padding-bottom: 2em;
-      border-bottom: 1px solid rgb(177, 180, 182);
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid rgb(177, 180, 182);
   }
 }
 
 // Select option filter
-
-
-
 
 .filters-accordion {
   position: relative;
@@ -326,6 +323,3 @@ assurance-visit {
     border-top: 1px solid $govuk-border-colour;
   }
 }
-
-
-

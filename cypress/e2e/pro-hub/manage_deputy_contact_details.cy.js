@@ -137,6 +137,25 @@ describe("Manage Deputy Contact Details", () => {
                         "The telephone number must be 255 characters or fewer"
                     );
             });
+
+            cy.get('.govuk-form-group--error').should("exist");
+            cy.get('#f-firstname').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(2) > #name-error-isEmpty').should("contain", "The deputy first name is required and can't be empty");
+            cy.get('#f-surname').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(3) > #name-error-isEmpty').should("contain", "The deputy surname is required and can't be empty");
+            cy.get('#f-addressLine1').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(3) > #name-error-stringLengthTooLong').should("contain", "The building or street must be 255 characters or fewer");
+            cy.get('#f-addressLine2').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(4) > #name-error-stringLengthTooLong').should("contain", "Address line 2 must be 255 characters or fewer");
+            cy.get('#f-addressLine3').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(5) > #name-error-stringLengthTooLong').should("contain", "Address line 3 must be 255 characters or fewer");
+            cy.get('#f-town').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(6) > #name-error-stringLengthTooLong').should("contain", "The town or city must be 255 characters or fewer");
+            cy.get('#f-county').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(7) > #name-error-stringLengthTooLong').should("contain", "The county must be 255 characters or fewer");
+            cy.get('#f-postcode').should("have.class", "govuk-input--error");
+            cy.get(':nth-child(8) > #name-error-stringLengthTooLong').should("contain", "The postcode must be 255 characters or fewer");
+            cy.get('#f-workPhoneNumber').should("have.class", "govuk-input--error");
         });
     });
 

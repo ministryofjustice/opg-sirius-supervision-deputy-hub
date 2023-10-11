@@ -5,11 +5,18 @@
             <meta charset="utf-8" />
             <title>
                 {{ block "title" . }}
-                    {{ if eq .DeputyType "PA" }}
-                        OPG Sirius Deputy Hub - Sirius
-                    {{ else if eq .DeputyType "PRO" }}
-                        OPG Sirius Professional Deputy Hub - Sirius
+                    {{ if .Errors }}
+                        {{ len .Errors }}
+                        {{ if eq (len .Errors) 1 }}Error{{ else }}Errors{{ end }} |
                     {{ end }}
+                    {{ block "page-name" . }}{{ end }} -
+                    {{ if eq .DeputyType "PA" }}
+                        {{ .DeputyDetails.OrganisationName }}
+                    {{ end }}
+                    {{ if eq .DeputyType "PRO" }}
+                        {{ printf "%v %v" .DeputyDetails.DeputyFirstName .DeputyDetails.DeputySurname }}
+                    {{ end }}
+                    | Sirius Supervision
                 {{ end }}
             </title>
             <meta
@@ -60,10 +67,12 @@
             {{ end }}
         ">
 
+        <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
         {{ template "header" . }}
 
     <div class="govuk-width-container">
-        <main class="govuk-main-wrapper app-main-class govuk-!-padding-top-2" role="main">
+        <main id="main-content" class="govuk-main-wrapper app-main-class govuk-!-padding-top-2" role="main">
             {{ block "main" . }}{{ end }}
         </main>
     </div>
