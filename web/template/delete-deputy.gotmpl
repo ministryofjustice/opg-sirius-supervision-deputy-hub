@@ -1,4 +1,7 @@
 {{ template "page" . }}
+
+{{ define "page-name" }}Delete deputy{{ end }}
+
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ if .SuccessMessage }}
@@ -8,7 +11,7 @@
     {{ if and .DeputyDetails.DeputyNumber (eq .SuccessMessage "")}}
         <header>
             <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                Delete deputy
+                {{ block "page-name" . }}{{ end }}
             </h1>
         </header>
         <div class="govuk-grid-row">
