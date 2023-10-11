@@ -49,14 +49,14 @@
                         {{ end }}
                     </select>
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "reportDueDate" }} govuk-form-group--error{{ end }}">
-                    <label class="govuk-label" for="f-reportDueDate">
+                <div class="govuk-form-group{{ if index $RenamedErrors "report-due-date" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-report-due-date">
                         Report due date
                     </label>
-                    {{ template "error-message" (index $RenamedErrors "reportDueDate") }}
+                    {{ template "error-message" (index $RenamedErrors "report-due-date") }}
                     <input
-                        class="govuk-input govuk-input--width-10{{ if index $RenamedErrors "reportDueDate" }} govuk-input--error{{ end }}"
-                        id="f-reportDueDate"
+                        class="govuk-input govuk-input--width-10{{ if index $RenamedErrors "report-due-date" }} govuk-input--error{{ end }}"
+                        id="f-report-due-date"
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"

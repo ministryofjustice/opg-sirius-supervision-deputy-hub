@@ -33,103 +33,111 @@
                         class="govuk-fieldset__legend govuk-fieldset__legend--m">
                         Address
                     </legend>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="f-address-line-1">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "addressLine1" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-addressLine1">
                             Building and street
                             <span class="govuk-visually-hidden">
                                 line 1 of 3
                             </span>
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "addressLine1") }}
                         <input
-                            class="govuk-input"
-                            id="f-address-line-1"
+                            class="govuk-input{{ if index $RenamedErrors "addressLine1" }} govuk-input--error{{ end }}"
+                            id="f-addressLine1"
                             name="address-line-1"
                             type="text"
                             autocomplete="address-line1"
                             value="" />
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="f-address-line-2">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "addressLine2" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-addressLine2">
                             <span class="govuk-visually-hidden">
                                 Building and street line 2 of 3
                             </span>
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "addressLine2") }}
                         <input
-                            class="govuk-input"
-                            id="f-address-line-2"
+                            class="govuk-input{{ if index $RenamedErrors "addressLine2" }} govuk-input--error{{ end }}"
+                            id="f-addressLine2"
                             name="address-line-2"
                             type="text"
                             autocomplete="address-line2"
                             value="" />
                     </div>
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="f-address-line-3">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "addressLine3" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-addressLine3">
                             <span class="govuk-visually-hidden"
                                 >Building and street line 3 of 3
                             </span>
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "addressLine3") }}
                         <input
-                            class="govuk-input"
-                            id="f-address-line-3"
+                            class="govuk-input{{ if index $RenamedErrors "addressLine3" }} govuk-input--error{{ end }}"
+                            id="f-addressLine3"
                             name="address-line-3"
                             type="text"
                             autocomplete="address-line3" />
                     </div>
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "town" }} govuk-form-group--error{{ end }}">
                         <label
                             class="govuk-label govuk-!-width-two-thirds"
                             for="f-town">
                             Town or city
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "town") }}
                         <input
-                            class="govuk-input"
+                            class="govuk-input{{ if index $RenamedErrors "town" }} govuk-input--error{{ end }}"
                             id="f-town"
                             name="town"
                             type="text"
                             value="" />
                     </div>
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "county" }} govuk-form-group--error{{ end }}">
                         <label
                             class="govuk-label govuk-!-width-two-thirds"
                             for="f-county">
                             County
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "county") }}
                         <input
-                            class="govuk-input"
+                            class="govuk-input{{ if index $RenamedErrors "county" }} govuk-input--error{{ end }}"
                             id="f-county"
                             name="county"
                             type="text"
                             value="" />
                     </div>
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index $RenamedErrors "postcode" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-postcode">
                             Postcode
                         </label>
+                        {{ template "error-message" (index $RenamedErrors "postcode") }}
                         <input
-                            class="govuk-input govuk-input--width-10"
+                            class="govuk-input govuk-input--width-10{{ if index $RenamedErrors "postcode" }} govuk-input--error{{ end }}"
                             id="f-postcode"
                             name="postcode"
                             type="text"
                             value="" />
                     </div>
                 </fieldset>
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="f-telephone">
+                <div class="govuk-form-group{{ if index $RenamedErrors "phoneNumber" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-phoneNumber">
                         Telephone number
                     </label>
+                    {{ template "error-message" (index $RenamedErrors "phoneNumber") }}
                     <input
-                        class="govuk-input"
-                        id="f-telephone"
+                        class="govuk-input{{ if index $RenamedErrors "phoneNumber" }} govuk-input--error{{ end }}"
+                        id="f-phoneNumber"
                         name="telephone"
                         type="text"
                         value="" />
                 </div>
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index $RenamedErrors "email" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-email">
                         Email address
                     </label>
+                    {{ template "error-message" (index $RenamedErrors "email") }}
                     <input
-                        class="govuk-input"
+                        class="govuk-input{{ if index $RenamedErrors "email" }} govuk-input--error{{ end }}"
                         id="f-email"
                         name="email"
                         type="text"

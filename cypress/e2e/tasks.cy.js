@@ -91,7 +91,13 @@ describe("Tasks", () => {
             );
             cy.get(".govuk-error-summary__list").within(() => {
                 cy.contains("li", "Select the task type");
+                cy.contains("li", "This must be a real date");
             });
+            cy.get('.govuk-form-group--error').should("exist");
+            cy.get('#name-error-isEmpty').should("contain", "Select the task type");
+            cy.get('#f-dueDate').should("have.class", "govuk-input--error");
+            cy.get('#name-error-dateFalseFormat').should("contain", "This must be a real date");
+
         });
     });
 
@@ -213,6 +219,9 @@ describe("Tasks", () => {
                 "contain",
                 "The note must be 1000 characters or fewer"
             );
+            cy.get('.govuk-form-group--error').should("exist");
+            cy.get('#f-notes').should("have.class", "govuk-input--error");
+            cy.get('#name-error-stringLengthTooLong').should("contain", "The note must be 1000 characters or fewer");
         });
     })
 });

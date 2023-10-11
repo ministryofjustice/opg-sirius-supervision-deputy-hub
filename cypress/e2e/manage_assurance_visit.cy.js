@@ -42,7 +42,7 @@ describe("Manage an Assurance Visit", () => {
             cy.setCookie("fail-route", "updateAssuranceVisit");
             cy.get("#f-commissioned-date").type("2021-02-01");
             cy.get('#visitor-allocated').select("John Johnson");
-            cy.get("#f-reportDueDate").type("2021-02-02");
+            cy.get("#f-report-due-date").type("2021-02-02");
             cy.get("#f-report-received-date").type("2021-02-03");
             cy.get('#visit-outcome-Successful').click();
             cy.get("#f-report-review-date").type("2021-02-04");
@@ -59,9 +59,12 @@ describe("Manage an Assurance Visit", () => {
                 "contain",
                 "Report due date must be in the future"
             );
+            cy.get('#f-report-due-date').should("have.class", "govuk-input--error")
+            cy.get('.govuk-form-group--error').should("exist");
+            cy.get('#name-error').should("contain", "Report due date must be in the future");
             cy.get("#f-commissioned-date").should("have.value", "2021-02-01");
             cy.get('#visitor-allocated').should("have.value", "John Johnson");
-            cy.get("#f-reportDueDate").should("have.value","2021-02-02");
+            cy.get("#f-report-due-date").should("have.value","2021-02-02");
             cy.get("#f-report-received-date").should("have.value","2021-02-03");
             cy.get('#visit-outcome-Successful').should("be.checked");
             cy.get("#f-report-review-date").should("have.value","2021-02-04");
