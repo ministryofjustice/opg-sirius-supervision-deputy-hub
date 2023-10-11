@@ -111,11 +111,11 @@
                                             -
                                         {{ end }}
                                     </span>
-                                    <span class="secondary rem-warning">
-                                        {{ if .HasActiveREMWarning }}
+                                    {{ if .HasActiveREMWarning }}
+                                        <span class="secondary rem-warning">
                                             REM Warning
-                                        {{ end }}
-                                    </span>
+                                        </span>
+                                    {{ end }}
                                 </td>
                                 <td class="govuk-table__cell">
                                     {{ if .AccommodationType }}
