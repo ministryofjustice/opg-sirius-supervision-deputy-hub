@@ -1958,7 +1958,7 @@ module.exports = function () {
                 "detail": "blah"
             },
             {
-                "id": "addAssuranceVisit",
+                "id": "addAssurance",
                 "validation_errors": {
                     "requested-date": {
                         "": "Enter a requested date"
@@ -1966,7 +1966,7 @@ module.exports = function () {
                 }
             },
             {
-                "id": "updateAssuranceVisit",
+                "id": "updateAssurance",
                 "validation_errors": {
                     "report-due-date": {
                         "": "Report due date must be in the future"
@@ -2375,14 +2375,14 @@ module.exports = function () {
                 "FirmNumber": 1000002
             }
         ],
-        "assuranceVisits": [
+        "assurances": [
             {
                 "id": 1,
-                "assuranceVisits": []
+                "assurances": []
             },
             {
                 "id": 2,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 36,
                         "assuranceType": {
@@ -2417,7 +2417,7 @@ module.exports = function () {
                             "deprecated": null
                         },
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "GREEN",
                             "label": "Green"
                         },
@@ -2459,7 +2459,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2487,7 +2487,7 @@ module.exports = function () {
             },
             {
                 "id": 3,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 35,
                         "assuranceType": {
@@ -2518,7 +2518,7 @@ module.exports = function () {
                         "assuranceVisitOutcome": null,
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2572,7 +2572,7 @@ module.exports = function () {
                         "assuranceVisitOutcome": null,
                         "pdrOutcome": null,
                         "reportReviewDate": "2022-02-02T00:00:00+00:00",
-                        "assuranceVisitReportMarkedAs": {
+                        "reportMarkedAs": {
                             "handle": "RED",
                             "label": "Red",
                             "deprecated": null
@@ -2600,7 +2600,7 @@ module.exports = function () {
             },
             {
                 "id": 4,
-                "assuranceVisits": [
+                "assurances": [
                     {
                         "id": 1,
                         "assuranceType": {
@@ -2635,7 +2635,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": null,
+                        "reportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
                         "note": 'Some notes that have been written here'
@@ -2674,7 +2674,7 @@ module.exports = function () {
                         },
                         "pdrOutcome": null,
                         "reportReviewDate": null,
-                        "assuranceVisitReportMarkedAs": null,
+                        "reportMarkedAs": null,
                         "visitorAllocated": "Jane Janeson",
                         "reviewedBy": null,
                         "note": 'Some notes that have been written here'
@@ -2750,7 +2750,7 @@ module.exports = function () {
                 "label": "Not received"
             }
         ],
-        "assuranceVisit": [
+        "assurance": [
             {
                 "id": 35,
                 "assuranceType": {
@@ -2781,7 +2781,7 @@ module.exports = function () {
                 "assuranceVisitOutcome": null,
                 "pdrOutcome": null,
                 "reportReviewDate": null,
-                "assuranceVisitReportMarkedAs": {
+                "reportMarkedAs": {
                     "handle": "RED",
                     "label": "Red",
                     "deprecated": null
@@ -2824,7 +2824,7 @@ module.exports = function () {
                     "deprecated": null
                 },
                 "reportReviewDate": null,
-                "assuranceVisitReportMarkedAs": {
+                "reportMarkedAs": {
                     "handle": "RED",
                     "label": "Red",
                     "deprecated": null

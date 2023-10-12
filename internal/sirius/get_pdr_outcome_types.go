@@ -2,16 +2,12 @@ package sirius
 
 import (
 	"encoding/json"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
-type PdrOutcomeTypes struct {
-	Handle string `json:"handle"`
-	Label  string `json:"label"`
-}
-
-func (c *Client) GetPdrOutcomeTypes(ctx Context) ([]PdrOutcomeTypes, error) {
-	var v []PdrOutcomeTypes
+func (c *Client) GetPdrOutcomeTypes(ctx Context) ([]model.PdrOutcomeType, error) {
+	var v []model.PdrOutcomeType
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/pdrOutcome", nil)
 	if err != nil {

@@ -66,10 +66,10 @@
                     <li class="moj-sub-navigation__item">
                         <a
                             class="moj-sub-navigation__link"
-                            {{ if eq .Path (printf "/%d/assurance-visits" .DeputyDetails.ID) }}
+                            {{ if eq .Path (printf "/%d/assurances" .DeputyDetails.ID) }}
                                 aria-current="page"
                             {{ end }}
-                            href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}"
+                            href="{{ prefix (printf "/%d/assurances" .DeputyDetails.ID) }}"
                             >Assurance visits</a
                         >
                     </li>

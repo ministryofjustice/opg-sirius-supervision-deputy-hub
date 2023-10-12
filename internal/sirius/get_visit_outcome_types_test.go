@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -38,18 +39,18 @@ func TestGetVisitOutcomeTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []VisitOutcomeTypes{
+	expectedResponse := []model.VisitOutcomeType{
 		{
-			"SUCCESSFUL",
-			"Successful",
+			Handle: "SUCCESSFUL",
+			Label:  "Successful",
 		},
 		{
-			"ABORTED",
-			"Aborted",
+			Handle: "ABORTED",
+			Label:  "Aborted",
 		},
 		{
-			"CANCELLED",
-			"Cancelled",
+			Handle: "CANCELLED",
+			Label:  "Cancelled",
 		},
 	}
 
@@ -69,7 +70,7 @@ func TestGetVisitOutcomeTypesReturnsNewStatusError(t *testing.T) {
 
 	visitOutcomeTypes, err := client.GetVisitOutcomeTypes(getContext(nil))
 
-	assert.Equal(t, []VisitOutcomeTypes(nil), visitOutcomeTypes)
+	assert.Equal(t, []model.VisitOutcomeType(nil), visitOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/visitOutcome",
@@ -88,5 +89,5 @@ func TestGetVisitOutcomeTypesReturnsUnauthorisedClientError(t *testing.T) {
 	visitOutcomeTypes, err := client.GetVisitOutcomeTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []VisitOutcomeTypes(nil), visitOutcomeTypes)
+	assert.Equal(t, []model.VisitOutcomeType(nil), visitOutcomeTypes)
 }

@@ -2,18 +2,12 @@ package sirius
 
 import (
 	"encoding/json"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
-type Visitors []Visitor
-
-type Visitor struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
-}
-
-func (c *Client) GetVisitors(ctx Context) (Visitors, error) {
-	var v Visitors
+func (c *Client) GetVisitors(ctx Context) ([]model.Visitor, error) {
+	var v []model.Visitor
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/visitors", nil)
 
