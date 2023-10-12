@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestGetVisitRagRatingTypes(t *testing.T) {
+func TestGetRagRatingTypes(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -38,28 +39,28 @@ func TestGetVisitRagRatingTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []VisitRagRatingTypes{
+	expectedResponse := []model.RagRatingType{
 		{
-			"RED",
-			"Red",
+			Handle: "RED",
+			Label:  "Red",
 		},
 		{
-			"AMBER",
-			"Amber",
+			Handle: "AMBER",
+			Label:  "Amber",
 		},
 		{
-			"GREEN",
-			"Green",
+			Handle: "GREEN",
+			Label:  "Green",
 		},
 	}
 
-	visitRagRatingTypes, err := client.GetVisitRagRatingTypes(getContext(nil))
+	ragRatingTypes, err := client.GetRagRatingTypes(getContext(nil))
 
-	assert.Equal(t, expectedResponse, visitRagRatingTypes)
+	assert.Equal(t, expectedResponse, ragRatingTypes)
 	assert.Equal(t, nil, err)
 }
 
-func TestGetVisitRagRatingTypesReturnsNewStatusError(t *testing.T) {
+func TestGetRagRatingTypesReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -67,9 +68,9 @@ func TestGetVisitRagRatingTypesReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	visitRagRatingTypes, err := client.GetVisitRagRatingTypes(getContext(nil))
+	ragRatingTypes, err := client.GetRagRatingTypes(getContext(nil))
 
-	assert.Equal(t, []VisitRagRatingTypes(nil), visitRagRatingTypes)
+	assert.Equal(t, []model.RagRatingType(nil), ragRatingTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/ragRating",
@@ -77,7 +78,7 @@ func TestGetVisitRagRatingTypesReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestGetVisitRagRatingTypesReturnsUnauthorisedClientError(t *testing.T) {
+func TestGetRagRatingTypesReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -85,8 +86,8 @@ func TestGetVisitRagRatingTypesReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	visitRagRatingTypes, err := client.GetVisitRagRatingTypes(getContext(nil))
+	ragRatingTypes, err := client.GetRagRatingTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []VisitRagRatingTypes(nil), visitRagRatingTypes)
+	assert.Equal(t, []model.RagRatingType(nil), ragRatingTypes)
 }
