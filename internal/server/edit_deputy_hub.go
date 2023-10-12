@@ -18,6 +18,8 @@ func renderTemplateForEditDeputyHub(client EditDeputyHubInformation, tmpl Templa
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
+		app.PageName = "Manage team details"
+
 		vars := editDeputyHubVars{
 			AppVars: app,
 		}

@@ -27,6 +27,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
+		app.PageName = "Manage important information"
+
 		vars := manageDeputyImportantInformationVars{AppVars: app}
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)

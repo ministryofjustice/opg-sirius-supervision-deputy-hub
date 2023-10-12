@@ -170,6 +170,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
 
+		app.PageName = "Clients"
+
 		vars := ListClientsVars{
 			DeputyClientsDetails: clientList.Clients,
 			ClientList:           clientList,

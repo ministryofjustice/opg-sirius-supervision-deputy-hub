@@ -1,14 +1,12 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.ListClientsVars*/ -}}
 {{ template "page" . }}
 
-{{ define "page-name" }}Clients{{ end }}
-
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ template "navigation" . }}
     <header class="govuk-!-padding-top-3">
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
-            {{ block "page-name" . }}{{ end }}
+            {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">

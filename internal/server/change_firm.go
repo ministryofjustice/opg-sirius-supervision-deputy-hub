@@ -28,6 +28,8 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			return err
 		}
 
+		app.PageName = "Change firm"
+
 		vars := changeFirmVars{
 			Firms:   firms,
 			AppVars: app,

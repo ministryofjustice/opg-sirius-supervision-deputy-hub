@@ -9,7 +9,7 @@
                         {{ len .Errors }}
                         {{ if eq (len .Errors) 1 }}Error{{ else }}Errors{{ end }} |
                     {{ end }}
-                    {{ block "page-name" . }}{{ end }} -
+                    {{ .PageName }} -
                     {{ if eq .DeputyType "PA" }}
                         {{ .DeputyDetails.OrganisationName }}
                     {{ end }}

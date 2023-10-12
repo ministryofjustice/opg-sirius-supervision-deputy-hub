@@ -52,6 +52,8 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 		routeVars := mux.Vars(r)
 		visitId, _ := strconv.Atoi(routeVars["visitId"])
 
+		app.PageName = "Manage assurance visit"
+
 		vars := ManageAssuranceVisitVars{AppVars: app}
 		tmpl := visitTmpl
 
@@ -65,6 +67,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 			vars.Visit = visit
 			if visit.AssuranceType.Handle == "PDR" {
 				tmpl = pdrTmpl
+				vars.AppVars.PageName = "Manage PDR"
 			}
 			return nil
 		})

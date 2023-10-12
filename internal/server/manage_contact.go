@@ -35,6 +35,11 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
+		appVars.PageName = "Add new contact"
+		if contactId != 0 {
+			appVars.PageName = "Manage contact"
+		}
+
 		vars := ManageContactVars{
 			AppVars:      appVars,
 			IsNewContact: contactId == 0,

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
+	"strings"
 )
 
 type DeputyHubNotesInformation interface {
@@ -38,6 +39,11 @@ func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Temp
 			successMessage := ""
 			if r.URL.Query().Get("success") == "true" {
 				successMessage = "Note added"
+			}
+
+			app.PageName = "Notes"
+			if strings.Contains(app.Path, "add-note") {
+				app.PageName = "Add a note"
 			}
 
 			vars := deputyHubNotesVars{

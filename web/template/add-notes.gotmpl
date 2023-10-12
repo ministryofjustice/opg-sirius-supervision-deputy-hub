@@ -1,7 +1,5 @@
 {{ template "page" . }}
 
-{{ define "page-name" }}Add a note{{ end }}
-
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ $RenamedErrors := (rename_errors .Errors) }}
@@ -11,7 +9,7 @@
             <header>
                 <h1
                     class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                    {{ block "page-name" . }}{{ end }}
+                    {{ .PageName }}
                 </h1>
             </header>
 

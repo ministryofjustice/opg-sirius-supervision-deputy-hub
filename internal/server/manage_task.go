@@ -49,6 +49,8 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return err
 		}
 
+		app.PageName = "Manage " + taskDetails.Type + " Task"
+
 		vars := manageTaskVars{
 			AppVars:           app,
 			TaskDetails:       taskDetails,

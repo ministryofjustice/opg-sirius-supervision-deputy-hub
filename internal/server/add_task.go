@@ -42,6 +42,8 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return err
 		}
 
+		app.PageName = "Add a deputy task"
+
 		vars := AddTaskVars{
 			TaskTypes: taskTypes,
 			Assignees: assignees,

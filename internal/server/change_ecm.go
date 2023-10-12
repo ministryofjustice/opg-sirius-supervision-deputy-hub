@@ -32,6 +32,8 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 			return err
 		}
 
+		app.PageName = "Change Executive Case Manager"
+
 		vars := changeECMHubVars{
 			EcmTeamDetails: ecmTeamDetails,
 			AppVars:        app,

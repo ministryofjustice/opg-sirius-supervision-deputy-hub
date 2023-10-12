@@ -41,6 +41,8 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 
 		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
 
+		app.PageName = "Complete Task"
+
 		vars := completeTaskVars{
 			AppVars:     app,
 			TaskDetails: taskDetails,

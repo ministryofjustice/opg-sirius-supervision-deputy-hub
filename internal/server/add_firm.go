@@ -19,6 +19,8 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
+		app.PageName = "Create new firm"
+
 		vars := addFirmVars{
 			AppVars: app,
 		}

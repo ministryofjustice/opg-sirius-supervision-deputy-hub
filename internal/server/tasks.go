@@ -53,6 +53,8 @@ func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
 			return err
 		}
 
+		app.PageName = "Deputy tasks"
+
 		vars := TasksVars{
 			AppVars:        app,
 			TaskTypes:      taskTypes,

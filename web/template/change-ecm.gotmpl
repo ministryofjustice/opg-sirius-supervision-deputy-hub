@@ -1,7 +1,5 @@
 {{ template "page" . }}
 
-{{ define "page-name" }}Change Executive Case Manager{{ end }}
-
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ $RenamedErrors := (rename_errors .Errors) }}
@@ -10,7 +8,7 @@
         <div class="govuk-grid-column-full">
             <header>
                 <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-                    {{ block "page-name" . }}{{ end }}
+                    {{ .PageName }}
                 </h1>
             </header>
             <div class="govuk-grid-row">

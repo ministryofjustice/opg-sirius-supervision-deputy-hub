@@ -18,6 +18,8 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
+		app.PageName = "Manage deputy contact details"
+
 		vars := manageDeputyContactDetailsVars{AppVars: app}
 
 		switch r.Method {

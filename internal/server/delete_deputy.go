@@ -23,6 +23,8 @@ func renderTemplateForDeleteDeputy(client DeleteDeputy, tmpl Template) Handler {
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 
+		appVars.PageName = "Delete deputy"
+
 		vars := DeleteDeputyVars{
 			AppVars: appVars,
 		}

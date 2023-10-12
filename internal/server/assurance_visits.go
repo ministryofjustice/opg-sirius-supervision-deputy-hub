@@ -38,6 +38,8 @@ func renderTemplateForAssuranceVisits(client AssuranceVisit, tmpl Template) Hand
 			return err
 		}
 
+		app.PageName = "Assurance visits"
+
 		vars := AssuranceVisitsVars{
 			SuccessMessage:  successMessage,
 			AssuranceVisits: visits,

@@ -18,6 +18,8 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
+		app.PageName = "Add assurance visit"
+
 		vars := AddAssuranceVisitVars{
 			AppVars: app,
 		}

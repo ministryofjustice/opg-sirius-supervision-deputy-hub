@@ -1,7 +1,5 @@
 {{ template "page" . }}
 
-{{ define "page-name" }}Deputy details{{ end }}
-
 {{ define "main" }}
     {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
         {{ template "pa-deputy-details" . }}
