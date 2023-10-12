@@ -96,10 +96,9 @@ describe("Notes", () => {
                 );
                 cy.get("li:last").should("contain", "Enter a note");
             });
-            cy.get('#f-1-title').should("have.class", "govuk-input--error")
-            cy.get('.govuk-form-group--error').should("exist")
+            cy.get('#f-1-title.govuk-input--error').should("exist");
+            cy.get(':nth-child(2).govuk-form-group--error').should("exist");
             cy.get(':nth-child(2) > #name-error-stringLengthTooLong').should("contain", "The title must be 255 characters or fewer");
-
         });
 
         it("displays an error if the request fails with a 500 error", () => {

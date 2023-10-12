@@ -52,8 +52,8 @@ describe("Change ECM", () => {
                 "contain",
                 "Select an executive case manager"
             );
-            cy.get(".govuk-form-group").should("have.class", "govuk-form-group--error")
-            cy.get("#name-error").should("contain", "Select an executive case manager");
+            cy.get('#change-ecm-form > .govuk-form-group--error').should("exist");
+            cy.get('#change-ecm-form > .govuk-form-group > #name-error').should("contain", "Select an executive case manager");
         });
     });
 

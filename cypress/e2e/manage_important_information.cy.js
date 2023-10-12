@@ -89,8 +89,8 @@ describe("Manage important Information", () => {
                 "contain",
                 "The other important information must be 1000 characters or fewer"
             );
-            cy.get('#f-otherImportantInformation').should("have.class", "govuk-input--error")
-            cy.get('.govuk-character-count > .govuk-form-group').should("have.class", "govuk-form-group--error")
+            cy.get('#f-otherImportantInformation.govuk-input--error').should("exist")
+            cy.get('.govuk-character-count > .govuk-form-group--error')
             cy.get('#name-error-stringLengthTooLong').should("contain", "The other important information must be 1000 characters or fewer");
         });
     });
@@ -179,8 +179,8 @@ describe("Manage important Information", () => {
                 "contain",
                 "The other important information must be 1000 characters or fewer"
             );
-            cy.get('#f-otherImportantInformation').should("have.class", "govuk-input--error")
-            cy.get('.govuk-character-count > .govuk-form-group').should("have.class", "govuk-form-group--error")
+            cy.get('#f-otherImportantInformation.govuk-input--error').should("exist");
+            cy.get('.govuk-character-count > .govuk-form-group--error').should("exist");
             cy.get('#name-error-stringLengthTooLong').should("contain", "The other important information must be 1000 characters or fewer");
         });
     });

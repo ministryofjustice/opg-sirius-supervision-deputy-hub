@@ -59,9 +59,12 @@ describe("Manage an Assurance Visit", () => {
                 "contain",
                 "Report due date must be in the future"
             );
-            cy.get('#f-report-due-date').should("have.class", "govuk-input--error")
-            cy.get('.govuk-form-group--error').should("exist");
-            cy.get('#name-error').should("contain", "Report due date must be in the future");
+
+            cy.get('#f-report-due-date.govuk-input--error').should("exist");
+            cy.get('#manage-assurance-visit-form :nth-child(4).govuk-form-group--error').should("exist");
+            cy.get('#manage-assurance-visit-form :nth-child(4) > #name-error')
+                .should("contain", "Report due date must be in the future");
+
             cy.get("#f-commissioned-date").should("have.value", "2021-02-01");
             cy.get('#visitor-allocated').should("have.value", "John Johnson");
             cy.get("#f-report-due-date").should("have.value","2021-02-02");

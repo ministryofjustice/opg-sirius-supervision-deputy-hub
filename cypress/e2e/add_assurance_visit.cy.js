@@ -37,9 +37,9 @@ describe("Add Assurance Visit", () => {
                 "contain",
                 "Enter a requested date"
             );
-            cy.get("#f-requested-date").should("have.class", "govuk-input--error")
-            cy.get("#add-assurance-visit-form > :nth-child(2)").should("have.class", "govuk-form-group--error")
-            cy.get("#add-assurance-visit-form > :nth-child(3)").should("have.class", "govuk-form-group--error")
+            cy.get("#f-requested-date.govuk-input--error").should("exist");
+            cy.get("#add-assurance-visit-form > :nth-child(2).govuk-form-group--error").should("exist");
+            cy.get("#add-assurance-visit-form > :nth-child(3).govuk-form-group--error").should("exist");
             cy.get("#f-assurance-type > #name-error").should("contain", "Select an assurance type");
             cy.get(":nth-child(3) > .govuk-fieldset > #name-error").should("contain", "Enter a requested date");
         });
