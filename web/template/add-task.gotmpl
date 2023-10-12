@@ -3,8 +3,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -24,10 +24,10 @@
                         value="{{ .XSRFToken }}"/>
 
                     <div class="govuk-form-group">
-                        <div class="govuk-form-group{{ if index $RenamedErrors "taskType" }} govuk-form-group--error{{ end }}">
+                        <div class="govuk-form-group{{ if index .Errors "taskType" }} govuk-form-group--error{{ end }}">
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-fieldset__legend" id="tasktype">Type of task</legend>
-                                {{ template "error-message" (index $RenamedErrors "taskType") }}
+                                {{ template "error-message" (index .Errors "taskType") }}
                                 {{ $selectedType := .TaskType }}
                                 <div class="govuk-radios" id="f-taskType">
                                     {{ range .TaskTypes }}
@@ -44,11 +44,11 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="govuk-form-group{{ if index $RenamedErrors "dueDate" }} govuk-form-group--error{{ end }}">
+                        <div class="govuk-form-group{{ if index .Errors "dueDate" }} govuk-form-group--error{{ end }}">
                             <label class="govuk-label" for="f-dueDate">Due date</label>
-                            {{ template "error-message" (index $RenamedErrors "dueDate") }}
+                            {{ template "error-message" (index .Errors "dueDate") }}
                             <input id="f-dueDate"
-                                class="govuk-input govuk-input--width-10 min-date-today{{ if index $RenamedErrors "dueDate" }} govuk-input--error{{ end }}"
+                                class="govuk-input govuk-input--width-10 min-date-today{{ if index .Errors "dueDate" }} govuk-input--error{{ end }}"
                                 name="duedate"
                                 value="{{.DueDate}}"
                                 type="date">
@@ -100,13 +100,13 @@
                             class="govuk-character-count"
                             data-module="govuk-character-count"
                             data-maxlength="1000">
-                            <div class="govuk-form-group{{ if index $RenamedErrors "2-note" }} govuk-form-group--error{{ end }}">
+                            <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
                                 <label class="govuk-label" for="f-2-note">
                                     Notes (optional)
                                 </label>
-                                {{ template "error-message" (index $RenamedErrors "2-note") }}
+                                {{ template "error-message" (index .Errors "2-note") }}
                                 <textarea
-                                    class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "2-note" }} govuk-input--error{{ end }}"
+                                    class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
                                     id="f-2-note"
                                     name="notes"
                                     rows="10"

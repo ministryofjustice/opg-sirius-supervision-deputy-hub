@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
@@ -150,7 +151,7 @@ func renderTemplateForManageAssuranceVisit(client ManageAssuranceVisit, visitTmp
 			err := client.UpdateAssuranceVisit(ctx, manageAssuranceVisitForm, app.DeputyId(), visitId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				vars.ErrorNote = r.PostFormValue("note")
 				vars.Visit = parseVisitForm(manageAssuranceVisitForm)
 

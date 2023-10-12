@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -23,35 +23,35 @@
                         name="xsrfToken"
                         value="{{ .XSRFToken }}" />
 
-                    <div class="govuk-form-group{{ if index $RenamedErrors "1-title" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "1-title" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-1-title">
                             Title (required)
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "1-title") }}
+                        {{ template "error-message" (index .Errors "1-title") }}
                         <input
-                            class="govuk-input{{ if index $RenamedErrors "1-title" }} govuk-input--error{{ end }}"
+                            class="govuk-input{{ if index .Errors "1-title" }} govuk-input--error{{ end }}"
                             id="f-1-title"
                             name="title"
                             type="text"
-                            {{ if $RenamedErrors }}value="{{ .Title }}"{{ end }} />
+                            {{ if .Errors }}value="{{ .Title }}"{{ end }} />
                     </div>
 
                     <div
                         class="govuk-character-count"
                         data-module="govuk-character-count"
                         data-maxlength="1000">
-                        <div class="govuk-form-group{{ if index $RenamedErrors "2-note" }} govuk-form-group--error{{ end }}">
+                        <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
                             <label class="govuk-label" for="f-2-note">
                                 Note (required)
                             </label>
-                            {{ template "error-message" (index $RenamedErrors "2-note") }}
+                            {{ template "error-message" (index .Errors "2-note") }}
                             <textarea
-                                class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "2-note" }} govuk-input--error{{ end }}"
+                                class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
                                 id="f-2-note"
                                 name="note"
                                 rows="10"
                                 aria-describedby="f-2-note-info"
-                            >{{ if $RenamedErrors }}{{ .Note }}{{ end }}</textarea>
+                            >{{ if .Errors }}{{ .Note }}{{ end }}</textarea>
                             <div
                                 id="f-2-note-info"
                                 class="govuk-hint govuk-character-count__message"

@@ -3,8 +3,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -87,13 +87,13 @@
                             class="govuk-character-count"
                             data-module="govuk-character-count"
                             data-maxlength="1000">
-                            <div class="govuk-form-group{{ if index $RenamedErrors "2-note" }} govuk-form-group--error{{ end }}">
+                            <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
                                 <label class="govuk-label" for="f-2-note">
                                     Notes (optional)
                                 </label>
-                                {{ template "error-message" (index $RenamedErrors "2-note") }}
+                                {{ template "error-message" (index .Errors "2-note") }}
                                 <textarea
-                                    class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "2-note" }} govuk-input--error{{ end }}"
+                                    class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
                                     id="f-2-note"
                                     name="notes"
                                     rows="10"

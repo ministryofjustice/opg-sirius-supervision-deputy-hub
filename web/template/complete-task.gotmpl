@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -52,7 +52,7 @@
                         type="hidden"
                         name="xsrfToken"
                         value="{{ .XSRFToken }}"/>
-                    <div class="govuk-form-group{{ if index $RenamedErrors "notes" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "notes" }} govuk-form-group--error{{ end }}">
                         <div
                             class="govuk-character-count"
                             data-module="govuk-character-count"
@@ -61,9 +61,9 @@
                                 <label class="govuk-label" for="f-notes">
                                     Notes (optional)
                                 </label>
-                                {{ template "error-message" (index $RenamedErrors "notes") }}
+                                {{ template "error-message" (index .Errors "notes") }}
                                 <textarea
-                                    class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "notes" }} govuk-input--error{{ end }}"
+                                    class="govuk-textarea govuk-js-character-count{{ if index .Errors "notes" }} govuk-input--error{{ end }}"
                                     id="f-notes"
                                     name="notes"
                                     rows="10"

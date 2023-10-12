@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 )
@@ -61,7 +62,7 @@ func renderTemplateForCompleteTask(client CompleteTask, tmpl Template) Handler {
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				vars.CompletedNotes = notes
 
 				w.WriteHeader(http.StatusBadRequest)

@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -27,11 +27,11 @@
                             {{ .DeputyDetails.ExecutiveCaseManager.EcmName }}
                         {{ end }}
                     </p>
-                    <div class="govuk-form-group{{ if index $RenamedErrors "select-ecm" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "select-ecm" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-select-ecm">
                             Enter an Executive Case Manager name
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "select-ecm") }}
+                        {{ template "error-message" (index .Errors "select-ecm") }}
                         <div
                             class="autocomplete-wrapper"
                             id="select-ecm-dropdown">

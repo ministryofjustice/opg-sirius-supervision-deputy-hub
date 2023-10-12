@@ -1,6 +1,6 @@
 {{ define "manage-pro-important-information" }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
 
@@ -88,13 +88,13 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="1000">
-                    <div class="govuk-form-group{{ if index $RenamedErrors "otherImportantInformation" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "otherImportantInformation" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-otherImportantInformation">
                             Other important information
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "otherImportantInformation") }}
+                        {{ template "error-message" (index .Errors "otherImportantInformation") }}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "otherImportantInformation" }} govuk-input--error{{ end }}"
+                            class="govuk-textarea govuk-js-character-count{{ if index .Errors "otherImportantInformation" }} govuk-input--error{{ end }}"
                             id="f-otherImportantInformation"
                             name="other-info-note"
                             rows="5"

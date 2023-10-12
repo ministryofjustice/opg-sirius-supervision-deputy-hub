@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
             {{ .PageName }}
@@ -47,13 +47,13 @@
                         {{ end }}
                     </select>
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "report-due-date" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "report-due-date" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-report-due-date">
                         Report due date
                     </label>
-                    {{ template "error-message" (index $RenamedErrors "report-due-date") }}
+                    {{ template "error-message" (index .Errors "report-due-date") }}
                     <input
-                        class="govuk-input govuk-input--width-10{{ if index $RenamedErrors "report-due-date" }} govuk-input--error{{ end }}"
+                        class="govuk-input govuk-input--width-10{{ if index .Errors "report-due-date" }} govuk-input--error{{ end }}"
                         id="f-report-due-date"
                         name="report-due-date"
                         type="date"
@@ -152,13 +152,13 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="1000">
-                    <div class="govuk-form-group{{ if index $RenamedErrors "note" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "note" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-note">
                             Note
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "note") }}
+                        {{ template "error-message" (index .Errors "note") }}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "note" }} govuk-input--error{{ end }}"
+                            class="govuk-textarea govuk-js-character-count{{ if index .Errors "note" }} govuk-input--error{{ end }}"
                             id="f-note"
                             name="note"
                             rows="10"

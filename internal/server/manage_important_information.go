@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 
@@ -107,7 +108,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			err = client.UpdateImportantInformation(ctx, app.DeputyId(), importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {

@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 )
 
@@ -42,6 +43,8 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 				vars.Errors["requested-date"] = map[string]string{"": "Enter a requested date"}
 			}
 
+			vars.Errors = util.RenameErrors(vars.Errors)
+
 			if len(vars.Errors) > 0 {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -49,7 +52,7 @@ func renderTemplateForAddAssuranceVisit(client AddAssuranceVisit, tmpl Template)
 			err := client.AddAssuranceVisit(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 			if err != nil {

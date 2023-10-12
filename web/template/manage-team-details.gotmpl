@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
@@ -13,7 +13,7 @@
             </header>
             <div class="govuk-grid-row">
                 <form class="govuk-grid-column-one-half" method="post">
-                    <div class="govuk-form-group{{ if index $RenamedErrors "organisationName" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "organisationName" }} govuk-form-group--error{{ end }}">
                         <input
                             type="hidden"
                             name="xsrfToken"
@@ -21,9 +21,9 @@
                         <label class="govuk-label" for="f-organisationName">
                             Deputy name (required)
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "organisationName") }}
+                        {{ template "error-message" (index .Errors "organisationName") }}
                         <input
-                            class="govuk-input{{ if index $RenamedErrors "organisationName" }} govuk-input--error{{ end }}"
+                            class="govuk-input{{ if index .Errors "organisationName" }} govuk-input--error{{ end }}"
                             id="f-organisationName"
                             name="deputy-name"
                             type="text"

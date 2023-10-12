@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 )
 
@@ -46,7 +47,7 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 			firmId, err := client.AddFirmDetails(ctx, addFirmDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 			if err != nil {

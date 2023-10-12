@@ -2,8 +2,8 @@
 
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ $RenamedErrors := (rename_errors .Errors) }}
-    {{ template "error-summary" $RenamedErrors }}
+
+    {{ template "error-summary" .Errors }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
             {{ .PageName }}
@@ -16,61 +16,61 @@
                     type="hidden"
                     name="xsrfToken"
                     value="{{ .XSRFToken }}" />
-                <div class="govuk-form-group{{ if index $RenamedErrors "contactName" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "contactName" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-contactName">Name</label>
-                    {{ template "error-message" (index $RenamedErrors "contactName") }}
+                    {{ template "error-message" (index .Errors "contactName") }}
                     <input
-                        class="govuk-input{{ if index $RenamedErrors "contactName" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "contactName" }} govuk-input--error{{ end }}"
                         id="f-contactName"
                         name="contact-name"
                         type="text"
                         value="{{ .ContactName }}"
                          />
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "jobTitle" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "jobTitle" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-jobTitle">Job title (optional)</label>
-                    {{ template "error-message" (index $RenamedErrors "jobTitle") }}
+                    {{ template "error-message" (index .Errors "jobTitle") }}
                     <input
-                        class="govuk-input{{ if index $RenamedErrors "jobTitle" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "jobTitle" }} govuk-input--error{{ end }}"
                         id="f-jobTitle"
                         name="job-title"
                         type="text"
                         value="{{ .JobTitle }}"
                          />
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "email" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "email" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-email">
                         Email (optional)
                     </label>
-                    {{ template "error-message" (index $RenamedErrors "email") }}
+                    {{ template "error-message" (index .Errors "email") }}
                     <input
-                        class="govuk-input{{ if index $RenamedErrors "email" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "email" }} govuk-input--error{{ end }}"
                         id="f-email"
                         name="email"
                         type="text"
                         value="{{ .Email }}"
                          />
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "phoneNumber" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "phoneNumber" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-phoneNumber">
                         Phone (optional)
                     </label>
-                    {{ template "error-message" (index $RenamedErrors "phoneNumber") }}
+                    {{ template "error-message" (index .Errors "phoneNumber") }}
                     <input
-                        class="govuk-input{{ if index $RenamedErrors "phoneNumber" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "phoneNumber" }} govuk-input--error{{ end }}"
                         id="f-phoneNumber"
                         name="phone-number"
                         type="text"
                         value="{{ .PhoneNumber }}"
                          />
                 </div>
-                <div class="govuk-form-group{{ if index $RenamedErrors "otherPhoneNumber" }} govuk-form-group--error{{ end }}">
+                <div class="govuk-form-group{{ if index .Errors "otherPhoneNumber" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-otherPhoneNumber">
                         Other phone (optional)
                     </label>
-                    {{ template "error-message" (index $RenamedErrors "otherPhoneNumber") }}
+                    {{ template "error-message" (index .Errors "otherPhoneNumber") }}
                     <input
-                        class="govuk-input{{ if index $RenamedErrors "otherPhoneNumber" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "otherPhoneNumber" }} govuk-input--error{{ end }}"
                         id="f-otherPhoneNumber"
                         name="other-phone-number"
                         type="text"
@@ -81,13 +81,13 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="255">
-                    <div class="govuk-form-group{{ if index $RenamedErrors "contactNotes" }} govuk-form-group--error{{ end }}">
+                    <div class="govuk-form-group{{ if index .Errors "contactNotes" }} govuk-form-group--error{{ end }}">
                         <label class="govuk-label" for="f-contactNotes">
                             Notes (optional)
                         </label>
-                        {{ template "error-message" (index $RenamedErrors "contactNotes") }}
+                        {{ template "error-message" (index .Errors "contactNotes") }}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count{{ if index $RenamedErrors "contactNotes" }} govuk-input--error{{ end }}"
+                            class="govuk-textarea govuk-js-character-count{{ if index .Errors "contactNotes" }} govuk-input--error{{ end }}"
                             id="f-contactNotes"
                             name="contact-notes"
                             rows="5"
