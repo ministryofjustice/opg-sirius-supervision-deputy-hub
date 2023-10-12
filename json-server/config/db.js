@@ -722,6 +722,7 @@ module.exports = function () {
                         "label": "Supported Housing",
                         "deprecated": false
                     },
+                    "HasActiveREMWarning": true,
                     "orders": [
                         {
                             "id": 62,

@@ -135,15 +135,6 @@
       margin-right: 10px;
     }
 
-    span.rem_warning {
-      background: url("/public/images/flag.svg") no-repeat 3px 3px;
-      padding-left: 20px;
-      font-weight: bold;
-      color: govuk-colour("red");
-      font-size: 16px;
-      font-size: 1rem;
-    }
-
     span.rag {
       font-weight: bold;
       &.green {
@@ -327,5 +318,10 @@ assurance {
   }
 }
 
-
-
+span.rem-warning {
+  font-weight: bold;
+  color: govuk-colour(red) !important;
+  background: url("#{$moj-assets-path}images/flag.svg") no-repeat 3px 3px;
+  padding-left: 20px;
+  line-height: normal !important;
+}
