@@ -116,5 +116,10 @@ describe("Clients tab", () => {
             cy.get(":nth-child(2) > .visit_type").should("contain", "Red");
             cy.get(":nth-child(3) > .visit_type").should("contain", "-");
         });
+
+        it("displays REM warning label", () => {
+            cy.get(":nth-child(1) > .rem-warning").should("contain", "REM Warning");
+            cy.get(":nth-child(2) > .rem-warning").should("not.exist");
+        });
     });
 });

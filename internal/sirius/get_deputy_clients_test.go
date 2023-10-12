@@ -78,7 +78,8 @@ func TestDeputyClientReturned(t *testing.T) {
             "label": "Pending"
           }
         },
-        "riskScore": 5
+        "riskScore": 5,
+		"hasActiveREMWarning": true
       }
     ],
     "pages": {
@@ -114,7 +115,8 @@ func TestDeputyClientReturned(t *testing.T) {
 				RevisedDueDate: "01/05/2016",
 				StatusLabel:    "Pending",
 			},
-			SupervisionLevel: "General",
+			SupervisionLevel:    "General",
+			HasActiveREMWarning: true,
 		},
 	}
 
