@@ -60,6 +60,8 @@ var assuranceVisitsAppVars = AppVars{
 }
 
 func TestGetManageAssurance(t *testing.T) {
+	assuranceVisitsAppVars.PageName = "Manage assurance visit"
+
 	assert := assert.New(t)
 
 	visitors := sirius.Visitors{sirius.Visitor{ID: 1, Name: "Mr Visitor"}}
@@ -132,6 +134,8 @@ func TestPostManageAssuranceVisit(t *testing.T) {
 }
 
 func TestGetManagePDR(t *testing.T) {
+	assuranceVisitsAppVars.PageName = "Manage PDR"
+
 	assert := assert.New(t)
 
 	visitors := sirius.Visitors{sirius.Visitor{ID: 1, Name: "Mr Visitor"}}

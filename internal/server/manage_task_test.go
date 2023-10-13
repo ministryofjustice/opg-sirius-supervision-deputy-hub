@@ -48,7 +48,10 @@ func TestNavigateToManageTask(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	app := AppVars{DeputyDetails: deputyDetails}
+	app := AppVars{
+		DeputyDetails: deputyDetails,
+		PageName:      "Manage  Task",
+	}
 	task := model.Task{Id: 555}
 	teamMembers := []model.TeamMember{{ID: 99}}
 	taskTypes := []model.TaskType{{Handle: "ABC", Description: "A Big Critical Task"}}

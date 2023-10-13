@@ -88,6 +88,7 @@ func TestLoadAddTaskForm(t *testing.T) {
 	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: deputy,
+		PageName:      "Add a deputy task",
 	}
 
 	expectedVars := AddTaskVars{
@@ -213,7 +214,8 @@ func TestAddTaskValidationErrors(t *testing.T) {
 
 	assert.Equal(AddTaskVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			PageName: "Add a deputy task",
+			Errors:   validationErrors,
 		},
 	}, template.lastVars)
 

@@ -1994,7 +1994,7 @@ module.exports = function () {
             {
                 "id": "ecm",
                 "validation_errors": {
-                    "Change ECM": {
+                    "select-ecm": {
                         "": "Select an executive case manager"
                     }
                 }

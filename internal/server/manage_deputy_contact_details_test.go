@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -102,7 +103,8 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 	assert.Equal(manageDeputyContactDetailsVars{
 		AppVars: AppVars{
 			DeputyDetails: assuranceVisitsAppVars.DeputyDetails,
-			Errors:        validationErrors,
+			Errors:        util.RenameErrors(validationErrors),
+			PageName:      "Manage deputy contact details",
 		},
 	}, template.lastVars)
 

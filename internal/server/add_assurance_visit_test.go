@@ -97,7 +97,8 @@ func TestAssuranceVisitHandlesValidationErrorsGeneratedWithinFile(t *testing.T) 
 
 	assert.Equal(AddAssuranceVisitVars{
 		AppVars{
-			Errors: expectedErrors,
+			Errors:   expectedErrors,
+			PageName: "Add assurance visit",
 		},
 	}, template.lastVars)
 
@@ -129,7 +130,8 @@ func TestAssuranceVisitHandlesValidationErrorsReturnedFromSiriusCall(t *testing.
 
 	assert.Equal(AddAssuranceVisitVars{
 		AppVars{
-			Errors: validationErrors,
+			Errors:   validationErrors,
+			PageName: "Add assurance visit",
 		},
 	}, template.lastVars)
 
