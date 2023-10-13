@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -38,17 +39,16 @@ func TestVisitorsReturned(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := Visitors{
-		Visitor{
+	expectedResponse := []model.Visitor{
+		{
 			ID:   1,
 			Name: "John Johnson",
 		},
-
-		Visitor{
+		{
 			ID:   2,
 			Name: "Richard Richardson",
 		},
-		Visitor{
+		{
 			ID:   3,
 			Name: "Jack Jackson",
 		},
@@ -70,7 +70,7 @@ func TestGetVisitorsReturnsNewStatusError(t *testing.T) {
 
 	visitors, err := client.GetVisitors(getContext(nil))
 
-	expectedResponse := Visitors(nil)
+	var expectedResponse []model.Visitor
 
 	assert.Equal(t, expectedResponse, visitors)
 	assert.Equal(t, StatusError{
@@ -90,7 +90,7 @@ func TestGetVisitorsReturnsUnauthorisedClientError(t *testing.T) {
 
 	visitors, err := client.GetVisitors(getContext(nil))
 
-	expectedResponse := Visitors(nil)
+	var expectedResponse []model.Visitor
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, expectedResponse, visitors)

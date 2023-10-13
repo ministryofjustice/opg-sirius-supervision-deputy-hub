@@ -7,7 +7,7 @@ describe("Manage an Assurance Visit", () => {
 
     describe("Manage an assurance visit form", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/manage-assurance-visit/35");
+            cy.visit("/supervision/deputies/3/manage-assurance/35");
         });
 
         it("cancel button returns user to the assurance visit page", () => {
@@ -16,7 +16,7 @@ describe("Manage an Assurance Visit", () => {
                 .click();
             cy.url().should(
                 "not.contain",
-                "/supervision/deputies/3/manage-assurance-visit/35"
+                "/supervision/deputies/3/manage-assurance/35"
             );
             cy.get(".govuk-main-wrapper > header").contains("Assurance visits");
             cy.get(".govuk-button").contains("Add a visit");
@@ -39,7 +39,7 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("form keeps data if validation error", () => {
-            cy.setCookie("fail-route", "updateAssuranceVisit");
+            cy.setCookie("fail-route", "updateAssurance");
             cy.get("#f-commissioned-date").type("2021-02-01");
             cy.get('#visitor-allocated').select("John Johnson");
             cy.get("#f-report-due-date").type("2021-02-02");
@@ -49,7 +49,7 @@ describe("Manage an Assurance Visit", () => {
             cy.get('#visit-report-marked-as-Green').click();
             cy.get('#f-note').type("This is a test note");
 
-            cy.get("#manage-assurance-visit-form").submit();
+            cy.get("#manage-assurance-form").submit();
             cy.get('.govuk-error-summary').should('be.visible');
             cy.get(".govuk-error-summary__title").should(
                 "contain",
@@ -76,17 +76,17 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("allows user to edit and submit the form", () => {
-            cy.setCookie("success-route", "/assuranceVisits/2");
+            cy.setCookie("success-route", "/assurances/2");
             cy.get("#f-commissioned-date").type("2021-02-01");
-            cy.get("#manage-assurance-visit-form").submit();
-            cy.url().should("contain", "/supervision/deputies/3/assurance-visits");
+            cy.get("#manage-assurance-form").submit();
+            cy.url().should("contain", "/supervision/deputies/3/assurances");
             cy.get(".moj-banner").should("contain", "Assurance visit updated");
         });
     });
 
     describe("Manage a PDR form", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/2/manage-assurance-visit/36");
+            cy.visit("/supervision/deputies/2/manage-assurance/36");
         });
 
         it("cancel button returns user to the assurance visit page", () => {
@@ -95,7 +95,7 @@ describe("Manage an Assurance Visit", () => {
                 .click();
             cy.url().should(
                 "not.contain",
-                "/supervision/deputies/2/manage-assurance-visit/36"
+                "/supervision/deputies/2/manage-assurance/36"
             );
             cy.get(".govuk-main-wrapper > header").contains("Assurance visits");
             cy.get(".govuk-button").contains("Add a visit");
@@ -117,10 +117,10 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("allows user to edit and submit the form", () => {
-            cy.setCookie("success-route", "/assuranceVisits/2");
+            cy.setCookie("success-route", "/assurances/2");
             cy.get("#f-reportDueDate").type("2021-02-01");
-            cy.get("#manage-assurance-visit-form").submit();
-            cy.url().should("contain", "/supervision/deputies/2/assurance-visits");
+            cy.get("#manage-assurance-form").submit();
+            cy.url().should("contain", "/supervision/deputies/2/assurances");
             cy.get(".moj-banner").should("contain", "PDR updated");
         });
     });

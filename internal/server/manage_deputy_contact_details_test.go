@@ -102,7 +102,7 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(manageDeputyContactDetailsVars{
 		AppVars: AppVars{
-			DeputyDetails: assuranceVisitsAppVars.DeputyDetails,
+			DeputyDetails: manageContactAppVars.DeputyDetails,
 			Errors:        util.RenameErrors(validationErrors),
 			PageName:      "Manage deputy contact details",
 		},

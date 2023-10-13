@@ -1,8 +1,6 @@
 {{ template "page" . }}
-
 {{ define "main" }}
     {{ template "content-header" . }}
-
     {{ template "error-summary" .Errors }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
@@ -11,7 +9,7 @@
     </header>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <form id="manage-assurance-visit-form" method="post" autocomplete="off">
+            <form id="manage-assurance-form" method="post" autocomplete="off">
                 <input
                     type="hidden"
                     name="xsrfToken"
@@ -27,10 +25,10 @@
                         name="commissioned-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.CommissionedDate $nullDateValue }}
+                            {{ if eq .Assurance.CommissionedDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.CommissionedDate }}"
+                                value="{{ .Assurance.CommissionedDate }}"
                             {{ end }}
                     />
                 </div>
@@ -38,7 +36,7 @@
                     <label class="govuk-label" for="visitor-allocated">
                         Select a visitor
                     </label>
-                    {{ $currentVisitorAllocated:=.Visit.VisitorAllocated }}
+                    {{ $currentVisitorAllocated:=.Assurance.VisitorAllocated }}
                     <select class="govuk-select" id="visitor-allocated" name="visitor-allocated">
                         <option value="">-- Select visitor --</option>
                         {{ range .Visitors }}
@@ -58,10 +56,10 @@
                         name="report-due-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportDueDate $nullDateValue }}
+                            {{ if eq .Assurance.ReportDueDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportDueDate }}"
+                                value="{{ .Assurance.ReportDueDate }}"
                             {{ end }}
                     />
                 </div>
@@ -75,10 +73,10 @@
                         name="report-received-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReceivedDate $nullDateValue }}
+                            {{ if eq .Assurance.ReportReceivedDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReceivedDate }}"
+                                value="{{ .Assurance.ReportReceivedDate }}"
                             {{ end }}
                     />
                 </div>
@@ -89,7 +87,7 @@
                         <legend class="govuk-fieldset__legend">
                             Outcome
                         </legend>
-                        {{ $currentVisitOutcomeLabel:=.Visit.VisitOutcome.Label }}
+                        {{ $currentVisitOutcomeLabel:=.Assurance.VisitOutcome.Label }}
                         <div class="govuk-radios">
                             {{ range .VisitOutcomeTypes }}
                                 {{ if ne .Label "Aborted" }}
@@ -117,10 +115,10 @@
                         name="report-review-date"
                         type="date"
                         style="text-transform:uppercase"
-                            {{ if eq .Visit.ReportReviewDate $nullDateValue }}
+                            {{ if eq .Assurance.ReportReviewDate $nullDateValue }}
                                 value=""
                             {{ else }}
-                                value="{{ .Visit.ReportReviewDate }}"
+                                value="{{ .Assurance.ReportReviewDate }}"
                             {{ end }}
                     />
                 </div>
@@ -131,13 +129,13 @@
                         <legend class="govuk-fieldset__legend">
                             Report marked as
                         </legend>
-                        {{ $currentVisitReportMarkedAsLabel:=.Visit.VisitReportMarkedAs.Label }}
+                        {{ $currentReportMarkedAsLabel:=.Assurance.ReportMarkedAs.Label }}
                         <div class="govuk-radios">
-                            {{ range .VisitRagRatingTypes }}
+                            {{ range .RagRatingTypes }}
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="visit-report-marked-as-{{ .Label }}"
                                            name="visit-report-marked-as" type="radio"
-                                           value="{{ .Label }}" {{ if ne $currentVisitReportMarkedAsLabel "" }}{{ if eq $currentVisitReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                           value="{{ .Label }}" {{ if ne $currentReportMarkedAsLabel "" }}{{ if eq $currentReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
                                     <label class="govuk-label govuk-radios__label"
                                            for="visit-report-marked-as-{{ .Label }}">
                                         {{ .Label }}
@@ -157,13 +155,15 @@
                             Note
                         </label>
                         {{ template "error-message" (index .Errors "note") }}
+                        {{/* prettier-ignore-start */}}
                         <textarea
                             class="govuk-textarea govuk-js-character-count{{ if index .Errors "note" }} govuk-input--error{{ end }}"
                             id="f-note"
                             name="note"
                             rows="10"
                             aria-describedby="f-note-info note-hint"
-                        >{{ if .ErrorNote }}{{ .ErrorNote }}{{ else }}{{.Visit.Note}}{{ end }}</textarea>
+                        >{{ if .ErrorNote }}{{ .ErrorNote }}{{ else }}{{.Assurance.Note}}{{ end }}</textarea>
+                        {{/* prettier-ignore-end */}}
                         <div
                             id="f-note-info"
                             class="govuk-hint govuk-character-count__message"
@@ -182,7 +182,7 @@
                     </button>
                     <a
                         class="govuk-link"
-                        href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+                        href="{{ prefix (printf "/%d/assurances" .DeputyDetails.ID) }}">
                         Cancel
                     </a>
                 </div>

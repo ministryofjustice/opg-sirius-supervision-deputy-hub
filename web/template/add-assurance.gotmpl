@@ -1,5 +1,4 @@
 {{ template "page" . }}
-
 {{ define "main" }}
     {{ template "content-header" . }}
     {{ template "error-summary" .Errors }}
@@ -10,7 +9,7 @@
     </header>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-one-half">
-            <form id="add-assurance-visit-form" method="post" autocomplete="off">
+            <form id="add-assurance-form" method="post" autocomplete="off">
                 <input type="hidden"
                        name="xsrfToken"
                        value="{{ .XSRFToken }}" />
@@ -32,10 +31,10 @@
                                     </label>
                                 </div>
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="assurance-visit"
+                                    <input class="govuk-radios__input" id="assurance"
                                            name="assurance-type" type="radio"
                                            value="VISIT" />
-                                    <label class="govuk-label govuk-radios__label" for="assurance-visit">
+                                    <label class="govuk-label govuk-radios__label" for="assurance">
                                         Visit
                                     </label>
                                 </div>
@@ -72,7 +71,7 @@
                     </button>
                    <a
                        class="govuk-link"
-                       href="{{ prefix (printf "/%d/assurance-visits" .DeputyDetails.ID) }}">
+                       href="{{ prefix (printf "/%d/assurances" .DeputyDetails.ID) }}">
                        Cancel
                    </a>
                 </div>
