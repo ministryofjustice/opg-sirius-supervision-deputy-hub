@@ -53,7 +53,7 @@
                             >Notes</a
                         >
                     </li>
-                    <li class="moj-sub-navigation__item {{ if not (feature_flagged "tasks") }} hide {{ end }}">
+                    <li class="moj-sub-navigation__item">
                         <a
                             class="moj-sub-navigation__link"
                             {{ if eq .Path (printf "/%d/tasks" .DeputyDetails.ID) }}
