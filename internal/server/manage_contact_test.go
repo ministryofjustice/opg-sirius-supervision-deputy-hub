@@ -43,6 +43,7 @@ func (m *mockManageContact) UpdateContact(ctx sirius.Context, deputyId int, cont
 func TestGetCreateContact(t *testing.T) {
 	assert := assert.New(t)
 
+	app := AppVars{PageName: "Add new contact"}
 	client := &mockManageContact{}
 	template := &mockTemplates{}
 
@@ -50,7 +51,7 @@ func TestGetCreateContact(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/path", nil)
 
 	handler := renderTemplateForManageContact(client, template)
-	err := handler(AppVars{}, w, r)
+	err := handler(app, w, r)
 
 	assert.Nil(err)
 
@@ -60,6 +61,7 @@ func TestGetCreateContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
+		AppVars:      app,
 		IsNewContact: true,
 	}, template.lastVars)
 }
@@ -80,8 +82,10 @@ func TestGetManageContact(t *testing.T) {
 
 	r = mux.SetURLVars(r, vars)
 
+	app := AppVars{PageName: "Manage contact"}
+
 	handler := renderTemplateForManageContact(client, template)
-	err := handler(AppVars{}, w, r)
+	err := handler(app, w, r)
 
 	assert.Nil(err)
 
@@ -91,6 +95,7 @@ func TestGetManageContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
+		AppVars:       app,
 		IsNamedDeputy: "false",
 		IsMainContact: "false",
 		IsNewContact:  false,
@@ -163,7 +168,8 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 
 	assert.Equal(ManageContactVars{
 		AppVars: AppVars{
-			Errors: expectedValidationErrors,
+			Errors:   expectedValidationErrors,
+			PageName: "Add new contact",
 		},
 		IsNewContact: true,
 	}, template.lastVars)
@@ -227,6 +233,8 @@ func TestGetManageContactReturnsNonValidationErrors(t *testing.T) {
 	r, _ := http.NewRequest("GET", "/123/contacts/1", strings.NewReader(""))
 	r = mux.SetURLVars(r, vars)
 
-	getContactByIdReturnedErr := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
+	app := AppVars{PageName: "Manage contact"}
+
+	getContactByIdReturnedErr := renderTemplateForManageContact(client, template)(app, w, r)
 	assert.Equal(client.GetContactByIdErr, getContactByIdReturnedErr)
 }

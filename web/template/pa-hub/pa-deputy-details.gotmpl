@@ -6,9 +6,8 @@
     {{ template "navigation" . }}
 
     <header>
-        <h1
-            class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
-            Deputy details
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+            {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
@@ -84,7 +83,7 @@
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">Email</dt>
                     <dd class="govuk-summary-list__value">
-                        <a href="mailto:{{ .DeputyDetails.Email }}">
+                        <a class="govuk-link" href="mailto:{{ .DeputyDetails.Email }}">
                             {{ .DeputyDetails.Email }}
                         </a>
                     </dd>

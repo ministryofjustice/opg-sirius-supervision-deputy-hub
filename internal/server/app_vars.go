@@ -13,6 +13,7 @@ type AppVars struct {
 	XSRFToken     string
 	UserDetails   sirius.UserDetails
 	DeputyDetails sirius.DeputyDetails
+	PageName      string
 	Error         string
 	Errors        sirius.ValidationErrors
 	EnvironmentVars

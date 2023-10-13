@@ -1,14 +1,15 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTaskVars*/ -}}
 {{ template "page" . }}
+
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ template "error-summary" (rename_errors .Errors) }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
-                <h1
-                    class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                    Add a deputy task
+                <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+                    {{ .PageName }}
                 </h1>
             </header>
 
@@ -23,11 +24,12 @@
                         value="{{ .XSRFToken }}"/>
 
                     <div class="govuk-form-group">
-                        <div class="govuk-form-group">
+                        <div class="govuk-form-group{{ if index .Errors "taskType" }} govuk-form-group--error{{ end }}">
                             <fieldset class="govuk-fieldset">
                                 <legend class="govuk-fieldset__legend" id="tasktype">Type of task</legend>
+                                {{ template "error-message" (index .Errors "taskType") }}
                                 {{ $selectedType := .TaskType }}
-                                <div class="govuk-radios">
+                                <div class="govuk-radios" id="f-taskType">
                                     {{ range .TaskTypes }}
                                         <div class="govuk-radios__item">
                                             <input class="govuk-radios__input" id="{{.Handle}}" name="tasktype"
@@ -42,10 +44,14 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <div class="govuk-form-group">
-                            <label class="govuk-label" for="duedate">Due date</label>
-                            <input id="duedate" class="govuk-input govuk-input--width-10 min-date-today" name="duedate"
-                                   value="{{.DueDate}}" type="date">
+                        <div class="govuk-form-group{{ if index .Errors "dueDate" }} govuk-form-group--error{{ end }}">
+                            <label class="govuk-label" for="f-dueDate">Due date</label>
+                            {{ template "error-message" (index .Errors "dueDate") }}
+                            <input id="f-dueDate"
+                                class="govuk-input govuk-input--width-10 min-date-today{{ if index .Errors "dueDate" }} govuk-input--error{{ end }}"
+                                name="duedate"
+                                value="{{.DueDate}}"
+                                type="date">
                         </div>
 
                         <div class="govuk-form-group">
@@ -74,10 +80,10 @@
                                 <div id="autocomplete-input" class="hide">
                                     <div class="govuk-radios__conditional">
                                         <div class="autocomplete-wrapper" id="select-ecm-dropdown">
-                                            <label class="govuk-label" for="select-ecm">
+                                            <label class="govuk-label" for="f-select-ecm">
                                                 Enter a name
                                             </label>
-                                            <select id="select-ecm" name="select-assignedto">
+                                            <select id="f-select-ecm" name="select-assignedto">
                                                 <option value=""></option>
                                                 {{ range .Assignees }}
                                                     <option value="{{ .ID }}">{{ .DisplayName }}</option>
@@ -94,19 +100,20 @@
                             class="govuk-character-count"
                             data-module="govuk-character-count"
                             data-maxlength="1000">
-                            <div class="govuk-form-group">
-                                <label class="govuk-label" for="notes">
+                            <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
+                                <label class="govuk-label" for="f-2-note">
                                     Notes (optional)
                                 </label>
+                                {{ template "error-message" (index .Errors "2-note") }}
                                 <textarea
-                                    class="govuk-textarea govuk-js-character-count"
-                                    id="notes"
+                                    class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
+                                    id="f-2-note"
                                     name="notes"
                                     rows="10"
-                                    aria-describedby="notes-info notes-hint"
+                                    aria-describedby="f-2-note-info notes-hint"
                                 >{{.Notes}}</textarea>
                                 <div
-                                    id="notes-info"
+                                    id="f-2-note-info"
                                     class="govuk-hint govuk-character-count__message"
                                     aria-live="polite">
                                     You have 1,000 characters remaining

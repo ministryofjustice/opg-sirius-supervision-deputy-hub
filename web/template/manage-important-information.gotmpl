@@ -1,6 +1,7 @@
 {{ template "page" . }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
+    {{ template "content-header" . }}
     {{ if eq .DeputyType "PA" }}
         {{ template "manage-pa-important-information" . }}
     {{ end }}

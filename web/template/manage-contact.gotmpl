@@ -1,10 +1,12 @@
 {{ template "page" . }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+
+    {{ template "error-summary" .Errors }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1">
-            {{ if eq .IsNewContact true }}Add new contact{{ else }}Manage contact{{ end }}
+            {{ .PageName }}
         </h1>
     </header>
     <div class="govuk-grid-row">
@@ -14,57 +16,62 @@
                     type="hidden"
                     name="xsrfToken"
                     value="{{ .XSRFToken }}" />
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index .Errors "contactName" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-contactName">Name</label>
+                    {{ template "error-message" (index .Errors "contactName") }}
                     <input
-                        class="govuk-input"
+                        class="govuk-input{{ if index .Errors "contactName" }} govuk-input--error{{ end }}"
                         id="f-contactName"
                         name="contact-name"
                         type="text"
                         value="{{ .ContactName }}"
                          />
                 </div>
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="f-job-title">Job title (optional)</label>
+                <div class="govuk-form-group{{ if index .Errors "jobTitle" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-jobTitle">Job title (optional)</label>
+                    {{ template "error-message" (index .Errors "jobTitle") }}
                     <input
-                        class="govuk-input"
-                        id="f-job-title"
+                        class="govuk-input{{ if index .Errors "jobTitle" }} govuk-input--error{{ end }}"
+                        id="f-jobTitle"
                         name="job-title"
                         type="text"
                         value="{{ .JobTitle }}"
                          />
                 </div>
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index .Errors "email" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-email">
                         Email (optional)
                     </label>
+                    {{ template "error-message" (index .Errors "email") }}
                     <input
-                        class="govuk-input"
+                        class="govuk-input{{ if index .Errors "email" }} govuk-input--error{{ end }}"
                         id="f-email"
                         name="email"
                         type="text"
                         value="{{ .Email }}"
                          />
                 </div>
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index .Errors "phoneNumber" }} govuk-form-group--error{{ end }}">
                     <label class="govuk-label" for="f-phoneNumber">
                         Phone (optional)
                     </label>
+                    {{ template "error-message" (index .Errors "phoneNumber") }}
                     <input
-                        class="govuk-input"
+                        class="govuk-input{{ if index .Errors "phoneNumber" }} govuk-input--error{{ end }}"
                         id="f-phoneNumber"
                         name="phone-number"
                         type="text"
                         value="{{ .PhoneNumber }}"
                          />
                 </div>
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="f-otherPhone">
+                <div class="govuk-form-group{{ if index .Errors "otherPhoneNumber" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-otherPhoneNumber">
                         Other phone (optional)
                     </label>
+                    {{ template "error-message" (index .Errors "otherPhoneNumber") }}
                     <input
-                        class="govuk-input"
-                        id="f-otherPhone"
+                        class="govuk-input{{ if index .Errors "otherPhoneNumber" }} govuk-input--error{{ end }}"
+                        id="f-otherPhoneNumber"
                         name="other-phone-number"
                         type="text"
                         value="{{ .OtherPhoneNumber }}"
@@ -74,22 +81,20 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="255">
-                    <div class="govuk-form-group" id="f-contact-notes">
-                        <label class="govuk-label" for="note">
+                    <div class="govuk-form-group{{ if index .Errors "contactNotes" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-contactNotes">
                             Notes (optional)
                         </label>
-                        {{/* prettier-ignore-start */}}
+                        {{ template "error-message" (index .Errors "contactNotes") }}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count"
-                            id="note"
+                            class="govuk-textarea govuk-js-character-count{{ if index .Errors "contactNotes" }} govuk-input--error{{ end }}"
+                            id="f-contactNotes"
                             name="contact-notes"
                             rows="5"
-                            aria-describedby="note-info note-hint"
+                            aria-describedby="f-contactNotes-info note-hint"
                         >{{ .ContactNotes }}</textarea>
-
-                        {{/* prettier-ignore-end */}}
                         <div
-                            id="note-info"
+                            id="f-contactNotes-info"
                             class="govuk-hint govuk-character-count__message"
                             aria-live="polite">
                             You have 255 characters remaining

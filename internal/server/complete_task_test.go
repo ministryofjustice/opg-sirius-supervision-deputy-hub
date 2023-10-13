@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
@@ -74,6 +75,7 @@ func TestLoadCompleteTaskForm(t *testing.T) {
 
 	app := AppVars{
 		DeputyDetails: testDeputy,
+		PageName:      "Complete Task",
 	}
 	taskDetails := model.Task{}
 
@@ -146,15 +148,16 @@ func TestCompleteTaskValidationErrors(t *testing.T) {
 
 	template := &mockTemplates{}
 
+	app := AppVars{
+		Errors:   util.RenameErrors(validationErrors),
+		PageName: "Complete Task",
+	}
+
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/111", strings.NewReader(""))
-	returnedError := renderTemplateForCompleteTask(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForCompleteTask(client, template)(app, w, r)
 
-	assert.Equal(completeTaskVars{
-		AppVars: AppVars{
-			Errors: validationErrors,
-		},
-	}, template.lastVars)
+	assert.Equal(completeTaskVars{AppVars: app}, template.lastVars)
 
 	assert.Nil(returnedError)
 }
