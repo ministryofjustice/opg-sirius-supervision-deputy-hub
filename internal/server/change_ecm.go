@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 
@@ -32,6 +33,8 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 			return err
 		}
 
+		app.PageName = "Change Executive Case Manager"
+
 		vars := changeECMHubVars{
 			EcmTeamDetails: ecmTeamDetails,
 			AppVars:        app,
@@ -55,9 +58,11 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 			EcmIdStringValue := r.PostFormValue("select-ecm")
 
 			if EcmIdStringValue == "" {
-				vars.Errors = sirius.ValidationErrors{
-					"Change ECM": {"": "Select an executive case manager"},
+				selectECMError := sirius.ValidationErrors{
+					"select-ecm": {"": "Select an executive case manager"},
 				}
+
+				vars.Errors = util.RenameErrors(selectECMError)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
@@ -71,7 +76,7 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 			err = client.ChangeECM(ctx, changeECMForm, app.DeputyDetails)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

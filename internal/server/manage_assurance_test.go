@@ -62,6 +62,8 @@ var manageAssuranceAppVars = AppVars{
 func TestGetManageAssurance(t *testing.T) {
 	assert := assert.New(t)
 
+	manageAssuranceAppVars.PageName = "Manage assurance visit"
+
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
 	ragRatingTypes := []model.RagRatingType{{Handle: "x", Label: "y"}}
 	visitOutcomeTypes := []model.VisitOutcomeType{{Handle: "x", Label: "w"}}
@@ -133,6 +135,8 @@ func TestPostManageAssurance(t *testing.T) {
 
 func TestGetManagePDR(t *testing.T) {
 	assert := assert.New(t)
+
+	manageAssuranceAppVars.PageName = "Manage PDR"
 
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
 	ragRatingTypes := []model.RagRatingType{{Handle: "x", Label: "y"}}

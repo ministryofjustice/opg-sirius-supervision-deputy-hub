@@ -46,7 +46,7 @@ describe("Notes", () => {
                 cy.get(
                     ".govuk-character-count > .govuk-form-group > .govuk-label"
                 ).should("contain", "Note (required)");
-                cy.get("#note-info").should(
+                cy.get("#f-2-note-info").should(
                     "contain",
                     "You have 1000 characters remaining"
                 );
@@ -55,17 +55,17 @@ describe("Notes", () => {
             });
 
             it("allows me to enter note information which amends character count", () => {
-                cy.get("#title").type("example note title");
-                cy.get("#note").type("example note text");
-                cy.get("#note-info + .govuk-character-count__status").should(
+                cy.get("#f-1-title").type("example note title");
+                cy.get("#f-2-note").type("example note text");
+                cy.get("#f-2-note-info + .govuk-character-count__status").should(
                     "contain",
                     "You have 983 characters remaining"
                 );
             });
 
             it("shows success banner with Note added message", () => {
-                cy.get("#title").type("title");
-                cy.get("#note").type("note");
+                cy.get("#f-1-title").type("title");
+                cy.get("#f-2-note").type("note");
                 cy.get("#add-note-form").submit();
                 cy.url().should("contain", "/supervision/deputies/2/notes");
                 cy.get(
@@ -96,6 +96,9 @@ describe("Notes", () => {
                 );
                 cy.get("li:last").should("contain", "Enter a note");
             });
+            cy.get('#f-1-title.govuk-input--error').should("exist");
+            cy.get(':nth-child(2).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(2) > #name-error-stringLengthTooLong').should("contain", "The title must be 255 characters or fewer");
         });
 
         it("displays an error if the request fails with a 500 error", () => {

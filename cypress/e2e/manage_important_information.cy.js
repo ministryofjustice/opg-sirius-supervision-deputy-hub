@@ -49,7 +49,7 @@ describe("Manage important Information", () => {
             cy.get("#complaints-Yes").should("be.checked");
             cy.get("#panel-deputy-yes").should("be.checked");
             cy.get("#annual-billing-Schedule").should("be.checked");
-            cy.get("#other-info-note").should(
+            cy.get("#f-otherImportantInformation").should(
                 "have.text",
                 "Some important information is here"
             );
@@ -60,7 +60,7 @@ describe("Manage important Information", () => {
             cy.get("#complaints-No").click();
             cy.get("#panel-deputy-no").click();
             cy.get("#annual-billing-Invoice").click();
-            cy.get("#other-info-note")
+            cy.get("#f-otherImportantInformation")
                 .clear()
                 .type("new data entered into box");
             cy.get(".govuk-button").click();
@@ -77,7 +77,7 @@ describe("Manage important Information", () => {
 
         it("will show validation errors", () => {
             cy.setCookie("fail-route", "importantInformation");
-            cy.get("#other-info-note")
+            cy.get("#f-otherImportantInformation")
                 .clear()
                 .type("data that is too long for the box");
             cy.get(".govuk-button").click();
@@ -89,6 +89,9 @@ describe("Manage important Information", () => {
                 "contain",
                 "The other important information must be 1000 characters or fewer"
             );
+            cy.get('#f-otherImportantInformation.govuk-input--error').should("exist")
+            cy.get('.govuk-character-count > .govuk-form-group--error')
+            cy.get('#name-error-stringLengthTooLong').should("contain", "The other important information must be 1000 characters or fewer");
         });
     });
 
@@ -104,7 +107,7 @@ describe("Manage important Information", () => {
             cy.get("#complaints-Unknown").should("be.checked");
             cy.get("#panel-deputy-no").should("be.checked");
             cy.get("#annual-billing-Unknown").should("be.checked");
-            cy.get("#other-info-note").should("have.text", "");
+            cy.get("#f-otherImportantInformation").should("have.text", "");
         });
     });
 
@@ -135,7 +138,7 @@ describe("Manage important Information", () => {
             cy.get("#annual-billing-Schedule\\ and\\ Invoice").should(
                 "be.checked"
             );
-            cy.get("#other-info-note").should(
+            cy.get("#f-otherImportantInformation").should(
                 "have.text",
                 "some info for the pa deputy"
             );
@@ -147,7 +150,7 @@ describe("Manage important Information", () => {
             cy.get("#bank-charges-No").click();
             cy.get("#apad-Unknown").click();
             cy.get("#annual-billing-Invoice").click();
-            cy.get("#other-info-note")
+            cy.get("#f-otherImportantInformation")
                 .clear()
                 .type("new data entered into box");
             cy.get(".govuk-button").click();
@@ -164,7 +167,7 @@ describe("Manage important Information", () => {
 
         it("will show validation errors", () => {
             cy.setCookie("fail-route", "importantInformation");
-            cy.get("#other-info-note")
+            cy.get("#f-otherImportantInformation")
                 .clear()
                 .type("data that is too long for the box");
             cy.get(".govuk-button").click();
@@ -176,6 +179,9 @@ describe("Manage important Information", () => {
                 "contain",
                 "The other important information must be 1000 characters or fewer"
             );
+            cy.get('#f-otherImportantInformation.govuk-input--error').should("exist");
+            cy.get('.govuk-character-count > .govuk-form-group--error').should("exist");
+            cy.get('#name-error-stringLengthTooLong').should("contain", "The other important information must be 1000 characters or fewer");
         });
     });
 

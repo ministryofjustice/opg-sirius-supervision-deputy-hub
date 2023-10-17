@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -82,18 +83,19 @@ func TestEditDeputyValidationErrors(t *testing.T) {
 
 	template := &mockTemplates{}
 
+	app := AppVars{
+		PageName: "Manage team details",
+		Errors:   util.RenameErrors(validationErrors),
+	}
+
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-	returnedError := renderTemplateForEditDeputyHub(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(app, w, r)
 
 	assert.Equal(1, client.count)
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
-	assert.Equal(editDeputyHubVars{
-		AppVars: AppVars{
-			Errors: validationErrors,
-		},
-	}, template.lastVars)
+	assert.Equal(editDeputyHubVars{AppVars: app}, template.lastVars)
 
 	assert.Nil(returnedError)
 }

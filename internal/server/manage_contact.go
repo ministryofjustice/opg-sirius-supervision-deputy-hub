@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 )
@@ -34,6 +35,11 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 		routeVars := mux.Vars(r)
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
+
+		appVars.PageName = "Add new contact"
+		if contactId != 0 {
+			appVars.PageName = "Manage contact"
+		}
 
 		vars := ManageContactVars{
 			AppVars:      appVars,
@@ -85,7 +91,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			}
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				vars.ContactName = manageContactForm.ContactName
 				vars.JobTitle = manageContactForm.JobTitle
 				vars.Email = manageContactForm.Email

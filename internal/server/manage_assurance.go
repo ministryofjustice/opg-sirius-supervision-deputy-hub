@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
@@ -52,6 +53,8 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		routeVars := mux.Vars(r)
 		visitId, _ := strconv.Atoi(routeVars["visitId"])
 
+		app.PageName = "Manage assurance visit"
+
 		vars := ManageAssuranceVars{AppVars: app}
 		tmpl := visitTmpl
 
@@ -65,6 +68,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 			vars.Assurance = visit
 			if visit.Type.Handle == "PDR" {
 				tmpl = pdrTmpl
+				vars.AppVars.PageName = "Manage PDR"
 			}
 			return nil
 		})
@@ -147,7 +151,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 			err := client.UpdateAssurance(ctx, manageAssuranceForm, app.DeputyId(), visitId)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				vars.ErrorNote = r.PostFormValue("note")
 				vars.Assurance = parseAssuranceForm(manageAssuranceForm)
 

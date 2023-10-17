@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 )
 
@@ -18,6 +19,8 @@ type addFirmVars struct {
 func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
+
+		app.PageName = "Create new firm"
 
 		vars := addFirmVars{
 			AppVars: app,
@@ -44,7 +47,7 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 			firmId, err := client.AddFirmDetails(ctx, addFirmDetailForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 			if err != nil {

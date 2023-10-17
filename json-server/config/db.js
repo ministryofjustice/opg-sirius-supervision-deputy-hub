@@ -1995,7 +1995,7 @@ module.exports = function () {
             {
                 "id": "ecm",
                 "validation_errors": {
-                    "Change ECM": {
+                    "select-ecm": {
                         "": "Select an executive case manager"
                     }
                 }
@@ -2020,12 +2020,6 @@ module.exports = function () {
                 "id": "manageContactEmpty",
                 "validation_errors": {
                     "contactName": {
-                        "isEmpty": ""
-                    },
-                    "email": {
-                        "isEmpty": ""
-                    },
-                    "phoneNumber": {
                         "isEmpty": ""
                     },
                     "isMainContact": {

@@ -1,10 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" .Errors }}
     <header>
-        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance">
-            Add assurance visit
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            {{ .PageName }}
         </h1>
     </header>
     <div class="govuk-grid-row">
@@ -15,13 +15,13 @@
                        value="{{ .XSRFToken }}" />
 
                 {{ if eq .DeputyType "PRO" }}
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index .Errors "assurance-type" }} govuk-form-group--error{{ end }}">
                         <fieldset class="govuk-fieldset" aria-describedby="assurance-type" id="f-assurance-type">
                             <legend class="govuk-fieldset__legend">
                                 Assurance type
                             </legend>
+                            {{ template "error-message" (index .Errors "assurance-type") }}
                             <div class="govuk-radios">
-
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="assurance-pdr"
                                            name="assurance-type" type="radio"
@@ -47,13 +47,14 @@
                            value="VISIT" />
                 {{ end }}
 
-                <div class="govuk-form-group">
+                <div class="govuk-form-group{{ if index .Errors "requested-date" }} govuk-form-group--error{{ end }}">
                     <fieldset class="govuk-fieldset" aria-describedby="assurance-type">
                         <label class="govuk-label" for="f-requested-date">
                             Requested date
                         </label>
+                        {{ template "error-message" (index .Errors "requested-date") }}
                         <input
-                            class="govuk-input govuk-input--width-10"
+                            class="govuk-input govuk-input--width-10{{ if index .Errors "requested-date" }} govuk-input--error{{ end }}"
                             id="f-requested-date"
                             name="requested-date"
                             type="date"
