@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 )
@@ -27,6 +28,8 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 		if err != nil {
 			return err
 		}
+
+		app.PageName = "Change firm"
 
 		vars := changeFirmVars{
 			Firms:   firms,
@@ -57,7 +60,7 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 			assignDeputyToFirmErr := client.AssignDeputyToFirm(ctx, app.DeputyId(), AssignToFirmId)
 
 			if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 

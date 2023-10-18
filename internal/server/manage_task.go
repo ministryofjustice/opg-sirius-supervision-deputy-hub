@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 )
@@ -49,6 +50,8 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return err
 		}
 
+		app.PageName = "Manage " + taskDetails.Type + " Task"
+
 		vars := manageTaskVars{
 			AppVars:           app,
 			TaskDetails:       taskDetails,
@@ -76,9 +79,11 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			}
 
 			if (dueDate == taskDetails.DueDate) && (notes == taskDetails.Notes) && (assigneeId == taskDetails.Assignee.Id) {
-				vars.Errors = sirius.ValidationErrors{
+				updateTaskError := sirius.ValidationErrors{
 					"Manage task": {"": "Please update the task information"},
 				}
+
+				vars.Errors = util.RenameErrors(updateTaskError)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 

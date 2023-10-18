@@ -1,15 +1,16 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTasksClient*/ -}}
 {{ template "page" . }}
-{{ define "main" }}
-{{ if .SuccessMessage }}
-    {{ template "success-banner" . }}
-{{ end }}
-{{ template "content-header" . }}
-{{ template "navigation" . }}
 
-<header>
-        <h1
-            class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">Deputy tasks
+{{ define "main" }}
+    {{ if .SuccessMessage }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
+
+    <header>
+        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
@@ -64,10 +65,10 @@
                 <span>{{.DueDate}}</span>
             </td>
             <td class="govuk-table__cell manage_task">
-                <a class="govuk-button govuk-button--secondary"
+                <a class="govuk-button govuk-button--secondary govuk-link"
                    href="{{ prefix (printf "/%d/tasks/%d" $.DeputyDetails.ID .Id) }}"> Manage task
                 </a>
-                <a class="govuk-button govuk-button--secondary"
+                <a class="govuk-button govuk-button--secondary govuk-link"
                    href="{{ prefix (printf "/%d/tasks/complete/%d" $.DeputyDetails.ID .Id) }}"> Mark as complete
                 </a>
             </td>

@@ -26,7 +26,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
             cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
             cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");
@@ -49,11 +49,11 @@ describe("Contacts", () => {
             cy.setCookie("fail-route", "manageContactEmpty");
             cy.get("#contact-form").submit();
             cy.get(".govuk-error-summary__body")
-                .should("contain", "Enter a name")
-                .should("contain", "Enter a telephone number")
-                .should("contain", "Enter an email address")
-                .should("contain", "Select whether this contact is a main contact")
-                .should("contain", "Select whether this contact is the named deputy");
+                .should("contain", "Enter a name");
+
+            cy.get('#f-contactName.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(2).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(2) > #name-error-isEmpty').should("contain", "Enter a name");
         });
 
         it("shows error message when submitting invalid data", () => {
@@ -65,6 +65,36 @@ describe("Contacts", () => {
                 .should("contain", "Enter an email address in the correct format, like name@example.com")
                 .should("contain", "The telephone number must be 255 characters or fewer")
                 .should("contain", "The other telephone number must be 255 characters or fewer")
+                .should("contain", "The note must be 255 characters or fewer");
+
+            cy.get('#f-contactName.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(2).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(2) > #name-error-stringLengthTooLong')
+                .should("contain", "The name must be 255 characters or fewer");
+
+            cy.get('#f-jobTitle.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(3).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(3) > #name-error-stringLengthTooLong')
+                .should("contain", "The job title must be 255 characters or fewer");
+
+            cy.get('#f-email.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(4).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(4) > #name-error-emailAddressInvalidFormat')
+                .should("contain", "Enter an email address in the correct format, like name@example.com");
+
+            cy.get('#f-phoneNumber.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(5).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(5) > #name-error-stringLengthTooLong')
+                .should("contain", "The telephone number must be 255 characters or fewer");
+
+            cy.get('#f-otherPhoneNumber.govuk-input--error').should("exist");
+            cy.get('#contact-form > :nth-child(6).govuk-form-group--error').should("exist");
+            cy.get(':nth-child(6) > #name-error-stringLengthTooLong')
+                .should("contain", "The other telephone number must be 255 characters or fewer");
+
+            cy.get('#f-contactNotes.govuk-input--error').should("exist");
+            cy.get('.govuk-character-count > .govuk-form-group.govuk-form-group--error').should("exist");
+            cy.get('.govuk-character-count > .govuk-form-group > #name-error-stringLengthTooLong')
                 .should("contain", "The note must be 255 characters or fewer");
         });
     });
@@ -82,7 +112,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(4) > .govuk-label").contains("Email");
             cy.get("#contact-form > :nth-child(5) > .govuk-label").contains("Phone");
             cy.get("#contact-form > :nth-child(6) > .govuk-label").contains("Other phone (optional)");
-            cy.get("#f-contact-notes > .govuk-label").contains("Notes (optional)");
+            cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
             cy.get(".govuk-button").contains("Save contact");
@@ -102,10 +132,12 @@ describe("Contacts", () => {
             cy.get("#contact-form").submit();
             cy.get(".govuk-error-summary__body")
                 .should("contain", "Enter a name")
-                .should("contain", "Enter a telephone number")
-                .should("contain", "Enter an email address")
                 .should("contain", "Select whether this contact is a main contact")
                 .should("contain", "Select whether this contact is the named deputy");
+
+            cy.get('#f-contactName.govuk-input--error').should("exist")
+            cy.get('.govuk-form-group--error').should("exist")
+            cy.get('#name-error-isEmpty').should("contain", "Enter a name");
         });
 
         it("shows error message when submitting invalid data", () => {
@@ -118,6 +150,21 @@ describe("Contacts", () => {
                 .should("contain", "The telephone number must be 255 characters or fewer")
                 .should("contain", "The other telephone number must be 255 characters or fewer")
                 .should("contain", "The note must be 255 characters or fewer");
+
+            cy.get('.govuk-form-group--error').should("exist");
+            cy.get('#f-contactName.govuk-input--error').should("exist");
+            cy.get(':nth-child(2) > #name-error-stringLengthTooLong').should("contain", "The name must be 255 characters or fewer");
+            cy.get('#f-jobTitle.govuk-input--error').should("exist")
+            cy.get(':nth-child(3) > #name-error-stringLengthTooLong').should("contain", "The job title must be 255 characters or fewer");
+            cy.get('#f-email.govuk-input--error').should("exist")
+            cy.get('#name-error-emailAddressInvalidFormat').should("contain", "Enter an email address in the correct format, like name@example.com");
+            cy.get('#f-phoneNumber.govuk-input--error').should("exist")
+            cy.get(':nth-child(5) > #name-error-stringLengthTooLong').should("contain", "The telephone number must be 255 characters or fewer");
+            cy.get('#f-otherPhoneNumber.govuk-input--error').should("exist")
+            cy.get(':nth-child(6) > #name-error-stringLengthTooLong').should("contain", "The other telephone number must be 255 characters or fewer");
+            cy.get('#f-contactNotes.govuk-input--error').should("exist")
+            cy.get('.govuk-character-count > .govuk-form-group--error').should("exist")
+            cy.get('.govuk-character-count > .govuk-form-group > #name-error-stringLengthTooLong').should("contain", "The note must be 255 characters or fewer");
         });
     });
 

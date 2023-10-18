@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 )
 
@@ -17,6 +18,8 @@ type AddAssuranceVars struct {
 func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
+
+		app.PageName = "Add assurance visit"
 
 		vars := AddAssuranceVars{
 			AppVars: app,
@@ -40,6 +43,8 @@ func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Han
 				vars.Errors["requested-date"] = map[string]string{"": "Enter a requested date"}
 			}
 
+			vars.Errors = util.RenameErrors(vars.Errors)
+
 			if len(vars.Errors) > 0 {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -47,7 +52,7 @@ func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Han
 			err := client.AddAssurance(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 			if err != nil {

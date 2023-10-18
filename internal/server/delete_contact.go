@@ -26,6 +26,7 @@ func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler
 		deputyId, _ := strconv.Atoi(routeVars["id"])
 		contactId, _ := strconv.Atoi(routeVars["contactId"])
 
+		appVars.PageName = "Delete contact"
 		vars := DeleteContactVars{
 			AppVars: appVars,
 		}
