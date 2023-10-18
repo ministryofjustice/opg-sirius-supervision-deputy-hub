@@ -151,7 +151,7 @@ func Test_wrapHandler_redirects_if_unauthorized(t *testing.T) {
 	mockClient := mockApiClient{error: sirius.ErrUnauthorized}
 
 	errorTemplate := &mockTemplates{}
-	envVars := EnvironmentVars{SiriusURL: "sirius-url", Prefix: "prefix/"}
+	envVars := EnvironmentVars{SiriusPublicURL: "sirius-url", Prefix: "prefix/"}
 	nextHandlerFunc := wrapHandler(logger, mockClient, errorTemplate, envVars)
 	next := mockNext{}
 	httpHandler := nextHandlerFunc(next.GetHandler())
