@@ -1,15 +1,16 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.deputyHubNotesVars*/ -}}
 {{ template "page" . }}
+
 {{ define "main" }}
-{{ if .SuccessMessage }}
-    {{ template "success-banner" . }}
-{{ end }}
-{{ template "content-header" . }}
-{{ template "navigation" . }}
+    {{ if .SuccessMessage }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
     <header>
         <h1
             class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-            Notes
+            {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">

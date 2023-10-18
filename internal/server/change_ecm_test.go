@@ -47,8 +47,10 @@ func TestGetChangeECM(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
+	app := AppVars{PageName: "Change Executive Case Manager"}
+
 	handler := renderTemplateForChangeECM(client, template)
-	err := handler(AppVars{}, w, r)
+	err := handler(app, w, r)
 
 	assert.Nil(err)
 
@@ -60,7 +62,7 @@ func TestGetChangeECM(t *testing.T) {
 
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
-	assert.Equal(changeECMHubVars{}, template.lastVars)
+	assert.Equal(changeECMHubVars{AppVars: app}, template.lastVars)
 }
 
 func TestPostChangeECM(t *testing.T) {
@@ -104,12 +106,13 @@ func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
 	returnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
-		"Change ECM": {"": "Select an executive case manager"},
+		"select-ecm": {"": "Select an executive case manager"},
 	}
 
 	assert.Equal(changeECMHubVars{
 		AppVars: AppVars{
-			Errors: expectedValidationErrors,
+			PageName: "Change Executive Case Manager",
+			Errors:   expectedValidationErrors,
 		},
 	}, template.lastVars)
 

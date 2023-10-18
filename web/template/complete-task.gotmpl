@@ -1,12 +1,14 @@
 {{ template "page" . }}
+
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ template "error-summary" (rename_errors .Errors) }}
+
+    {{ template "error-summary" .Errors }}
     <div class="govuk-grid-row govuk-!-margin-top-5">
         <div class="govuk-grid-column-full">
             <header>
                 <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-                    Complete Task
+                    {{ .PageName }}
                 </h1>
             </header>
 
@@ -50,24 +52,25 @@
                         type="hidden"
                         name="xsrfToken"
                         value="{{ .XSRFToken }}"/>
-                    <div class="govuk-form-group">
+                    <div class="govuk-form-group{{ if index .Errors "notes" }} govuk-form-group--error{{ end }}">
                         <div
                             class="govuk-character-count"
                             data-module="govuk-character-count"
                             data-maxlength="1000">
                             <div class="govuk-form-group">
-                                <label class="govuk-label" for="notes">
+                                <label class="govuk-label" for="f-notes">
                                     Notes (optional)
                                 </label>
+                                {{ template "error-message" (index .Errors "notes") }}
                                 <textarea
-                                    class="govuk-textarea govuk-js-character-count"
-                                    id="notes"
+                                    class="govuk-textarea govuk-js-character-count{{ if index .Errors "notes" }} govuk-input--error{{ end }}"
+                                    id="f-notes"
                                     name="notes"
                                     rows="10"
-                                    aria-describedby="notes-info notes-hint"
+                                    aria-describedby="f-notes-info notes-hint"
                                 >{{ .CompletedNotes }}</textarea>
                                 <div
-                                    id="notes-info"
+                                    id="f-notes-info"
                                     class="govuk-hint govuk-character-count__message"
                                     aria-live="polite">
                                     You have 1,000 characters remaining

@@ -40,6 +40,8 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			return err
 		}
 
+		app.PageName = "Deputy details"
+
 		vars := deputyHubVars{
 			AppVars:           app,
 			ActiveClientCount: clientList.Metadata.TotalActiveClients,

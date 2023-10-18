@@ -59,7 +59,6 @@ func main() {
 				return envVars.FirmHubURL + s
 			},
 			"translate":       util.Translate,
-			"rename_errors":   util.RenameErrors,
 			"feature_flagged": util.IsFeatureFlagged(envVars.Features),
 			"is_last":         util.IsLast,
 		}).

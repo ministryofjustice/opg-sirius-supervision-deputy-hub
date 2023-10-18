@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
@@ -39,6 +40,7 @@ var deputyNotesAppVars = AppVars{
 	DeputyDetails: sirius.DeputyDetails{
 		ID: 123,
 	},
+	PageName: "Notes",
 }
 
 func TestGetNotes(t *testing.T) {
@@ -115,7 +117,7 @@ func TestErrorMessageWhenStringLengthTooLong(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			Errors: util.RenameErrors(validationErrors),
 		},
 	}, template.lastVars)
 
@@ -150,7 +152,7 @@ func TestErrorMessageWhenIsEmpty(t *testing.T) {
 	assert.Equal("page", template.lastName)
 	assert.Equal(addNoteVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			Errors: util.RenameErrors(validationErrors),
 		},
 	}, template.lastVars)
 
