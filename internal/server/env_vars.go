@@ -34,7 +34,7 @@ func NewEnvironmentVars() (EnvironmentVars, error) {
 		Port:            getEnv("PORT", "1234"),
 		WebDir:          getEnv("WEB_DIR", "web"),
 		SiriusURL:       getEnv("SIRIUS_URL", "http://localhost:8080"),
-		SiriusPublicURL: getEnv("SIRIUS_PUBLIC_URL", ""),
+		SiriusPublicURL: getEnv("SIRIUS_PUBLIC_URL", "http://localhost:8080"),
 		FirmHubURL:      getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm",
 		Prefix:          getEnv("PREFIX", ""),
 		DefaultPaTeam:   defaultPaTeamId,

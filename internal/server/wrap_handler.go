@@ -59,7 +59,7 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 						redirect = "?redirect=" + r.RequestURI
 					}
 
-					http.Redirect(w, r, envVars.SiriusURL+"/auth"+redirect, http.StatusFound)
+					http.Redirect(w, r, envVars.SiriusPublicURL+"/auth"+redirect, http.StatusFound)
 					return
 				}
 
