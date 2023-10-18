@@ -26,6 +26,8 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			return err
 		}
 
+		app.PageName = "Timeline"
+
 		vars := deputyHubEventVars{
 			DeputyEvents: deputyEvents,
 			AppVars:      app,

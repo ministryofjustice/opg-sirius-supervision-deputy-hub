@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 )
 
@@ -17,6 +18,8 @@ type manageDeputyContactDetailsVars struct {
 func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
+
+		app.PageName = "Manage deputy contact details"
 
 		vars := manageDeputyContactDetailsVars{AppVars: app}
 
@@ -43,7 +46,7 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 			err := client.UpdateDeputyContactDetails(ctx, app.DeputyId(), form)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
 				return err

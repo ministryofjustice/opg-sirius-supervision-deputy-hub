@@ -45,7 +45,10 @@ func TestGetManageImportantInformation(t *testing.T) {
 	assert := assert.New(t)
 
 	deputyDetails := sirius.DeputyDetails{ID: 123}
-	app := AppVars{DeputyDetails: deputyDetails}
+	app := AppVars{
+		DeputyDetails: deputyDetails,
+		PageName:      "Manage important information",
+	}
 	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "x", Label: "y"}}
 	booleanTypes := []sirius.DeputyBooleanTypes{{Handle: "x", Label: "w"}}
 	reportTypes := []sirius.DeputyReportSystemTypes{{Handle: "x", Label: "z"}}

@@ -1,4 +1,5 @@
 {{ template "page" . }}
+
 {{ define "main" }}
     {{ if .SuccessMessage }}
         {{ template "success-banner" . }}
@@ -6,9 +7,8 @@
     {{ template "content-header" . }}
     {{ template "navigation" . }}
     <header>
-        <h1
-            class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
-            Contacts
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-0  govuk-!-margin-top-0">
+            {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
@@ -51,7 +51,7 @@
                         {{ if .JobTitle }}<span class="job-title">{{ .JobTitle }}</span>{{ end }}
                     </td>
                     <td class="govuk-table__cell">
-                        <span class="email"><a href>{{ .Email }}</a></span>
+                        <span class="email"><a class="govuk-link" href="mailto:{{ .Email }}">{{ .Email }}</a></span>
                         <span class="phone-number">{{ .PhoneNumber }}</span>
                         {{ if .OtherPhoneNumber }}<span class="other-phone-number">{{ .OtherPhoneNumber }}</span>{{ end }}
                     </td>
@@ -59,8 +59,8 @@
                         <span class="notes">{{ .Notes }}</span>
                     </td>
                     <td class="govuk-table__cell">
-                        <a class="govuk-button govuk-button--secondary" href="{{ prefix (printf "/%d/contacts/%d" $deputyId .Id) }}">Manage contact</a>
-                        <a class="govuk-button govuk-button--warning" href="{{ prefix (printf "/%d/contacts/%d/delete" $deputyId .Id) }}">Delete contact</a>
+                        <a class="govuk-button govuk-button--secondary govuk-link" href="{{ prefix (printf "/%d/contacts/%d" $deputyId .Id) }}">Manage contact</a>
+                        <a class="govuk-button govuk-button--warning govuk-link" href="{{ prefix (printf "/%d/contacts/%d/delete" $deputyId .Id) }}">Delete contact</a>
                     </td>
                 </tr>
             {{ end }}

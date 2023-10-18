@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
 )
@@ -42,6 +43,8 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			return err
 		}
 
+		app.PageName = "Add a deputy task"
+
 		vars := AddTaskVars{
 			TaskTypes: taskTypes,
 			Assignees: assignees,
@@ -75,7 +78,7 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 				vars.TaskType = taskType
 				vars.DueDate = dueDate
 				vars.Notes = notes
-				vars.Errors = verr.Errors
+				vars.Errors = util.RenameErrors(verr.Errors)
 				w.WriteHeader(http.StatusBadRequest)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

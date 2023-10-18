@@ -1,11 +1,11 @@
 {{ template "page" . }}
+
 {{ define "main" }}
-{{ template "content-header" . }}
-{{ template "navigation" . }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
     <header>
-        <h1
-            class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
-            Timeline
+        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            {{ .PageName }}
         </h1>
     </header>
     <div class="govuk-grid-row">

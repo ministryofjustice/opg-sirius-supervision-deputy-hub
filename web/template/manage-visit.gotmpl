@@ -1,10 +1,10 @@
 {{ template "page" . }}
 {{ define "main" }}
     {{ template "content-header" . }}
-    {{ template "error-summary" (rename_errors .Errors) }}
+    {{ template "error-summary" .Errors }}
     <header>
-        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance">
-            Manage assurance visit
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            {{ .PageName }}
         </h1>
     </header>
     <div class="govuk-grid-row">
@@ -16,7 +16,7 @@
                     value="{{ .XSRFToken }}"/>
                 <div class="govuk-form-group">
                     {{ $nullDateValue:="0001-01-01" }}
-                    <label class="govuk-label" for="commissioned-date">
+                    <label class="govuk-label" for="f-commissioned-date">
                         Commissioned date
                     </label>
                     <input
@@ -33,7 +33,7 @@
                     />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="sort">
+                    <label class="govuk-label" for="visitor-allocated">
                         Select a visitor
                     </label>
                     {{ $currentVisitorAllocated:=.Assurance.VisitorAllocated }}
@@ -45,12 +45,13 @@
                         {{ end }}
                     </select>
                 </div>
-                <div class="govuk-form-group">
-                    <label class="govuk-label" for="report-due-date">
+                <div class="govuk-form-group{{ if index .Errors "report-due-date" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-report-due-date">
                         Report due date
                     </label>
+                    {{ template "error-message" (index .Errors "report-due-date") }}
                     <input
-                        class="govuk-input govuk-input--width-10"
+                        class="govuk-input govuk-input--width-10{{ if index .Errors "report-due-date" }} govuk-input--error{{ end }}"
                         id="f-report-due-date"
                         name="report-due-date"
                         type="date"
@@ -63,7 +64,7 @@
                     />
                 </div>
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="report-received-date">
+                    <label class="govuk-label" for="f-report-received-date">
                         Report received date
                     </label>
                     <input
@@ -105,7 +106,7 @@
                 </div>
 
                 <div class="govuk-form-group">
-                    <label class="govuk-label" for="report-review-date">
+                    <label class="govuk-label" for="f-report-review-date">
                         Report review date
                     </label>
                     <input
@@ -149,21 +150,22 @@
                     class="govuk-character-count"
                     data-module="govuk-character-count"
                     data-maxlength="1000">
-                    <div class="govuk-form-group" id="f-note">
-                        <label class="govuk-label" for="note">
+                    <div class="govuk-form-group{{ if index .Errors "note" }} govuk-form-group--error{{ end }}">
+                        <label class="govuk-label" for="f-note">
                             Note
                         </label>
+                        {{ template "error-message" (index .Errors "note") }}
                         {{/* prettier-ignore-start */}}
                         <textarea
-                            class="govuk-textarea govuk-js-character-count"
-                            id="note"
+                            class="govuk-textarea govuk-js-character-count{{ if index .Errors "note" }} govuk-input--error{{ end }}"
+                            id="f-note"
                             name="note"
                             rows="10"
-                            aria-describedby="note-info note-hint"
+                            aria-describedby="f-note-info note-hint"
                         >{{ if .ErrorNote }}{{ .ErrorNote }}{{ else }}{{.Assurance.Note}}{{ end }}</textarea>
                         {{/* prettier-ignore-end */}}
                         <div
-                            id="note-info"
+                            id="f-note-info"
                             class="govuk-hint govuk-character-count__message"
                             aria-live="polite">
                             You have 1000 characters remaining

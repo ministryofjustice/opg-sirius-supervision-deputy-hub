@@ -47,6 +47,8 @@ func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Templa
 			successMessage = ""
 		}
 
+		app.PageName = "Contacts"
+
 		vars := ListContactsVars{
 			AppVars:        app,
 			ContactList:    contactList,

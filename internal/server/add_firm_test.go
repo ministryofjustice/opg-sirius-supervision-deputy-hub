@@ -99,7 +99,8 @@ func TestAddFirmValidationErrors(t *testing.T) {
 
 	assert.Equal(addFirmVars{
 		AppVars: AppVars{
-			Errors: validationErrors,
+			Errors:   validationErrors,
+			PageName: "Create new firm",
 		},
 	}, template.lastVars)
 
@@ -144,6 +145,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 		AppVars: AppVars{
 			DeputyDetails: testDeputy,
 			Errors:        expectedValidationErrors,
+			PageName:      "Create new firm",
 		},
 	}, template.lastVars)
 
