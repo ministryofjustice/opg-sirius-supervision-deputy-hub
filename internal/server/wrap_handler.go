@@ -53,7 +53,13 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 
 			if err != nil {
 				if err == sirius.ErrUnauthorized {
-					http.Redirect(w, r, envVars.SiriusURL+"/auth", http.StatusFound)
+					redirect := ""
+
+					if r.RequestURI != "" {
+						redirect = "?redirect=" + r.RequestURI
+					}
+
+					http.Redirect(w, r, envVars.SiriusPublicURL+"/auth"+redirect, http.StatusFound)
 					return
 				}
 
