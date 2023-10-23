@@ -12,6 +12,14 @@ type UrlBuilder struct {
 	SelectedFilters []Filter
 }
 
+func (ub UrlBuilder) GetPaginationUrl(page int, perPage ...int) string {
+	selectedPerPage := ub.SelectedPerPage
+	if len(perPage) > 0 {
+		selectedPerPage = perPage[0]
+	}
+	return ub.buildUrl(page, selectedPerPage, ub.SelectedFilters)
+}
+
 func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
 	url := fmt.Sprintf("%s?limit=%d&page=%d", ub.OriginalPath, perPage, page)
 	for _, filter := range filters {

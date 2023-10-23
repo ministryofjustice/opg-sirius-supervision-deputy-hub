@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
@@ -14,14 +15,14 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
-	GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails
 }
 
 type ListClientsVars struct {
 	AriaSorting           sirius.AriaSorting
 	DeputyClientsDetails  sirius.DeputyClientDetails
 	ClientList            sirius.ClientList
-	PageDetails           sirius.PageDetails
+	Pagination            paginate.Pagination
+	PerPage               int
 	ActiveClientCount     int
 	ColumnBeingSorted     string
 	SortOrder             string
@@ -121,7 +122,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		ctx := getContext(r)
 		urlParams := r.URL.Query()
-
+		page := paginate.GetRequestedPage(urlParams.Get("page"))
+		perPageOptions := []int{25, 50, 100}
+		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("per-page"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 		displayClientLimit, _ := strconv.Atoi(r.FormValue("limit"))
 		if displayClientLimit == 0 {
@@ -168,19 +171,31 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			return err
 		}
 
-		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
-
 		app.PageName = "Clients"
 
 		vars := ListClientsVars{
 			DeputyClientsDetails: clientList.Clients,
 			ClientList:           clientList,
-			PageDetails:          pageDetails,
+			PerPage:              perPage,
 			AriaSorting:          ariaSorting,
 			ColumnBeingSorted:    columnBeingSorted,
 			SortOrder:            sortOrder,
 			DisplayClientLimit:   displayClientLimit,
 			AppVars:              app,
+		}
+
+		if page > clientList.Pages.PageTotal && clientList.Pages.PageTotal > 0 {
+			return Redirect(vars.UrlBuilder.GetPaginationUrl(clientList.Pages.PageTotal, perPage))
+		}
+
+		vars.Pagination = paginate.Pagination{
+			CurrentPage:     clientList.Pages.PageCurrent,
+			TotalPages:      clientList.Pages.PageTotal,
+			TotalElements:   clientList.TotalClients,
+			ElementsPerPage: vars.PerPage,
+			ElementName:     "clients",
+			PerPageOptions:  perPageOptions,
+			UrlBuilder:      vars.UrlBuilder,
 		}
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)

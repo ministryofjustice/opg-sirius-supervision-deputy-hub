@@ -6,27 +6,21 @@ describe("Pagination", () => {
     });
 
     it("shows correct number of total clients", () => {
-        cy.get("#pagination-label > .flex-container > .moj-pagination__results > :nth-child(1)").should('contain', '1')
-        cy.get("#pagination-label > .flex-container > .moj-pagination__results > :nth-child(2)").should('contain', '3')
-        cy.get("#pagination-label > .flex-container > .moj-pagination__results > :nth-child(3)").should('contain', '3')
-    })
-
-    it("disabled previous button while on page one", () => {
-        cy.get("#pagination-label > .flex-container > .moj-pagination__list > .moj-pagination__item--prev > .moj-pagination__link").should('be.hidden')
+        cy.get("#top-pagination").contains(".moj-pagination__results", 'Showing 1 to 3 of 3 clients')
     })
 
     it("can select 25 from task view value dropdown", () => {
-        cy.get("#display-rows").select('25')
-        cy.get("#display-rows").should('have.value', '25')
+        cy.get("#top-pagination .display-rows").select('25')
+            .invoke('val').should('contain', 'limit=25')
     })
 
     it("can select 50 from task view value dropdown", () => {
-        cy.get("#display-rows").select('50')
-        cy.get("#display-rows").should('have.value', '50')
+        cy.get("#top-pagination .display-rows").select('50')
+            .invoke('val').should('contain', 'limit=50')
     })
 
     it("can select 100 from task view value dropdown", () => {
-        cy.get("#display-rows").select('100')
-        cy.get("#display-rows").should('have.value', '100')
+        cy.get("#top-pagination .display-rows").select('100')
+            .invoke('val').should('contain', 'limit=100')
     })
 });
