@@ -16,7 +16,6 @@ type mockDeputyHubClientInformation struct {
 	lastCtx          sirius.Context
 	err              error
 	deputyClientData sirius.ClientList
-	pageDetails      sirius.PageDetails
 	ariaSorting      sirius.AriaSorting
 }
 
@@ -25,12 +24,6 @@ func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, pa
 	m.lastCtx = ctx
 
 	return m.deputyClientData, m.ariaSorting, m.err
-}
-
-func (m *mockDeputyHubClientInformation) GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails {
-	m.count += 1
-
-	return m.pageDetails
 }
 
 func TestNavigateToClientTab(t *testing.T) {
