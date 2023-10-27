@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"html/template"
 	"log"
 	"net/http"
@@ -63,6 +64,8 @@ func main() {
 			"is_last":         util.IsLast,
 		}).
 		ParseGlob(envVars.WebDir + "/template/*/*.gotmpl")
+
+	layouts, _ = layouts.Parse(paginate.Template)
 
 	files, _ := filepath.Glob(envVars.WebDir + "/template/*.gotmpl")
 	tmpls := map[string]*template.Template{}

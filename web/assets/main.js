@@ -3,6 +3,7 @@ import MojBannerAutoHide from "./javascript/moj-banner-auto-hide";
 import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
+import ManageJumpMenus from "./javascript/manage-jump-menus";
 
 GOVUKFrontend.initAll();
 
@@ -64,6 +65,11 @@ document.querySelectorAll(".min-date-today")
 const manageFilters = document.querySelectorAll('[data-module="filters"]');
 manageFilters.forEach(function (manageFilter) {
     new ManageFilters(manageFilter);
+});
+
+const jumpMenus = document.querySelectorAll('[data-module="jump-menu"]');
+jumpMenus.forEach(function (jumpMenu) {
+    new ManageJumpMenus(jumpMenu);
 });
 
 function onHomePage() {

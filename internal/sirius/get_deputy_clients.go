@@ -123,20 +123,20 @@ type ClientList struct {
 }
 
 type ClientListParams struct {
-	DeputyId           int
-	DisplayClientLimit int
-	Search             int
-	DeputyType         string
-	ColumnBeingSorted  string
-	SortOrder          string
-	OrderStatuses      []string
+	DeputyId          int
+	Limit             int
+	Search            int
+	DeputyType        string
+	ColumnBeingSorted string
+	SortOrder         string
+	OrderStatuses     []string
 }
 
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
 
-	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.DisplayClientLimit, params.Search)
+	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search)
 
 	filter := params.CreateFilter()
 	if filter != "" {
