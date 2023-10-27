@@ -22,7 +22,7 @@
         </div>
     </header>
 
-        <section data-module="filters">
+    <section data-module="filters">
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div id="filters-column" class="govuk-grid-column-one-quarter">
                 {{ template "filters" . }}
@@ -36,8 +36,10 @@
                             <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
                         {{ end }}
                     {{ end }}
-                    <div>
-                        {{ template "pagination" . }}
+                    <div class="govuk-grid-row">
+                        <nav id="top-pagination" aria-label="Top pagination">
+                            {{ template "pagination" .Pagination }}
+                        </nav>
                     </div>
                     <table id="pa-clients-3" class="govuk-table sortable">
                         <thead class="govuk-table__head">
@@ -85,7 +87,7 @@
                         </thead>
 
                         <tbody class="govuk-table__body">
-                        {{ range .ClientList.Clients }}
+                        {{ range .Clients.Clients }}
                             <tr class="govuk-table__row">
                                 <td
                                     class="govuk-table__cell client_name_ref nowrap"
@@ -181,8 +183,13 @@
                         </tbody>
                     </table>
                 </form>
+                <div class="govuk-grid-row">
+                    <nav id="bottom-pagination" aria-label="Bottom pagination">
+                        {{ template "pagination" .Pagination }}
+                    </nav>
+                </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
 {{ end }}

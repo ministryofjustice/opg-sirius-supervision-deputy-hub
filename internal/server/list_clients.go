@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
@@ -14,18 +15,17 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
-	GetPageDetails(sirius.Context, sirius.ClientList, int, int) sirius.PageDetails
 }
 
 type ListClientsVars struct {
 	AriaSorting           sirius.AriaSorting
 	DeputyClientsDetails  sirius.DeputyClientDetails
-	ClientList            sirius.ClientList
-	PageDetails           sirius.PageDetails
+	Clients               sirius.ClientList
+	Pagination            paginate.Pagination
+	PerPage               int
 	ActiveClientCount     int
 	ColumnBeingSorted     string
 	SortOrder             string
-	DisplayClientLimit    int
 	SelectedOrderStatuses []string
 	OrderStatuses         []OrderStatus
 	AppliedFilters        []string
@@ -42,9 +42,8 @@ type FilterByOrderStatus struct {
 
 func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
-		OriginalPath:    "clients",
-		SortBy:          vars.SortBy,
-		SelectedPerPage: vars.DisplayClientLimit,
+		OriginalPath: "clients",
+		SortBy:       vars.SortBy,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
 		},
@@ -121,12 +120,10 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		ctx := getContext(r)
 		urlParams := r.URL.Query()
-
+		page := paginate.GetRequestedPage(urlParams.Get("page"))
+		perPageOptions := []int{25, 50, 100}
+		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
-		displayClientLimit, _ := strconv.Atoi(r.FormValue("limit"))
-		if displayClientLimit == 0 {
-			displayClientLimit = 25
-		}
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
@@ -153,34 +150,44 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		params := sirius.ClientListParams{
-			DeputyId:           app.DeputyId(),
-			DisplayClientLimit: displayClientLimit,
-			Search:             search,
-			DeputyType:         app.DeputyType(),
-			ColumnBeingSorted:  columnBeingSorted,
-			SortOrder:          sortOrder,
-			OrderStatuses:      selectedOrderStatuses,
+			DeputyId:          app.DeputyId(),
+			Limit:             perPage,
+			Search:            search,
+			DeputyType:        app.DeputyType(),
+			ColumnBeingSorted: columnBeingSorted,
+			SortOrder:         sortOrder,
+			OrderStatuses:     selectedOrderStatuses,
 		}
 
-		clientList, ariaSorting, err := client.GetDeputyClients(ctx, params)
+		clients, ariaSorting, err := client.GetDeputyClients(ctx, params)
 
 		if err != nil {
 			return err
 		}
 
-		pageDetails := client.GetPageDetails(ctx, clientList, search, displayClientLimit)
-
 		app.PageName = "Clients"
 
 		vars := ListClientsVars{
-			DeputyClientsDetails: clientList.Clients,
-			ClientList:           clientList,
-			PageDetails:          pageDetails,
-			AriaSorting:          ariaSorting,
-			ColumnBeingSorted:    columnBeingSorted,
-			SortOrder:            sortOrder,
-			DisplayClientLimit:   displayClientLimit,
-			AppVars:              app,
+			Clients:           clients,
+			PerPage:           perPage,
+			AriaSorting:       ariaSorting,
+			ColumnBeingSorted: columnBeingSorted,
+			SortOrder:         sortOrder,
+			AppVars:           app,
+		}
+
+		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
+			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
+		}
+
+		vars.Pagination = paginate.Pagination{
+			CurrentPage:     clients.Pages.PageCurrent,
+			TotalPages:      clients.Pages.PageTotal,
+			TotalElements:   clients.TotalClients,
+			ElementsPerPage: vars.PerPage,
+			ElementName:     "clients",
+			PerPageOptions:  perPageOptions,
+			UrlBuilder:      vars.UrlBuilder,
 		}
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
