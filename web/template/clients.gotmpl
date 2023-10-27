@@ -87,7 +87,7 @@
                         </thead>
 
                         <tbody class="govuk-table__body">
-                        {{ range .ClientList.Clients }}
+                        {{ range .Clients.Clients }}
                             <tr class="govuk-table__row">
                                 <td
                                     class="govuk-table__cell client_name_ref nowrap"
@@ -183,11 +183,11 @@
                         </tbody>
                     </table>
                 </form>
-            </div>
-            <div class="govuk-grid-row">
-                <nav id="bottom-pagination" aria-label="Bottom pagination">
-                    {{ template "pagination" .Pagination }}
-                </nav>
+                <div class="govuk-grid-row">
+                    <nav id="bottom-pagination" aria-label="Bottom pagination">
+                        {{ template "pagination" .Pagination }}
+                    </nav>
+                </div>
             </div>
         </div>
     </section>
