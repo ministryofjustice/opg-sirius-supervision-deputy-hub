@@ -16,8 +16,8 @@ func TestNewEnvironmentVars(t *testing.T) {
 		SiriusPublicURL: "http://localhost:8080",
 		FirmHubURL:      "/supervision/deputies/firm",
 		Prefix:          "",
-		DefaultPaTeam:   23,
-		DefaultProTeam:  28,
+		DefaultPaTeam:   28,
+		DefaultProTeam:  31,
 		Features:        []string{""},
 	}, vars)
 }
