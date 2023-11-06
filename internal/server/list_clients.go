@@ -6,7 +6,6 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 	"net/url"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -15,29 +14,27 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
+	//GetAccommodationTypes(sirius.Context, string) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
-	AriaSorting           sirius.AriaSorting
-	DeputyClientsDetails  sirius.DeputyClientDetails
-	Clients               sirius.ClientList
-	Pagination            paginate.Pagination
-	PerPage               int
-	ActiveClientCount     int
-	ColumnBeingSorted     string
-	SortOrder             string
+	AriaSorting          sirius.AriaSorting
+	DeputyClientsDetails sirius.DeputyClientDetails
+	Clients              sirius.ClientList
+	Pagination           paginate.Pagination
+	PerPage              int
+	ActiveClientCount    int
+	ColumnBeingSorted    string
+	SortOrder            string
+	AppliedFilters       []string
+	OrderStatusOptions   []model.RefData
+	urlbuilder.UrlBuilder
+	//ListPage
+	//FilterByAccommodationType
+	FilterByOrderStatus
 	SelectedOrderStatuses []string
 	OrderStatuses         []OrderStatus
-	AppliedFilters        []string
-	OrderStatusOptions    []model.RefData
-	FilterByOrderStatus
-	urlbuilder.UrlBuilder
 	AppVars
-}
-
-type FilterByOrderStatus struct {
-	OrderStatusOptions    []model.RefData
-	SelectedOrderStatuses []string
 }
 
 func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
@@ -46,39 +43,23 @@ func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 		SortBy:       vars.SortBy,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
+			//urlbuilder.CreateFilter("accommodation-type", vars.SelectedAccommodationTypes),
 		},
 	}
-}
-
-func (vars ListClientsVars) HasFilterBy(page interface{}, filter string) bool {
-	filters := map[string]interface{}{
-		"order-status": FilterByOrderStatus{},
-	}
-
-	extends := func(parent interface{}, child interface{}) bool {
-		p := reflect.TypeOf(parent)
-		c := reflect.TypeOf(child)
-		for i := 0; i < p.NumField(); i++ {
-			if f := p.Field(i); f.Type == c && f.Anonymous {
-				return true
-			}
-		}
-		return false
-	}
-
-	if f, ok := filters[filter]; ok {
-		return extends(page, f)
-	}
-	return false
 }
 
 func (vars ListClientsVars) GetAppliedFilters() []string {
 	var appliedFilters []string
 	for _, u := range vars.OrderStatuses {
 		if u.IsSelected(vars.SelectedOrderStatuses) {
-			appliedFilters = append(appliedFilters, u.Incomplete)
+			appliedFilters = append(appliedFilters, u.Handle)
 		}
 	}
+	//for _, u := range vars.AccommodationTypes {
+	//	if u.IsIn(vars.SelectedOrderStatuses) {
+	//		appliedFilters = append(appliedFilters, u.Label)
+	//	}
+	//}
 	return appliedFilters
 }
 
@@ -149,6 +130,11 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			selectedOrderStatuses = urlParams["order-status"]
 		}
 
+		//var selectedAccommodationTypes []string
+		//if urlParams.Has("accommodation-type") {
+		//	selectedAccommodationTypes = urlParams["accommodation-type"]
+		//}
+
 		params := sirius.ClientListParams{
 			DeputyId:          app.DeputyId(),
 			Limit:             perPage,
@@ -157,6 +143,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			ColumnBeingSorted: columnBeingSorted,
 			SortOrder:         sortOrder,
 			OrderStatuses:     selectedOrderStatuses,
+			//AccommodationTypes: selectedAccommodationTypes,
 		}
 
 		clients, ariaSorting, err := client.GetDeputyClients(ctx, params)
@@ -173,8 +160,11 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			AriaSorting:       ariaSorting,
 			ColumnBeingSorted: columnBeingSorted,
 			SortOrder:         sortOrder,
-			AppVars:           app,
 		}
+
+		vars.App = app
+		vars.SelectedOrderStatuses = selectedOrderStatuses
+		//vars.SelectedAccommodationTypes = selectedAccommodationTypes
 
 		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
 			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
@@ -189,7 +179,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			PerPageOptions:  perPageOptions,
 			UrlBuilder:      vars.UrlBuilder,
 		}
-
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
@@ -207,6 +196,11 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 				Label:  "Closed",
 			},
 		}
+
+		//vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
+		//if err != nil {
+		//	return err
+		//}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}

@@ -26,12 +26,14 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		ctx := getContext(r)
 
 		var selectedOrderStatuses []string
+		var selectedAccommodationTypes []string
 
 		params := sirius.ClientListParams{
-			DeputyId:      app.DeputyId(),
-			Search:        1,
-			DeputyType:    app.DeputyType(),
-			OrderStatuses: selectedOrderStatuses,
+			DeputyId:           app.DeputyId(),
+			Search:             1,
+			DeputyType:         app.DeputyType(),
+			OrderStatuses:      selectedOrderStatuses,
+			AccommodationTypes: selectedAccommodationTypes,
 		}
 
 		clientList, _, err := client.GetDeputyClients(ctx, params)

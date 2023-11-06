@@ -123,13 +123,14 @@ type ClientList struct {
 }
 
 type ClientListParams struct {
-	DeputyId          int
-	Limit             int
-	Search            int
-	DeputyType        string
-	ColumnBeingSorted string
-	SortOrder         string
-	OrderStatuses     []string
+	DeputyId           int
+	Limit              int
+	Search             int
+	DeputyType         string
+	ColumnBeingSorted  string
+	SortOrder          string
+	OrderStatuses      []string
+	AccommodationTypes []string
 }
 
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {

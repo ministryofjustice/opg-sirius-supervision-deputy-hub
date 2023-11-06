@@ -1,0 +1,16 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-workflow/internal/server.FilterByAccommodation*/ -}}
+{{ define "accommodation-type-filter-applied" }}
+    {{ if .SelectedAccommodationTypes }}
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Accommodation type</h3>
+{{/*      <ul class="moj-filter-tags">*/}}
+{{/*          {{ range .AccommodationTypeOptions }}*/}}
+{{/*              {{ if .IsIn $.SelectedAccommodationTypes }}*/}}
+{{/*                <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "accommodation-type" .Handle }}&sort={{ $.ColumnBeingSorted }}:{{ $.SortOrder}}"*/}}
+{{/*                    class="moj-filter__tag"><span class="govuk-visually-hidden">*/}}
+{{/*                    Remove this filter</span> {{ .Label }}*/}}
+{{/*                </a></li>*/}}
+{{/*              {{ end }}*/}}
+{{/*          {{ end }}*/}}
+{{/*      </ul>*/}}
+    {{ end }}
+{{ end }}
