@@ -11,11 +11,10 @@ type ListPage struct {
 	App            AppVars
 	AppliedFilters []string
 	Sort           urlbuilder.Sort
-	//AriaSorting    urlbuilder.Sort
-	Error      string
-	Pagination paginate.Pagination
-	PerPage    int
-	UrlBuilder urlbuilder.UrlBuilder
+	Error          string
+	Pagination     paginate.Pagination
+	PerPage        int
+	UrlBuilder     urlbuilder.UrlBuilder
 }
 
 type FilterByOrderStatus struct {

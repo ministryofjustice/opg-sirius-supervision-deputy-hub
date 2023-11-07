@@ -8,7 +8,7 @@ import (
 )
 
 type DeputyHubInformation interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 }
 
 type deputyHubVars struct {
@@ -34,7 +34,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			OrderStatuses: selectedOrderStatuses,
 		}
 
-		clientList, _, err := client.GetDeputyClients(ctx, params)
+		clientList, err := client.GetDeputyClients(ctx, params)
 		if err != nil {
 			return err
 		}

@@ -93,12 +93,6 @@ type DeputyClient struct {
 
 type DeputyClientDetails []DeputyClient
 
-type AriaSorting struct {
-	SurnameAriaSort   string
-	ReportDueAriaSort string
-	CRECAriaSort      string
-}
-
 type Page struct {
 	PageCurrent int `json:"current"`
 	PageTotal   int `json:"total"`
@@ -132,7 +126,7 @@ type ClientListParams struct {
 	OrderStatuses     []string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {
+func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
 
@@ -146,26 +140,26 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	req, err := c.newRequest(ctx, http.MethodGet, url, nil)
 
 	if err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return clientList, AriaSorting{}, ErrUnauthorized
+		return clientList, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return clientList, AriaSorting{}, newStatusError(resp)
+		return clientList, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&apiClientList); err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
 
 	var clients DeputyClientDetails
@@ -203,11 +197,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	clientList.TotalClients = apiClientList.TotalClients
 	clientList.Metadata = apiClientList.Metadata
 
-	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "crec")
-
 	switch params.ColumnBeingSorted {
 	case "reportdue":
 		reportDueScoreSort(clients, params.SortOrder)
@@ -217,7 +206,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		alphabeticalSort(clients, params.SortOrder)
 	}
 
-	return clientList, aria, err
+	return clientList, err
 }
 
 func (p ClientListParams) CreateFilter() string {
@@ -343,25 +332,4 @@ func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 		}
 	})
 	return clients
-}
-
-func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
-	if functionCalling == columnBeingSorted {
-		if sortOrder == "asc" {
-			return "ascending"
-		} else if sortOrder == "desc" {
-			return "descending"
-		}
-		return "none"
-	} else {
-		return "none"
-	}
-
-}
-
-func (s AriaSorting) GetHTMLSortDirection(direction string) string {
-	if direction == "ascending" {
-		return "desc"
-	}
-	return "asc"
 }

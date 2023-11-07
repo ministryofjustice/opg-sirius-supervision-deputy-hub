@@ -13,15 +13,13 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 }
 
 type ListClientsVars struct {
-	AriaSorting       sirius.AriaSorting
 	Clients           sirius.ClientList
 	ColumnBeingSorted string
 	SortOrder         string
-	SortBy            string
 	//ListPage
 	FilterByOrderStatus
 	AppVars
@@ -94,7 +92,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			OrderStatuses:     selectedOrderStatuses,
 		}
 
-		clients, ariaSorting, err := client.GetDeputyClients(ctx, params)
+		clients, err := client.GetDeputyClients(ctx, params)
 
 		if err != nil {
 			return err
@@ -114,19 +112,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.Sort = urlbuilder.Sort{OrderBy: columnBeingSorted, Descending: boolSortOrder}
 		vars.ColumnBeingSorted = columnBeingSorted
 		vars.SortOrder = sortOrder
-		vars.AriaSorting = ariaSorting
 		vars.AppVars = app
 		vars.UrlBuilder = vars.CreateUrlBuilder()
-
-		//
-		//vars := ListClientsVars{
-		//	Clients:           clients,
-		//	PerPage:           perPage,
-		//	AriaSorting:       ariaSorting,
-		//	ColumnBeingSorted: columnBeingSorted,
-		//	SortOrder:         sortOrder,
-		//	AppVars:           app,
-		//}
 
 		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
 			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))

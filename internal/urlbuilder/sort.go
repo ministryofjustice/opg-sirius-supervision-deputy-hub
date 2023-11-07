@@ -49,3 +49,24 @@ func (s Sort) GetAriaSort(orderBy string) string {
 	}
 	return "ascending"
 }
+
+func (s Sort) GetHTMLSortDirection(orderingBy string) string {
+	if orderingBy == s.OrderBy {
+		return s.GetDirection()
+	} else {
+		return "asc"
+	}
+}
+
+func (s Sort) ChangeSortButtonDirection(orderingBy string, currentDirection string) string {
+	if orderingBy == s.OrderBy {
+		if currentDirection != "asc" {
+			return "ascending"
+		} else if currentDirection != "desc" {
+			return "descending"
+		}
+		return "none"
+	} else {
+		return "none"
+	}
+}
