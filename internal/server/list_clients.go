@@ -6,7 +6,6 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 	"net/url"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -18,58 +17,24 @@ type DeputyHubClientInformation interface {
 }
 
 type ListClientsVars struct {
-	AriaSorting           sirius.AriaSorting
-	DeputyClientsDetails  sirius.DeputyClientDetails
-	Clients               sirius.ClientList
-	Pagination            paginate.Pagination
-	PerPage               int
-	ActiveClientCount     int
-	ColumnBeingSorted     string
-	SortOrder             string
-	SelectedOrderStatuses []string
-	OrderStatuses         []OrderStatus
-	AppliedFilters        []string
-	OrderStatusOptions    []model.RefData
+	AriaSorting       sirius.AriaSorting
+	Clients           sirius.ClientList
+	ColumnBeingSorted string
+	SortOrder         string
+	SortBy            string
+	//ListPage
 	FilterByOrderStatus
-	urlbuilder.UrlBuilder
 	AppVars
-}
-
-type FilterByOrderStatus struct {
-	OrderStatusOptions    []model.RefData
-	SelectedOrderStatuses []string
 }
 
 func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
 		OriginalPath: "clients",
-		SortBy:       vars.SortBy,
+		SelectedSort: vars.Sort,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
 		},
 	}
-}
-
-func (vars ListClientsVars) HasFilterBy(page interface{}, filter string) bool {
-	filters := map[string]interface{}{
-		"order-status": FilterByOrderStatus{},
-	}
-
-	extends := func(parent interface{}, child interface{}) bool {
-		p := reflect.TypeOf(parent)
-		c := reflect.TypeOf(child)
-		for i := 0; i < p.NumField(); i++ {
-			if f := p.Field(i); f.Type == c && f.Anonymous {
-				return true
-			}
-		}
-		return false
-	}
-
-	if f, ok := filters[filter]; ok {
-		return extends(page, f)
-	}
-	return false
 }
 
 func (vars ListClientsVars) GetAppliedFilters() []string {
@@ -80,36 +45,6 @@ func (vars ListClientsVars) GetAppliedFilters() []string {
 		}
 	}
 	return appliedFilters
-}
-
-func (vars ListClientsVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []OrderStatus) []string {
-	var validSelectedOrderStatuses []string
-	for _, selectedOrderStatus := range selectedOrderStatuses {
-		for _, orderStatus := range orderStatuses {
-			if selectedOrderStatus == orderStatus.Handle {
-				validSelectedOrderStatuses = append(validSelectedOrderStatuses, selectedOrderStatus)
-				break
-			}
-		}
-	}
-	return validSelectedOrderStatuses
-}
-
-type OrderStatus struct {
-	Handle      string `json:"handle"`
-	Incomplete  string `json:"incomplete"`
-	Category    string `json:"category"`
-	Complete    string `json:"complete"`
-	StatusCount int
-}
-
-func (os OrderStatus) IsSelected(selectedOrderStatuses []string) bool {
-	for _, selectedOrderStatus := range selectedOrderStatuses {
-		if os.Handle == selectedOrderStatus {
-			return true
-		}
-	}
-	return false
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
@@ -127,7 +62,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		columnBeingSorted, sortOrder := parseUrl(urlParams)
 
-		orderStatuses := []OrderStatus{
+		orderStatuses := []model.OrderStatus{
 			{
 				"ACTIVE",
 				"Active",
@@ -167,14 +102,31 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		app.PageName = "Clients"
 
-		vars := ListClientsVars{
-			Clients:           clients,
-			PerPage:           perPage,
-			AriaSorting:       ariaSorting,
-			ColumnBeingSorted: columnBeingSorted,
-			SortOrder:         sortOrder,
-			AppVars:           app,
+		var vars ListClientsVars
+
+		vars.Clients = clients
+		vars.PerPage = perPage
+		var boolSortOrder bool
+		if sortOrder == "asc" {
+			boolSortOrder = true
 		}
+
+		vars.Sort = urlbuilder.Sort{OrderBy: columnBeingSorted, Descending: boolSortOrder}
+		vars.ColumnBeingSorted = columnBeingSorted
+		vars.SortOrder = sortOrder
+		vars.AriaSorting = ariaSorting
+		vars.AppVars = app
+		vars.UrlBuilder = vars.CreateUrlBuilder()
+
+		//
+		//vars := ListClientsVars{
+		//	Clients:           clients,
+		//	PerPage:           perPage,
+		//	AriaSorting:       ariaSorting,
+		//	ColumnBeingSorted: columnBeingSorted,
+		//	SortOrder:         sortOrder,
+		//	AppVars:           app,
+		//}
 
 		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
 			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
@@ -193,8 +145,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
-
-		vars.UrlBuilder = vars.CreateUrlBuilder()
 		vars.AppliedFilters = vars.GetAppliedFilters()
 
 		vars.OrderStatusOptions = []model.RefData{
