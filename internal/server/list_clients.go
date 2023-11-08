@@ -22,7 +22,6 @@ type ListClientsVars struct {
 	ListPage
 	FilterByOrderStatus
 	FilterByAccommodation
-	//AppVars
 }
 
 func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
@@ -160,7 +159,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			return err
 		}
 
-		return tmpl.Execute(w, vars)
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
 

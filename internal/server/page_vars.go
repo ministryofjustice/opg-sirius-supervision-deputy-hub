@@ -8,7 +8,7 @@ import (
 )
 
 type ListPage struct {
-	AppVars        AppVars
+	AppVars
 	AppliedFilters []string
 	Sort           urlbuilder.Sort
 	Error          string
