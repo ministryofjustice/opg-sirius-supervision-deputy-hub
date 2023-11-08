@@ -8,7 +8,7 @@ import (
 )
 
 type ListPage struct {
-	App            AppVars
+	AppVars        AppVars
 	AppliedFilters []string
 	Sort           urlbuilder.Sort
 	Error          string
@@ -22,6 +22,12 @@ type FilterByOrderStatus struct {
 	OrderStatusOptions    []model.RefData
 	SelectedOrderStatuses []string
 	OrderStatuses         []model.OrderStatus
+}
+
+type FilterByAccommodation struct {
+	ListPage
+	AccommodationOptions   []model.RefData
+	SelectedAccommodations []string
 }
 
 func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {
@@ -46,7 +52,7 @@ func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {
 	return false
 }
 
-func (vars ListClientsVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []model.OrderStatus) []string {
+func (lcv ListClientsVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []model.OrderStatus) []string {
 	var validSelectedOrderStatuses []string
 	for _, selectedOrderStatus := range selectedOrderStatuses {
 		for _, orderStatus := range orderStatuses {

@@ -38,6 +38,7 @@ type Client interface {
 
 type Template interface {
 	ExecuteTemplate(io.Writer, string, interface{}) error
+	Execute(wr io.Writer, data any) error
 }
 
 func New(logger *logging.Logger, client Client, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {

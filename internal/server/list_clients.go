@@ -14,30 +14,39 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
+	GetAccommodationTypes(sirius.Context, string) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
 	Clients sirius.ClientList
-	//ListPage
+	ListPage
 	FilterByOrderStatus
-	AppVars
+	FilterByAccommodation
+	//AppVars
 }
 
-func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
+func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
 		OriginalPath: "clients",
-		SelectedSort: vars.Sort,
+		SelectedSort: lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
-			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
+			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
+			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodations),
 		},
 	}
 }
 
-func (vars ListClientsVars) GetAppliedFilters() []string {
+func (lcv ListClientsVars) GetAppliedFilters() []string {
 	var appliedFilters []string
-	for _, u := range vars.OrderStatuses {
-		if u.IsSelected(vars.SelectedOrderStatuses) {
+	for _, u := range lcv.OrderStatuses {
+		if u.IsSelected(lcv.SelectedOrderStatuses) {
 			appliedFilters = append(appliedFilters, u.Incomplete)
+		}
+	}
+
+	for _, k := range lcv.AccommodationOptions {
+		if k.IsIn(lcv.SelectedOrderStatuses) {
+			appliedFilters = append(appliedFilters, k.Label)
 		}
 	}
 	return appliedFilters
@@ -124,9 +133,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			TotalPages:      clients.Pages.PageTotal,
 			TotalElements:   clients.TotalClients,
 			ElementsPerPage: vars.PerPage,
-			//ElementName:     "clients",
-			PerPageOptions: perPageOptions,
-			UrlBuilder:     vars.UrlBuilder,
+			ElementName:     "clients",
+			PerPageOptions:  perPageOptions,
+			UrlBuilder:      vars.UrlBuilder,
 		}
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
@@ -144,8 +153,14 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 				Label:  "Closed",
 			},
 		}
+		//
+		//vars.AccommodationOptions, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
+		//fmt.Print(vars.AccommodationOptions)
+		if err != nil {
+			return err
+		}
 
-		return tmpl.ExecuteTemplate(w, "page", vars)
+		return tmpl.Execute(w, vars)
 	}
 }
 
