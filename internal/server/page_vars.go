@@ -32,7 +32,8 @@ type FilterByAccommodation struct {
 
 func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {
 	filters := map[string]interface{}{
-		"order-status": FilterByOrderStatus{},
+		"order-status":  FilterByOrderStatus{},
+		"accommodation": FilterByAccommodation{},
 	}
 
 	extends := func(parent interface{}, child interface{}) bool {

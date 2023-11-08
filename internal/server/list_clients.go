@@ -152,9 +152,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 				Label:  "Closed",
 			},
 		}
-		//
-		//vars.AccommodationOptions, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
-		//fmt.Print(vars.AccommodationOptions)
+
+		vars.AccommodationOptions, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
 		if err != nil {
 			return err
 		}

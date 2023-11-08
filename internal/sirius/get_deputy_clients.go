@@ -147,7 +147,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	if err != nil {
 		return clientList, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -218,8 +217,9 @@ func (p ClientListParams) CreateFilter() string {
 }
 
 /*
-		GetOrderStatus returns the status of the oldest active order for a client.
-	  If there isn’t one, the status of the oldest order is returned.
+GetOrderStatus returns the status of the oldest active order for a client.
+
+	If there isn’t one, the status of the oldest order is returned.
 */
 func getOrderStatus(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
