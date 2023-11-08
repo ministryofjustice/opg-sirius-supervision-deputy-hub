@@ -20,12 +20,12 @@ type EnvironmentVars struct {
 }
 
 func NewEnvironmentVars() (EnvironmentVars, error) {
-	defaultPaTeamId, err := strconv.Atoi(getEnv("DEFAULT_PA_TEAM", "23"))
+	defaultPaTeamId, err := strconv.Atoi(getEnv("DEFAULT_PA_TEAM", "28"))
 	if err != nil {
 		return EnvironmentVars{}, errors.New("error converting DEFAULT_PA_TEAM to int")
 	}
 
-	defaultProTeamId, err := strconv.Atoi(getEnv("DEFAULT_PRO_TEAM", "28"))
+	defaultProTeamId, err := strconv.Atoi(getEnv("DEFAULT_PRO_TEAM", "31"))
 	if err != nil {
 		return EnvironmentVars{}, errors.New("error converting DEFAULT_PRO_TEAM to int")
 	}
