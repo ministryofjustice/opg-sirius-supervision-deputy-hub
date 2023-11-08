@@ -124,9 +124,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			TotalPages:      clients.Pages.PageTotal,
 			TotalElements:   clients.TotalClients,
 			ElementsPerPage: vars.PerPage,
-			ElementName:     "clients",
-			PerPageOptions:  perPageOptions,
-			UrlBuilder:      vars.UrlBuilder,
+			//ElementName:     "clients",
+			PerPageOptions: perPageOptions,
+			UrlBuilder:     vars.UrlBuilder,
 		}
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
