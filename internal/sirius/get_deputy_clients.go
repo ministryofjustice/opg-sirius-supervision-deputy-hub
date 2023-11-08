@@ -132,7 +132,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search)
 
-	filter := params.CreateFilter()
+	filter := createFilter(params)
 	if filter != "" {
 		url = fmt.Sprintf("%s&filter=%s", url, filter)
 	}
@@ -209,7 +209,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	return clientList, err
 }
 
-func (p ClientListParams) CreateFilter() string {
+func createFilter(p ClientListParams) string {
 	var filter string
 	for _, s := range p.OrderStatuses {
 		filter += "order-status:" + s + ","

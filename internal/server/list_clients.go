@@ -17,9 +17,7 @@ type DeputyHubClientInformation interface {
 }
 
 type ListClientsVars struct {
-	Clients           sirius.ClientList
-	ColumnBeingSorted string
-	SortOrder         string
+	Clients sirius.ClientList
 	//ListPage
 	FilterByOrderStatus
 	AppVars
@@ -58,7 +56,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 
-		columnBeingSorted, sortOrder := parseUrl(urlParams)
+		var columnBeingSorted, sortOrder = parseUrl(urlParams)
 
 		orderStatuses := []model.OrderStatus{
 			{
@@ -109,9 +107,11 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			boolSortOrder = true
 		}
 
-		vars.Sort = urlbuilder.Sort{OrderBy: columnBeingSorted, Descending: boolSortOrder}
-		vars.ColumnBeingSorted = columnBeingSorted
-		vars.SortOrder = sortOrder
+		vars.Sort = urlbuilder.Sort{
+			OrderBy:    columnBeingSorted,
+			Descending: boolSortOrder,
+			SortOrder:  sortOrder,
+		}
 		vars.AppVars = app
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 

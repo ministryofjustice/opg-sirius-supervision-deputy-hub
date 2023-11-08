@@ -30,7 +30,7 @@
             </div>
             <div id="table-column" class="govuk-grid-column-three-quarters">
                 <form action="{{ .UrlBuilder.OriginalPath }}" method="GET" id="pagination-form">
-                    <input type="hidden" name="sort" value="{{ $.ColumnBeingSorted }}:{{ $.SortOrder}}" />
+                    <input type="hidden" name="sort" value="{{ $.Sort.OrderBy }}:{{ $.Sort.SortOrder}}" />
                     {{ range .UrlBuilder.SelectedFilters }}
                         {{ $name := .Name }}
                         {{ range  $i, $value := .SelectedValues }}

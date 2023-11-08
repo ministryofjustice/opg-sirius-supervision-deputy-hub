@@ -7,6 +7,7 @@ import (
 
 type Sort struct {
 	OrderBy    string
+	SortOrder  string
 	Descending bool
 }
 
