@@ -20,6 +20,7 @@ func (c *Client) GetAccommodationTypes(ctx Context, params string) ([]model.RefD
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 
 	resp, err := c.http.Do(req)
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {

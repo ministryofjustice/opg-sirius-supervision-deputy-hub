@@ -26,8 +26,8 @@ type FilterByOrderStatus struct {
 
 type FilterByAccommodation struct {
 	ListPage
-	AccommodationOptions   []model.RefData
-	SelectedAccommodations []string
+	AccommodationTypes         []model.RefData
+	SelectedAccommodationTypes []string
 }
 
 func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
@@ -30,7 +31,7 @@ func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 		SelectedSort: lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
-			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodations),
+			urlbuilder.CreateFilter("accommodation-types", lcv.SelectedAccommodationTypes),
 		},
 	}
 }
@@ -43,8 +44,8 @@ func (lcv ListClientsVars) GetAppliedFilters() []string {
 		}
 	}
 
-	for _, k := range lcv.AccommodationOptions {
-		if k.IsIn(lcv.SelectedOrderStatuses) {
+	for _, k := range lcv.AccommodationTypes {
+		if k.IsIn(lcv.SelectedAccommodationTypes) {
 			appliedFilters = append(appliedFilters, k.Label)
 		}
 	}
@@ -64,7 +65,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 
-		var columnBeingSorted, sortOrder = parseUrl(urlParams)
+		var columnBeingSorted, sortOrder, boolSortOrder = parseUrl(urlParams)
 
 		orderStatuses := []model.OrderStatus{
 			{
@@ -83,19 +84,17 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		var selectedOrderStatuses []string
-		if urlParams.Has("order-status") {
-			selectedOrderStatuses = urlParams["order-status"]
-		}
+		selectedOrderStatuses, selectedAccommodationTypes := getFiltersFromParams(urlParams)
 
 		params := sirius.ClientListParams{
-			DeputyId:          app.DeputyId(),
-			Limit:             perPage,
-			Search:            search,
-			DeputyType:        app.DeputyType(),
-			ColumnBeingSorted: columnBeingSorted,
-			SortOrder:         sortOrder,
-			OrderStatuses:     selectedOrderStatuses,
+			DeputyId:           app.DeputyId(),
+			Limit:              perPage,
+			Search:             search,
+			DeputyType:         app.DeputyType(),
+			ColumnBeingSorted:  columnBeingSorted,
+			SortOrder:          sortOrder,
+			OrderStatuses:      selectedOrderStatuses,
+			AccommodationTypes: selectedAccommodationTypes,
 		}
 
 		clients, err := client.GetDeputyClients(ctx, params)
@@ -110,10 +109,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		vars.Clients = clients
 		vars.PerPage = perPage
-		var boolSortOrder bool
-		if sortOrder == "asc" {
-			boolSortOrder = true
-		}
 
 		vars.Sort = urlbuilder.Sort{
 			OrderBy:    columnBeingSorted,
@@ -140,6 +135,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
+		vars.SelectedAccommodationTypes = selectedAccommodationTypes
+
 		vars.AppliedFilters = vars.GetAppliedFilters()
 
 		vars.OrderStatusOptions = []model.RefData{
@@ -153,7 +150,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.AccommodationOptions, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
+		vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
 		if err != nil {
 			return err
 		}
@@ -162,13 +159,34 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 	}
 }
 
-func parseUrl(urlParams url.Values) (string, string) {
+func parseUrl(urlParams url.Values) (string, string, bool) {
 	sortParam := urlParams.Get("sort")
+	boolSortOrder := false
 	if sortParam != "" {
 		sortParamsArray := strings.Split(sortParam, ":")
 		columnBeingSorted := sortParamsArray[0]
 		sortOrder := sortParamsArray[1]
-		return columnBeingSorted, sortOrder
+		if sortOrder == "asc" {
+			boolSortOrder = true
+		}
+		return columnBeingSorted, sortOrder, boolSortOrder
 	}
-	return "", ""
+	return "", "", boolSortOrder
+}
+
+func getFiltersFromParams(params url.Values) ([]string, []string) {
+	var selectedOrderStatuses []string
+	var selectedAccommodationTypes []string
+
+	if params.Has("order-status") {
+		selectedOrderStatuses = params["order-status"]
+	}
+	if params.Has("accommodation") {
+		selectedAccommodationTypes = params["accommodation"]
+	}
+	fmt.Println("selectedAccommodationTypes")
+	fmt.Println(selectedAccommodationTypes)
+	fmt.Println("selectedOrderStatuses")
+	fmt.Println(selectedOrderStatuses)
+	return selectedOrderStatuses, selectedAccommodationTypes
 }

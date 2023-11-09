@@ -19,10 +19,10 @@
     <div class="app-c-option-select__container-inner js-auto-height-inner ">
       <fieldset class="govuk-fieldset govuk-!-margin-left-2" aria-label="Accommodation">
         <legend class="hide">Accommodation</legend>
-        {{ range .AccommodationOptions }}
+        {{ range .AccommodationTypes }}
           <div class="govuk-checkboxes govuk-checkboxes--small">
             <div class="govuk-checkboxes__item filter__checkbox">
-              <input class="govuk-checkboxes__input" id="accommodation_{{ .Handle }}" name="accommodation" type="checkbox" value="{{ .Handle }}" data-module="filter" {{ if .IsIn $.SelectedAccommodations }}checked{{end}} />
+              <input class="govuk-checkboxes__input" id="accommodation_{{ .Handle }}" name="accommodation" type="checkbox" value="{{ .Handle }}" data-module="filter" {{ if .IsIn $.SelectedAccommodationTypes }}checked{{end}} />
               <label class="govuk-label govuk-checkboxes__label" for="accommodation_{{ .Handle }}">{{ .Label }}</label>
             </div>
           </div>
