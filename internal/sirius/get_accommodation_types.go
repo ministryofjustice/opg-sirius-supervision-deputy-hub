@@ -18,9 +18,13 @@ func (c *Client) GetAccommodationTypes(ctx Context, params string) ([]model.RefD
 	endpoint := fmt.Sprintf("/supervision-api/v1/reference-data?filter=%s", params)
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
-
+	if err != nil {
+		return nil, err
+	}
 	resp, err := c.http.Do(req)
-
+	if err != nil {
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {

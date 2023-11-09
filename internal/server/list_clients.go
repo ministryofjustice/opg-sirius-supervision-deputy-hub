@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
@@ -69,18 +68,18 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		orderStatuses := []model.OrderStatus{
 			{
-				"ACTIVE",
-				"Active",
-				"Active",
-				"Active",
-				0,
+				Handle:      "ACTIVE",
+				Incomplete:  "Active",
+				Category:    "Active",
+				Complete:    "Active",
+				StatusCount: 0,
 			},
 			{
-				"CLOSED",
-				"Closed",
-				"Closed",
-				"Closed",
-				0,
+				Handle:      "CLOSED",
+				Incomplete:  "Closed",
+				Category:    "Closed",
+				Complete:    "Closed",
+				StatusCount: 0,
 			},
 		}
 
@@ -184,9 +183,5 @@ func getFiltersFromParams(params url.Values) ([]string, []string) {
 	if params.Has("accommodation") {
 		selectedAccommodationTypes = params["accommodation"]
 	}
-	fmt.Println("selectedAccommodationTypes")
-	fmt.Println(selectedAccommodationTypes)
-	fmt.Println("selectedOrderStatuses")
-	fmt.Println(selectedOrderStatuses)
 	return selectedOrderStatuses, selectedAccommodationTypes
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -12,10 +13,11 @@ import (
 )
 
 type mockDeputyHubClientInformation struct {
-	count            int
-	lastCtx          sirius.Context
-	err              error
-	deputyClientData sirius.ClientList
+	count              int
+	lastCtx            sirius.Context
+	err                error
+	deputyClientData   sirius.ClientList
+	accommodationTypes []model.RefData
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, params sirius.ClientListParams) (sirius.ClientList, error) {
@@ -23,6 +25,13 @@ func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, pa
 	m.lastCtx = ctx
 
 	return m.deputyClientData, m.err
+}
+
+func (m *mockDeputyHubClientInformation) GetAccommodationTypes(ctx sirius.Context, testString string) ([]model.RefData, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.accommodationTypes, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {
@@ -46,20 +55,24 @@ func TestNavigateToClientTab(t *testing.T) {
 func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 	urlParams := url.Values{}
 	urlParams.Set("sort", "crec:desc")
-	expectedResponseColumnBeingSorted, sortOrder := "crec", "desc"
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
+	expectedResponseColumnBeingSorted, sortOrder, expectedsortBool := "crec", "desc", false
+	resultColumnBeingSorted, resultSortOrder, sortBool := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
+	assert.Equal(t, expectedsortBool, sortBool)
+
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
 	urlParams := url.Values{}
-	expectedResponseColumnBeingSorted, sortOrder := "", ""
-	resultColumnBeingSorted, resultSortOrder := parseUrl(urlParams)
+	expectedResponseColumnBeingSorted, sortOrder, expectedSortBool := "", "", false
+	resultColumnBeingSorted, resultSortOrder, sortBool := parseUrl(urlParams)
 
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
+	assert.Equal(t, expectedSortBool, sortBool)
+
 }
 
 func TestListClientsHandlesErrors(t *testing.T) {

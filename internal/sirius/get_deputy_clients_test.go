@@ -138,6 +138,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		"",
 		"",
 		[]string{},
+		[]string{},
 	})
 
 	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
@@ -159,6 +160,7 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 		"PA",
 		"",
 		"",
+		[]string{},
 		[]string{},
 	})
 
@@ -185,6 +187,7 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 		"PA",
 		"",
 		"",
+		[]string{},
 		[]string{},
 	})
 
