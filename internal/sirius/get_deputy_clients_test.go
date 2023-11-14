@@ -130,7 +130,7 @@ func TestDeputyClientReturned(t *testing.T) {
 		TotalClients: 1,
 	}
 
-	deputyClientDetails, ariaTags, err := client.GetDeputyClients(getContext(nil), ClientListParams{
+	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), ClientListParams{
 		1,
 		25,
 		1,
@@ -138,11 +138,11 @@ func TestDeputyClientReturned(t *testing.T) {
 		"",
 		"",
 		[]string{},
+		[]string{},
 	})
 
 	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
 	assert.Equal(t, expectedResponse, deputyClientDetails)
-	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "none", ReportDueAriaSort: "none", CRECAriaSort: "none"})
 	assert.Equal(t, nil, err)
 }
 
@@ -153,7 +153,7 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	clientList, ariaTags, err := client.GetDeputyClients(getContext(nil), ClientListParams{
+	clientList, err := client.GetDeputyClients(getContext(nil), ClientListParams{
 		1,
 		25,
 		1,
@@ -161,10 +161,10 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 		"",
 		"",
 		[]string{},
+		[]string{},
 	})
 
 	expectedResponse := ClientList{}
-	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -180,7 +180,7 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	defer svr.Close()
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
-	clientList, ariaTags, err := client.GetDeputyClients(getContext(nil), ClientListParams{
+	clientList, err := client.GetDeputyClients(getContext(nil), ClientListParams{
 		1,
 		25,
 		1,
@@ -188,9 +188,9 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 		"",
 		"",
 		[]string{},
+		[]string{},
 	})
 
-	assert.Equal(t, ariaTags, AriaSorting{SurnameAriaSort: "", ReportDueAriaSort: "", CRECAriaSort: ""})
 	expectedResponse := ClientList{}
 
 	assert.Equal(t, ErrUnauthorized, err)
@@ -591,25 +591,6 @@ func TestReportDueScoreSortDesc(t *testing.T) {
 	assert.Equal(t, expectedDescendingResponse, reportDueScoreSort(testData, "desc"))
 }
 
-func TestChangeSortButtonDirection(t *testing.T) {
-	tests := []struct {
-		sortOrder         string
-		columnBeingSorted string
-		functionCalling   string
-		expectedResponse  string
-	}{
-		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=surname", expectedResponse: "none"},
-		{sortOrder: "other", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "none"},
-		{sortOrder: "asc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "ascending"},
-		{sortOrder: "desc", columnBeingSorted: "sort=report_due", functionCalling: "sort=report_due", expectedResponse: "descending"},
-	}
-
-	for _, tc := range tests {
-		result := changeSortButtonDirection(tc.sortOrder, tc.columnBeingSorted, tc.functionCalling)
-		assert.Equal(t, tc.expectedResponse, result)
-	}
-}
-
 func TestSetDueDateForSortReturnDueDate(t *testing.T) {
 	expectedResponse := "01/01/2021"
 	result := setDueDateForSort("01/01/2021", "")
@@ -743,11 +724,4 @@ func TestRestructureOrdersReturnsEmptyStringForNilSupervisionLevel(t *testing.T)
 		Order{OrderStatus: "Active", SupervisionLevel: "", OrderDate: dateOne},
 	}
 	assert.Equal(t, expectedResponse, restructureOrders(unformattedData))
-}
-
-func TestAriaSorting_GetHTMLSortDirection(t *testing.T) {
-	s := AriaSorting{}
-	assert.Equal(t, "desc", s.GetHTMLSortDirection("ascending"))
-	assert.Equal(t, "asc", s.GetHTMLSortDirection("descending"))
-	assert.Equal(t, "asc", s.GetHTMLSortDirection("none"))
 }

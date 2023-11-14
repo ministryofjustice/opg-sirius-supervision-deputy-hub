@@ -93,12 +93,6 @@ type DeputyClient struct {
 
 type DeputyClientDetails []DeputyClient
 
-type AriaSorting struct {
-	SurnameAriaSort   string
-	ReportDueAriaSort string
-	CRECAriaSort      string
-}
-
 type Page struct {
 	PageCurrent int `json:"current"`
 	PageTotal   int `json:"total"`
@@ -123,22 +117,24 @@ type ClientList struct {
 }
 
 type ClientListParams struct {
-	DeputyId          int
-	Limit             int
-	Search            int
-	DeputyType        string
-	ColumnBeingSorted string
-	SortOrder         string
-	OrderStatuses     []string
+	DeputyId           int
+	Limit              int
+	Search             int
+	DeputyType         string
+	ColumnBeingSorted  string
+	SortOrder          string
+	OrderStatuses      []string
+	AccommodationTypes []string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, AriaSorting, error) {
+func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
 	var apiClientList ApiClientList
 
 	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search)
 
 	filter := params.CreateFilter()
+
 	if filter != "" {
 		url = fmt.Sprintf("%s&filter=%s", url, filter)
 	}
@@ -146,26 +142,25 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	req, err := c.newRequest(ctx, http.MethodGet, url, nil)
 
 	if err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return clientList, AriaSorting{}, ErrUnauthorized
+		return clientList, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return clientList, AriaSorting{}, newStatusError(resp)
+		return clientList, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&apiClientList); err != nil {
-		return clientList, AriaSorting{}, err
+		return clientList, err
 	}
 
 	var clients DeputyClientDetails
@@ -203,11 +198,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	clientList.TotalClients = apiClientList.TotalClients
 	clientList.Metadata = apiClientList.Metadata
 
-	var aria AriaSorting
-	aria.SurnameAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "surname")
-	aria.ReportDueAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "reportdue")
-	aria.CRECAriaSort = changeSortButtonDirection(params.SortOrder, params.ColumnBeingSorted, "crec")
-
 	switch params.ColumnBeingSorted {
 	case "reportdue":
 		reportDueScoreSort(clients, params.SortOrder)
@@ -217,7 +207,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		alphabeticalSort(clients, params.SortOrder)
 	}
 
-	return clientList, aria, err
+	return clientList, err
 }
 
 func (p ClientListParams) CreateFilter() string {
@@ -225,12 +215,16 @@ func (p ClientListParams) CreateFilter() string {
 	for _, s := range p.OrderStatuses {
 		filter += "order-status:" + s + ","
 	}
+	for _, k := range p.AccommodationTypes {
+		filter += "accommodation-types:" + strings.Replace(k, " ", "%20", -1) + ","
+	}
 	return strings.TrimRight(filter, ",")
 }
 
 /*
-		GetOrderStatus returns the status of the oldest active order for a client.
-	  If there isn’t one, the status of the oldest order is returned.
+GetOrderStatus returns the status of the oldest active order for a client.
+
+	If there isn’t one, the status of the oldest order is returned.
 */
 func getOrderStatus(orders Orders) string {
 	sort.Slice(orders, func(i, j int) bool {
@@ -343,25 +337,4 @@ func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyCli
 		}
 	})
 	return clients
-}
-
-func changeSortButtonDirection(sortOrder string, columnBeingSorted string, functionCalling string) string {
-	if functionCalling == columnBeingSorted {
-		if sortOrder == "asc" {
-			return "ascending"
-		} else if sortOrder == "desc" {
-			return "descending"
-		}
-		return "none"
-	} else {
-		return "none"
-	}
-
-}
-
-func (s AriaSorting) GetHTMLSortDirection(direction string) string {
-	if direction == "ascending" {
-		return "desc"
-	}
-	return "asc"
 }
