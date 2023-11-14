@@ -109,28 +109,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.Clients = clients
 		vars.PerPage = perPage
 
-		vars.Sort = urlbuilder.Sort{
-			OrderBy:    columnBeingSorted,
-			Descending: boolSortOrder,
-			SortOrder:  sortOrder,
-		}
-		vars.AppVars = app
-		vars.UrlBuilder = vars.CreateUrlBuilder()
-
-		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
-			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
-		}
-
-		vars.Pagination = paginate.Pagination{
-			CurrentPage:     clients.Pages.PageCurrent,
-			TotalPages:      clients.Pages.PageTotal,
-			TotalElements:   clients.TotalClients,
-			ElementsPerPage: vars.PerPage,
-			ElementName:     "clients",
-			PerPageOptions:  perPageOptions,
-			UrlBuilder:      vars.UrlBuilder,
-		}
-
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
@@ -152,6 +130,28 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx)
 		if err != nil {
 			return err
+		}
+
+		vars.Sort = urlbuilder.Sort{
+			OrderBy:    columnBeingSorted,
+			Descending: boolSortOrder,
+			SortOrder:  sortOrder,
+		}
+		vars.AppVars = app
+		vars.UrlBuilder = vars.CreateUrlBuilder()
+
+		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
+			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
+		}
+
+		vars.Pagination = paginate.Pagination{
+			CurrentPage:     clients.Pages.PageCurrent,
+			TotalPages:      clients.Pages.PageTotal,
+			TotalElements:   clients.TotalClients,
+			ElementsPerPage: vars.PerPage,
+			ElementName:     "clients",
+			PerPageOptions:  perPageOptions,
+			UrlBuilder:      vars.UrlBuilder,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
