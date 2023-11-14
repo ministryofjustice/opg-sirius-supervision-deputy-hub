@@ -12,7 +12,7 @@ describe("Pagination", () => {
     it("has the correct options in the per-page dropdown", () => {
         cy.get("#top-pagination .display-rows option").then(options => {
             const values = [...options].map(o => o.value);
-            expect(values).to.deep.eq(["?limit=25&page=1", "?limit=50&page=1", "?limit=100&page=1"]);
+            expect(values).to.deep.eq(["clients?limit=25&page=1", "clients?limit=50&page=1", "clients?limit=100&page=1"]);
         });
     });
 

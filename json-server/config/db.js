@@ -2744,6 +2744,41 @@ module.exports = function () {
                 "label": "Not received"
             }
         ],
+        "clientAccommodation":
+            {
+                "clientAccommodation": [
+                    {"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type"},
+                    {"handle": "COUNCIL RENTED", "label": "Council Rented"},
+                    {
+                        "handle": "FAMILY MEMBER/FRIENDS HOME",
+                        "label": "Family Member/Friends Home (including spouse/civil partner)"
+                    },
+                    {"handle": "SUPERVISED SHELTERED", "label": "Supervised Sheltered Accommodation"},
+                    {"handle": "HOUSING ASSOCIATION", "label": "Housing Association"},
+                    {"handle": "HOTEL", "label": "Hotel"},
+                    {"handle": "HOSTEL", "label": "Hostel"},
+                    {"handle": "HEALTH SERVICE PATIENT", "label": "Health Service Patient"},
+                    {"handle": "NHS ACCOMMODATION", "label": "NHS Accommodation e.g. hospital or hostel"},
+                    {"handle": "NO FIXED ADDRESS", "label": "No Fixed Address"},
+                    {
+                        "handle": "CARE/NURSING/RESIDENTIAL HOME (PRIVATE/LA/REGISTERED)",
+                        "label": "Care/Nursing/Residential Home (Private/LA/Registered)"
+                    },
+                    {"handle": "LA NURSING HOME", "label": "LA Nursing Home"},
+                    {"handle": "LA NURSING HOME OR RESIDENTIAL HOME", "label": "LA NURSING HOME OR RESIDENTIAL HOME"},
+                    {"handle": "PRIVATE NURSING HOME", "label": "Private Nursing Home"},
+                    {"handle": "REGISTERED CARE HOME", "label": "Registered Care Home"},
+                    {"handle": "PRIVATE RESIDENTIAL HOME", "label": "Private Residential Home"},
+                    {"handle": "OWN HOME", "label": "Own Home"},
+                    {"handle": "OTHER", "label": "Other"},
+                    {"handle": "PRIVATE HOSPITAL", "label": "Private Hospital"},
+                    {"handle": "LA PART 3 ACCOMMODATION", "label": "Local Authority Part 3 Accommodation"},
+                    {"handle": "PRIVATE RENTED", "label": "Private Rented (i.e. Not Council)"},
+                    {"handle": "SECURE HOSPITAL", "label": "Secure Hospital"},
+                    {"handle": "SUPPORTED HOUSING", "label": "Supported Housing"},
+                    {"handle": "SUPPORTED LIVING", "label": "Supported Living"}
+                ],
+            },
         "assurance": [
             {
                 "id": 35,

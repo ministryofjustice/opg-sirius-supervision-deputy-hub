@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html/template"
 	"net/http"
@@ -8,7 +9,7 @@ import (
 )
 
 type DeputyHubInformation interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 }
 
 type deputyHubVars struct {
@@ -28,13 +29,16 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		var selectedOrderStatuses []string
 
 		params := sirius.ClientListParams{
-			DeputyId:      app.DeputyId(),
+			DeputyId:      app.DeputyDetails.ID,
 			Search:        1,
-			DeputyType:    app.DeputyType(),
+			DeputyType:    app.DeputyDetails.DeputyType.Handle,
 			OrderStatuses: selectedOrderStatuses,
 		}
 
-		clientList, _, err := client.GetDeputyClients(ctx, params)
+		fmt.Println("deputy hub client list params deputy id")
+		fmt.Println(params.DeputyId)
+
+		clientList, err := client.GetDeputyClients(ctx, params)
 		if err != nil {
 			return err
 		}

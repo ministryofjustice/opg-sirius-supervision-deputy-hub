@@ -18,5 +18,6 @@
     "/reference-data/visitOutcome": "/visitOutcome",
     "/reference-data/pdrOutcome": "/pdrOutcome",
     "/reference-data/ragRating": "/ragRating",
+    "/reference-data?filter=clientAccommodation": "/clientAccommodation",
     "/tasktypes/deputy": "/tasktypes"
 }

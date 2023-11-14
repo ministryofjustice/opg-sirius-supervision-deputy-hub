@@ -10,14 +10,7 @@ type UrlBuilder struct {
 	SortBy          string
 	SelectedPerPage int
 	SelectedFilters []Filter
-}
-
-func (ub UrlBuilder) GetPaginationUrl(page int, perPage ...int) string {
-	selectedPerPage := ub.SelectedPerPage
-	if len(perPage) > 0 {
-		selectedPerPage = perPage[0]
-	}
-	return ub.buildUrl(page, selectedPerPage, ub.SelectedFilters)
+	SelectedSort    Sort
 }
 
 func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
@@ -30,6 +23,14 @@ func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
 		}
 	}
 	return url
+}
+
+func (ub UrlBuilder) GetPaginationUrl(page int, perPage ...int) string {
+	selectedPerPage := ub.SelectedPerPage
+	if len(perPage) > 0 {
+		selectedPerPage = perPage[0]
+	}
+	return ub.buildUrl(page, selectedPerPage, ub.SelectedFilters)
 }
 
 func (ub UrlBuilder) GetClearFiltersUrl() string {
