@@ -61,7 +61,6 @@ func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
 	assert.Equal(t, expectedsortBool, sortBool)
-
 }
 
 func TestParseUrlReturnsEmptyStrings(t *testing.T) {
@@ -72,7 +71,6 @@ func TestParseUrlReturnsEmptyStrings(t *testing.T) {
 	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
 	assert.Equal(t, resultSortOrder, sortOrder)
 	assert.Equal(t, expectedSortBool, sortBool)
-
 }
 
 func TestListClientsHandlesErrors(t *testing.T) {
@@ -89,5 +87,41 @@ func TestListClientsHandlesErrors(t *testing.T) {
 	returnedError := renderTemplateForClientTab(client, template)(AppVars{}, w, r)
 
 	assert.Equal(client.err, returnedError)
+}
 
+func TestGetFiltersFromParamsWithOrderStatus(t *testing.T) {
+	params := url.Values{}
+	params.Set("order-status", "ACTIVE")
+
+	var expectedResponseForAccommodation []string
+	expectedResponseForOrderStatus := []string{"ACTIVE"}
+	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+
+	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
+	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+}
+
+func TestGetFiltersFromParamsWithAccommodation(t *testing.T) {
+	params := url.Values{}
+	params.Set("accommodation", "COUNCIL RENTED")
+
+	expectedResponseForAccommodation := []string{"COUNCIL RENTED"}
+	var expectedResponseForOrderStatus []string
+	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+
+	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
+	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+}
+
+func TestGetFiltersFromParamsWithAllFilters(t *testing.T) {
+	params := url.Values{}
+	params.Set("order-status", "ACTIVE")
+	params.Set("accommodation", "COUNCIL RENTED")
+
+	expectedResponseForAccommodation := []string{"COUNCIL RENTED"}
+	expectedResponseForOrderStatus := []string{"ACTIVE"}
+	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+
+	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
+	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
 }
