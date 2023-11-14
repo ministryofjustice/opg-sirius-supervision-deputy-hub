@@ -27,7 +27,7 @@ func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, pa
 	return m.deputyClientData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetAccommodationTypes(ctx sirius.Context, testString string) ([]model.RefData, error) {
+func (m *mockDeputyHubClientInformation) GetAccommodationTypes(ctx sirius.Context) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

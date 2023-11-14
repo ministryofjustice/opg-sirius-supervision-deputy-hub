@@ -2,7 +2,6 @@ package sirius
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
@@ -14,8 +13,8 @@ type AccommodationTypeList struct {
 	} `json:"clientAccommodation"`
 }
 
-func (c *Client) GetAccommodationTypes(ctx Context, params string) ([]model.RefData, error) {
-	endpoint := fmt.Sprintf("/api/v1/reference-data?filter=%s", params)
+func (c *Client) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
+	endpoint := "/api/v1/reference-data?filter=clientAccommodation"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {

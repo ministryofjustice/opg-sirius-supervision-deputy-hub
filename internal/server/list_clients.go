@@ -14,7 +14,7 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
-	GetAccommodationTypes(sirius.Context, string) ([]model.RefData, error)
+	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
@@ -149,7 +149,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx, "clientAccommodation")
+		vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx)
 		if err != nil {
 			return err
 		}
