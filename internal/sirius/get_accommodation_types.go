@@ -15,7 +15,7 @@ type AccommodationTypeList struct {
 }
 
 func (c *Client) GetAccommodationTypes(ctx Context, params string) ([]model.RefData, error) {
-	endpoint := fmt.Sprintf("/supervision-api/v1/reference-data?filter=%s", params)
+	endpoint := fmt.Sprintf("/api/v1/reference-data?filter=%s", params)
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 	if err != nil {
