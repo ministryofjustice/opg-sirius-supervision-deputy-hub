@@ -10,6 +10,7 @@ type UrlBuilder struct {
 	SortBy          string
 	SelectedPerPage int
 	SelectedFilters []Filter
+	SelectedSort    Sort
 }
 
 func (ub UrlBuilder) GetPaginationUrl(page int, perPage ...int) string {

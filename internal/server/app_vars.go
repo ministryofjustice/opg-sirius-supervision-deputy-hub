@@ -35,6 +35,7 @@ type AppVarsClient interface {
 func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (*AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)
+	deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
 
 	vars := AppVars{
 		Path:            r.URL.Path,
@@ -51,7 +52,6 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 		return nil
 	})
 	group.Go(func() error {
-		deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
 		deputy, err := client.GetDeputyDetails(ctx.With(groupCtx), vars.DefaultPaTeam, vars.DefaultProTeam, deputyId)
 		if err != nil {
 			return err

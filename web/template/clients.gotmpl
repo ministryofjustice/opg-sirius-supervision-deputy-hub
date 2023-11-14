@@ -29,7 +29,7 @@
             </div>
             <div id="table-column" class="govuk-grid-column-three-quarters">
                 <form action="{{ .UrlBuilder.OriginalPath }}" method="GET" id="pagination-form">
-                    <input type="hidden" name="sort" value="{{ $.ColumnBeingSorted }}:{{ $.SortOrder}}" />
+                    <input type="hidden" name="sort" value="{{ $.Sort.OrderBy }}:{{ $.Sort.SortOrder}}" />
                     {{ range .UrlBuilder.SelectedFilters }}
                         {{ $name := .Name }}
                         {{ range  $i, $value := .SelectedValues }}
@@ -45,11 +45,11 @@
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">
                             <th
+                                {{ $direction := (.Sort.GetHTMLSortDirection "surname") }}
                                 scope="col"
                                 class="govuk-table__header"
-                                label="sort-name-column-{{ .AriaSorting.SurnameAriaSort }}"
-                                aria-sort="{{ .AriaSorting.SurnameAriaSort }}">
-                                {{ $direction := (.AriaSorting.GetHTMLSortDirection .AriaSorting.SurnameAriaSort) }}
+                                label="sort-name-column-{{ ( .Sort.ChangeSortButtonDirection "surname" $direction ) }}"
+                                aria-sort="{{ ( .Sort.ChangeSortButtonDirection "surname" $direction ) }}">
                                 <a class="sorting-arrows button"
                                    href="{{ prefix (printf "/%d/clients?sort=surname:%s" .DeputyDetails.ID $direction ) }}">
                                     Client
@@ -60,11 +60,11 @@
                             <th scope="col" class="govuk-table__header">Supervision level</th>
                             <th scope="col" class="govuk-table__header">Visits</th>
                             <th
+                                {{ $direction = (.Sort.GetHTMLSortDirection "reportdue") }}
                                 scope="col"
                                 class="govuk-table__header"
-                                label="sort-due-date-column-{{ .AriaSorting.ReportDueAriaSort }}"
-                                aria-sort="{{ .AriaSorting.ReportDueAriaSort }}">
-                                {{ $direction = (.AriaSorting.GetHTMLSortDirection .AriaSorting.ReportDueAriaSort) }}
+                                label="sort-due-date-column-{{ ( .Sort.ChangeSortButtonDirection "reportdue" $direction ) }}"
+                                aria-sort="{{ ( .Sort.ChangeSortButtonDirection "reportdue" $direction ) }}">
                                 <a
                                     class="sorting-arrows button"
                                     href="{{ prefix (printf "/%d/clients?sort=reportdue:%s" .DeputyDetails.ID $direction) }}">
@@ -72,11 +72,11 @@
                                 </a>
                             </th>
                             <th
+                                {{ $direction = (.Sort.GetHTMLSortDirection "crec") }}
                                 scope="col"
                                 class="govuk-table__header"
-                                label="sort-aria-column-{{ .AriaSorting.CRECAriaSort }}"
-                                aria-sort="{{ .AriaSorting.CRECAriaSort }}">
-                                {{ $direction = (.AriaSorting.GetHTMLSortDirection .AriaSorting.CRECAriaSort) }}
+                                label="sort-aria-column-{{ ( .Sort.ChangeSortButtonDirection "crec" $direction ) }}"
+                                aria-sort="{{ ( .Sort.ChangeSortButtonDirection "crec" $direction )  }}">
                                 <a
                                     class="sorting-arrows button"
                                     href="{{ prefix (printf "/%d/clients?sort=crec:%s" .DeputyDetails.ID $direction) }}">
