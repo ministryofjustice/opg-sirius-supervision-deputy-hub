@@ -3,6 +3,7 @@ package urlbuilder
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type UrlBuilder struct {
@@ -55,9 +56,11 @@ func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string,
 		retainedValues = []string{}
 		for _, v := range filter.SelectedValues {
 			if name != filter.Name || stringValue != v {
-				retainedValues = append(retainedValues, v)
+				formatWhiteSpace := strings.Replace(v, " ", "%20", -1)
+				retainedValues = append(retainedValues, formatWhiteSpace)
 			}
 		}
+
 		if len(retainedValues) > 0 {
 			filter.SelectedValues = retainedValues
 			retainedFilters = append(retainedFilters, filter)

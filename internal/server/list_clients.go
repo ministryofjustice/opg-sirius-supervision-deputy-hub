@@ -30,7 +30,7 @@ func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 		SelectedSort: lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
-			urlbuilder.CreateFilter("accommodation-types", lcv.SelectedAccommodationTypes),
+			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodationTypes),
 		},
 	}
 }

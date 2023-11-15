@@ -216,7 +216,7 @@ func (p ClientListParams) CreateFilter() string {
 		filter += "order-status:" + s + ","
 	}
 	for _, k := range p.AccommodationTypes {
-		filter += "accommodation-types:" + strings.Replace(k, " ", "%20", -1) + ","
+		filter += "accommodation:" + strings.Replace(k, " ", "%20", -1) + ","
 	}
 	return strings.TrimRight(filter, ",")
 }
