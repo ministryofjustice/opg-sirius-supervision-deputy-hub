@@ -8,7 +8,7 @@ build:
 	docker compose build --parallel deputy-hub
 
 build-all:
-	docker compose build --parallel deputy-hub puppeteer cypress test-runner json-server
+	docker compose build --parallel deputy-hub cypress test-runner json-server
 
 yarn-lint:
 	docker compose run --rm yarn
@@ -31,7 +31,7 @@ scan: setup-directories
 
 cypress: setup-directories
 	docker compose up -d --wait deputy-hub
-	docker compose run --rm cypress run --env grepUntagged=true
+	docker compose run --build --rm cypress run --env grepUntagged=true
 
 axe: setup-directories
 	docker compose up -d --wait deputy-hub
