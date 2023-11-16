@@ -4,6 +4,7 @@ import (
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
+	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -58,6 +59,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		ctx := getContext(r)
+		group, groupCtx := errgroup.WithContext(ctx.Context)
 		urlParams := r.URL.Query()
 		page := paginate.GetRequestedPage(urlParams.Get("page"))
 		perPageOptions := []int{25, 50, 100}
@@ -96,17 +98,31 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			AccommodationTypes: selectedAccommodationTypes,
 		}
 
-		clients, err := client.GetDeputyClients(ctx, params)
+		var vars ListClientsVars
 
-		if err != nil {
+		group.Go(func() error {
+			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
+			if err != nil {
+				return err
+			}
+			vars.Clients = clients
+			return nil
+		})
+
+		group.Go(func() error {
+			accommodationTypes, err := client.GetAccommodationTypes(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.AccommodationTypes = accommodationTypes
+			return nil
+		})
+
+		if err := group.Wait(); err != nil {
 			return err
 		}
 
 		app.PageName = "Clients"
-
-		var vars ListClientsVars
-
-		vars.Clients = clients
 		vars.PerPage = perPage
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
@@ -127,11 +143,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.AccommodationTypes, err = client.GetAccommodationTypes(ctx)
-		if err != nil {
-			return err
-		}
-
 		vars.Sort = urlbuilder.Sort{
 			OrderBy:    columnBeingSorted,
 			Descending: boolSortOrder,
@@ -140,14 +151,14 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.AppVars = app
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
-		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
-			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
+		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
+			return Redirect(vars.UrlBuilder.GetPaginationUrl(vars.Clients.Pages.PageTotal, perPage))
 		}
 
 		vars.Pagination = paginate.Pagination{
-			CurrentPage:     clients.Pages.PageCurrent,
-			TotalPages:      clients.Pages.PageTotal,
-			TotalElements:   clients.TotalClients,
+			CurrentPage:     vars.Clients.Pages.PageCurrent,
+			TotalPages:      vars.Clients.Pages.PageTotal,
+			TotalElements:   vars.Clients.TotalClients,
 			ElementsPerPage: vars.PerPage,
 			ElementName:     "clients",
 			PerPageOptions:  perPageOptions,
