@@ -1,4 +1,4 @@
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-workflow/internal/server.FilterByStatus*/ -}}
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.FilterByStatus*/ -}}
 {{ define "order-status-filter-applied" }}
 
 {{ if .SelectedOrderStatuses }}
@@ -6,7 +6,7 @@
   <ul class="moj-filter-tags">
       {{ range .OrderStatusOptions }}
           {{ if .IsIn $.SelectedOrderStatuses }}
-            <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "order-status" .Handle }}&sort={{ $.ColumnBeingSorted }}:{{ $.SortOrder}}"
+            <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "order-status" .Handle }}&sort={{ $.Sort.OrderBy }}:{{ $.Sort.SortOrder}}"
                 class="moj-filter__tag"><span class="govuk-visually-hidden">
                 Remove this filter</span> {{ .Label }}
             </a></li>

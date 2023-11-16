@@ -4,9 +4,9 @@ import (
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
+	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
-	"reflect"
 	"strconv"
 	"strings"
 
@@ -14,102 +14,42 @@ import (
 )
 
 type DeputyHubClientInformation interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, sirius.AriaSorting, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
+	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
-	AriaSorting           sirius.AriaSorting
-	DeputyClientsDetails  sirius.DeputyClientDetails
-	Clients               sirius.ClientList
-	Pagination            paginate.Pagination
-	PerPage               int
-	ActiveClientCount     int
-	ColumnBeingSorted     string
-	SortOrder             string
-	SelectedOrderStatuses []string
-	OrderStatuses         []OrderStatus
-	AppliedFilters        []string
-	OrderStatusOptions    []model.RefData
+	Clients sirius.ClientList
+	ListPage
 	FilterByOrderStatus
-	urlbuilder.UrlBuilder
-	AppVars
+	FilterByAccommodation
 }
 
-type FilterByOrderStatus struct {
-	OrderStatusOptions    []model.RefData
-	SelectedOrderStatuses []string
-}
-
-func (vars ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
+func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
 		OriginalPath: "clients",
-		SortBy:       vars.SortBy,
+		SelectedSort: lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
-			urlbuilder.CreateFilter("order-status", vars.SelectedOrderStatuses),
+			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
+			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodationTypes),
 		},
 	}
 }
 
-func (vars ListClientsVars) HasFilterBy(page interface{}, filter string) bool {
-	filters := map[string]interface{}{
-		"order-status": FilterByOrderStatus{},
-	}
-
-	extends := func(parent interface{}, child interface{}) bool {
-		p := reflect.TypeOf(parent)
-		c := reflect.TypeOf(child)
-		for i := 0; i < p.NumField(); i++ {
-			if f := p.Field(i); f.Type == c && f.Anonymous {
-				return true
-			}
-		}
-		return false
-	}
-
-	if f, ok := filters[filter]; ok {
-		return extends(page, f)
-	}
-	return false
-}
-
-func (vars ListClientsVars) GetAppliedFilters() []string {
+func (lcv ListClientsVars) GetAppliedFilters() []string {
 	var appliedFilters []string
-	for _, u := range vars.OrderStatuses {
-		if u.IsSelected(vars.SelectedOrderStatuses) {
+	for _, u := range lcv.OrderStatuses {
+		if u.IsSelected(lcv.SelectedOrderStatuses) {
 			appliedFilters = append(appliedFilters, u.Incomplete)
 		}
 	}
+
+	for _, k := range lcv.AccommodationTypes {
+		if k.IsIn(lcv.SelectedAccommodationTypes) {
+			appliedFilters = append(appliedFilters, k.Label)
+		}
+	}
 	return appliedFilters
-}
-
-func (vars ListClientsVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []OrderStatus) []string {
-	var validSelectedOrderStatuses []string
-	for _, selectedOrderStatus := range selectedOrderStatuses {
-		for _, orderStatus := range orderStatuses {
-			if selectedOrderStatus == orderStatus.Handle {
-				validSelectedOrderStatuses = append(validSelectedOrderStatuses, selectedOrderStatus)
-				break
-			}
-		}
-	}
-	return validSelectedOrderStatuses
-}
-
-type OrderStatus struct {
-	Handle      string `json:"handle"`
-	Incomplete  string `json:"incomplete"`
-	Category    string `json:"category"`
-	Complete    string `json:"complete"`
-	StatusCount int
-}
-
-func (os OrderStatus) IsSelected(selectedOrderStatuses []string) bool {
-	for _, selectedOrderStatus := range selectedOrderStatuses {
-		if os.Handle == selectedOrderStatus {
-			return true
-		}
-	}
-	return false
 }
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
@@ -119,82 +59,77 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		ctx := getContext(r)
+		group, groupCtx := errgroup.WithContext(ctx.Context)
 		urlParams := r.URL.Query()
 		page := paginate.GetRequestedPage(urlParams.Get("page"))
 		perPageOptions := []int{25, 50, 100}
 		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 
-		columnBeingSorted, sortOrder := parseUrl(urlParams)
+		var columnBeingSorted, sortOrder, boolSortOrder = parseUrl(urlParams)
 
-		orderStatuses := []OrderStatus{
+		orderStatuses := []model.OrderStatus{
 			{
-				"ACTIVE",
-				"Active",
-				"Active",
-				"Active",
-				0,
+				Handle:      "ACTIVE",
+				Incomplete:  "Active",
+				Category:    "Active",
+				Complete:    "Active",
+				StatusCount: 0,
 			},
 			{
-				"CLOSED",
-				"Closed",
-				"Closed",
-				"Closed",
-				0,
+				Handle:      "CLOSED",
+				Incomplete:  "Closed",
+				Category:    "Closed",
+				Complete:    "Closed",
+				StatusCount: 0,
 			},
 		}
 
-		var selectedOrderStatuses []string
-		if urlParams.Has("order-status") {
-			selectedOrderStatuses = urlParams["order-status"]
-		}
+		selectedOrderStatuses, selectedAccommodationTypes := getFiltersFromParams(urlParams)
 
 		params := sirius.ClientListParams{
-			DeputyId:          app.DeputyId(),
-			Limit:             perPage,
-			Search:            search,
-			DeputyType:        app.DeputyType(),
-			ColumnBeingSorted: columnBeingSorted,
-			SortOrder:         sortOrder,
-			OrderStatuses:     selectedOrderStatuses,
+			DeputyId:           app.DeputyId(),
+			Limit:              perPage,
+			Search:             search,
+			DeputyType:         app.DeputyType(),
+			ColumnBeingSorted:  columnBeingSorted,
+			SortOrder:          sortOrder,
+			OrderStatuses:      selectedOrderStatuses,
+			AccommodationTypes: selectedAccommodationTypes,
 		}
 
-		clients, ariaSorting, err := client.GetDeputyClients(ctx, params)
+		var vars ListClientsVars
 
-		if err != nil {
+		group.Go(func() error {
+			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
+			if err != nil {
+				return err
+			}
+			vars.Clients = clients
+			return nil
+		})
+
+		group.Go(func() error {
+			accommodationTypes, err := client.GetAccommodationTypes(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.AccommodationTypes = accommodationTypes
+			return nil
+		})
+
+		if err := group.Wait(); err != nil {
 			return err
 		}
 
 		app.PageName = "Clients"
-
-		vars := ListClientsVars{
-			Clients:           clients,
-			PerPage:           perPage,
-			AriaSorting:       ariaSorting,
-			ColumnBeingSorted: columnBeingSorted,
-			SortOrder:         sortOrder,
-			AppVars:           app,
-		}
-
-		if page > clients.Pages.PageTotal && clients.Pages.PageTotal > 0 {
-			return Redirect(vars.UrlBuilder.GetPaginationUrl(clients.Pages.PageTotal, perPage))
-		}
-
-		vars.Pagination = paginate.Pagination{
-			CurrentPage:     clients.Pages.PageCurrent,
-			TotalPages:      clients.Pages.PageTotal,
-			TotalElements:   clients.TotalClients,
-			ElementsPerPage: vars.PerPage,
-			ElementName:     "clients",
-			PerPageOptions:  perPageOptions,
-			UrlBuilder:      vars.UrlBuilder,
-		}
+		vars.PerPage = perPage
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
+		vars.SelectedAccommodationTypes = selectedAccommodationTypes
 
-		vars.UrlBuilder = vars.CreateUrlBuilder()
 		vars.AppliedFilters = vars.GetAppliedFilters()
 
 		vars.OrderStatusOptions = []model.RefData{
@@ -208,17 +143,56 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
+		vars.Sort = urlbuilder.Sort{
+			OrderBy:    columnBeingSorted,
+			Descending: boolSortOrder,
+			SortOrder:  sortOrder,
+		}
+		vars.AppVars = app
+		vars.UrlBuilder = vars.CreateUrlBuilder()
+
+		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
+			return Redirect(vars.UrlBuilder.GetPaginationUrl(vars.Clients.Pages.PageTotal, perPage))
+		}
+
+		vars.Pagination = paginate.Pagination{
+			CurrentPage:     vars.Clients.Pages.PageCurrent,
+			TotalPages:      vars.Clients.Pages.PageTotal,
+			TotalElements:   vars.Clients.TotalClients,
+			ElementsPerPage: vars.PerPage,
+			ElementName:     "clients",
+			PerPageOptions:  perPageOptions,
+			UrlBuilder:      vars.UrlBuilder,
+		}
+
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
 
-func parseUrl(urlParams url.Values) (string, string) {
+func parseUrl(urlParams url.Values) (string, string, bool) {
 	sortParam := urlParams.Get("sort")
+	boolSortOrder := false
 	if sortParam != "" {
 		sortParamsArray := strings.Split(sortParam, ":")
 		columnBeingSorted := sortParamsArray[0]
 		sortOrder := sortParamsArray[1]
-		return columnBeingSorted, sortOrder
+		if sortOrder == "asc" {
+			boolSortOrder = true
+		}
+		return columnBeingSorted, sortOrder, boolSortOrder
 	}
-	return "", ""
+	return "", "", boolSortOrder
+}
+
+func getFiltersFromParams(params url.Values) ([]string, []string) {
+	var selectedOrderStatuses []string
+	var selectedAccommodationTypes []string
+
+	if params.Has("order-status") {
+		selectedOrderStatuses = params["order-status"]
+	}
+	if params.Has("accommodation") {
+		selectedAccommodationTypes = params["accommodation"]
+	}
+	return selectedOrderStatuses, selectedAccommodationTypes
 }
