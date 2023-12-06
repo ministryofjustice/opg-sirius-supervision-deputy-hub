@@ -16,6 +16,7 @@ import (
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
+	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
@@ -23,6 +24,7 @@ type ListClientsVars struct {
 	ListPage
 	FilterByOrderStatus
 	FilterByAccommodation
+	FilterBySupervisionLevel
 }
 
 func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
@@ -32,6 +34,7 @@ func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
 			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodationTypes),
+			urlbuilder.CreateFilter("supervision-level", lcv.SelectedSupervisionLevels),
 		},
 	}
 }
@@ -46,6 +49,12 @@ func (lcv ListClientsVars) GetAppliedFilters() []string {
 
 	for _, k := range lcv.AccommodationTypes {
 		if k.IsIn(lcv.SelectedAccommodationTypes) {
+			appliedFilters = append(appliedFilters, k.Label)
+		}
+	}
+
+	for _, k := range lcv.SupervisionLevels {
+		if k.IsIn(lcv.SelectedSupervisionLevels) {
 			appliedFilters = append(appliedFilters, k.Label)
 		}
 	}
@@ -85,7 +94,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		selectedOrderStatuses, selectedAccommodationTypes := getFiltersFromParams(urlParams)
+		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
 		params := sirius.ClientListParams{
 			DeputyId:           app.DeputyId(),
@@ -96,6 +105,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			SortOrder:          sortOrder,
 			OrderStatuses:      selectedOrderStatuses,
 			AccommodationTypes: selectedAccommodationTypes,
+			SupervisionLevels:  selectedSupervisionLevels,
 		}
 
 		var vars ListClientsVars
@@ -118,6 +128,15 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			return nil
 		})
 
+		group.Go(func() error {
+			supervisionLevels, err := client.GetSupervisionLevels(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.SupervisionLevels = supervisionLevels
+			return nil
+		})
+
 		if err := group.Wait(); err != nil {
 			return err
 		}
@@ -129,6 +148,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.OrderStatuses = orderStatuses
 		vars.SelectedOrderStatuses = selectedOrderStatuses
 		vars.SelectedAccommodationTypes = selectedAccommodationTypes
+		vars.SelectedSupervisionLevels = selectedSupervisionLevels
 
 		vars.AppliedFilters = vars.GetAppliedFilters()
 
@@ -184,9 +204,8 @@ func parseUrl(urlParams url.Values) (string, string, bool) {
 	return "", "", boolSortOrder
 }
 
-func getFiltersFromParams(params url.Values) ([]string, []string) {
-	var selectedOrderStatuses []string
-	var selectedAccommodationTypes []string
+func getFiltersFromParams(params url.Values) ([]string, []string, []string) {
+	var selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels []string
 
 	if params.Has("order-status") {
 		selectedOrderStatuses = params["order-status"]
@@ -194,5 +213,8 @@ func getFiltersFromParams(params url.Values) ([]string, []string) {
 	if params.Has("accommodation") {
 		selectedAccommodationTypes = params["accommodation"]
 	}
-	return selectedOrderStatuses, selectedAccommodationTypes
+	if params.Has("supervision-level") {
+		selectedSupervisionLevels = params["supervision-level"]
+	}
+	return selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels
 }

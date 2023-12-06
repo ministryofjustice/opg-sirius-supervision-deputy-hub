@@ -19,5 +19,6 @@
     "/reference-data/pdrOutcome": "/pdrOutcome",
     "/reference-data/ragRating": "/ragRating",
     "/reference-data?filter=clientAccommodation": "/clientAccommodation",
+    "/reference-data?filter=supervisionLevel": "/supervisionLevel",
     "/tasktypes/deputy": "/tasktypes"
 }
