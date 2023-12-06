@@ -131,14 +131,13 @@ func TestDeputyClientReturned(t *testing.T) {
 	}
 
 	deputyClientDetails, err := client.GetDeputyClients(getContext(nil), ClientListParams{
-		1,
-		25,
-		1,
-		"PA",
-		"",
-		"",
-		[]string{},
-		[]string{},
+		DeputyId:           1,
+		Limit:              25,
+		Search:             1,
+		DeputyType:         "PA",
+		OrderStatuses:      []string{},
+		AccommodationTypes: []string{},
+		SupervisionLevels:  []string{},
 	})
 
 	assert.Equal(t, 1, deputyClientDetails.Metadata.TotalActiveClients)
@@ -154,21 +153,20 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 	clientList, err := client.GetDeputyClients(getContext(nil), ClientListParams{
-		1,
-		25,
-		1,
-		"PA",
-		"",
-		"",
-		[]string{"ACTIVE"},
-		[]string{"COUNCIL RENTED", "NO ACCOMMODATION TYPE"},
+		DeputyId:           1,
+		Limit:              25,
+		Search:             1,
+		DeputyType:         "PA",
+		OrderStatuses:      []string{"ACTIVE"},
+		AccommodationTypes: []string{"COUNCIL RENTED", "NO ACCOMMODATION TYPE"},
+		SupervisionLevels:  []string{"MINIMUM"},
 	})
 
 	expectedResponse := ClientList{}
 	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE",
+		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE,supervision-level:MINIMUM",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -181,14 +179,13 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 	clientList, err := client.GetDeputyClients(getContext(nil), ClientListParams{
-		1,
-		25,
-		1,
-		"PA",
-		"",
-		"",
-		[]string{},
-		[]string{},
+		DeputyId:           1,
+		Limit:              25,
+		Search:             1,
+		DeputyType:         "PA",
+		OrderStatuses:      []string{},
+		AccommodationTypes: []string{},
+		SupervisionLevels:  []string{},
 	})
 
 	expectedResponse := ClientList{}
