@@ -18,6 +18,7 @@ type mockDeputyHubClientInformation struct {
 	err                error
 	deputyClientData   sirius.ClientList
 	accommodationTypes []model.RefData
+	supervisionLevels  []model.RefData
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, params sirius.ClientListParams) (sirius.ClientList, error) {
@@ -32,6 +33,13 @@ func (m *mockDeputyHubClientInformation) GetAccommodationTypes(ctx sirius.Contex
 	m.lastCtx = ctx
 
 	return m.accommodationTypes, m.err
+}
+
+func (m *mockDeputyHubClientInformation) GetSupervisionLevels(ctx sirius.Context) ([]model.RefData, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.supervisionLevels, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {
@@ -93,12 +101,13 @@ func TestGetFiltersFromParamsWithOrderStatus(t *testing.T) {
 	params := url.Values{}
 	params.Set("order-status", "ACTIVE")
 
-	var expectedResponseForAccommodation []string
+	var expectedResponseForAccommodation, expectedResponseForSupervisionLevel []string
 	expectedResponseForOrderStatus := []string{"ACTIVE"}
-	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+	resultOrderStatus, resultAccommodation, resultSupervisionLevel := getFiltersFromParams(params)
 
 	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
 	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+	assert.Equal(t, expectedResponseForSupervisionLevel, resultSupervisionLevel)
 }
 
 func TestGetFiltersFromParamsWithAccommodation(t *testing.T) {
@@ -106,22 +115,39 @@ func TestGetFiltersFromParamsWithAccommodation(t *testing.T) {
 	params.Set("accommodation", "COUNCIL RENTED")
 
 	expectedResponseForAccommodation := []string{"COUNCIL RENTED"}
-	var expectedResponseForOrderStatus []string
-	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+	var expectedResponseForOrderStatus, expectedResponseForSupervisionLevel []string
+	resultOrderStatus, resultAccommodation, resultSupervisionLevel := getFiltersFromParams(params)
 
 	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
 	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+	assert.Equal(t, expectedResponseForSupervisionLevel, resultSupervisionLevel)
+}
+
+func TestGetFiltersFromParamsWithSupervisionLevel(t *testing.T) {
+	params := url.Values{}
+	params.Set("supervision-level", "GENERAL")
+
+	expectedResponseForSupervisionLevel := []string{"GENERAL"}
+	var expectedResponseForOrderStatus, expectedResponseForAccommodation []string
+	resultOrderStatus, resultAccommodation, resultSupervisionLevel := getFiltersFromParams(params)
+
+	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
+	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+	assert.Equal(t, expectedResponseForSupervisionLevel, resultSupervisionLevel)
 }
 
 func TestGetFiltersFromParamsWithAllFilters(t *testing.T) {
 	params := url.Values{}
 	params.Set("order-status", "ACTIVE")
 	params.Set("accommodation", "COUNCIL RENTED")
+	params.Set("supervision-level", "GENERAL")
 
 	expectedResponseForAccommodation := []string{"COUNCIL RENTED"}
 	expectedResponseForOrderStatus := []string{"ACTIVE"}
-	resultOrderStatus, resultAccommodation := getFiltersFromParams(params)
+	expectedResponseForSupervisionLevel := []string{"GENERAL"}
+	resultOrderStatus, resultAccommodation, resultSupervisionLevel := getFiltersFromParams(params)
 
 	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
 	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
+	assert.Equal(t, expectedResponseForSupervisionLevel, resultSupervisionLevel)
 }
