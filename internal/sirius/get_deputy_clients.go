@@ -103,7 +103,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	if err != nil {
 		return clientList, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -143,6 +142,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	clientList.Clients = clients
 	clientList.TotalClients = clientList.Metadata.TotalActiveClients
+
 	return clientList, err
 }
 
@@ -196,6 +196,7 @@ func getMostRecentSupervisionLevel(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
 		if orders[i].LatestSupervisionLevel.AppliesFrom == "" {
 			orders[i].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
+
 		}
 		if orders[j].LatestSupervisionLevel.AppliesFrom == "" {
 			orders[j].LatestSupervisionLevel.AppliesFrom = "01/01/0001"

@@ -93,7 +93,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "reportDue", "crec"})
-
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
 		params := sirius.ClientListParams{
