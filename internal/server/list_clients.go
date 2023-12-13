@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
@@ -29,8 +30,9 @@ type ListClientsVars struct {
 
 func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
-		OriginalPath: "clients",
-		SelectedSort: lcv.Sort,
+		OriginalPath:    "clients",
+		SelectedPerPage: lcv.PerPage,
+		SelectedSort:    lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
 			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodationTypes),
@@ -75,8 +77,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 
-		var columnBeingSorted, sortOrder, boolSortOrder = parseUrl(urlParams)
-
 		orderStatuses := []model.OrderStatus{
 			{
 				Handle:      "ACTIVE",
@@ -96,13 +96,14 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
+		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "reportDue"}) //this will have all the thing you can sort on ie risk
+
 		params := sirius.ClientListParams{
 			DeputyId:           app.DeputyId(),
 			Limit:              perPage,
 			Search:             search,
 			DeputyType:         app.DeputyType(),
-			ColumnBeingSorted:  columnBeingSorted,
-			SortOrder:          sortOrder,
+			Sort:               fmt.Sprintf("%s:%s", sort.OrderBy, sort.GetDirection()),
 			OrderStatuses:      selectedOrderStatuses,
 			AccommodationTypes: selectedAccommodationTypes,
 			SupervisionLevels:  selectedSupervisionLevels,
@@ -163,12 +164,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.Sort = urlbuilder.Sort{
-			OrderBy:    columnBeingSorted,
-			Descending: boolSortOrder,
-			SortOrder:  sortOrder,
-		}
 		vars.AppVars = app
+		vars.Sort = sort
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
 		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
