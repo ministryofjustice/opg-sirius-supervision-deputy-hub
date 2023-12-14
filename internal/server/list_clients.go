@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
-
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubClientInformation interface {
@@ -186,20 +184,20 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 	}
 }
 
-func parseUrl(urlParams url.Values) (string, string, bool) {
-	sortParam := urlParams.Get("sort")
-	boolSortOrder := false
-	if sortParam != "" {
-		sortParamsArray := strings.Split(sortParam, ":")
-		columnBeingSorted := sortParamsArray[0]
-		sortOrder := sortParamsArray[1]
-		if sortOrder == "asc" {
-			boolSortOrder = true
-		}
-		return columnBeingSorted, sortOrder, boolSortOrder
-	}
-	return "", "", boolSortOrder
-}
+//func parseUrl(urlParams url.Values) (string, string, bool) {
+//	sortParam := urlParams.Get("sort")
+//	boolSortOrder := false
+//	if sortParam != "" {
+//		sortParamsArray := strings.Split(sortParam, ":")
+//		columnBeingSorted := sortParamsArray[0]
+//		sortOrder := sortParamsArray[1]
+//		if sortOrder == "asc" {
+//			boolSortOrder = true
+//		}
+//		return columnBeingSorted, sortOrder, boolSortOrder
+//	}
+//	return "", "", boolSortOrder
+//}
 
 func getFiltersFromParams(params url.Values) ([]string, []string, []string) {
 	var selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels []string
