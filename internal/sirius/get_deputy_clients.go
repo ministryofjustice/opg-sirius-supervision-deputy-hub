@@ -126,6 +126,7 @@ type ClientListParams struct {
 	Sort               string
 	OrderStatuses      []string
 	AccommodationTypes []string
+	SupervisionLevels  []string
 }
 
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
@@ -147,6 +148,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	}
 
 	resp, err := c.http.Do(req)
+
 	if err != nil {
 		return clientList, err
 	}
@@ -215,6 +217,9 @@ func (p ClientListParams) CreateFilter() string {
 	}
 	for _, k := range p.AccommodationTypes {
 		filter += "accommodation:" + strings.Replace(k, " ", "%20", -1) + ","
+	}
+	for _, s := range p.SupervisionLevels {
+		filter += "supervision-level:" + s + ","
 	}
 	return strings.TrimRight(filter, ",")
 }

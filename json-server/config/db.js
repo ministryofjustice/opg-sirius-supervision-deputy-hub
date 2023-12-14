@@ -2779,6 +2779,13 @@ module.exports = function () {
                     {"handle": "SUPPORTED LIVING", "label": "Supported Living"}
                 ],
             },
+        "supervisionLevel":
+            {
+                "supervisionLevel": [
+                    {"handle": "GENERAL", "label": "General"},
+                    {"handle": "MINIMAL", "label": "Minimal"}
+                ],
+            },
         "assurance": [
             {
                 "id": 35,

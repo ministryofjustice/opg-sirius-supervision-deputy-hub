@@ -30,10 +30,17 @@ type FilterByAccommodation struct {
 	SelectedAccommodationTypes []string
 }
 
+type FilterBySupervisionLevel struct {
+	ListPage
+	SupervisionLevels         []model.RefData
+	SelectedSupervisionLevels []string
+}
+
 func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {
 	filters := map[string]interface{}{
-		"order-status":  FilterByOrderStatus{},
-		"accommodation": FilterByAccommodation{},
+		"order-status":      FilterByOrderStatus{},
+		"accommodation":     FilterByAccommodation{},
+		"supervision-level": FilterBySupervisionLevel{},
 	}
 
 	extends := func(parent interface{}, child interface{}) bool {
