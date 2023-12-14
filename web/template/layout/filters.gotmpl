@@ -31,14 +31,15 @@
         {{ if not .AppliedFilters }}
           <p class="govuk-body govuk-!-margin-bottom-0">No filters selected</p>
         {{ end }}
-        {{ if .HasFilterBy . "order-status" }}{{ template "order-status-filter-applied" . }}{{ end }}
         {{ if .HasFilterBy . "accommodation" }}{{ template "accommodation-filter-applied" . }}{{ end }}
+        {{ if .HasFilterBy . "order-status" }}{{ template "order-status-filter-applied" . }}{{ end }}
+        {{ if .HasFilterBy . "supervision-level" }}{{ template "supervision-level-filter-applied" . }}{{ end }}
 
       </div>
     </div>
-
-    {{ if .HasFilterBy . "order-status" }}{{ template "order-status-filter" . }}{{ end }}
-    {{ if .HasFilterBy . "accommodation" }}{{ template "accommodation-filter" . }}{{ end }}
+      {{ if .HasFilterBy . "accommodation" }}{{ template "accommodation-filter" . }}{{ end }}
+      {{ if .HasFilterBy . "order-status" }}{{ template "order-status-filter" . }}{{ end }}
+      {{ if .HasFilterBy . "supervision-level" }}{{ template "supervision-level-filter" . }}{{ end }}
 
     <button class="govuk-button govuk-!-margin-top-4 govuk-!-margin-left-4 govuk-!-margin-bottom-4" data-module="apply-filters">Apply filters</button>
 

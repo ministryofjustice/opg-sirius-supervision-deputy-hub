@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html/template"
 	"net/http"
@@ -34,9 +33,6 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 			DeputyType:    app.DeputyType(),
 			OrderStatuses: selectedOrderStatuses,
 		}
-
-		fmt.Println("deputy hub client list params deputy id")
-		fmt.Println(params.DeputyId)
 
 		clientList, err := client.GetDeputyClients(ctx, params)
 		if err != nil {
