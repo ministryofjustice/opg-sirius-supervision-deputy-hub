@@ -1,16 +1,15 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
 	"strconv"
-	"strings"
-
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubClientInformation interface {
@@ -29,8 +28,9 @@ type ListClientsVars struct {
 
 func (lcv ListClientsVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
-		OriginalPath: "clients",
-		SelectedSort: lcv.Sort,
+		OriginalPath:    "clients",
+		SelectedPerPage: lcv.PerPage,
+		SelectedSort:    lcv.Sort,
 		SelectedFilters: []urlbuilder.Filter{
 			urlbuilder.CreateFilter("order-status", lcv.SelectedOrderStatuses),
 			urlbuilder.CreateFilter("accommodation", lcv.SelectedAccommodationTypes),
@@ -75,8 +75,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 		search, _ := strconv.Atoi(r.FormValue("page"))
 
-		var columnBeingSorted, sortOrder, boolSortOrder = parseUrl(urlParams)
-
 		orderStatuses := []model.OrderStatus{
 			{
 				Handle:      "ACTIVE",
@@ -96,13 +94,14 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
+		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "reportDue"}) //this will have all the thing you can sort on ie risk
+
 		params := sirius.ClientListParams{
 			DeputyId:           app.DeputyId(),
 			Limit:              perPage,
 			Search:             search,
 			DeputyType:         app.DeputyType(),
-			ColumnBeingSorted:  columnBeingSorted,
-			SortOrder:          sortOrder,
+			Sort:               fmt.Sprintf("%s:%s", sort.OrderBy, sort.GetDirection()),
 			OrderStatuses:      selectedOrderStatuses,
 			AccommodationTypes: selectedAccommodationTypes,
 			SupervisionLevels:  selectedSupervisionLevels,
@@ -163,12 +162,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.Sort = urlbuilder.Sort{
-			OrderBy:    columnBeingSorted,
-			Descending: boolSortOrder,
-			SortOrder:  sortOrder,
-		}
 		vars.AppVars = app
+		vars.Sort = sort
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
 		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
@@ -189,20 +184,20 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 	}
 }
 
-func parseUrl(urlParams url.Values) (string, string, bool) {
-	sortParam := urlParams.Get("sort")
-	boolSortOrder := false
-	if sortParam != "" {
-		sortParamsArray := strings.Split(sortParam, ":")
-		columnBeingSorted := sortParamsArray[0]
-		sortOrder := sortParamsArray[1]
-		if sortOrder == "asc" {
-			boolSortOrder = true
-		}
-		return columnBeingSorted, sortOrder, boolSortOrder
-	}
-	return "", "", boolSortOrder
-}
+//func parseUrl(urlParams url.Values) (string, string, bool) {
+//	sortParam := urlParams.Get("sort")
+//	boolSortOrder := false
+//	if sortParam != "" {
+//		sortParamsArray := strings.Split(sortParam, ":")
+//		columnBeingSorted := sortParamsArray[0]
+//		sortOrder := sortParamsArray[1]
+//		if sortOrder == "asc" {
+//			boolSortOrder = true
+//		}
+//		return columnBeingSorted, sortOrder, boolSortOrder
+//	}
+//	return "", "", boolSortOrder
+//}
 
 func getFiltersFromParams(params url.Values) ([]string, []string, []string) {
 	var selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels []string
