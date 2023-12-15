@@ -184,6 +184,7 @@ func getOrderStatus(orders []Order) string {
 			return o.OrderStatus.Label
 		}
 	}
+<<<<<<< HEAD
 	for _, o := range orders {
 		if o.OrderStatus.Label != "Open" {
 			return o.OrderStatus.Label
@@ -208,3 +209,68 @@ func getMostRecentSupervisionLevel(orders []Order) string {
 	})
 	return orders[0].LatestSupervisionLevel.SupervisionLevel.Label
 }
+=======
+	return orders[0].OrderStatus
+}
+
+func getMostRecentSupervisionLevel(orders Orders) string {
+	sort.Slice(orders, func(i, j int) bool {
+		return orders[i].OrderDate.After(orders[j].OrderDate)
+	})
+	return orders[0].SupervisionLevel
+}
+
+func restructureOrders(apiOrders apiOrders) Orders {
+	orders := make(Orders, len(apiOrders))
+
+	for i, t := range apiOrders {
+		// reformatting order date to yyyy-dd-mm
+		reformattedDate := formatDate(t.OrderDate)
+
+		var supervisionLevel string
+		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
+			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
+		} else {
+			supervisionLevel = ""
+		}
+
+		orders[i] = Order{
+			OrderStatus:      t.OrderStatus.Label,
+			SupervisionLevel: supervisionLevel,
+			OrderDate:        reformattedDate,
+		}
+	}
+
+	//updatedOrders := removeOpenStatusOrders(orders)
+	return orders
+}
+
+func formatDate(dateString string) time.Time {
+	dateTime, _ := time.Parse("02/01/2006", dateString)
+	return dateTime
+}
+
+//func removeOpenStatusOrders(orders Orders) Orders {
+//	/* An order is open when it's with the Allocations team,
+//	and so not yet supervised by the PA team */
+//
+//	var updatedOrders Orders
+//	for _, o := range orders {
+//		if o.OrderStatus != "Open" {
+//			updatedOrders = append(updatedOrders, o)
+//		}
+//	}
+//	return updatedOrders
+//}
+
+//func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+//	sort.Slice(clients, func(i, j int) bool {
+//		if sortOrder == "asc" {
+//			return clients[i].RiskScore < clients[j].RiskScore
+//		} else {
+//			return clients[i].RiskScore > clients[j].RiskScore
+//		}
+//	})
+//	return clients
+//}
+>>>>>>> cd4bc21 (sw-6609 removing frontend sort)
