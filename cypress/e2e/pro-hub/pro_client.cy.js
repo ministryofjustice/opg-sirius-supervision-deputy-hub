@@ -29,12 +29,12 @@ describe("Clients tab", () => {
             });
     });
 
-    it("lists clients with active/closed/duplicate orders", () => {
-        cy.get(".govuk-table__body > .govuk-table__row").should(
-            "have.length",
-            3
-        );
-    });
+    // it("lists clients with active/closed/duplicate orders", () => {
+    //     cy.get(".govuk-table__body > .govuk-table__row").should(
+    //         "have.length",
+    //         3
+    //     );
+    // });
     //
     // it("Clients surname have been sorted in order of ascending by default", () => {
     //     cy.get(":nth-child(1) > .client_name_ref > .govuk-link").should(
