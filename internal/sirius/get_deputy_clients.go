@@ -201,11 +201,11 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	clientList.Pages = apiClientList.Pages
 	clientList.TotalClients = apiClientList.TotalClients
 	clientList.Metadata = apiClientList.Metadata
-
-	switch params.ColumnBeingSorted {
-	default:
-		crecScoreSort(clients, params.SortOrder)
-	}
+	//
+	//switch params.ColumnBeingSorted {
+	//default:
+	//	crecScoreSort(clients, params.SortOrder)
+	//}
 
 	return clientList, err
 }
@@ -270,8 +270,8 @@ func restructureOrders(apiOrders apiOrders) Orders {
 		}
 	}
 
-	updatedOrders := removeOpenStatusOrders(orders)
-	return updatedOrders
+	//updatedOrders := removeOpenStatusOrders(orders)
+	return orders
 }
 
 func formatDate(dateString string) time.Time {
@@ -279,26 +279,26 @@ func formatDate(dateString string) time.Time {
 	return dateTime
 }
 
-func removeOpenStatusOrders(orders Orders) Orders {
-	/* An order is open when it's with the Allocations team,
-	and so not yet supervised by the PA team */
+//func removeOpenStatusOrders(orders Orders) Orders {
+//	/* An order is open when it's with the Allocations team,
+//	and so not yet supervised by the PA team */
+//
+//	var updatedOrders Orders
+//	for _, o := range orders {
+//		if o.OrderStatus != "Open" {
+//			updatedOrders = append(updatedOrders, o)
+//		}
+//	}
+//	return updatedOrders
+//}
 
-	var updatedOrders Orders
-	for _, o := range orders {
-		if o.OrderStatus != "Open" {
-			updatedOrders = append(updatedOrders, o)
-		}
-	}
-	return updatedOrders
-}
-
-func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
-	sort.Slice(clients, func(i, j int) bool {
-		if sortOrder == "asc" {
-			return clients[i].RiskScore < clients[j].RiskScore
-		} else {
-			return clients[i].RiskScore > clients[j].RiskScore
-		}
-	})
-	return clients
-}
+//func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
+//	sort.Slice(clients, func(i, j int) bool {
+//		if sortOrder == "asc" {
+//			return clients[i].RiskScore < clients[j].RiskScore
+//		} else {
+//			return clients[i].RiskScore > clients[j].RiskScore
+//		}
+//	})
+//	return clients
+//}
