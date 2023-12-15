@@ -28,7 +28,7 @@ describe("Clients tab", () => {
                 cy.wrap($el).should("contain", expected[index]);
             });
     });
-
+    
     it("lists clients with active/closed/duplicate orders", () => {
         cy.get(".govuk-table__body > .govuk-table__row").should(
             "have.length",
