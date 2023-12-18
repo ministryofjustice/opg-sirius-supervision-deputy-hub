@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sort"
 	"strings"
 	"time"
 )
@@ -229,25 +228,25 @@ GetOrderStatus returns the status of the oldest active order for a client.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
-func getOrderStatus(orders Orders) string {
-	sort.Slice(orders, func(i, j int) bool {
-		return orders[i].OrderDate.Before(orders[j].OrderDate)
-	})
-
-	for _, o := range orders {
-		if o.OrderStatus == "Active" {
-			return o.OrderStatus
-		}
-	}
-	return orders[0].OrderStatus
-}
-
-func getMostRecentSupervisionLevel(orders Orders) string {
-	sort.Slice(orders, func(i, j int) bool {
-		return orders[i].OrderDate.After(orders[j].OrderDate)
-	})
-	return orders[0].SupervisionLevel
-}
+//func getOrderStatus(orders Orders) string {
+//	sort.Slice(orders, func(i, j int) bool {
+//		return orders[i].OrderDate.Before(orders[j].OrderDate)
+//	})
+//
+//	for _, o := range orders {
+//		if o.OrderStatus == "Active" {
+//			return o.OrderStatus
+//		}
+//	}
+//	return orders[0].OrderStatus
+//}
+//
+//func getMostRecentSupervisionLevel(orders Orders) string {
+//	sort.Slice(orders, func(i, j int) bool {
+//		return orders[i].OrderDate.After(orders[j].OrderDate)
+//	})
+//	return orders[0].SupervisionLevel
+//}
 
 //func restructureOrders(apiOrders apiOrders) Orders {
 //	orders := make(Orders, len(apiOrders))
