@@ -319,6 +319,7 @@ func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
 		test2,
 	}
 	expectedResponse := "Minimal"
+
 	result := getMostRecentSupervisionLevel(orderData)
 
 	assert.Equal(t, expectedResponse, result)
