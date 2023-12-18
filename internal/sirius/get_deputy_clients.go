@@ -178,6 +178,9 @@ GetOrderStatus returns the status of the oldest active order for a client.
 */
 func getOrderStatus(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
+		if orders[i].OrderDate == "" {
+			orders[i].OrderDate = "31/12/9999"
+		}
 		iDate := model.NewDate(orders[i].OrderDate)
 		jDate := model.NewDate(orders[j].OrderDate)
 		return iDate.Before(jDate)
