@@ -3,7 +3,9 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
+	"sort"
 	"strings"
 	"time"
 )
@@ -177,7 +179,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			CourtRef:          t.CourtRef,
 			RiskScore:         t.RiskScore,
 			AccommodationType: t.ClientAccommodation.Label,
-			OrderStatus:       t.Orders[0].OrderStatus.Label,
+			OrderStatus:       getOrderStatus(t.Orders),
 			SupervisionLevel:  t.Orders[0].LatestSupervisionLevel.SupervisionLevel.Label,
 			OldestReport: reportReturned{
 				t.OldestReport.DueDate,
@@ -228,18 +230,26 @@ GetOrderStatus returns the status of the oldest active order for a client.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
-//func getOrderStatus(orders Orders) string {
-//	sort.Slice(orders, func(i, j int) bool {
-//		return orders[i].OrderDate.Before(orders[j].OrderDate)
-//	})
-//
-//	for _, o := range orders {
-//		if o.OrderStatus == "Active" {
-//			return o.OrderStatus
-//		}
-//	}
-//	return orders[0].OrderStatus
-//}
+func getOrderStatus(orders apiOrders) string {
+	sort.Slice(orders, func(i, j int) bool {
+		iDate := model.NewDate(orders[i].OrderDate)
+		jDate := model.NewDate(orders[j].OrderDate)
+		return iDate.Before(jDate)
+	})
+
+	for _, o := range orders {
+		if o.OrderStatus.Label == "Active" {
+			return o.OrderStatus.Label
+		}
+	}
+	for _, o := range orders {
+		if o.OrderStatus.Label != "Open" {
+			return o.OrderStatus.Label
+		}
+	}
+	return orders[0].OrderStatus.Label
+}
+
 //
 //func getMostRecentSupervisionLevel(orders Orders) string {
 //	sort.Slice(orders, func(i, j int) bool {

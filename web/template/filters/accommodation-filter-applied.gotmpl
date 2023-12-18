@@ -1,16 +1,16 @@
 {{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.FilterByAccommodation*/ -}}
 {{ define "accommodation-filter-applied" }}
-{{/*    {{ if .SelectedAccommodationTypes }}*/}}
-{{/*      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Accommodation</h3>*/}}
-{{/*      <ul class="moj-filter-tags">*/}}
-{{/*          {{ range .AccommodationTypes }}*/}}
-{{/*              {{ if .IsIn $.SelectedAccommodationTypes }}*/}}
-{{/*                <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "accommodation" .Handle }}&sort={{ $.Sort.OrderBy }}:{{ $.Sort.SortOrder}}"*/}}
-{{/*                    class="moj-filter__tag"><span class="govuk-visually-hidden">*/}}
-{{/*                    Remove this filter</span> {{ .Label }}*/}}
-{{/*                </a></li>*/}}
-{{/*              {{ end }}*/}}
-{{/*          {{ end }}*/}}
-{{/*      </ul>*/}}
-{{/*    {{ end }}*/}}
+    {{ if .SelectedAccommodationTypes }}
+      <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Accommodation</h3>
+      <ul class="moj-filter-tags">
+          {{ range .AccommodationTypes }}
+              {{ if .IsIn $.SelectedAccommodationTypes }}
+                <li><a href="{{ $.UrlBuilder.GetRemoveFilterUrl "accommodation" .Handle }}"
+                    class="moj-filter__tag"><span class="govuk-visually-hidden">
+                    Remove this filter</span> {{ .Label }}
+                </a></li>
+              {{ end }}
+          {{ end }}
+      </ul>
+    {{ end }}
 {{ end }}
