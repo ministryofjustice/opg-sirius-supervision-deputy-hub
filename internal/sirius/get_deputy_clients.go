@@ -119,6 +119,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	}
 
 	var clients []DeputyClient
+
 	for _, t := range clientList.Clients {
 		var client = DeputyClient{
 			ClientId:            t.ClientId,
