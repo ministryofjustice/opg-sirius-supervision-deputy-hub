@@ -172,9 +172,11 @@ func getOrderStatus(orders []Order) string {
 		if orders[i].OrderDate == "" {
 			orders[i].OrderDate = "31/12/9999"
 		}
+
 		if orders[j].OrderDate == "" {
 			orders[j].OrderDate = "31/12/9999"
 		}
+
 		iDate := model.NewDate(orders[i].OrderDate)
 		jDate := model.NewDate(orders[j].OrderDate)
 
