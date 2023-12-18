@@ -15,6 +15,8 @@ type apiOrder struct {
 		Label string `json:"label"`
 	}
 	LatestSupervisionLevel struct {
+		Id               int    `json:"id"`
+		AppliesFrom      string `json:"appliesFrom"`
 		SupervisionLevel struct {
 			Label string `json:"label"`
 		}
@@ -153,7 +155,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	if err != nil {
 		return clientList, err
 	}
-	//io.Copy(os.Stdout, resp.Body)
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -170,8 +172,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	var clients DeputyClientDetails
 	for _, t := range apiClientList.Clients {
-		//orders := restructureOrders(t.Orders)
-		//if len(orders) > 0 {
 		var client = DeputyClient{
 			ClientId:          t.ClientId,
 			Firstname:         t.Firstname,
@@ -180,7 +180,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			RiskScore:         t.RiskScore,
 			AccommodationType: t.ClientAccommodation.Label,
 			OrderStatus:       getOrderStatus(t.Orders),
-			SupervisionLevel:  t.Orders[0].LatestSupervisionLevel.SupervisionLevel.Label,
+			SupervisionLevel:  getMostRecentSupervisionLevel(t.Orders),
 			OldestReport: reportReturned{
 				t.OldestReport.DueDate,
 				t.OldestReport.RevisedDueDate,
@@ -195,18 +195,12 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			HasActiveREMWarning: t.HasActiveREMWarning,
 		}
 		clients = append(clients, client)
-		//}
 	}
 
 	clientList.Clients = clients
 	clientList.Pages = apiClientList.Pages
 	clientList.TotalClients = apiClientList.TotalClients
 	clientList.Metadata = apiClientList.Metadata
-	//
-	//switch params.ColumnBeingSorted {
-	//default:
-	//	crecScoreSort(clients, params.SortOrder)
-	//}
 
 	return clientList, err
 }
@@ -250,64 +244,15 @@ func getOrderStatus(orders apiOrders) string {
 	return orders[0].OrderStatus.Label
 }
 
-//
-//func getMostRecentSupervisionLevel(orders Orders) string {
-//	sort.Slice(orders, func(i, j int) bool {
-//		return orders[i].OrderDate.After(orders[j].OrderDate)
-//	})
-//	return orders[0].SupervisionLevel
-//}
+func getMostRecentSupervisionLevel(orders apiOrders) string {
+	sort.Slice(orders, func(i, j int) bool {
+		if orders[i].LatestSupervisionLevel.AppliesFrom == "" {
+			orders[i].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
+		}
+		iDate := model.NewDate(orders[i].LatestSupervisionLevel.AppliesFrom)
+		jDate := model.NewDate(orders[j].LatestSupervisionLevel.AppliesFrom)
 
-//func restructureOrders(apiOrders apiOrders) Orders {
-//	orders := make(Orders, len(apiOrders))
-//
-//	for i, t := range apiOrders {
-//		// reformatting order date to yyyy-dd-mm
-//		reformattedDate := formatDate(t.OrderDate)
-//
-//		var supervisionLevel string
-//		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
-//			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
-//		} else {
-//			supervisionLevel = ""
-//		}
-//
-//		orders[i] = Order{
-//			OrderStatus:      t.OrderStatus.Label,
-//			SupervisionLevel: supervisionLevel,
-//			OrderDate:        reformattedDate,
-//		}
-//	}
-//
-//	//updatedOrders := removeOpenStatusOrders(orders)
-//	return orders
-//}
-
-//func formatDate(dateString string) time.Time {
-//	dateTime, _ := time.Parse("02/01/2006", dateString)
-//	return dateTime
-//}
-
-//func removeOpenStatusOrders(orders Orders) Orders {
-//	/* An order is open when it's with the Allocations team,
-//	and so not yet supervised by the PA team */
-//
-//	var updatedOrders Orders
-//	for _, o := range orders {
-//		if o.OrderStatus != "Open" {
-//			updatedOrders = append(updatedOrders, o)
-//		}
-//	}
-//	return updatedOrders
-//}
-
-//func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
-//	sort.Slice(clients, func(i, j int) bool {
-//		if sortOrder == "asc" {
-//			return clients[i].RiskScore < clients[j].RiskScore
-//		} else {
-//			return clients[i].RiskScore > clients[j].RiskScore
-//		}
-//	})
-//	return clients
-//}
+		return iDate.After(jDate)
+	})
+	return orders[0].LatestSupervisionLevel.SupervisionLevel.Label
+}

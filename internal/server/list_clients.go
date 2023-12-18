@@ -96,7 +96,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
-
 		params := sirius.ClientListParams{
 			DeputyId:           app.DeputyId(),
 			Limit:              perPage,
@@ -184,21 +183,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 }
-
-//func parseUrl(urlParams url.Values) (string, string, bool) {
-//	sortParam := urlParams.Get("sort")
-//	boolSortOrder := false
-//	if sortParam != "" {
-//		sortParamsArray := strings.Split(sortParam, ":")
-//		columnBeingSorted := sortParamsArray[0]
-//		sortOrder := sortParamsArray[1]
-//		if sortOrder == "asc" {
-//			boolSortOrder = true
-//		}
-//		return columnBeingSorted, sortOrder, boolSortOrder
-//	}
-//	return "", "", boolSortOrder
-//}
 
 func getFiltersFromParams(params url.Values) ([]string, []string, []string) {
 	var selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels []string
