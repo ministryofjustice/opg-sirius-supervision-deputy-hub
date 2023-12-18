@@ -99,8 +99,8 @@
                                     {{ end }}
                                 </td>
                                 <td class="govuk-table__cell">
-                                    {{ if .AccommodationType }}
-                                        {{ .AccommodationType }}
+                                    {{ if ne .ClientAccommodation.Label "" }}
+                                        {{ .ClientAccommodation.Label }}
                                     {{ else }}
                                         -
                                     {{ end }}
@@ -123,12 +123,12 @@
                                     {{ if ne .LatestCompletedVisit.VisitCompletedDate "" }}
                                         {{ .LatestCompletedVisit.VisitCompletedDate }}
                                         <span class="secondary">
-                                                        {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency }}
+                                                        {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency.Label }}
                                                     </span>
                                         <span
                                             class="secondary rag {{ .LatestCompletedVisit.RagRatingLowerCase }}">
-                                                        {{ if ne .LatestCompletedVisit.VisitReportMarkedAs "" }}
-                                                            {{ .LatestCompletedVisit.VisitReportMarkedAs }}
+                                                        {{ if ne .LatestCompletedVisit.VisitReportMarkedAs.Label "" }}
+                                                            {{ .LatestCompletedVisit.VisitReportMarkedAs.Label }}
                                                         {{ else }}
                                                             -
                                                         {{ end }}
@@ -145,7 +145,7 @@
                                             {{ .OldestReport.DueDate }}
                                         {{ end }}
                                         <br/>
-                                        {{ .OldestReport.StatusLabel }}
+                                        {{ .OldestReport.Status.Label }}
                                     {{ else }}
                                         -
                                     {{ end }}

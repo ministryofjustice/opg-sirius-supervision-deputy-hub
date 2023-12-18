@@ -7,57 +7,37 @@ import (
 	"net/http"
 	"sort"
 	"strings"
-	"time"
 )
 
-type apiOrder struct {
-	OrderStatus struct {
-		Label string `json:"label"`
-	}
-	LatestSupervisionLevel struct {
-		Id               int    `json:"id"`
-		AppliesFrom      string `json:"appliesFrom"`
-		SupervisionLevel struct {
-			Label string `json:"label"`
-		}
-	}
-	OrderDate string `json:"orderDate"`
+type label struct {
+	Label string `json:"label"`
 }
 
-type apiOrders []apiOrder
+type Order struct {
+	OrderStatus            label
+	LatestSupervisionLevel latestSupervisionLevel
+	OrderDate              string `json:"orderDate"`
+}
 
-type apiReport struct {
+type latestSupervisionLevel struct {
+	AppliesFrom      string `json:"appliesFrom"`
+	SupervisionLevel label
+}
+
+type Report struct {
 	DueDate        string `json:"dueDate"`
 	RevisedDueDate string `json:"revisedDueDate"`
-	Status         struct {
-		Label string `json:"label"`
-	} `json:"status"`
+	Status         label  `json:"status"`
 }
 
-type reportReturned struct {
-	DueDate        string
-	RevisedDueDate string
-	StatusLabel    string
-}
-
-type apiLatestCompletedVisit struct {
+type LatestCompletedVisit struct {
 	VisitCompletedDate  string
-	VisitReportMarkedAs struct {
-		Label string `json:"label"`
-	} `json:"visitReportMarkedAs"`
-	VisitUrgency struct {
-		Label string `json:"label"`
-	} `json:"visitUrgency"`
-}
-
-type latestCompletedVisit struct {
-	VisitCompletedDate  string
-	VisitReportMarkedAs string
-	VisitUrgency        string
+	VisitReportMarkedAs label `json:"visitReportMarkedAs"`
+	VisitUrgency        label `json:"visitUrgency"`
 	RagRatingLowerCase  string
 }
 
-type apiClient struct {
+type DeputyClient struct {
 	ClientId            int    `json:"id"`
 	Firstname           string `json:"firstname"`
 	Surname             string `json:"surname"`
@@ -66,35 +46,13 @@ type apiClient struct {
 	ClientAccommodation struct {
 		Label string `json:"label"`
 	}
-	Orders               apiOrders               `json:"orders"`
-	OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
-	LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
-	HasActiveREMWarning  bool                    `json:"HasActiveREMWarning"`
-}
-
-type Order struct {
-	OrderStatus      string
-	SupervisionLevel string
-	OrderDate        time.Time
-}
-
-type Orders []Order
-
-type DeputyClient struct {
-	ClientId             int
-	Firstname            string
-	Surname              string
-	CourtRef             string
-	RiskScore            int
-	AccommodationType    string
-	OrderStatus          string
+	Orders               []Order              `json:"orders"`
+	OldestReport         Report               `json:"oldestNonLodgedAnnualReport"`
+	LatestCompletedVisit LatestCompletedVisit `json:"latestCompletedVisit"`
+	HasActiveREMWarning  bool                 `json:"HasActiveREMWarning"`
 	SupervisionLevel     string
-	OldestReport         reportReturned
-	LatestCompletedVisit latestCompletedVisit
-	HasActiveREMWarning  bool
+	OrderStatus          string
 }
-
-type DeputyClientDetails []DeputyClient
 
 type Page struct {
 	PageCurrent int `json:"current"`
@@ -106,14 +64,14 @@ type Metadata struct {
 }
 
 type ApiClientList struct {
-	Clients      []apiClient `json:"clients"`
-	Pages        Page        `json:"pages"`
-	Metadata     Metadata    `json:"metadata"`
-	TotalClients int         `json:"total"`
+	Clients      []DeputyClient `json:"clients"`
+	Pages        Page           `json:"pages"`
+	Metadata     Metadata       `json:"metadata"`
+	TotalClients int            `json:"total"`
 }
 
 type ClientList struct {
-	Clients      DeputyClientDetails
+	Clients      []DeputyClient
 	Pages        Page
 	TotalClients int
 	Metadata     Metadata
@@ -168,26 +126,22 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		return clientList, err
 	}
 
-	var clients DeputyClientDetails
+	var clients []DeputyClient
 	for _, t := range apiClientList.Clients {
 		var client = DeputyClient{
-			ClientId:          t.ClientId,
-			Firstname:         t.Firstname,
-			Surname:           t.Surname,
-			CourtRef:          t.CourtRef,
-			RiskScore:         t.RiskScore,
-			AccommodationType: t.ClientAccommodation.Label,
-			OrderStatus:       getOrderStatus(t.Orders),
-			SupervisionLevel:  getMostRecentSupervisionLevel(t.Orders),
-			OldestReport: reportReturned{
-				t.OldestReport.DueDate,
-				t.OldestReport.RevisedDueDate,
-				t.OldestReport.Status.Label,
-			},
-			LatestCompletedVisit: latestCompletedVisit{
+			ClientId:            t.ClientId,
+			Firstname:           t.Firstname,
+			Surname:             t.Surname,
+			CourtRef:            t.CourtRef,
+			RiskScore:           t.RiskScore,
+			ClientAccommodation: t.ClientAccommodation,
+			OrderStatus:         getOrderStatus(t.Orders),
+			SupervisionLevel:    getMostRecentSupervisionLevel(t.Orders),
+			OldestReport:        t.OldestReport,
+			LatestCompletedVisit: LatestCompletedVisit{
 				FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
-				t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-				t.LatestCompletedVisit.VisitUrgency.Label,
+				t.LatestCompletedVisit.VisitReportMarkedAs,
+				t.LatestCompletedVisit.VisitUrgency,
 				strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 			},
 			HasActiveREMWarning: t.HasActiveREMWarning,
@@ -222,7 +176,7 @@ GetOrderStatus returns the status of the oldest active order for a client.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
-func getOrderStatus(orders apiOrders) string {
+func getOrderStatus(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
 		iDate := model.NewDate(orders[i].OrderDate)
 		jDate := model.NewDate(orders[j].OrderDate)
@@ -242,7 +196,7 @@ func getOrderStatus(orders apiOrders) string {
 	return orders[0].OrderStatus.Label
 }
 
-func getMostRecentSupervisionLevel(orders apiOrders) string {
+func getMostRecentSupervisionLevel(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
 		if orders[i].LatestSupervisionLevel.AppliesFrom == "" {
 			orders[i].LatestSupervisionLevel.AppliesFrom = "01/01/0001"

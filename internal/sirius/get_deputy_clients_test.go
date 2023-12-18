@@ -101,19 +101,19 @@ func TestDeputyClientReturned(t *testing.T) {
 		}, nil
 	}
 
-	clients := DeputyClientDetails{
+	clients := []DeputyClient{
 		DeputyClient{
-			ClientId:          67,
-			Firstname:         "John",
-			Surname:           "Fearless",
-			CourtRef:          "67422477",
-			RiskScore:         5,
-			AccommodationType: "Family Member/Friend's Home (including spouse/civil partner)",
-			OrderStatus:       "Active",
-			OldestReport: reportReturned{
+			ClientId:            67,
+			Firstname:           "John",
+			Surname:             "Fearless",
+			CourtRef:            "67422477",
+			RiskScore:           5,
+			ClientAccommodation: label{Label: "Family Member/Friend's Home (including spouse/civil partner)"},
+			OrderStatus:         "Active",
+			OldestReport: Report{
 				DueDate:        "01/01/2016",
 				RevisedDueDate: "01/05/2016",
-				StatusLabel:    "Pending",
+				Status:         label{"Pending"},
 			},
 			SupervisionLevel:    "General",
 			HasActiveREMWarning: true,
@@ -197,63 +197,67 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	assert.Equal(t, expectedResponse, clientList)
 }
 
-//func TestSetDueDateForSortReturnDueDate(t *testing.T) {
-//	expectedResponse := "01/01/2021"
-//	result := setDueDateForSort("01/01/2021", "")
-//	assert.Equal(t, expectedResponse, result)
-//}
-//
-//func TestSetDueDateForSortReturnRevisedDueDate(t *testing.T) {
-//	expectedResponse := "20/12/2021"
-//	result := setDueDateForSort("", "20/12/2021")
-//	assert.Equal(t, expectedResponse, result)
-//}
-//
-//func TestSetDueDateForSortReturnZeroDateForNoDueOrRevisedDueDate(t *testing.T) {
-//	expectedResponse := "12/12/9999"
-//	result := setDueDateForSort("", "")
-//	assert.Equal(t, expectedResponse, result)
-//}
-//
-//func TestFormatDate(t *testing.T) {
-//	expectedResponse, _ := time.Parse("2006-01-02", "2021-01-01")
-//	result := formatDate("01/01/2021")
-//	assert.Equal(t, expectedResponse, result)
-//}
-
-//	func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
-//		dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
-//		dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
-//
-//		orderData := Orders{
-//			Order{OrderStatus: "Active", SupervisionLevel: "General", OrderDate: dateOne},
-//			Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
-//		}
-//		expectedResponse := "Active"
-//		result := getOrderStatus(orderData)
-//
-//		assert.Equal(t, expectedResponse, result)
-//	}
-//
-//	func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
-//		dateOne, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2014-01-12 00:00:00 +0000 UTC")
-//		dateTwo, _ := time.Parse("2006-01-02 00:00:00 +0000 UTC", "2017-01-12 00:00:00 +0000 UTC")
-//
-//		orderData := Orders{
-//			Order{OrderStatus: "Close", SupervisionLevel: "General", OrderDate: dateOne},
-//			Order{OrderStatus: "Open", SupervisionLevel: "General", OrderDate: dateTwo},
-//		}
-//		expectedResponse := "Close"
-//		result := getOrderStatus(orderData)
-//
-//		assert.Equal(t, expectedResponse, result)
-//	}
-func TestGetMostRecentSupervisionLevel(t *testing.T) {
-	orderData := apiOrders{
-		apiOrder{LatestSupervisionLevel: {Id: 0, AppliesFrom: "2014-01-12", SupervisionLevel: {Label: "Minimal"}}, OrderDate: "2014-01-12"},
-		apiOrder{SupervisionLevel: "General", OrderDate: "2017-01-12"},
+func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
+	orderData := []Order{
+		{
+			OrderStatus:            label{"Active"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2014",
+		},
+		{
+			OrderStatus:            label{"Open"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2017",
+		},
 	}
-	expectedResponse := "General"
+	expectedResponse := "Active"
+	result := getOrderStatus(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
+func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
+	orderData := []Order{
+		{
+			OrderStatus:            label{"Closed"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2014",
+		},
+		{
+			OrderStatus:            label{"Open"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2017",
+		},
+	}
+	expectedResponse := "Closed"
+	result := getOrderStatus(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
+func TestGetMostRecentSupervisionLevel(t *testing.T) {
+
+	test := Order{
+		LatestSupervisionLevel: latestSupervisionLevel{
+			AppliesFrom:      "01/02/2020",
+			SupervisionLevel: label{Label: "General"},
+		},
+		OrderDate: "01/02/2020",
+	}
+
+	test2 := Order{
+		LatestSupervisionLevel: latestSupervisionLevel{
+			AppliesFrom:      "03/02/2020",
+			SupervisionLevel: label{Label: "Minimal"},
+		},
+		OrderDate: "12/01/2020",
+	}
+
+	orderData := []Order{
+		test,
+		test2,
+	}
+	expectedResponse := "Minimal"
 	result := getMostRecentSupervisionLevel(orderData)
 
 	assert.Equal(t, expectedResponse, result)
