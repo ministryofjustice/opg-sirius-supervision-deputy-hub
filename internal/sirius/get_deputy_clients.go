@@ -103,6 +103,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	if err != nil {
 		return clientList, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
