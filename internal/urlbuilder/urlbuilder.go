@@ -8,13 +8,12 @@ import (
 
 type UrlBuilder struct {
 	OriginalPath    string
-	SortBy          string
 	SelectedPerPage int
 	SelectedFilters []Filter
 	SelectedSort    Sort
 }
 
-func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
+func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter, sort Sort) string {
 	url := fmt.Sprintf("%s?limit=%d&page=%d", ub.OriginalPath, perPage, page)
 	for _, filter := range filters {
 		for _, value := range filter.SelectedValues {
@@ -22,6 +21,9 @@ func (ub UrlBuilder) buildUrl(page int, perPage int, filters []Filter) string {
 				url += "&" + filter.Name + "=" + value
 			}
 		}
+	}
+	if sort.ToURL() != "" {
+		url += "&" + sort.ToURL()
 	}
 	return url
 }
@@ -31,11 +33,19 @@ func (ub UrlBuilder) GetPaginationUrl(page int, perPage ...int) string {
 	if len(perPage) > 0 {
 		selectedPerPage = perPage[0]
 	}
-	return ub.buildUrl(page, selectedPerPage, ub.SelectedFilters)
+	return ub.buildUrl(page, selectedPerPage, ub.SelectedFilters, ub.SelectedSort)
+}
+
+func (ub UrlBuilder) GetSortUrl(orderBy string) string {
+	sort := Sort{OrderBy: orderBy}
+	if orderBy == ub.SelectedSort.OrderBy {
+		sort.Descending = !ub.SelectedSort.Descending
+	}
+	return ub.buildUrl(1, ub.SelectedPerPage, ub.SelectedFilters, sort)
 }
 
 func (ub UrlBuilder) GetClearFiltersUrl() string {
-	return ub.buildUrl(1, ub.SelectedPerPage, []Filter{})
+	return ub.buildUrl(1, ub.SelectedPerPage, []Filter{}, ub.SelectedSort)
 }
 
 func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string, error) {
@@ -67,5 +77,5 @@ func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string,
 		}
 	}
 
-	return ub.buildUrl(1, ub.SelectedPerPage, retainedFilters), nil
+	return ub.buildUrl(1, ub.SelectedPerPage, retainedFilters, ub.SelectedSort), nil
 }
