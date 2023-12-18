@@ -169,32 +169,32 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	var clients DeputyClientDetails
 	for _, t := range apiClientList.Clients {
-		orders := restructureOrders(t.Orders)
-		if len(orders) > 0 {
-			var client = DeputyClient{
-				ClientId:          t.ClientId,
-				Firstname:         t.Firstname,
-				Surname:           t.Surname,
-				CourtRef:          t.CourtRef,
-				RiskScore:         t.RiskScore,
-				AccommodationType: t.ClientAccommodation.Label,
-				OrderStatus:       getOrderStatus(orders),
-				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport: reportReturned{
-					t.OldestReport.DueDate,
-					t.OldestReport.RevisedDueDate,
-					t.OldestReport.Status.Label,
-				},
-				LatestCompletedVisit: latestCompletedVisit{
-					FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
-					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					t.LatestCompletedVisit.VisitUrgency.Label,
-					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
-				},
-				HasActiveREMWarning: t.HasActiveREMWarning,
-			}
-			clients = append(clients, client)
+		//orders := restructureOrders(t.Orders)
+		//if len(orders) > 0 {
+		var client = DeputyClient{
+			ClientId:          t.ClientId,
+			Firstname:         t.Firstname,
+			Surname:           t.Surname,
+			CourtRef:          t.CourtRef,
+			RiskScore:         t.RiskScore,
+			AccommodationType: t.ClientAccommodation.Label,
+			OrderStatus:       t.Orders[0].OrderStatus.Label,
+			SupervisionLevel:  t.Orders[0].LatestSupervisionLevel.SupervisionLevel.Label,
+			OldestReport: reportReturned{
+				t.OldestReport.DueDate,
+				t.OldestReport.RevisedDueDate,
+				t.OldestReport.Status.Label,
+			},
+			LatestCompletedVisit: latestCompletedVisit{
+				FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
+				t.LatestCompletedVisit.VisitReportMarkedAs.Label,
+				t.LatestCompletedVisit.VisitUrgency.Label,
+				strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+			},
+			HasActiveREMWarning: t.HasActiveREMWarning,
 		}
+		clients = append(clients, client)
+		//}
 	}
 
 	clientList.Clients = clients
@@ -249,30 +249,30 @@ func getMostRecentSupervisionLevel(orders Orders) string {
 	return orders[0].SupervisionLevel
 }
 
-func restructureOrders(apiOrders apiOrders) Orders {
-	orders := make(Orders, len(apiOrders))
-
-	for i, t := range apiOrders {
-		// reformatting order date to yyyy-dd-mm
-		reformattedDate := formatDate(t.OrderDate)
-
-		var supervisionLevel string
-		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
-			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
-		} else {
-			supervisionLevel = ""
-		}
-
-		orders[i] = Order{
-			OrderStatus:      t.OrderStatus.Label,
-			SupervisionLevel: supervisionLevel,
-			OrderDate:        reformattedDate,
-		}
-	}
-
-	//updatedOrders := removeOpenStatusOrders(orders)
-	return orders
-}
+//func restructureOrders(apiOrders apiOrders) Orders {
+//	orders := make(Orders, len(apiOrders))
+//
+//	for i, t := range apiOrders {
+//		// reformatting order date to yyyy-dd-mm
+//		reformattedDate := formatDate(t.OrderDate)
+//
+//		var supervisionLevel string
+//		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
+//			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
+//		} else {
+//			supervisionLevel = ""
+//		}
+//
+//		orders[i] = Order{
+//			OrderStatus:      t.OrderStatus.Label,
+//			SupervisionLevel: supervisionLevel,
+//			OrderDate:        reformattedDate,
+//		}
+//	}
+//
+//	//updatedOrders := removeOpenStatusOrders(orders)
+//	return orders
+//}
 
 func formatDate(dateString string) time.Time {
 	dateTime, _ := time.Parse("02/01/2006", dateString)
