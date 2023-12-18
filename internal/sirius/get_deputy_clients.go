@@ -273,10 +273,10 @@ GetOrderStatus returns the status of the oldest active order for a client.
 //	return orders
 //}
 
-func formatDate(dateString string) time.Time {
-	dateTime, _ := time.Parse("02/01/2006", dateString)
-	return dateTime
-}
+//func formatDate(dateString string) time.Time {
+//	dateTime, _ := time.Parse("02/01/2006", dateString)
+//	return dateTime
+//}
 
 //func removeOpenStatusOrders(orders Orders) Orders {
 //	/* An order is open when it's with the Allocations team,
