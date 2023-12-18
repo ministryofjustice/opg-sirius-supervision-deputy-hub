@@ -124,8 +124,6 @@ type ClientListParams struct {
 	Limit              int
 	Search             int
 	DeputyType         string
-	ColumnBeingSorted  string
-	SortOrder          string
 	Sort               string
 	OrderStatuses      []string
 	AccommodationTypes []string
