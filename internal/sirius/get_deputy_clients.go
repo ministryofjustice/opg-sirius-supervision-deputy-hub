@@ -3,58 +3,41 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"sort"
 	"strings"
-	"time"
 )
 
-type apiOrder struct {
-	OrderStatus struct {
-		Label string `json:"label"`
-	}
-	LatestSupervisionLevel struct {
-		SupervisionLevel struct {
-			Label string `json:"label"`
-		}
-	}
-	OrderDate string `json:"orderDate"`
+type label struct {
+	Label string `json:"label"`
 }
 
-type apiOrders []apiOrder
+type Order struct {
+	OrderStatus            label
+	LatestSupervisionLevel latestSupervisionLevel
+	OrderDate              string `json:"orderDate"`
+}
 
-type apiReport struct {
+type latestSupervisionLevel struct {
+	AppliesFrom      string `json:"appliesFrom"`
+	SupervisionLevel label
+}
+
+type Report struct {
 	DueDate        string `json:"dueDate"`
 	RevisedDueDate string `json:"revisedDueDate"`
-	Status         struct {
-		Label string `json:"label"`
-	} `json:"status"`
+	Status         label  `json:"status"`
 }
 
-type reportReturned struct {
-	DueDate        string
-	RevisedDueDate string
-	StatusLabel    string
-}
-
-type apiLatestCompletedVisit struct {
+type LatestCompletedVisit struct {
 	VisitCompletedDate  string
-	VisitReportMarkedAs struct {
-		Label string `json:"label"`
-	} `json:"visitReportMarkedAs"`
-	VisitUrgency struct {
-		Label string `json:"label"`
-	} `json:"visitUrgency"`
-}
-
-type latestCompletedVisit struct {
-	VisitCompletedDate  string
-	VisitReportMarkedAs string
-	VisitUrgency        string
+	VisitReportMarkedAs label `json:"visitReportMarkedAs"`
+	VisitUrgency        label `json:"visitUrgency"`
 	RagRatingLowerCase  string
 }
 
-type apiClient struct {
+type DeputyClient struct {
 	ClientId            int    `json:"id"`
 	Firstname           string `json:"firstname"`
 	Surname             string `json:"surname"`
@@ -63,35 +46,13 @@ type apiClient struct {
 	ClientAccommodation struct {
 		Label string `json:"label"`
 	}
-	Orders               apiOrders               `json:"orders"`
-	OldestReport         apiReport               `json:"oldestNonLodgedAnnualReport"`
-	LatestCompletedVisit apiLatestCompletedVisit `json:"latestCompletedVisit"`
-	HasActiveREMWarning  bool                    `json:"HasActiveREMWarning"`
-}
-
-type Order struct {
-	OrderStatus      string
-	SupervisionLevel string
-	OrderDate        time.Time
-}
-
-type Orders []Order
-
-type DeputyClient struct {
-	ClientId             int
-	Firstname            string
-	Surname              string
-	CourtRef             string
-	RiskScore            int
-	AccommodationType    string
-	OrderStatus          string
+	Orders               []Order              `json:"orders"`
+	OldestReport         Report               `json:"oldestNonLodgedAnnualReport"`
+	LatestCompletedVisit LatestCompletedVisit `json:"latestCompletedVisit"`
+	HasActiveREMWarning  bool                 `json:"HasActiveREMWarning"`
 	SupervisionLevel     string
-	OldestReport         reportReturned
-	LatestCompletedVisit latestCompletedVisit
-	HasActiveREMWarning  bool
+	OrderStatus          string
 }
-
-type DeputyClientDetails []DeputyClient
 
 type Page struct {
 	PageCurrent int `json:"current"`
@@ -103,14 +64,14 @@ type Metadata struct {
 }
 
 type ApiClientList struct {
-	Clients      []apiClient `json:"clients"`
-	Pages        Page        `json:"pages"`
-	Metadata     Metadata    `json:"metadata"`
-	TotalClients int         `json:"total"`
+	Clients      []DeputyClient `json:"clients"`
+	Pages        Page           `json:"pages"`
+	Metadata     Metadata       `json:"metadata"`
+	TotalClients int            `json:"total"`
 }
 
 type ClientList struct {
-	Clients      DeputyClientDetails
+	Clients      []DeputyClient
 	Pages        Page
 	TotalClients int
 	Metadata     Metadata
@@ -121,8 +82,7 @@ type ClientListParams struct {
 	Limit              int
 	Search             int
 	DeputyType         string
-	ColumnBeingSorted  string
-	SortOrder          string
+	Sort               string
 	OrderStatuses      []string
 	AccommodationTypes []string
 	SupervisionLevels  []string
@@ -132,7 +92,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	var clientList ClientList
 	var apiClientList ApiClientList
 
-	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search)
+	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
 
 	filter := params.CreateFilter()
 
@@ -151,6 +111,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	if err != nil {
 		return clientList, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -165,49 +126,33 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		return clientList, err
 	}
 
-	var clients DeputyClientDetails
+	var clients []DeputyClient
 	for _, t := range apiClientList.Clients {
-		orders := restructureOrders(t.Orders)
-		if len(orders) > 0 {
-			var client = DeputyClient{
-				ClientId:          t.ClientId,
-				Firstname:         t.Firstname,
-				Surname:           t.Surname,
-				CourtRef:          t.CourtRef,
-				RiskScore:         t.RiskScore,
-				AccommodationType: t.ClientAccommodation.Label,
-				OrderStatus:       getOrderStatus(orders),
-				SupervisionLevel:  getMostRecentSupervisionLevel(orders),
-				OldestReport: reportReturned{
-					t.OldestReport.DueDate,
-					t.OldestReport.RevisedDueDate,
-					t.OldestReport.Status.Label,
-				},
-				LatestCompletedVisit: latestCompletedVisit{
-					FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
-					t.LatestCompletedVisit.VisitReportMarkedAs.Label,
-					t.LatestCompletedVisit.VisitUrgency.Label,
-					strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
-				},
-				HasActiveREMWarning: t.HasActiveREMWarning,
-			}
-			clients = append(clients, client)
+		var client = DeputyClient{
+			ClientId:            t.ClientId,
+			Firstname:           t.Firstname,
+			Surname:             t.Surname,
+			CourtRef:            t.CourtRef,
+			RiskScore:           t.RiskScore,
+			ClientAccommodation: t.ClientAccommodation,
+			OrderStatus:         getOrderStatus(t.Orders),
+			SupervisionLevel:    getMostRecentSupervisionLevel(t.Orders),
+			OldestReport:        t.OldestReport,
+			LatestCompletedVisit: LatestCompletedVisit{
+				FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
+				t.LatestCompletedVisit.VisitReportMarkedAs,
+				t.LatestCompletedVisit.VisitUrgency,
+				strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+			},
+			HasActiveREMWarning: t.HasActiveREMWarning,
 		}
+		clients = append(clients, client)
 	}
 
 	clientList.Clients = clients
 	clientList.Pages = apiClientList.Pages
 	clientList.TotalClients = apiClientList.TotalClients
 	clientList.Metadata = apiClientList.Metadata
-
-	switch params.ColumnBeingSorted {
-	case "reportdue":
-		reportDueScoreSort(clients, params.SortOrder)
-	case "crec":
-		crecScoreSort(clients, params.SortOrder)
-	default:
-		alphabeticalSort(clients, params.SortOrder)
-	}
 
 	return clientList, err
 }
@@ -231,115 +176,35 @@ GetOrderStatus returns the status of the oldest active order for a client.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
-func getOrderStatus(orders Orders) string {
+func getOrderStatus(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
-		return orders[i].OrderDate.Before(orders[j].OrderDate)
+		iDate := model.NewDate(orders[i].OrderDate)
+		jDate := model.NewDate(orders[j].OrderDate)
+		return iDate.Before(jDate)
 	})
 
 	for _, o := range orders {
-		if o.OrderStatus == "Active" {
-			return o.OrderStatus
+		if o.OrderStatus.Label == "Active" {
+			return o.OrderStatus.Label
 		}
 	}
-	return orders[0].OrderStatus
-}
-
-func getMostRecentSupervisionLevel(orders Orders) string {
-	sort.Slice(orders, func(i, j int) bool {
-		return orders[i].OrderDate.After(orders[j].OrderDate)
-	})
-	return orders[0].SupervisionLevel
-}
-
-func restructureOrders(apiOrders apiOrders) Orders {
-	orders := make(Orders, len(apiOrders))
-
-	for i, t := range apiOrders {
-		// reformatting order date to yyyy-dd-mm
-		reformattedDate := formatDate(t.OrderDate)
-
-		var supervisionLevel string
-		if t.LatestSupervisionLevel.SupervisionLevel.Label != "" {
-			supervisionLevel = t.LatestSupervisionLevel.SupervisionLevel.Label
-		} else {
-			supervisionLevel = ""
-		}
-
-		orders[i] = Order{
-			OrderStatus:      t.OrderStatus.Label,
-			SupervisionLevel: supervisionLevel,
-			OrderDate:        reformattedDate,
-		}
-	}
-
-	updatedOrders := removeOpenStatusOrders(orders)
-	return updatedOrders
-}
-
-func formatDate(dateString string) time.Time {
-	dateTime, _ := time.Parse("02/01/2006", dateString)
-	return dateTime
-}
-
-func removeOpenStatusOrders(orders Orders) Orders {
-	/* An order is open when it's with the Allocations team,
-	and so not yet supervised by the PA team */
-
-	var updatedOrders Orders
 	for _, o := range orders {
-		if o.OrderStatus != "Open" {
-			updatedOrders = append(updatedOrders, o)
+		if o.OrderStatus.Label != "Open" {
+			return o.OrderStatus.Label
 		}
 	}
-	return updatedOrders
+	return orders[0].OrderStatus.Label
 }
 
-func alphabeticalSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
-	if len(clients) > 1 {
-		sort.Slice(clients, func(i, j int) bool {
-			if sortOrder == "asc" {
-				return clients[i].Surname < clients[j].Surname
-			} else {
-				return clients[i].Surname > clients[j].Surname
-			}
-		})
-	}
-	return clients
-}
-
-func crecScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
-	sort.Slice(clients, func(i, j int) bool {
-		if sortOrder == "asc" {
-			return clients[i].RiskScore < clients[j].RiskScore
-		} else {
-			return clients[i].RiskScore > clients[j].RiskScore
+func getMostRecentSupervisionLevel(orders []Order) string {
+	sort.Slice(orders, func(i, j int) bool {
+		if orders[i].LatestSupervisionLevel.AppliesFrom == "" {
+			orders[i].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
 		}
+		iDate := model.NewDate(orders[i].LatestSupervisionLevel.AppliesFrom)
+		jDate := model.NewDate(orders[j].LatestSupervisionLevel.AppliesFrom)
+
+		return iDate.After(jDate)
 	})
-	return clients
-}
-
-func setDueDateForSort(dueDate, revisedDueDate string) string {
-	if revisedDueDate != "" {
-		return revisedDueDate
-	} else if dueDate != "" {
-		return dueDate
-	} else {
-		return "12/12/9999"
-	}
-}
-
-func reportDueScoreSort(clients DeputyClientDetails, sortOrder string) DeputyClientDetails {
-	sort.Slice(clients, func(i, j int) bool {
-		x := setDueDateForSort(clients[i].OldestReport.DueDate, clients[i].OldestReport.RevisedDueDate)
-		y := setDueDateForSort(clients[j].OldestReport.DueDate, clients[j].OldestReport.RevisedDueDate)
-		dateTimeI := formatDate(x)
-		dateTimeJ := formatDate(y)
-
-		if sortOrder == "asc" {
-			return dateTimeI.Before(dateTimeJ)
-		} else {
-			return dateTimeJ.Before(dateTimeI)
-		}
-	})
-	return clients
+	return orders[0].LatestSupervisionLevel.SupervisionLevel.Label
 }
