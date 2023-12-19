@@ -48,20 +48,7 @@
                             <th scope="col" class="govuk-table__header">Supervision level</th>
                             <th scope="col" class="govuk-table__header">Visits</th>
                             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "reportDue" }}"><a href="{{ .UrlBuilder.GetSortUrl "reportDue" }}"><button type="button">Report due</button></a></th>
-                            <th
-{{/*                                {{ $direction = (.Sort.GetHTMLSortDirection "crec") }}*/}}
-                                scope="col"
-                                class="govuk-table__header"
-{{/*                                label="sort-aria-column-{{ ( .Sort.ChangeSortButtonDirection "crec" $direction ) }}"*/}}
-{{/*                                aria-sort="{{ ( .Sort.ChangeSortButtonDirection "crec" $direction )  }}"*/}}
-                            >
-                                <a
-                                    class="sorting-arrows button"
-{{/*                                    href="{{ prefix (printf "/%d/clients?sort=crec:%s" .DeputyDetails.ID $direction) }}"*/}}
-                                >
-                                    Risk
-                                </a>
-                            </th>
+                            <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "crec" }}"><a href="{{ .UrlBuilder.GetSortUrl "crec" }}"><button type="button">Risk</button></a></th>
                         </tr>
                         </thead>
 
