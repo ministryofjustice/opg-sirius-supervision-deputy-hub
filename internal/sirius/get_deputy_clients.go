@@ -206,6 +206,9 @@ func getMostRecentSupervisionLevel(orders []Order) string {
 		if orders[j].LatestSupervisionLevel.AppliesFrom == "" {
 			orders[j].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
 		}
+		if orders[j].LatestSupervisionLevel.AppliesFrom == "" {
+			orders[j].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
+		}
 		iDate := model.NewDate(orders[i].LatestSupervisionLevel.AppliesFrom)
 		jDate := model.NewDate(orders[j].LatestSupervisionLevel.AppliesFrom)
 
