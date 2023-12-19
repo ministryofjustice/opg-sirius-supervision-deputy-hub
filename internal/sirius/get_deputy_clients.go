@@ -63,13 +63,6 @@ type Metadata struct {
 	TotalActiveClients int `json:"totalActiveClients"`
 }
 
-type ApiClientList struct {
-	Clients      []DeputyClient `json:"clients"`
-	Pages        Page           `json:"pages"`
-	Metadata     Metadata       `json:"metadata"`
-	TotalClients int            `json:"total"`
-}
-
 type ClientList struct {
 	Clients      []DeputyClient
 	Pages        Page
@@ -90,7 +83,6 @@ type ClientListParams struct {
 
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
-	var apiClientList ApiClientList
 
 	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
 
@@ -122,12 +114,12 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		return clientList, newStatusError(resp)
 	}
 
-	if err = json.NewDecoder(resp.Body).Decode(&apiClientList); err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&clientList); err != nil {
 		return clientList, err
 	}
 
 	var clients []DeputyClient
-	for _, t := range apiClientList.Clients {
+	for _, t := range clientList.Clients {
 		var client = DeputyClient{
 			ClientId:            t.ClientId,
 			Firstname:           t.Firstname,
@@ -150,10 +142,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	}
 
 	clientList.Clients = clients
-	clientList.Pages = apiClientList.Pages
-	clientList.TotalClients = apiClientList.TotalClients
-	clientList.Metadata = apiClientList.Metadata
-
+	clientList.TotalClients = clientList.Metadata.TotalActiveClients
 	return clientList, err
 }
 
