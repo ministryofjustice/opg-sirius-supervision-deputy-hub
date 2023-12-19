@@ -181,8 +181,12 @@ func getOrderStatus(orders []Order) string {
 		if orders[i].OrderDate == "" {
 			orders[i].OrderDate = "31/12/9999"
 		}
+		if orders[j].OrderDate == "" {
+			orders[j].OrderDate = "31/12/9999"
+		}
 		iDate := model.NewDate(orders[i].OrderDate)
 		jDate := model.NewDate(orders[j].OrderDate)
+
 		return iDate.Before(jDate)
 	})
 
@@ -203,6 +207,9 @@ func getMostRecentSupervisionLevel(orders []Order) string {
 	sort.Slice(orders, func(i, j int) bool {
 		if orders[i].LatestSupervisionLevel.AppliesFrom == "" {
 			orders[i].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
+		}
+		if orders[j].LatestSupervisionLevel.AppliesFrom == "" {
+			orders[j].LatestSupervisionLevel.AppliesFrom = "01/01/0001"
 		}
 		iDate := model.NewDate(orders[i].LatestSupervisionLevel.AppliesFrom)
 		jDate := model.NewDate(orders[j].LatestSupervisionLevel.AppliesFrom)

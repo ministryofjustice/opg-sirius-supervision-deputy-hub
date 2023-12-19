@@ -15,82 +15,82 @@ func TestDeputyClientReturned(t *testing.T) {
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := ` {
-   "clients": [
-     {
-       "id": 67,
-       "caseRecNumber": "67422477",
-       "email": "john.fearless@example.com",
-       "firstname": "John",
-       "surname": "Fearless",
-       "addressLine1": "94 Duckpit Lane",
-       "addressLine2": "Upper Oddington",
-       "addressLine3": "Canvey Island",
-       "town": "",
-       "county": "",
-       "postcode": "GL566WQ",
-       "country": "",
-       "phoneNumber": "07960209814",
-       "clientAccommodation": {
-         "handle": "FAMILY MEMBER/FRIEND'S HOME",
-         "label": "Family Member/Friend's Home (including spouse/civil partner)",
-         "deprecated": false
-       },
-       "orders": [
-         {
-           "id": 59,
-           "latestSupervisionLevel": {
+  "clients": [
+    {
+      "id": 67,
+      "caseRecNumber": "67422477",
+      "email": "john.fearless@example.com",
+      "firstname": "John",
+      "surname": "Fearless",
+      "addressLine1": "94 Duckpit Lane",
+      "addressLine2": "Upper Oddington",
+      "addressLine3": "Canvey Island",
+      "town": "",
+      "county": "",
+      "postcode": "GL566WQ",
+      "country": "",
+      "phoneNumber": "07960209814",
+      "clientAccommodation": {
+        "handle": "FAMILY MEMBER/FRIEND'S HOME",
+        "label": "Family Member/Friend's Home (including spouse/civil partner)",
+        "deprecated": false
+      },
+      "orders": [
+        {
+          "id": 59,
+          "latestSupervisionLevel": {
 			"appliesFrom": "01/12/2020",
-             "supervisionLevel": {
-               "handle": "GENERAL",
-               "label": "General",
-               "deprecated": null
-             }
-           },
-           "orderDate": "01/12/2020",
-           "orderStatus": {
-             "handle": "ACTIVE",
-             "label": "Active",
-             "deprecated": false
-           }
-         },
-         {
-           "id": 60,
-           "latestSupervisionLevel": {
+            "supervisionLevel": {
+              "handle": "GENERAL",
+              "label": "General",
+              "deprecated": null
+            }
+          },
+          "orderDate": "01/12/2020",
+          "orderStatus": {
+            "handle": "ACTIVE",
+            "label": "Active",
+            "deprecated": false
+          }
+        },
+        {
+          "id": 60,
+          "latestSupervisionLevel": {
 			 "appliesFrom": "01/12/2017",
-             "supervisionLevel": {
-               "handle": "GENERAL",
-               "label": "General",
-               "deprecated": null
-             }
-           },
-           "orderDate": "01/12/2017",
-           "orderStatus": {
-             "handle": "ACTIVE",
-             "label": "Active",
-             "deprecated": false
-           }
-         }
-       ],
-       "oldestNonLodgedAnnualReport": {
-         "dueDate": "01/01/2016",
-         "revisedDueDate": "01/05/2016",
-         "status": {
-           "label": "Pending"
-         }
-       },
-       "riskScore": 5,
+            "supervisionLevel": {
+              "handle": "GENERAL",
+              "label": "General",
+              "deprecated": null
+            }
+          },
+          "orderDate": "01/12/2017",
+          "orderStatus": {
+            "handle": "ACTIVE",
+            "label": "Active",
+            "deprecated": false
+          }
+        }
+      ],
+      "oldestNonLodgedAnnualReport": {
+        "dueDate": "01/01/2016",
+        "revisedDueDate": "01/05/2016",
+        "status": {
+          "label": "Pending"
+        }
+      },
+      "riskScore": 5,
 		"hasActiveREMWarning": true
-     }
-   ],
-   "pages": {
-     "current": 1,
-     "total": 1
-   },
-   "metadata": {
-     "totalActiveClients": 1
-   },
-   "total": 1
- } `
+    }
+  ],
+  "pages": {
+    "current": 1,
+    "total": 1
+  },
+  "metadata": {
+    "totalActiveClients": 1
+  },
+  "total": 1
+} `
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
 
@@ -216,6 +216,30 @@ func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 	assert.Equal(t, expectedResponse, result)
 }
 
+func TestGetOrderStatusNil(t *testing.T) {
+	orderData := []Order{
+		{
+			OrderStatus:            label{"Open"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "",
+		},
+		{
+			OrderStatus:            label{"Active"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2014",
+		},
+		{
+			OrderStatus:            label{"Open"},
+			LatestSupervisionLevel: latestSupervisionLevel{},
+			OrderDate:              "12/01/2017",
+		},
+	}
+	expectedResponse := "Active"
+	result := getOrderStatus(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
 func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
 	orderData := []Order{
 		{
@@ -254,6 +278,43 @@ func TestGetMostRecentSupervisionLevel(t *testing.T) {
 	}
 
 	orderData := []Order{
+		test,
+		test2,
+	}
+	expectedResponse := "Minimal"
+	result := getMostRecentSupervisionLevel(orderData)
+
+	assert.Equal(t, expectedResponse, result)
+}
+
+func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
+
+	test := Order{
+		LatestSupervisionLevel: latestSupervisionLevel{
+			AppliesFrom:      "01/02/2020",
+			SupervisionLevel: label{Label: "General"},
+		},
+		OrderDate: "01/02/2020",
+	}
+
+	test2 := Order{
+		LatestSupervisionLevel: latestSupervisionLevel{
+			AppliesFrom:      "03/02/2020",
+			SupervisionLevel: label{Label: "Minimal"},
+		},
+		OrderDate: "12/01/2020",
+	}
+
+	test3 := Order{
+		LatestSupervisionLevel: latestSupervisionLevel{
+			AppliesFrom:      "",
+			SupervisionLevel: label{Label: "Minimal"},
+		},
+		OrderDate: "12/01/2020",
+	}
+
+	orderData := []Order{
+		test3,
 		test,
 		test2,
 	}
