@@ -24,10 +24,10 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@cypress/grep@^3.1.5":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@cypress/grep/-/grep-3.1.5.tgz#d21a7194e2dd172daf864ac7a5ffc9313cc122f7"
-  integrity sha512-dbLKP9wGLId+TwTRFDcWVcr9AvJ06W3K7dVeJzLONiPbI5/XJh2mDZvnoyJlAz+VZxdwe0+nejk/CPmuphuzkQ==
+"@cypress/grep@^4.0.0":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@cypress/grep/-/grep-4.0.1.tgz#bce679f85da286c4979bb9ffc79b2782dc5b75c6"
+  integrity sha512-i3mWy4mG6nxF7m93W0nzsMZkl0PflGa4+SygA9P92tELayYYAaRKlr07I4fo5PnwoPk1H9IEbXoMFJkhfTMxtg==
   dependencies:
     debug "^4.3.4"
     find-test-names "^1.19.0"
