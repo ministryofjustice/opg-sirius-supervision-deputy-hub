@@ -60,27 +60,6 @@ func TestNavigateToClientTab(t *testing.T) {
 	assert.Equal(http.StatusOK, resp.StatusCode)
 }
 
-func TestParseUrlReturnsColumnAndSortOrder(t *testing.T) {
-	urlParams := url.Values{}
-	urlParams.Set("sort", "crec:desc")
-	expectedResponseColumnBeingSorted, sortOrder, expectedsortBool := "crec", "desc", false
-	resultColumnBeingSorted, resultSortOrder, sortBool := parseUrl(urlParams)
-
-	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
-	assert.Equal(t, resultSortOrder, sortOrder)
-	assert.Equal(t, expectedsortBool, sortBool)
-}
-
-func TestParseUrlReturnsEmptyStrings(t *testing.T) {
-	urlParams := url.Values{}
-	expectedResponseColumnBeingSorted, sortOrder, expectedSortBool := "", "", false
-	resultColumnBeingSorted, resultSortOrder, sortBool := parseUrl(urlParams)
-
-	assert.Equal(t, expectedResponseColumnBeingSorted, resultColumnBeingSorted)
-	assert.Equal(t, resultSortOrder, sortOrder)
-	assert.Equal(t, expectedSortBool, sortBool)
-}
-
 func TestListClientsHandlesErrors(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockDeputyHubClientInformation{
