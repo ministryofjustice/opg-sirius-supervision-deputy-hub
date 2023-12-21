@@ -24,6 +24,7 @@ func (c *Client) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -43,6 +44,11 @@ func (c *Client) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
 	for _, u := range v.ClientAccommodation {
 		accommodationTypes = append(accommodationTypes, u)
 	}
+
+	accommodationTypes = append(
+		[]model.RefData{
+			{Handle: "HIGH RISK LIVING", Label: "High Risk Living"},
+		}, accommodationTypes...)
 
 	return accommodationTypes, nil
 }
