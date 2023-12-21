@@ -2504,6 +2504,7 @@ module.exports = function () {
         "clientAccommodation":
             {
                 "clientAccommodation": [
+                    {"handle": "HIGH RISK LIVING", "label": "High Risk Living"},
                     {"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type"},
                     {"handle": "COUNCIL RENTED", "label": "Council Rented"},
                     {
