@@ -63,10 +63,10 @@ describe("Clients tab", () => {
             "contain",
             "Standard visit"
         );
-        cy.get(":nth-child(1) > .visit_type").should("contain", "Green");
+        cy.get(":nth-child(1) > .visit_type").should("contain", "Low risk");
         cy.get(":nth-child(2) > .visit_type").should("contain", "03/03/2020");
         cy.get(":nth-child(2) > .visit_type").should("contain", "Urgent visit");
-        cy.get(":nth-child(2) > .visit_type").should("contain", "Red");
+        cy.get(":nth-child(2) > .visit_type").should("contain", "High risk");
         cy.get(":nth-child(3) > .visit_type").should("contain", "-");
     });
 });
