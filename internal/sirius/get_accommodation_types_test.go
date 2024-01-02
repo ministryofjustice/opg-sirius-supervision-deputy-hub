@@ -18,8 +18,8 @@ func TestGetAccommodationTypes(t *testing.T) {
 	json := `
             {
 				"clientAccommodation": [
-					{"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type"},
-					{"handle": "COUNCIL RENTED", "label": "Council Rented"}
+					{"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type", "deprecated": false},
+					{"handle": "COUNCIL RENTED", "label": "Council Rented", "deprecated": true}
 				]
 			}`
 
@@ -40,10 +40,6 @@ func TestGetAccommodationTypes(t *testing.T) {
 		{
 			Handle: "NO ACCOMMODATION TYPE",
 			Label:  "No Accommodation Type",
-		},
-		{
-			Handle: "COUNCIL RENTED",
-			Label:  "Council Rented",
 		},
 	}
 

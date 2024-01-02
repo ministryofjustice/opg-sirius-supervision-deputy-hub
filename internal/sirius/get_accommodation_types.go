@@ -8,8 +8,9 @@ import (
 
 type AccommodationTypeList struct {
 	ClientAccommodation []struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
+		Handle     string `json:"handle"`
+		Label      string `json:"label"`
+		Deprecated bool   `json:"deprecated"`
 	} `json:"clientAccommodation"`
 }
 
@@ -42,7 +43,9 @@ func (c *Client) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
 
 	var accommodationTypes []model.RefData
 	for _, u := range v.ClientAccommodation {
-		accommodationTypes = append(accommodationTypes, u)
+		if !u.Deprecated {
+			accommodationTypes = append(accommodationTypes, u)
+		}
 	}
 
 	accommodationTypes = append(

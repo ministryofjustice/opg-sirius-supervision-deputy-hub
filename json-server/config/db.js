@@ -1801,7 +1801,7 @@ module.exports = function () {
                     },
                     "phoneNumber": {
                         "stringLengthTooLong": ""
-                    },                    
+                    },
                     "otherPhoneNumber": {
                         "stringLengthTooLong": ""
                     },
@@ -2504,37 +2504,54 @@ module.exports = function () {
         "clientAccommodation":
             {
                 "clientAccommodation": [
-                    {"handle": "HIGH RISK LIVING", "label": "High Risk Living"},
-                    {"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type"},
-                    {"handle": "COUNCIL RENTED", "label": "Council Rented"},
+                    {"handle": "NO ACCOMMODATION TYPE", "label": "No Accommodation Type", "deprecated": false},
+                    {"handle": "COUNCIL RENTED", "label": "Council Rented", "deprecated": false},
                     {
                         "handle": "FAMILY MEMBER/FRIENDS HOME",
-                        "label": "Family Member/Friends Home (including spouse/civil partner)"
+                        "label": "Family Member/Friends Home (including spouse/civil partner)",
+                        "deprecated": false
                     },
-                    {"handle": "SUPERVISED SHELTERED", "label": "Supervised Sheltered Accommodation"},
-                    {"handle": "HOUSING ASSOCIATION", "label": "Housing Association"},
-                    {"handle": "HOTEL", "label": "Hotel"},
-                    {"handle": "HOSTEL", "label": "Hostel"},
-                    {"handle": "HEALTH SERVICE PATIENT", "label": "Health Service Patient"},
-                    {"handle": "NHS ACCOMMODATION", "label": "NHS Accommodation e.g. hospital or hostel"},
-                    {"handle": "NO FIXED ADDRESS", "label": "No Fixed Address"},
+                    {
+                        "handle": "SUPERVISED SHELTERED",
+                        "label": "Supervised Sheltered Accommodation",
+                        "deprecated": false
+                    },
+                    {"handle": "HOUSING ASSOCIATION", "label": "Housing Association", "deprecated": true},
+                    {"handle": "HOTEL", "label": "Hotel", "deprecated": false},
+                    {"handle": "HOSTEL", "label": "Hostel", "deprecated": false},
+                    {"handle": "HEALTH SERVICE PATIENT", "label": "Health Service Patient", "deprecated": false},
+                    {
+                        "handle": "NHS ACCOMMODATION",
+                        "label": "NHS Accommodation e.g. hospital or hostel",
+                        "deprecated": false
+                    },
+                    {"handle": "NO FIXED ADDRESS", "label": "No Fixed Address", "deprecated": false},
                     {
                         "handle": "CARE/NURSING/RESIDENTIAL HOME (PRIVATE/LA/REGISTERED)",
                         "label": "Care/Nursing/Residential Home (Private/LA/Registered)"
+                        , "deprecated": false
                     },
-                    {"handle": "LA NURSING HOME", "label": "LA Nursing Home"},
-                    {"handle": "LA NURSING HOME OR RESIDENTIAL HOME", "label": "LA NURSING HOME OR RESIDENTIAL HOME"},
-                    {"handle": "PRIVATE NURSING HOME", "label": "Private Nursing Home"},
-                    {"handle": "REGISTERED CARE HOME", "label": "Registered Care Home"},
-                    {"handle": "PRIVATE RESIDENTIAL HOME", "label": "Private Residential Home"},
-                    {"handle": "OWN HOME", "label": "Own Home"},
-                    {"handle": "OTHER", "label": "Other"},
-                    {"handle": "PRIVATE HOSPITAL", "label": "Private Hospital"},
-                    {"handle": "LA PART 3 ACCOMMODATION", "label": "Local Authority Part 3 Accommodation"},
-                    {"handle": "PRIVATE RENTED", "label": "Private Rented (i.e. Not Council)"},
-                    {"handle": "SECURE HOSPITAL", "label": "Secure Hospital"},
-                    {"handle": "SUPPORTED HOUSING", "label": "Supported Housing"},
-                    {"handle": "SUPPORTED LIVING", "label": "Supported Living"}
+                    {"handle": "LA NURSING HOME", "label": "LA Nursing Home", "deprecated": true},
+                    {
+                        "handle": "LA NURSING HOME OR RESIDENTIAL HOME",
+                        "label": "LA NURSING HOME OR RESIDENTIAL HOME",
+                        "deprecated": true
+                    },
+                    {"handle": "PRIVATE NURSING HOME", "label": "Private Nursing Home", "deprecated": true},
+                    {"handle": "REGISTERED CARE HOME", "label": "Registered Care Home", "deprecated": true},
+                    {"handle": "PRIVATE RESIDENTIAL HOME", "label": "Private Residential Home", "deprecated": true},
+                    {"handle": "OWN HOME", "label": "Own Home", "deprecated": false},
+                    {"handle": "OTHER", "label": "Other", "deprecated": false},
+                    {"handle": "PRIVATE HOSPITAL", "label": "Private Hospital", "deprecated": false},
+                    {
+                        "handle": "LA PART 3 ACCOMMODATION",
+                        "label": "Local Authority Part 3 Accommodation",
+                        "deprecated": false
+                    },
+                    {"handle": "PRIVATE RENTED", "label": "Private Rented (i.e. Not Council)", "deprecated": false},
+                    {"handle": "SECURE HOSPITAL", "label": "Secure Hospital", "deprecated": false},
+                    {"handle": "SUPPORTED HOUSING", "label": "Supported Housing", "deprecated": false},
+                    {"handle": "SUPPORTED LIVING", "label": "Supported Living", "deprecated": false}
                 ],
             },
         "supervisionLevel":
