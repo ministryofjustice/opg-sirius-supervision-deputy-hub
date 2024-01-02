@@ -1,8 +1,9 @@
 package model
 
 type RefData struct {
-	Handle string `json:"handle"`
-	Label  string `json:"label"`
+	Handle     string `json:"handle"`
+	Label      string `json:"label"`
+	Deprecated bool   `json:"deprecated"`
 }
 
 func (r RefData) Is(handle string) bool {
