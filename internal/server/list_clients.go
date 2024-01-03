@@ -166,6 +166,8 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		vars.Sort = sort
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
+		//fmt.Println(vars.Clients.Pages.PageCurrent)
+
 		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
 			return Redirect(vars.UrlBuilder.GetPaginationUrl(vars.Clients.Pages.PageTotal, perPage))
 		}
