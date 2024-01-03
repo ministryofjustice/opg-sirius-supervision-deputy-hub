@@ -34,119 +34,19 @@
                             <input type="hidden" name="{{ $name }}" value="{{ $value }}" />
                         {{ end }}
                     {{ end }}
-                    <div class="govuk-grid-row">
-                        <nav id="top-pagination" aria-label="Top pagination">
-                            {{ template "pagination" .Pagination }}
-                        </nav>
+                <div class="govuk-grid-row">
+                    <nav id="top-pagination" aria-label="Top pagination">
+                        {{ template "pagination" .Pagination }}
+                    </nav>
+                </div>
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <form method="post">
+                            {{ template "client-list" . }}
+                        </form>
                     </div>
-                    <table id="pa-clients-3" class="govuk-table sortable">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "surname" }}"><a href="{{ .UrlBuilder.GetSortUrl "surname" }}"><button type="button">Client</button></a></th>
-                            <th scope="col" class="govuk-table__header">Accommodation type</th>
-                            <th scope="col" class="govuk-table__header">Status</th>
-                            <th scope="col" class="govuk-table__header">Supervision level</th>
-                            <th scope="col" class="govuk-table__header">Visits</th>
-                            <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "reportDue" }}"><a href="{{ .UrlBuilder.GetSortUrl "reportDue" }}"><button type="button">Report due</button></a></th>
-                            <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "crec" }}"><a href="{{ .UrlBuilder.GetSortUrl "crec" }}"><button type="button">Risk</button></a></th>
-                        </tr>
-                        </thead>
+                </div>
 
-                        <tbody class="govuk-table__body">
-                        {{ range .Clients.Clients }}
-                            <tr class="govuk-table__row">
-                                <td
-                                    class="govuk-table__cell client_name_ref nowrap"
-                                    label="clientId {{ .ClientId }}">
-                                    <a
-                                        class="govuk-link"
-                                        href="{{ sirius (printf "/supervision/#/clients/%d" .ClientId) }}">
-                                        {{ if .Firstname }}
-                                            {{ .Firstname }}
-                                        {{ else }}
-                                            -
-                                        {{ end }}
-                                        {{ if .Surname }}
-                                            {{ .Surname }}
-                                        {{ else }}
-                                            -
-                                        {{ end }}
-                                    </a>
-                                    <span class="secondary court_ref">
-                                        {{ if .CourtRef }}
-                                            {{ .CourtRef }}
-                                            {{ .HasActiveREMWarning }}
-                                        {{ else }}
-                                            -
-                                        {{ end }}
-                                    </span>
-                                    {{ if .HasActiveREMWarning }}
-                                        <span class="secondary rem-warning">
-                                            REM warning
-                                        </span>
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell">
-                                    {{ if ne .ClientAccommodation.Label "" }}
-                                        {{ .ClientAccommodation.Label }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell">
-                                    {{ if .OrderStatus }}
-                                        {{ .OrderStatus }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell">
-                                    {{ if .SupervisionLevel }}
-                                        {{ .SupervisionLevel }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell visit_type nowrap">
-                                    {{ if ne .LatestCompletedVisit.VisitCompletedDate "" }}
-                                        {{ .LatestCompletedVisit.VisitCompletedDate }}
-                                        <span class="secondary">
-                                            {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency.Label }}
-                                        </span>
-                                        {{ $rag := .LatestCompletedVisit.GetRAGRating }}
-                                        {{ if $rag.Colour }}
-                                            <span><strong class="govuk-tag govuk-tag--{{ $rag.Colour }}">{{ $rag.Name }}</strong></span>
-                                        {{ else }}
-                                            -
-                                        {{ end }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell reports nowrap due">
-                                    {{ if ne .OldestReport.DueDate "" }}
-                                        {{ if .OldestReport.RevisedDueDate }}
-                                            {{ .OldestReport.RevisedDueDate }}
-                                        {{ else }}
-                                            {{ .OldestReport.DueDate }}
-                                        {{ end }}
-                                        <br/>
-                                        {{ .OldestReport.Status.Label }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                                <td class="govuk-table__cell data-crec">
-                                    {{ if .RiskScore }}
-                                        {{ .RiskScore }}
-                                    {{ else }}
-                                        -
-                                    {{ end }}
-                                </td>
-                            </tr>
-                        {{ end }}
-                        </tbody>
-                    </table>
                 <div class="govuk-grid-row">
                     <nav id="bottom-pagination" aria-label="Bottom pagination">
                         {{ template "pagination" .Pagination }}
