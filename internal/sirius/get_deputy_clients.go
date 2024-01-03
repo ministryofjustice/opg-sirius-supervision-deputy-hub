@@ -9,47 +9,34 @@ import (
 	"strings"
 )
 
-type label struct {
-	Label string `json:"label"`
-}
-
 type Order struct {
-	OrderStatus            label
+	OrderStatus            model.RefData `json:"orderStatus"`
 	LatestSupervisionLevel latestSupervisionLevel
 	OrderDate              string `json:"orderDate"`
 }
 
 type latestSupervisionLevel struct {
-	AppliesFrom      string `json:"appliesFrom"`
-	SupervisionLevel label
+	AppliesFrom      string        `json:"appliesFrom"`
+	SupervisionLevel model.RefData `json:"supervisionLevel"`
 }
 
 type Report struct {
-	DueDate        string `json:"dueDate"`
-	RevisedDueDate string `json:"revisedDueDate"`
-	Status         label  `json:"status"`
-}
-
-type LatestCompletedVisit struct {
-	VisitCompletedDate  string
-	VisitReportMarkedAs label `json:"visitReportMarkedAs"`
-	VisitUrgency        label `json:"visitUrgency"`
-	RagRatingLowerCase  string
+	DueDate        string        `json:"dueDate"`
+	RevisedDueDate string        `json:"revisedDueDate"`
+	Status         model.RefData `json:"status"`
 }
 
 type DeputyClient struct {
-	ClientId            int    `json:"id"`
-	Firstname           string `json:"firstname"`
-	Surname             string `json:"surname"`
-	CourtRef            string `json:"caseRecNumber"`
-	RiskScore           int    `json:"riskScore"`
-	ClientAccommodation struct {
-		Label string `json:"label"`
-	}
-	Orders               []Order              `json:"orders"`
-	OldestReport         Report               `json:"oldestNonLodgedAnnualReport"`
-	LatestCompletedVisit LatestCompletedVisit `json:"latestCompletedVisit"`
-	HasActiveREMWarning  bool                 `json:"HasActiveREMWarning"`
+	ClientId             int                        `json:"id"`
+	Firstname            string                     `json:"firstname"`
+	Surname              string                     `json:"surname"`
+	CourtRef             string                     `json:"caseRecNumber"`
+	RiskScore            int                        `json:"riskScore"`
+	ClientAccommodation  model.RefData              `json:"clientAccommodation"`
+	Orders               []Order                    `json:"orders"`
+	OldestReport         Report                     `json:"oldestNonLodgedAnnualReport"`
+	LatestCompletedVisit model.LatestCompletedVisit `json:"latestCompletedVisit"`
+	HasActiveREMWarning  bool                       `json:"HasActiveREMWarning"`
 	SupervisionLevel     string
 	OrderStatus          string
 }
@@ -131,11 +118,11 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			OrderStatus:         getOrderStatus(t.Orders),
 			SupervisionLevel:    getMostRecentSupervisionLevel(t.Orders),
 			OldestReport:        t.OldestReport,
-			LatestCompletedVisit: LatestCompletedVisit{
-				FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
-				t.LatestCompletedVisit.VisitReportMarkedAs,
-				t.LatestCompletedVisit.VisitUrgency,
-				strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
+			LatestCompletedVisit: model.LatestCompletedVisit{
+				VisitCompletedDate:  FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
+				VisitReportMarkedAs: t.LatestCompletedVisit.VisitReportMarkedAs,
+				VisitUrgency:        t.LatestCompletedVisit.VisitUrgency,
+				RagRatingLowerCase:  strings.ToLower(t.LatestCompletedVisit.VisitReportMarkedAs.Label),
 			},
 			HasActiveREMWarning: t.HasActiveREMWarning,
 		}

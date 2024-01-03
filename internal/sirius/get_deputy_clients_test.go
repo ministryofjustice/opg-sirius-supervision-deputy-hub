@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -108,12 +109,12 @@ func TestDeputyClientReturned(t *testing.T) {
 			Surname:             "Fearless",
 			CourtRef:            "67422477",
 			RiskScore:           5,
-			ClientAccommodation: label{Label: "Family Member/Friend's Home (including spouse/civil partner)"},
+			ClientAccommodation: model.RefData{Handle: "FAMILY MEMBER/FRIEND'S HOME", Label: "Family Member/Friend's Home (including spouse/civil partner)"},
 			OrderStatus:         "Active",
 			OldestReport: Report{
 				DueDate:        "01/01/2016",
 				RevisedDueDate: "01/05/2016",
-				Status:         label{"Pending"},
+				Status:         model.RefData{Label: "Pending"},
 			},
 			SupervisionLevel:    "General",
 			HasActiveREMWarning: true,
@@ -200,12 +201,12 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 	orderData := []Order{
 		{
-			OrderStatus:            label{"Active"},
+			OrderStatus:            model.RefData{Label: "Active"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2014",
 		},
 		{
-			OrderStatus:            label{"Open"},
+			OrderStatus:            model.RefData{Label: "Open"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2017",
 		},
@@ -219,17 +220,17 @@ func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
 func TestGetOrderStatusNil(t *testing.T) {
 	orderData := []Order{
 		{
-			OrderStatus:            label{"Open"},
+			OrderStatus:            model.RefData{Label: "Open"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "",
 		},
 		{
-			OrderStatus:            label{"Active"},
+			OrderStatus:            model.RefData{Label: "Active"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2014",
 		},
 		{
-			OrderStatus:            label{"Open"},
+			OrderStatus:            model.RefData{Label: "Open"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2017",
 		},
@@ -243,12 +244,12 @@ func TestGetOrderStatusNil(t *testing.T) {
 func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
 	orderData := []Order{
 		{
-			OrderStatus:            label{"Closed"},
+			OrderStatus:            model.RefData{Label: "Closed"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2014",
 		},
 		{
-			OrderStatus:            label{"Open"},
+			OrderStatus:            model.RefData{Label: "Open"},
 			LatestSupervisionLevel: latestSupervisionLevel{},
 			OrderDate:              "12/01/2017",
 		},
@@ -264,7 +265,7 @@ func TestGetMostRecentSupervisionLevel(t *testing.T) {
 	test := Order{
 		LatestSupervisionLevel: latestSupervisionLevel{
 			AppliesFrom:      "01/02/2020",
-			SupervisionLevel: label{Label: "General"},
+			SupervisionLevel: model.RefData{Label: "General"},
 		},
 		OrderDate: "01/02/2020",
 	}
@@ -272,7 +273,7 @@ func TestGetMostRecentSupervisionLevel(t *testing.T) {
 	test2 := Order{
 		LatestSupervisionLevel: latestSupervisionLevel{
 			AppliesFrom:      "03/02/2020",
-			SupervisionLevel: label{Label: "Minimal"},
+			SupervisionLevel: model.RefData{Label: "Minimal"},
 		},
 		OrderDate: "12/01/2020",
 	}
@@ -292,7 +293,7 @@ func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
 	test := Order{
 		LatestSupervisionLevel: latestSupervisionLevel{
 			AppliesFrom:      "01/02/2020",
-			SupervisionLevel: label{Label: "General"},
+			SupervisionLevel: model.RefData{Label: "General"},
 		},
 		OrderDate: "01/02/2020",
 	}
@@ -300,7 +301,7 @@ func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
 	test2 := Order{
 		LatestSupervisionLevel: latestSupervisionLevel{
 			AppliesFrom:      "03/02/2020",
-			SupervisionLevel: label{Label: "Minimal"},
+			SupervisionLevel: model.RefData{Label: "Minimal"},
 		},
 		OrderDate: "12/01/2020",
 	}
@@ -308,7 +309,7 @@ func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
 	test3 := Order{
 		LatestSupervisionLevel: latestSupervisionLevel{
 			AppliesFrom:      "",
-			SupervisionLevel: label{Label: "Minimal"},
+			SupervisionLevel: model.RefData{Label: "Minimal"},
 		},
 		OrderDate: "12/01/2020",
 	}
