@@ -46,7 +46,7 @@
                             <th scope="col" class="govuk-table__header">Accommodation type</th>
                             <th scope="col" class="govuk-table__header">Status</th>
                             <th scope="col" class="govuk-table__header">Supervision level</th>
-                            <th scope="col" class="govuk-table__header">Visits</th>
+                            <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "visitDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "visitDate" }}"><button type="button">Visits</button></a></th>
                             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "reportDue" }}"><a href="{{ .UrlBuilder.GetSortUrl "reportDue" }}"><button type="button">Report due</button></a></th>
                             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "crec" }}"><a href="{{ .UrlBuilder.GetSortUrl "crec" }}"><button type="button">Risk</button></a></th>
                         </tr>
