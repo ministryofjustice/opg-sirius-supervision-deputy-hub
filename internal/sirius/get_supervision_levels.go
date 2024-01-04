@@ -8,8 +8,9 @@ import (
 
 type SupervisionLevelList struct {
 	SupervisionLevel []struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
+		Handle     string `json:"handle"`
+		Label      string `json:"label"`
+		Deprecated bool   `json:"deprecated"`
 	} `json:"supervisionLevel"`
 }
 

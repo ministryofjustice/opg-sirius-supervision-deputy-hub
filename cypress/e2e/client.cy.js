@@ -66,7 +66,7 @@ describe("Clients tab", () => {
         });
 
         it("displays REM warning label", () => {
-            cy.get(":nth-child(1) > .rem-warning").should("contain", "REM Warning");
+            cy.get(":nth-child(1) > .rem-warning").should("contain", "REM warning");
             cy.get(":nth-child(2) > .rem-warning").should("not.exist");
         });
     });
