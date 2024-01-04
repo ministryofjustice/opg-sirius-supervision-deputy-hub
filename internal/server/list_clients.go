@@ -92,7 +92,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "reportDue", "crec"})
+		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "visitDate", "reportDue", "crec"})
 
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
