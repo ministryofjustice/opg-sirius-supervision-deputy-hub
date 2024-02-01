@@ -1,12 +1,12 @@
 module github.com/ministryofjustice/opg-sirius-supervision-deputy-hub
 
-go 1.18
+go 1.21
 
 require (
-	github.com/gorilla/mux v1.8.0
-	github.com/ministryofjustice/opg-go-common v0.0.0-20231106092059-b3dcf8bd1eeb
+	github.com/gorilla/mux v1.8.1
+	github.com/ministryofjustice/opg-go-common v0.0.0-20231128145056-24628fba649c
 	github.com/stretchr/testify v1.8.4
-	golang.org/x/sync v0.3.0
+	golang.org/x/sync v0.6.0
 )
 
 require (
