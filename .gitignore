@@ -20,3 +20,4 @@ cypress/downloads
 .cache
 .gocache
 .trivy-cache
+yarn-error.log
