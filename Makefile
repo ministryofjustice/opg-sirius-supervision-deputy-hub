@@ -5,7 +5,7 @@ all: go-lint build-all unit-test scan pa11y lighthouse cypress down
 lint: go-lint yarn-lint
 
 build:
-	docker compose build --parallel deputy-hub
+	docker compose build --no-cache --parallel deputy-hub
 
 build-all:
 	docker compose build --parallel deputy-hub cypress test-runner json-server
