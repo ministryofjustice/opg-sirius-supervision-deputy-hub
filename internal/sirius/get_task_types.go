@@ -29,7 +29,7 @@ func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]mo
 	}
 
 	sort.Slice(deputyTaskTypes, func(i, j int) bool {
-		return deputyTaskTypes[i].Handle < deputyTaskTypes[j].Handle
+		return deputyTaskTypes[i].Description < deputyTaskTypes[j].Description
 	})
 
 	return deputyTaskTypes, err
