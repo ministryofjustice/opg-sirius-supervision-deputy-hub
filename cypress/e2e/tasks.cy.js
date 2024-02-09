@@ -161,7 +161,8 @@ describe("Tasks", () => {
             cy.get('#assignedto-other').should("not.be.checked");
             cy.get('#f-2-note').should("contain.text", "Notes about the task");
 
-            cy.get('#duedate').type('2024-02-02');
+            let nextYear = new Date().getFullYear() + 1;
+            cy.get('#duedate').type(nextYear + '-01-01');
             cy.get('#assignedto-other').check();
             cy.get("#f-select-ecm").type("S");
             cy.get("#f-select-ecm__listbox").find("li").should("have.length", 3);

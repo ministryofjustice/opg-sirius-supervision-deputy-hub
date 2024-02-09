@@ -37,16 +37,16 @@ func TestGetTaskTypes_PRO(t *testing.T) {
 
 	returnedTypes := []model.TaskType{
 		{
-			Handle:        "AAA",
-			Description:   "Pro only",
-			ProDeputyTask: true,
-			PaDeputyTask:  false,
-		},
-		{
 			Handle:        "CCC",
 			Description:   "Both",
 			ProDeputyTask: true,
 			PaDeputyTask:  true,
+		},
+		{
+			Handle:        "AAA",
+			Description:   "Pro only",
+			ProDeputyTask: true,
+			PaDeputyTask:  false,
 		},
 	}
 
@@ -71,15 +71,15 @@ func TestGetTaskTypes_PA(t *testing.T) {
 
 	returnedTypes := []model.TaskType{
 		{
-			Handle:        "BBB",
-			Description:   "PA only",
-			ProDeputyTask: false,
-			PaDeputyTask:  true,
-		},
-		{
 			Handle:        "CCC",
 			Description:   "Both",
 			ProDeputyTask: true,
+			PaDeputyTask:  true,
+		},
+		{
+			Handle:        "BBB",
+			Description:   "PA only",
+			ProDeputyTask: false,
 			PaDeputyTask:  true,
 		},
 	}
