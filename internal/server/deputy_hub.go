@@ -26,6 +26,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		ctx := getContext(r)
 
 		var selectedOrderStatuses []string
+		selectedOrderStatuses = append(selectedOrderStatuses, "ACTIVE")
 
 		params := sirius.ClientListParams{
 			DeputyId:      app.DeputyId(),
