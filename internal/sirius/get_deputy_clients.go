@@ -39,6 +39,7 @@ type DeputyClient struct {
 	HasActiveREMWarning  bool                       `json:"HasActiveREMWarning"`
 	SupervisionLevel     string
 	OrderStatus          string
+	OrderMadeDate        string
 }
 
 type Page struct {
@@ -108,6 +109,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 	var clients []DeputyClient
 
 	for _, t := range clientList.Clients {
+		OrderStatus, OrderMadeDate := getOrderStatus(t.Orders)
 		var client = DeputyClient{
 			ClientId:            t.ClientId,
 			Firstname:           t.Firstname,
@@ -115,7 +117,8 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			CourtRef:            t.CourtRef,
 			RiskScore:           t.RiskScore,
 			ClientAccommodation: t.ClientAccommodation,
-			OrderStatus:         getOrderStatus(t.Orders),
+			OrderStatus:         OrderStatus,
+			OrderMadeDate:       OrderMadeDate,
 			SupervisionLevel:    getMostRecentSupervisionLevel(t.Orders),
 			OldestReport:        t.OldestReport,
 			LatestCompletedVisit: model.LatestCompletedVisit{
@@ -150,11 +153,11 @@ func (p ClientListParams) CreateFilter() string {
 }
 
 /*
-GetOrderStatus returns the status of the oldest active order for a client.
+GetOrderStatus returns the status of the oldest active order for a client and when that order was mdae.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
-func getOrderStatus(orders []Order) string {
+func getOrderStatus(orders []Order) (string, string) {
 	sort.Slice(orders, func(i, j int) bool {
 		if orders[i].OrderDate == "" {
 			orders[i].OrderDate = "31/12/9999"
@@ -172,16 +175,16 @@ func getOrderStatus(orders []Order) string {
 
 	for _, o := range orders {
 		if o.OrderStatus.Label == "Active" {
-			return o.OrderStatus.Label
+			return o.OrderStatus.Label, o.OrderDate
 		}
 	}
 
 	for _, o := range orders {
 		if o.OrderStatus.Label != "Open" {
-			return o.OrderStatus.Label
+			return o.OrderStatus.Label, ""
 		}
 	}
-	return orders[0].OrderStatus.Label
+	return orders[0].OrderStatus.Label, orders[0].OrderDate
 }
 
 func getMostRecentSupervisionLevel(orders []Order) string {

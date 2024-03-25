@@ -53,6 +53,13 @@
                 {{ end }}
             </td>
             <td class="govuk-table__cell">
+             {{ if .OrderMadeDate }}
+                       {{ .OrderMadeDate }}
+                   {{ else }}
+                       -
+                   {{ end }}
+            </td>
+            <td class="govuk-table__cell">
                 {{ if .OrderStatus }}
                     {{ .OrderStatus }}
                 {{ else }}
