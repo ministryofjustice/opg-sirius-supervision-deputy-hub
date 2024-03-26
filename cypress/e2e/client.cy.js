@@ -16,12 +16,13 @@ describe("Clients tab", () => {
             cy.visit("/supervision/deputies/1/clients?sort=surname:asc");
         });
 
-        it("displays 7 column headings", () => {
-            cy.get(".govuk-table__row").find("th").should("have.length", 7);
+        it("displays 8 column headings", () => {
+            cy.get(".govuk-table__row").find("th").should("have.length", 8);
 
             const expected = [
                 "Client",
                 "Accommodation type",
+                "Order made date",
                 "Status",
                 "Supervision level",
                 "Visits",
