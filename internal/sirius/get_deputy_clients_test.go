@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
@@ -198,129 +199,187 @@ func TestGetDeputyClientsReturnsUnauthorisedClientError(t *testing.T) {
 	assert.Equal(t, expectedResponse, clientList)
 }
 
-func TestGetOrderStatusReturnsOldestActiveOrder(t *testing.T) {
-	orderData := []Order{
+func Test_GetOrderStatus(t *testing.T) {
+	tests := []struct {
+		Scenario       string
+		Order1Date     string
+		Order1Status   string
+		Order2Date     string
+		Order2Status   string
+		ExpectedOutput string
+	}{
 		{
-			OrderStatus:            model.RefData{Label: "Active"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2014",
+			Scenario:       "Returns oldest active order",
+			Order1Status:   "Active",
+			Order1Date:     "12/01/2014",
+			Order2Status:   "Open",
+			Order2Date:     "12/01/2017",
+			ExpectedOutput: "Active",
 		},
 		{
-			OrderStatus:            model.RefData{Label: "Open"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2017",
+			Scenario:       "Returns oldest non active order",
+			Order1Status:   "Closed",
+			Order1Date:     "12/01/2014",
+			Order2Status:   "Open",
+			Order2Date:     "12/01/2017",
+			ExpectedOutput: "Closed",
+		},
+		{
+			Scenario:       "Ignores nil order date",
+			Order1Status:   "Open",
+			Order1Date:     "",
+			Order2Status:   "Active",
+			Order2Date:     "12/01/2014",
+			ExpectedOutput: "Active",
 		},
 	}
-	expectedResponse := "Active"
-	result := getOrderStatus(orderData)
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Scenario, func(t *testing.T) {
+			orderData := []Order{
+				{
+					OrderStatus:            model.RefData{Label: tc.Order1Status},
+					LatestSupervisionLevel: latestSupervisionLevel{},
+					OrderDate:              tc.Order1Date,
+				},
+				{
+					OrderStatus:            model.RefData{Label: tc.Order2Status},
+					LatestSupervisionLevel: latestSupervisionLevel{},
+					OrderDate:              tc.Order2Date,
+				},
+			}
 
-	assert.Equal(t, expectedResponse, result)
+			assert.Equal(t, getOrderStatus(orderData), tc.ExpectedOutput)
+		})
+	}
 }
 
-func TestGetOrderStatusNil(t *testing.T) {
-	orderData := []Order{
+func Test_GetMostRecentSupervisionLevel(t *testing.T) {
+	tests := []struct {
+		Scenario               string
+		Order1AppliesFrom      string
+		Order1SupervisionLevel string
+		Order1Date             string
+		Order2AppliesFrom      string
+		Order2SupervisionLevel string
+		Order2Date             string
+		ExpectedOutput         string
+	}{
 		{
-			OrderStatus:            model.RefData{Label: "Open"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "",
+			Scenario:               "Returns most recent supervision level",
+			Order1AppliesFrom:      "01/02/2020",
+			Order1SupervisionLevel: "General",
+			Order1Date:             "01/02/2020",
+			Order2AppliesFrom:      "03/02/2020",
+			Order2SupervisionLevel: "Minimal",
+			Order2Date:             "12/01/2020",
+			ExpectedOutput:         "Minimal",
 		},
 		{
-			OrderStatus:            model.RefData{Label: "Active"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2014",
-		},
-		{
-			OrderStatus:            model.RefData{Label: "Open"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2017",
+			Scenario:               "Returns most recent supervision level for a nil",
+			Order1AppliesFrom:      "01/02/2020",
+			Order1SupervisionLevel: "General",
+			Order1Date:             "01/02/2020",
+			Order2AppliesFrom:      "",
+			Order2SupervisionLevel: "Minimal",
+			Order2Date:             "12/01/2020",
+			ExpectedOutput:         "General",
 		},
 	}
-	expectedResponse := "Active"
-	result := getOrderStatus(orderData)
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Scenario, func(t *testing.T) {
+			test := Order{
+				LatestSupervisionLevel: latestSupervisionLevel{
+					AppliesFrom:      tc.Order1AppliesFrom,
+					SupervisionLevel: model.RefData{Label: tc.Order1SupervisionLevel},
+				},
+				OrderDate: tc.Order1Date,
+			}
 
-	assert.Equal(t, expectedResponse, result)
+			test2 := Order{
+				LatestSupervisionLevel: latestSupervisionLevel{
+					AppliesFrom:      tc.Order2AppliesFrom,
+					SupervisionLevel: model.RefData{Label: tc.Order2SupervisionLevel},
+				},
+				OrderDate: tc.Order2Date,
+			}
+
+			orderData := []Order{
+				test,
+				test2,
+			}
+
+			assert.Equal(t, getMostRecentSupervisionLevel(orderData), tc.ExpectedOutput)
+		})
+	}
 }
 
-func TestGetOrderStatusReturnsOldestNonActiveOrder(t *testing.T) {
-	orderData := []Order{
+func Test_GetActivePfaOrderMadeDate(t *testing.T) {
+	tests := []struct {
+		Scenario          string
+		Order1CaseSubType string
+		Order2CaseSubType string
+		ExpectedOutput    string
+	}{
 		{
-			OrderStatus:            model.RefData{Label: "Closed"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2014",
+			Scenario:          "Returns null if only hw orders",
+			Order1CaseSubType: "hw",
+			Order2CaseSubType: "hw",
+			ExpectedOutput:    "",
 		},
 		{
-			OrderStatus:            model.RefData{Label: "Open"},
-			LatestSupervisionLevel: latestSupervisionLevel{},
-			OrderDate:              "12/01/2017",
+			Scenario:          "Returns pfa over hw orders",
+			Order1CaseSubType: "pfa",
+			Order2CaseSubType: "hw",
+			ExpectedOutput:    "01/02/2020",
 		},
 	}
-	expectedResponse := "Closed"
-	result := getOrderStatus(orderData)
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Scenario, func(t *testing.T) {
+			orderData := []Order{
+				Order{
+					OrderDate:   "01/02/2020",
+					CaseSubType: tc.Order1CaseSubType,
+					OrderStatus: model.RefData{
+						Label: "Active",
+					},
+				},
+				Order{
+					OrderDate:   "02/02/2020",
+					CaseSubType: tc.Order2CaseSubType,
+					OrderStatus: model.RefData{
+						Label: "Active",
+					},
+				},
+			}
 
-	assert.Equal(t, expectedResponse, result)
+			assert.Equal(t, getActivePfaOrderMadeDate(orderData), tc.ExpectedOutput)
+		})
+	}
 }
 
-func TestGetMostRecentSupervisionLevel(t *testing.T) {
-
-	test := Order{
-		LatestSupervisionLevel: latestSupervisionLevel{
-			AppliesFrom:      "01/02/2020",
-			SupervisionLevel: model.RefData{Label: "General"},
-		},
-		OrderDate: "01/02/2020",
+func Test_GetActivePfaOrderMadeDateReturnsOnlyActivePfaOrders(t *testing.T) {
+	tests := []struct {
+		Input          string
+		ExpectedOutput string
+	}{
+		{Input: "Closed", ExpectedOutput: ""},
+		{Input: "Open", ExpectedOutput: ""},
+		{Input: "Duplicate", ExpectedOutput: ""},
+		{Input: "Active", ExpectedOutput: "01/02/2020"},
 	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Input, func(t *testing.T) {
+			orderData := []Order{
+				Order{
+					OrderDate:   "01/02/2020",
+					CaseSubType: "pfa",
+					OrderStatus: model.RefData{
+						Label: tc.Input,
+					},
+				},
+			}
 
-	test2 := Order{
-		LatestSupervisionLevel: latestSupervisionLevel{
-			AppliesFrom:      "03/02/2020",
-			SupervisionLevel: model.RefData{Label: "Minimal"},
-		},
-		OrderDate: "12/01/2020",
+			assert.Equal(t, getActivePfaOrderMadeDate(orderData), tc.ExpectedOutput)
+		})
 	}
-
-	orderData := []Order{
-		test,
-		test2,
-	}
-	expectedResponse := "Minimal"
-	result := getMostRecentSupervisionLevel(orderData)
-
-	assert.Equal(t, expectedResponse, result)
-}
-
-func TestGetMostRecentSupervisionLevelForANil(t *testing.T) {
-
-	test := Order{
-		LatestSupervisionLevel: latestSupervisionLevel{
-			AppliesFrom:      "01/02/2020",
-			SupervisionLevel: model.RefData{Label: "General"},
-		},
-		OrderDate: "01/02/2020",
-	}
-
-	test2 := Order{
-		LatestSupervisionLevel: latestSupervisionLevel{
-			AppliesFrom:      "03/02/2020",
-			SupervisionLevel: model.RefData{Label: "Minimal"},
-		},
-		OrderDate: "12/01/2020",
-	}
-
-	test3 := Order{
-		LatestSupervisionLevel: latestSupervisionLevel{
-			AppliesFrom:      "",
-			SupervisionLevel: model.RefData{Label: "Minimal"},
-		},
-		OrderDate: "12/01/2020",
-	}
-
-	orderData := []Order{
-		test3,
-		test,
-		test2,
-	}
-	expectedResponse := "Minimal"
-	result := getMostRecentSupervisionLevel(orderData)
-
-	assert.Equal(t, expectedResponse, result)
 }
