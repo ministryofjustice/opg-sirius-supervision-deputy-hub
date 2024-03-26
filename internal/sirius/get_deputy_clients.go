@@ -75,9 +75,6 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
 
-	fmt.Println("url")
-	fmt.Println(url)
-
 	filter := params.CreateFilter()
 
 	if filter != "" {
