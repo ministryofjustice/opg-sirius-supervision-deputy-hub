@@ -4,6 +4,7 @@
     <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "surname" }}"><a href="{{ .UrlBuilder.GetSortUrl "surname" }}"><button type="button">Client</button></a></th>
         <th scope="col" class="govuk-table__header">Accommodation type</th>
+        <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "orderMadeDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "orderMadeDate" }}"><button type="button">Order made date</button></a></th>
         <th scope="col" class="govuk-table__header">Status</th>
         <th scope="col" class="govuk-table__header">Supervision level</th>
         <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "visitDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "visitDate" }}"><button type="button">Visits</button></a></th>
@@ -53,13 +54,13 @@
                 {{ end }}
             </td>
             <td class="govuk-table__cell">
-             {{ if .OrderMadeDate }}
-                       {{ .OrderMadeDate }}
+             {{ if .ActivePfaOrderMadeDate }}
+                       {{ .ActivePfaOrderMadeDate }}
                    {{ else }}
                        -
                    {{ end }}
             </td>
-            <td class="govuk-table__cell">
+            <td class="govuk-table__cell order_status nowrap">
                 {{ if .OrderStatus }}
                     {{ .OrderStatus }}
                 {{ else }}
