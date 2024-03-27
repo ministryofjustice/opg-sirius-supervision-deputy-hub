@@ -13,6 +13,7 @@ type Order struct {
 	OrderStatus            model.RefData `json:"orderStatus"`
 	LatestSupervisionLevel latestSupervisionLevel
 	OrderDate              string `json:"orderDate"`
+	CaseSubType            string `json:"casesubtype"`
 }
 
 type latestSupervisionLevel struct {
@@ -27,18 +28,19 @@ type Report struct {
 }
 
 type DeputyClient struct {
-	ClientId             int                        `json:"id"`
-	Firstname            string                     `json:"firstname"`
-	Surname              string                     `json:"surname"`
-	CourtRef             string                     `json:"caseRecNumber"`
-	RiskScore            int                        `json:"riskScore"`
-	ClientAccommodation  model.RefData              `json:"clientAccommodation"`
-	Orders               []Order                    `json:"orders"`
-	OldestReport         Report                     `json:"oldestNonLodgedAnnualReport"`
-	LatestCompletedVisit model.LatestCompletedVisit `json:"latestCompletedVisit"`
-	HasActiveREMWarning  bool                       `json:"HasActiveREMWarning"`
-	SupervisionLevel     string
-	OrderStatus          string
+	ClientId               int                        `json:"id"`
+	Firstname              string                     `json:"firstname"`
+	Surname                string                     `json:"surname"`
+	CourtRef               string                     `json:"caseRecNumber"`
+	RiskScore              int                        `json:"riskScore"`
+	ClientAccommodation    model.RefData              `json:"clientAccommodation"`
+	Orders                 []Order                    `json:"orders"`
+	OldestReport           Report                     `json:"oldestNonLodgedAnnualReport"`
+	LatestCompletedVisit   model.LatestCompletedVisit `json:"latestCompletedVisit"`
+	HasActiveREMWarning    bool                       `json:"HasActiveREMWarning"`
+	SupervisionLevel       string
+	OrderStatus            string
+	ActivePfaOrderMadeDate string
 }
 
 type Page struct {
@@ -109,15 +111,16 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 
 	for _, t := range clientList.Clients {
 		var client = DeputyClient{
-			ClientId:            t.ClientId,
-			Firstname:           t.Firstname,
-			Surname:             t.Surname,
-			CourtRef:            t.CourtRef,
-			RiskScore:           t.RiskScore,
-			ClientAccommodation: t.ClientAccommodation,
-			OrderStatus:         getOrderStatus(t.Orders),
-			SupervisionLevel:    getMostRecentSupervisionLevel(t.Orders),
-			OldestReport:        t.OldestReport,
+			ClientId:               t.ClientId,
+			Firstname:              t.Firstname,
+			Surname:                t.Surname,
+			CourtRef:               t.CourtRef,
+			RiskScore:              t.RiskScore,
+			ClientAccommodation:    t.ClientAccommodation,
+			OrderStatus:            getOrderStatus(t.Orders),
+			ActivePfaOrderMadeDate: getActivePfaOrderMadeDate(t.Orders),
+			SupervisionLevel:       getMostRecentSupervisionLevel(t.Orders),
+			OldestReport:           t.OldestReport,
 			LatestCompletedVisit: model.LatestCompletedVisit{
 				VisitCompletedDate:  FormatDateTime(IsoDateTimeZone, t.LatestCompletedVisit.VisitCompletedDate, SiriusDate),
 				VisitReportMarkedAs: t.LatestCompletedVisit.VisitReportMarkedAs,
@@ -150,7 +153,7 @@ func (p ClientListParams) CreateFilter() string {
 }
 
 /*
-GetOrderStatus returns the status of the oldest active order for a client.
+GetOrderStatus returns the status of the oldest active order for a client and when that order was mdae.
 
 	If there isn’t one, the status of the oldest order is returned.
 */
@@ -182,6 +185,15 @@ func getOrderStatus(orders []Order) string {
 		}
 	}
 	return orders[0].OrderStatus.Label
+}
+
+func getActivePfaOrderMadeDate(orders []Order) string {
+	for _, o := range orders {
+		if o.CaseSubType == "pfa" && o.OrderStatus.Label == "Active" {
+			return o.OrderDate
+		}
+	}
+	return ""
 }
 
 func getMostRecentSupervisionLevel(orders []Order) string {
