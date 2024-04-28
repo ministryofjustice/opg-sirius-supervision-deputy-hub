@@ -68,16 +68,12 @@ services:
       - LHCI_GITHUB_APP_TOKEN
 
   cypress:
-    image: deputy-hub-cypress:latest
-    build: docker/cypress
-    command: run --browser chrome
-    entrypoint: cypress
-    depends_on:
-      - json-server
-      - deputy-hub
-    environment:
-      - CYPRESS_BASE_URL=http://deputy-hub:8888
-      - CYPRESS_VIDEO=false
-    working_dir: /e2e
+    build:
+      dockerfile: docker/cypress/Dockerfile
+    command: ["--headless", "-b", "chrome"]
     volumes:
-      - ./:/e2e
+      - ./cypress/screenshots:/root/cypress/screenshots:rw,delegated
+      - ./cypress/logs:/root/cypress/logs:rw,delegated
+    depends_on:
+      - deputy-hub
+      - json-server
