@@ -1,3 +1,14 @@
 FROM cypress/included:13.8.1
 
-RUN yarn add cypress-failed-log@2.9.2 axe-core cypress-axe @cypress/grep
+WORKDIR /root
+
+RUN npm install "cypress-failed-log@2.9.2"
+RUN npm install axe-core
+RUN npm install cypress-axe
+RUN npm install @cypress/grep
+
+ENV CYPRESS_VIDEO=false
+ENV CYPRESS_baseUrl=http://deputy-hub:8888
+
+COPY cypress.config.js .
+COPY cypress cypress
