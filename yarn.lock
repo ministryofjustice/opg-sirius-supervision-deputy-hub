@@ -344,7 +344,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.12.0.tgz#ce1c9d143389679e253b314241ea9aa5cec980d3"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
-axe-core@^4.8.3:
+axe-core@^4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.9.0.tgz#b18971494551ab39d4ff5f7d4c6411bd20cc7c2a"
   integrity sha512-H5orY+M2Fr56DWmMFpMrq5Ge93qjNdPVqzBv5gWK3aD1OvjBEJlEzxf09z93dGVQeI0LiW+aCMIx1QtShC/zUw==
@@ -558,12 +558,12 @@ cypress-axe@^1.5.0:
   resolved "https://registry.yarnpkg.com/cypress-axe/-/cypress-axe-1.5.0.tgz#95082734583da77b51ce9b7784e14a442016c7a1"
   integrity sha512-Hy/owCjfj+25KMsecvDgo4fC/781ccL+e8p+UUYoadGVM2ogZF9XIKbiM6KI8Y3cEaSreymdD6ZzccbI2bY0lQ==
 
-cypress-failed-log@^2.10.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/cypress-failed-log/-/cypress-failed-log-2.10.0.tgz#dbbe9b57a55a7a204b2f7898eb17a2b34253d4fd"
-  integrity sha512-v+GsOcpCAgj335zfDy9jDnaujH31SM/6pEQBp0dH0clbYu4NSXirLRXW9WoKhd0j70UrAA0hTLNbS2oTt1Y5kA==
+cypress-failed-log@2.9.2:
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/cypress-failed-log/-/cypress-failed-log-2.9.2.tgz#136727f1a9317a44981abb144d5775963c4d384c"
+  integrity sha512-Gu06nXsQBxDv3bTRQG05753Z9/DHiOSVW4IUouoOSZVL8DfBdxRkbCgKJjfkZZJRRcewn6K7GOYp2qQD+AHCuw==
   dependencies:
-    debug "4.3.4"
+    debug "4.3.2"
     logdown "3.3.1"
 
 cypress@^13.6.4:
@@ -626,10 +626,10 @@ dayjs@^1.10.4:
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.10.tgz#68acea85317a6e164457d6d6947564029a6a16a0"
   integrity sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==
 
-debug@4.3.4, debug@^4.1.1, debug@^4.3.3, debug@^4.3.4:
-  version "4.3.4"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
-  integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
+debug@4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.2.tgz#f0a49c18ac8779e31d4a0c6029dfb76873c7428b"
+  integrity sha512-mOp8wKcvj7XxC78zLgw/ZA+6TSgkoE2C/ienthhRD298T7UNwAg9diBpLRxC0mOezLl4B0xV7M0cCO6P/O0Xhw==
   dependencies:
     ms "2.1.2"
 
@@ -639,6 +639,13 @@ debug@^3.1.0:
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
   dependencies:
     ms "^2.1.1"
+
+debug@^4.1.1, debug@^4.3.3, debug@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
+  integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
+  dependencies:
+    ms "2.1.2"
 
 define-data-property@^1.1.4:
   version "1.1.4"
@@ -1283,7 +1290,6 @@ onetime@^5.1.0:
 
 "opg-sirius-header@ministryofjustice/opg-sirius-header#semver:v0.17.0":
   version "1.0.0"
-  uid d862857087632b08a6f869ec580d6a349d0f90fc
   resolved "https://codeload.github.com/ministryofjustice/opg-sirius-header/tar.gz/d862857087632b08a6f869ec580d6a349d0f90fc"
   dependencies:
     scss "^0.2.4"

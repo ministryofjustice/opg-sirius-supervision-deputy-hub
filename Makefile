@@ -35,7 +35,7 @@ cypress: setup-directories
 
 axe: setup-directories
 	docker compose up -d --wait deputy-hub
-	docker compose run --rm cypress run --env grepTags="@axe"
+	docker compose run --build --rm cypress run --env grepTags="@axe"
 
 up:
 	docker compose up --build -d deputy-hub
