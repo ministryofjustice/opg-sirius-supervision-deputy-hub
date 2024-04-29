@@ -344,7 +344,7 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.12.0.tgz#ce1c9d143389679e253b314241ea9aa5cec980d3"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
-axe-core@^4.8.3:
+axe-core@^4.9.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.9.0.tgz#b18971494551ab39d4ff5f7d4c6411bd20cc7c2a"
   integrity sha512-H5orY+M2Fr56DWmMFpMrq5Ge93qjNdPVqzBv5gWK3aD1OvjBEJlEzxf09z93dGVQeI0LiW+aCMIx1QtShC/zUw==
@@ -1283,7 +1283,6 @@ onetime@^5.1.0:
 
 "opg-sirius-header@ministryofjustice/opg-sirius-header#semver:v0.17.0":
   version "1.0.0"
-  uid d862857087632b08a6f869ec580d6a349d0f90fc
   resolved "https://codeload.github.com/ministryofjustice/opg-sirius-header/tar.gz/d862857087632b08a6f869ec580d6a349d0f90fc"
   dependencies:
     scss "^0.2.4"
