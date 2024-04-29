@@ -89,7 +89,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				annualBillingInvoice = vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label
 			}
 			if annualBillingInvoice == "" {
-				annualBillingInvoice = "Unknown"
+				annualBillingInvoice = "UNKNOWN"
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
