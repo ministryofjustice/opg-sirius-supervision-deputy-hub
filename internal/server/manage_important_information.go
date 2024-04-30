@@ -84,12 +84,9 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 			reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
 
-			annualBillingInvoice := r.PostFormValue("annual-billing")
-			if annualBillingInvoice == "" {
-				annualBillingInvoice = vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label
-			}
-			if annualBillingInvoice == "" {
-				annualBillingInvoice = "UNKNOWN"
+			annualBillingInvoice := vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
+			if r.PostFormValue("annual-billing") != "" {
+				annualBillingInvoice = getHandleForAnnualBillingInvoiceTypes(r.PostFormValue("annual-billing"), vars.AnnualBillingInvoiceTypes)
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
@@ -130,4 +127,13 @@ func checkForReportSystemType(reportType string) string {
 	} else {
 		return reportType
 	}
+}
+
+func getHandleForAnnualBillingInvoiceTypes(label string, invoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes) string {
+	for _, element := range invoiceTypes {
+		if element.Label == label {
+			return element.Handle
+		}
+	}
+	return ""
 }
