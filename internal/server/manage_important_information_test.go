@@ -49,7 +49,7 @@ func TestGetManageImportantInformation(t *testing.T) {
 		DeputyDetails: deputyDetails,
 		PageName:      "Manage important information",
 	}
-	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "x", Label: "y"}}
+	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}
 	booleanTypes := []sirius.DeputyBooleanTypes{{Handle: "x", Label: "w"}}
 	reportTypes := []sirius.DeputyReportSystemTypes{{Handle: "x", Label: "z"}}
 
@@ -96,7 +96,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 			form: url.Values{},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
-				AnnualBillingInvoice: "UNKNOWN",
+				AnnualBillingInvoice: "",
 			},
 		},
 		"previous value": {
@@ -104,13 +104,13 @@ func TestPostManageImportantInformation(t *testing.T) {
 				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
-					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
+					AnnualBillingInvoice: sirius.HandleLabel{Label: "TypeA", Handle: "TYPEA"},
 				},
 			}},
 			form: url.Values{},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
-				AnnualBillingInvoice: "last-value",
+				AnnualBillingInvoice: "TYPEA",
 			},
 		},
 		"form value": {
@@ -118,13 +118,13 @@ func TestPostManageImportantInformation(t *testing.T) {
 				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
-					AnnualBillingInvoice: sirius.HandleLabel{Label: "last-value"},
+					AnnualBillingInvoice: sirius.HandleLabel{Label: "TypeA"},
 				},
 			}},
-			form: url.Values{"annual-billing": {"new-value"}},
+			form: url.Values{"annual-billing": {"TypeB"}},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
-				AnnualBillingInvoice: "new-value",
+				AnnualBillingInvoice: "TYPEB",
 			},
 		},
 	}
@@ -135,7 +135,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
-			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{}, nil)
+			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}, nil)
 			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]sirius.DeputyBooleanTypes{}, nil)
 			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]sirius.DeputyReportSystemTypes{}, nil)
 			client.On("UpdateImportantInformation", mock.Anything, 123, tc.importantInformationDetails).Return(nil)
@@ -165,4 +165,22 @@ func TestCheckForReportSystemType(t *testing.T) {
 	assert.Equal(checkForReportSystemType("OPG Digital"), "OPGDigital")
 	assert.Equal(checkForReportSystemType("OPG Paper"), "OPGPaper")
 	assert.Equal(checkForReportSystemType("Other type"), "Other type")
+}
+
+func TestGetHandleForAnnualBillingInvoiceTypes(t *testing.T) {
+	annualBillingTypes := []sirius.DeputyAnnualBillingInvoiceTypes{
+		{
+			Handle: "TYPEA",
+			Label:  "Type A",
+		},
+		{
+			Handle: "TYPEB",
+			Label:  "Type B",
+		},
+	}
+
+	assert := assert.New(t)
+	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Type A", annualBillingTypes), "TYPEA")
+	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Type B", annualBillingTypes), "TYPEB")
+	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Other type", annualBillingTypes), "")
 }
