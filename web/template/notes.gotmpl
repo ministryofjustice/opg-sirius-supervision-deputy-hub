@@ -37,6 +37,8 @@
                             {{ printf "%v task updated" .Name }}
                         {{ else if eq .NoteType "TASK_COMPLETED"}}
                             {{ printf "%v task completed" .Name }}
+                        {{ else if eq .NoteType "ASSURANCE_VISIT_UPDATED"}}
+                             {{ printf "%v assurance visit updated" .Name }}
                         {{ else }}
                             {{ .Name }}
                         {{ end }}
