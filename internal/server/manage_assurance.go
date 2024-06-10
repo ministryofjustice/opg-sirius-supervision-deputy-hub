@@ -6,6 +6,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -192,12 +193,10 @@ func (visitors ByName) Less(i, j int) bool {
 }
 
 func parseName(fullName string) (firstName, middleName, lastName string) {
-	titles := map[string]bool{
-		"Mr": true, "Mrs": true, "Ms": true, "Miss": true, "Dr": true,
-	}
+	titles := []string{"Mr", "Mrs", "Ms", "Miss", "Dr"}
 
 	parts := strings.Fields(fullName)
-	if len(parts) > 0 && titles[parts[0]] {
+	if len(parts) > 0 && slices.Contains(titles, parts[0]) {
 		parts = parts[1:]
 	}
 

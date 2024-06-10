@@ -296,8 +296,9 @@ func TestSortByName(t *testing.T) {
 		{ID: 5, Name: "Jane Janeson"},
 		{ID: 6, Name: "Jen Jenson"},
 		{ID: 7, Name: "Mr John Smith"},
+		{ID: 8, Name: ""},
 	}
-	expectedOrder := []int{3, 5, 6, 1, 7, 2, 4}
+	expectedOrder := []int{8, 3, 5, 6, 1, 7, 2, 4}
 
 	sort.Sort(visitors)
 
