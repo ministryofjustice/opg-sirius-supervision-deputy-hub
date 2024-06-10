@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
+	"sort"
 	"strings"
 	"testing"
 
@@ -237,4 +238,73 @@ func TestParseVisitForm(t *testing.T) {
 	}
 
 	assert.Equal(expectedAssurance, parseAssuranceForm(form))
+}
+
+func TestByName_Len(t *testing.T) {
+	visitors := ByName{
+		{ID: 1, Name: "Dr Andrew Mick Salt"},
+		{ID: 2, Name: "Mr John Johnson"},
+	}
+	expected := 2
+
+	if visitors.Len() != expected {
+		t.Errorf("expected length %d, got %d", expected, visitors.Len())
+	}
+}
+
+func TestByName_Swap(t *testing.T) {
+	visitors := ByName{
+		{ID: 1, Name: "Dr Andrew Mick Salt"},
+		{ID: 2, Name: "Mr John Johnson"},
+	}
+	visitors.Swap(0, 1)
+	if visitors[0].ID != 2 || visitors[1].ID != 1 {
+		t.Errorf("expected IDs [2, 1], got [%d, %d]", visitors[0].ID, visitors[1].ID)
+	}
+}
+
+func TestByName_Less(t *testing.T) {
+	visitors := ByName{
+		{ID: 1, Name: "Dr Andrew Mick Salt"},
+		{ID: 2, Name: "Mr John Johnson"},
+	}
+
+	if !visitors.Less(0, 1) {
+		t.Errorf("expected Andrew Mick Salt to be less than John Johnson")
+	}
+
+	if visitors.Less(1, 0) {
+		t.Errorf("expected John Johnson to be greater than Andrew Mick Salt")
+	}
+
+	visitors = ByName{
+		{ID: 1, Name: "John H. Smith"},
+		{ID: 2, Name: "John H. Johnson"},
+	}
+
+	if visitors.Less(0, 1) {
+		t.Errorf("expected John H. Smith to be greater than John H. Johnson")
+	}
+}
+
+func TestSortByName(t *testing.T) {
+	visitors := ByName{
+		{ID: 1, Name: "Mr John Johnson"},
+		{ID: 2, Name: "Dr Richard Richardson"},
+		{ID: 3, Name: "Jack Jackson"},
+		{ID: 4, Name: "Robert Robson"},
+		{ID: 5, Name: "Jane Janeson"},
+		{ID: 6, Name: "Jen Jenson"},
+		{ID: 7, Name: "Mr John Smith"},
+		{ID: 8, Name: ""},
+	}
+	expectedOrder := []int{8, 3, 5, 6, 1, 7, 2, 4}
+
+	sort.Sort(visitors)
+
+	for i, visitor := range visitors {
+		if visitor.ID != expectedOrder[i] {
+			t.Errorf("expected ID %d at position %d, got %d", expectedOrder[i], i, visitor.ID)
+		}
+	}
 }
