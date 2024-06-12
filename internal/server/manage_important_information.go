@@ -82,31 +82,24 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 					return err
 				}
 			}
-			reportSystemType := checkForReportSystemType(r.PostFormValue("report-system"))
-
-			annualBillingInvoice := vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
-			if r.PostFormValue("annual-billing") != "" {
-				annualBillingInvoice = getHandleForAnnualBillingInvoiceTypes(r.PostFormValue("annual-billing"), vars.AnnualBillingInvoiceTypes)
-			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
 				DeputyType:                vars.AppVars.DeputyType(),
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
-				AnnualBillingInvoice:      annualBillingInvoice,
+				AnnualBillingInvoice:      r.PostFormValue("annual-billing"),
 				OtherImportantInformation: r.PostFormValue("other-info-note"),
 				MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),
 				IndependentVisitorCharges: r.PostFormValue("independent-visitor-charges"),
 				BankCharges:               r.PostFormValue("bank-charges"),
 				APAD:                      r.PostFormValue("apad"),
-				ReportSystem:              reportSystemType,
+				ReportSystem:              r.PostFormValue("report-system"),
 			}
 
 			err = client.UpdateImportantInformation(ctx, app.DeputyId(), importantInfoForm)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = util.RenameErrors(verr.Errors)
-
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			} else if err != nil {
 				return err
@@ -117,23 +110,4 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
-}
-
-func checkForReportSystemType(reportType string) string {
-	if reportType == "OPG Digital" {
-		return "OPGDigital"
-	} else if reportType == "OPG Paper" {
-		return "OPGPaper"
-	} else {
-		return reportType
-	}
-}
-
-func getHandleForAnnualBillingInvoiceTypes(label string, invoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes) string {
-	for _, element := range invoiceTypes {
-		if element.Label == label {
-			return element.Handle
-		}
-	}
-	return ""
 }
