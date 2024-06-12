@@ -30,7 +30,7 @@
                         {{$currentSpreadsheetValue:=.DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label}}
                          {{ range .DeputyBooleanTypes }}
                            <div class="govuk-radios__item">
-                               <input class="govuk-radios__input" id="monthly-spreadsheet-{{.Label}}" name="monthly-spreadsheet" type="radio" value="{{.Label}}" {{if eq $currentSpreadsheetValue .Label}} checked="true"{{end}}{{if eq $currentSpreadsheetValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                               <input class="govuk-radios__input" id="monthly-spreadsheet-{{.Label}}" name="monthly-spreadsheet" type="radio" value="{{.Handle}}" {{if eq $currentSpreadsheetValue .Label}} checked="true"{{end}}{{if eq $currentSpreadsheetValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                                <label class="govuk-label govuk-radios__label" for="monthly-spreadsheet-{{.Label}}">
                                  {{.Label}}
                                </label>
@@ -48,7 +48,7 @@
                        {{$currentVisitorChargesValue:=.DeputyDetails.DeputyImportantInformation.IndependentVisitorCharges.Label}}
                         {{ range .DeputyBooleanTypes }}
                           <div class="govuk-radios__item">
-                              <input class="govuk-radios__input" id="independent-visitor-charges-{{.Label}}" name="independent-visitor-charges" type="radio" value="{{.Label}}" {{if eq $currentVisitorChargesValue .Label}} checked="true"{{end}}{{if eq $currentVisitorChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                              <input class="govuk-radios__input" id="independent-visitor-charges-{{.Label}}" name="independent-visitor-charges" type="radio" value="{{.Handle}}" {{if eq $currentVisitorChargesValue .Label}} checked="true"{{end}}{{if eq $currentVisitorChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                               <label class="govuk-label govuk-radios__label" for="independent-visitor-charges-{{.Label}}">
                                 {{.Label}}
                               </label>
@@ -66,7 +66,7 @@
                        {{$currentBankChargesValue:=.DeputyDetails.DeputyImportantInformation.BankCharges.Label}}
                         {{ range .DeputyBooleanTypes }}
                           <div class="govuk-radios__item">
-                              <input class="govuk-radios__input" id="bank-charges-{{.Label}}" name="bank-charges" type="radio" value="{{.Label}}" {{if eq $currentBankChargesValue .Label}} checked="true"{{end}}{{if eq $currentBankChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                              <input class="govuk-radios__input" id="bank-charges-{{.Label}}" name="bank-charges" type="radio" value="{{.Handle}}" {{if eq $currentBankChargesValue .Label}} checked="true"{{end}}{{if eq $currentBankChargesValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                               <label class="govuk-label govuk-radios__label" for="bank-charges-{{.Label}}">
                                 {{.Label}}
                               </label>
@@ -84,7 +84,7 @@
                    {{$currentAPADValue:=.DeputyDetails.DeputyImportantInformation.APAD.Label}}
                     {{ range .DeputyBooleanTypes }}
                       <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="apad-{{.Label}}" name="apad" type="radio" value="{{.Label}}" {{if eq $currentAPADValue .Label}} checked="true"{{end}}{{if eq $currentAPADValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                          <input class="govuk-radios__input" id="apad-{{.Label}}" name="apad" type="radio" value="{{.Handle}}" {{if eq $currentAPADValue .Label}} checked="true"{{end}}{{if eq $currentAPADValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                           <label class="govuk-label govuk-radios__label" for="apad-{{.Label}}">
                             {{.Label}}
                           </label>
@@ -102,7 +102,7 @@
                    {{$currentReportSystemValue:=.DeputyDetails.DeputyImportantInformation.ReportSystem.Label}}
                     {{ range .DeputyReportSystemTypes }}
                       <div class="govuk-radios__item">
-                          <input class="govuk-radios__input" id="report-system-{{.Label}}" name="report-system" type="radio" value="{{.Label}}" {{if eq $currentReportSystemValue .Label}} checked="true"{{end}}{{if eq $currentReportSystemValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                          <input class="govuk-radios__input" id="report-system-{{.Label}}" name="report-system" type="radio" value="{{.Handle}}" {{if eq $currentReportSystemValue .Label}} checked="true"{{end}}{{if eq $currentReportSystemValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                           <label class="govuk-label govuk-radios__label" for="report-system-{{.Label}}">
                             {{.Label}}
                           </label>
@@ -122,7 +122,7 @@
                     <div class="govuk-radios">
                         {{ range .AnnualBillingInvoiceTypes }}
                             <div class="govuk-radios__item">
-                              <input class="govuk-radios__input" id="annual-billing-{{.Label}}" name="annual-billing" type="radio" value="{{.Label}}" {{if ne $currentAnnualBillingInvoiceLabel "" }}{{if eq $currentAnnualBillingInvoiceLabel .Label}} checked="true"{{end}}{{else if eq .Label "Unknown"}}checked="true"{{end}}>
+                              <input class="govuk-radios__input" id="annual-billing-{{.Label}}" name="annual-billing" type="radio" value="{{.Handle}}" {{if ne $currentAnnualBillingInvoiceLabel "" }}{{if eq $currentAnnualBillingInvoiceLabel .Label}} checked="true"{{end}}{{else if eq .Label "Unknown"}}checked="true"{{end}}>
                               <label class="govuk-label govuk-radios__label" for="annual-billing-{{.Label}}">
                                 {{.Label}}
                               </label>
