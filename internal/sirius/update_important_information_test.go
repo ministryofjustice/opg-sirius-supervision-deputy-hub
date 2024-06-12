@@ -56,12 +56,12 @@ func TestUpdateImportantInformationForPaInfo(t *testing.T) {
 
 	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
-		MonthlySpreadsheet:        "No",
-		IndependentVisitorCharges: "No",
-		BankCharges:               "No",
-		APAD:                      "No",
-		ReportSystem:              "Controcc",
-		AnnualBillingInvoice:      "Schedule and Invoice",
+		MonthlySpreadsheet:        "NO",
+		IndependentVisitorCharges: "NO",
+		BankCharges:               "NO",
+		APAD:                      "NO",
+		ReportSystem:              "CONTROCC",
+		AnnualBillingInvoice:      "SCHEDULE AND INVOICE",
 		OtherImportantInformation: "important info",
 	}
 
@@ -98,8 +98,8 @@ func TestUpdateImportantInformationForProData(t *testing.T) {
 
 	formData := ImportantInformationDetails{
 		PanelDeputy:               true,
-		Complaints:                "No",
-		AnnualBillingInvoice:      "Schedule and Invoice",
+		Complaints:                "NO",
+		AnnualBillingInvoice:      "SCHEDULE AND INVOICE",
 		OtherImportantInformation: "important info",
 	}
 
@@ -118,12 +118,12 @@ func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
 
 	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
-		MonthlySpreadsheet:        "No",
-		IndependentVisitorCharges: "No",
-		BankCharges:               "No",
-		APAD:                      "No",
-		ReportSystem:              "Controcc",
-		AnnualBillingInvoice:      "Schedule and Invoice",
+		MonthlySpreadsheet:        "NO",
+		IndependentVisitorCharges: "NO",
+		BankCharges:               "NO",
+		APAD:                      "NO",
+		ReportSystem:              "CONTROCC",
+		AnnualBillingInvoice:      "SCHEDULE AND INVOICE",
 		OtherImportantInformation: "important info",
 	}
 
@@ -146,12 +146,12 @@ func TestUpdateImportantInformationReturnsUnauthorisedClientError(t *testing.T) 
 
 	formData := ImportantInformationDetails{
 		DeputyType:                "PA",
-		MonthlySpreadsheet:        "No",
-		IndependentVisitorCharges: "No",
-		BankCharges:               "No",
-		APAD:                      "No",
-		ReportSystem:              "Controcc",
-		AnnualBillingInvoice:      "Schedule and Invoice",
+		MonthlySpreadsheet:        "NO",
+		IndependentVisitorCharges: "NO",
+		BankCharges:               "NO",
+		APAD:                      "NO",
+		ReportSystem:              "CONTROCC",
+		AnnualBillingInvoice:      "SCHEDULE AND INVOICE",
 		OtherImportantInformation: "important info",
 	}
 

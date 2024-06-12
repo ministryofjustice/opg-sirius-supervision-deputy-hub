@@ -30,7 +30,7 @@
                      {{$currentComplaintsValue:=.DeputyDetails.DeputyImportantInformation.Complaints.Label}}
                       {{ range .DeputyBooleanTypes }}
                         <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="complaints-{{.Label}}" name="complaints" type="radio" value="{{.Label}}" {{if eq $currentComplaintsValue .Label}} checked="true"{{end}}{{if eq $currentComplaintsValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
+                            <input class="govuk-radios__input" id="complaints-{{.Label}}" name="complaints" type="radio" value="{{.Handle}}" {{if eq $currentComplaintsValue .Label}} checked="true"{{end}}{{if eq $currentComplaintsValue ""}}{{if eq "Unknown" .Label}} checked="true"{{end}}{{end}}>
                             <label class="govuk-label govuk-radios__label" for="complaints-{{.Label}}">
                               {{.Label}}
                             </label>
@@ -73,7 +73,7 @@
                     <div class="govuk-radios">
                         {{ range .AnnualBillingInvoiceTypes }}
                             <div class="govuk-radios__item">
-                              <input class="govuk-radios__input" id="annual-billing-{{.Label}}" name="annual-billing" type="radio" value="{{.Label}}" {{if ne $currentAnnualBillingInvoiceLabel "" }}{{if eq $currentAnnualBillingInvoiceLabel .Label}} checked="true"{{end}}{{else if eq .Label "Unknown"}}checked="true"{{end}}>
+                              <input class="govuk-radios__input" id="annual-billing-{{.Label}}" name="annual-billing" type="radio" value="{{.Handle}}" {{if ne $currentAnnualBillingInvoiceLabel "" }}{{if eq $currentAnnualBillingInvoiceLabel .Label}} checked="true"{{end}}{{else if eq .Label "Unknown"}}checked="true"{{end}}>
                               <label class="govuk-label govuk-radios__label" for="annual-billing-{{.Label}}">
                                 {{.Label}}
                               </label>
