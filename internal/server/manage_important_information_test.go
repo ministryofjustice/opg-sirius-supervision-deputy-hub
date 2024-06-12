@@ -118,10 +118,10 @@ func TestPostManageImportantInformation(t *testing.T) {
 				ID:         123,
 				DeputyType: sirius.DeputyType{Handle: "x"},
 				DeputyImportantInformation: sirius.DeputyImportantInformation{
-					AnnualBillingInvoice: sirius.HandleLabel{Label: "TypeA"},
+					AnnualBillingInvoice: sirius.HandleLabel{Handle: "TYPEA", Label: "TypeA"},
 				},
 			}},
-			form: url.Values{"annual-billing": {"TypeB"}},
+			form: url.Values{"annual-billing": {"TYPEB"}},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
 				AnnualBillingInvoice: "TYPEB",
@@ -158,29 +158,4 @@ func TestPostManageImportantInformation(t *testing.T) {
 			assert.Equal(Redirect("/123?success=importantInformation"), redirect)
 		})
 	}
-}
-
-func TestCheckForReportSystemType(t *testing.T) {
-	assert := assert.New(t)
-	assert.Equal(checkForReportSystemType("OPG Digital"), "OPGDigital")
-	assert.Equal(checkForReportSystemType("OPG Paper"), "OPGPaper")
-	assert.Equal(checkForReportSystemType("Other type"), "Other type")
-}
-
-func TestGetHandleForAnnualBillingInvoiceTypes(t *testing.T) {
-	annualBillingTypes := []sirius.DeputyAnnualBillingInvoiceTypes{
-		{
-			Handle: "TYPEA",
-			Label:  "Type A",
-		},
-		{
-			Handle: "TYPEB",
-			Label:  "Type B",
-		},
-	}
-
-	assert := assert.New(t)
-	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Type A", annualBillingTypes), "TYPEA")
-	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Type B", annualBillingTypes), "TYPEB")
-	assert.Equal(getHandleForAnnualBillingInvoiceTypes("Other type", annualBillingTypes), "")
 }
