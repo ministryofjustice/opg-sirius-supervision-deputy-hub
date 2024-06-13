@@ -96,7 +96,7 @@ func TestPostManageImportantInformation(t *testing.T) {
 			form: url.Values{},
 			importantInformationDetails: sirius.ImportantInformationDetails{
 				DeputyType:           "x",
-				AnnualBillingInvoice: "",
+				AnnualBillingInvoice: "UNKNOWN",
 			},
 		},
 		"previous value": {
