@@ -86,6 +86,8 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			annualBillingInvoice := vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
 			if r.PostFormValue("annual-billing") != "" {
 				annualBillingInvoice = r.PostFormValue("annual-billing")
+			} else if annualBillingInvoice == "" {
+				annualBillingInvoice = "UNKNOWN"
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
