@@ -63,7 +63,7 @@
                   </fieldset>
                 </div>
 
-                {{ if .UserDetails.IsFinanceManager }}
+                {{ if (.UserDetails.IsFinanceManager) }}
                 <div class="govuk-form-group">
                   <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend">
@@ -82,8 +82,13 @@
                     </div>
                   </fieldset>
                 </div>
+                {{ else }}
+                    {{ if ne .DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label "" }}
+                        <input type="hidden" id="annual-billing-{{ .DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label }}" name="annual-billing" value="{{ .DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle }}">
+                    {{ else }}
+                        <input type="hidden" id="annual-billing-Unknown" name="annual-billing" value="UNKNOWN">
+                    {{ end }}
                 {{ end }}
-
                 <div
                     class="govuk-character-count"
                     data-module="govuk-character-count"
