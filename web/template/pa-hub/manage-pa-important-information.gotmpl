@@ -132,11 +132,11 @@
                   </fieldset>
                 </div>
               {{ else }}
-                  {{ $currentAnnualBillingInvoiceLabel:=.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label }}
+                  {{ $currentAnnualBillingInvoiceLabel:= .DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label }}
                   {{ if ne $currentAnnualBillingInvoiceLabel "" }}
-                      <input type="hidden" id="annual-billing-Unknown" name="annual-billing" value="Unknown">
-                  {{ else }}
                       <input type="hidden" id="annual-billing-{{ $currentAnnualBillingInvoiceLabel }}" name="annual-billing" value="{{ $currentAnnualBillingInvoiceLabel }}">
+                  {{ else }}
+                      <input type="hidden" id="annual-billing-Unknown" name="annual-billing" value="Unknown">
                   {{ end }}
               {{ end }}
                 <div
