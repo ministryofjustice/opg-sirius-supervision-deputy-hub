@@ -75,7 +75,7 @@ func TestAssuranceReturned(t *testing.T) {
 		VisitOutcome:       model.VisitOutcomeType{Label: "Cancelled", Handle: "CANCELLED"},
 		PdrOutcome:         model.PdrOutcomeType{Label: "Received", Handle: "RECEIVED"},
 		ReportReviewDate:   "2022-02-02",
-		ReportMarkedAs:     model.RagRatingType{Label: "Red", Handle: "RED"},
+		ReportMarkedAs:     model.RAGRating{Label: "Red", Handle: "RED"},
 		Note:               "This is just to see the notes and it is below 1000 characters",
 		VisitorAllocated:   "Jane Janeson",
 		ReviewedBy:         model.User{ID: 53, Name: "case manager"},
