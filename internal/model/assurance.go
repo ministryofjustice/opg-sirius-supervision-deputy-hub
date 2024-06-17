@@ -11,7 +11,7 @@ type Assurance struct {
 	VisitOutcome       VisitOutcomeType `json:"assuranceVisitOutcome"`
 	PdrOutcome         PdrOutcomeType   `json:"pdrOutcome"`
 	ReportReviewDate   string           `json:"reportReviewDate"`
-	ReportMarkedAs     RagRatingType    `json:"reportMarkedAs"`
+	ReportMarkedAs     RAGRating        `json:"reportMarkedAs"`
 	Note               string           `json:"note"`
 	VisitorAllocated   string           `json:"visitorAllocated"`
 	ReviewedBy         User             `json:"reviewedBy"`
@@ -29,11 +29,6 @@ type VisitOutcomeType struct {
 }
 
 type PdrOutcomeType struct {
-	Handle string `json:"handle"`
-	Label  string `json:"label"`
-}
-
-type RagRatingType struct {
 	Handle string `json:"handle"`
 	Label  string `json:"label"`
 }
