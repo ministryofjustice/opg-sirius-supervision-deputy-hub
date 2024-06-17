@@ -58,7 +58,7 @@ func TestGetAssurances_LatestReviewed(t *testing.T) {
 		assurances: []model.Assurance{
 			{
 				ReportReviewDate: "01/01/2022",
-				ReportMarkedAs: model.RagRatingType{
+				ReportMarkedAs: model.RAGRating{
 					Label:  "RED",
 					Handle: "RED",
 				},
@@ -112,7 +112,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			assurances: []model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -145,7 +145,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest visit has no review date",
 			[]model.Assurance{
 				{
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -199,7 +199,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 				{},
 				{
 					ReportReviewDate: "01/01/2022",
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -220,7 +220,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -262,7 +262,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
@@ -302,7 +302,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Handle: "PDR",
 						Label:  "PDR",
 					},
-					ReportMarkedAs: model.RagRatingType{
+					ReportMarkedAs: model.RAGRating{
 						Label:  "RED",
 						Handle: "RED",
 					},
