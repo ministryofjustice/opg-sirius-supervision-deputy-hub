@@ -1,17 +1,16 @@
 package server
 
 import (
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
 
 type DocumentsClient interface {
-	GetDeputyDocuments(ctx sirius.Context, deputyId int) (*[]model.Document, error)
+	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
 }
 
 type DocumentsVars struct {
-	Documents      []model.Document
+	DocumentList   sirius.DocumentList
 	SuccessMessage string
 	AppVars
 }
@@ -23,35 +22,14 @@ func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 		}
 		ctx := getContext(r)
 
-		documents, err := client.GetDeputyDocuments(ctx, app.DeputyId())
+		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId())
 		if err != nil {
 			return err
 		}
 
-		//taskType := r.URL.Query().Get("taskType")
-
-		//var successMessage string
-		//switch r.URL.Query().Get("success") {
-		//case "add":
-		//	successMessage = fmt.Sprintf("%s task added", taskType)
-		//case "manage":
-		//	successMessage = fmt.Sprintf("%s task updated", taskType)
-		//case "complete":
-		//	successMessage = fmt.Sprintf("%s task completed", taskType)
-		//default:
-		//	successMessage = ""
-		//}
-		//
-		//taskList, err := client.GetTasks(ctx, app.DeputyId())
-		//if err != nil {
-		//	return err
-		//}
-		//
-		//app.PageName = "Deputy tasks"
-		//
 		vars := DocumentsVars{
-			AppVars:   app,
-			Documents: *documents,
+			AppVars:      app,
+			DocumentList: documentList,
 			//SuccessMessage: successMessage,
 		}
 

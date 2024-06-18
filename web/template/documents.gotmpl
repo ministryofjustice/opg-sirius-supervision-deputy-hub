@@ -1,4 +1,4 @@
-{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.AddTasksClient*/ -}}
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.DocumentsClient*/ -}}
 {{ template "page" . }}
 
 {{ define "main" }}
@@ -12,7 +12,6 @@
         <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
             {{ .PageName }}
         </h1>
-        <p>{{ .Documents }}</p>
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
@@ -26,6 +25,22 @@
             </div>
         </div>
     </header>
+    <section data-module="filters">
+        <div class="govuk-grid-row govuk-!-margin-top-6">
 
+            <div id="table-column" class="govuk-grid-column-three-quarters">
+
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <form method="post">
+                            {{ template "document-list" . }}
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </section>
 
 {{ end }}

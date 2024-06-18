@@ -7,46 +7,53 @@ import (
 	"net/http"
 )
 
-//type ApiDocument struct {
-//	Id               int    `json:"id"`
-//	Name             string `json:"name"`
-//	JobTitle         string `json:"jobTitle"`
-//	Email            string `json:"email"`
-//	PhoneNumber      string `json:"phoneNumber"`
-//	OtherPhoneNumber string `json:"otherPhoneNumber"`
-//	Notes            string `json:"notes"`
-//	IsMainContact    bool   `json:"isMainContact"`
-//	IsNamedDeputy    bool   `json:"isNamedDeputy"`
-//}
+type DocumentList struct {
+	Documents      []model.Document
+	Pages          Page
+	TotalDocuments int
+	Metadata       Metadata
+}
 
-func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (*[]model.Document, error) {
-	var documentList model.Response
-
-	deputyId = 81
+func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, error) {
+	var documentList DocumentList
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/persons/%d/documents", deputyId), nil)
 
 	if err != nil {
-		return nil, err
+		return documentList, err
 	}
 
 	resp, err := c.http.Do(req)
 	if err != nil {
-		return nil, err
+		return documentList, err
 	}
 
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
-		return nil, ErrUnauthorized
+		return documentList, ErrUnauthorized
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, newStatusError(resp)
+		return documentList, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&documentList); err != nil {
-		return nil, err
+		return documentList, err
 	}
 
-	return &documentList.Documents, err
+	documentList.formatDocuments()
+
+	fmt.Println("are the document dates updated")
+	fmt.Println(documentList.Documents)
+	return documentList, err
+
+}
+
+func (d *DocumentList) formatDocuments() {
+	var list []model.Document
+	for _, existingDocument := range d.Documents {
+		existingDocument.CreatedDate = FormatDateTime(SiriusDateTime, existingDocument.CreatedDate, SiriusDate)
+		list = append(list, existingDocument)
+	}
+	d.Documents = list
 }
