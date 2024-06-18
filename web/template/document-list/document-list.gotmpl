@@ -20,7 +20,7 @@
                 label=" ">
                 <a
                     class="govuk-link"
-                    href="">
+                    href="{{ prefix (printf "/%d/documents/%d" $.DeputyDetails.ID .Id) }}">
                     {{ if .FriendlyDescription }}
                         {{ .FriendlyDescription }}
                     {{ else }}
@@ -50,14 +50,16 @@
                  {{ end }}
            </td>
             <td class="govuk-table__cell nowrap" id="document-date">
-                {{ if .ReceivedDateTime }}
-                    {{ .ReceivedDateTime }}
+                {{ if .CreatedDate }}
+                    {{ .CreatedDate }}
                 {{ else }}
                     -
                 {{ end }}
             </td>
             <td class="govuk-table__cell">
-              Actions
+                <a class="govuk-button govuk-button--secondary govuk-link"
+                   href="{{ prefix (printf "/%d/documents/%d/replace" $.DeputyDetails.ID .Id) }}">Replace
+                </a>
             </td>
         </tr>
     {{ end }}

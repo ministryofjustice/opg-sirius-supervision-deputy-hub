@@ -7,8 +7,10 @@ import (
 	"net/http"
 )
 
+type Documents []model.Document
+
 type DocumentList struct {
-	Documents      []model.Document
+	Documents      Documents
 	Pages          Page
 	TotalDocuments int
 	Metadata       Metadata
@@ -41,19 +43,15 @@ func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, er
 		return documentList, err
 	}
 
-	documentList.formatDocuments()
+	documentList.Documents = formatDocuments(documentList.Documents)
 
-	fmt.Println("are the document dates updated")
-	fmt.Println(documentList.Documents)
 	return documentList, err
-
 }
 
-func (d *DocumentList) formatDocuments() {
-	var list []model.Document
-	for _, existingDocument := range d.Documents {
-		existingDocument.CreatedDate = FormatDateTime(SiriusDateTime, existingDocument.CreatedDate, SiriusDate)
-		list = append(list, existingDocument)
+func formatDocuments(documents []model.Document) []model.Document {
+	for key, document := range documents {
+		documents[key].CreatedDate = FormatDateTime(SiriusDateTime, document.CreatedDate, SiriusDate)
+		documents[key].ReceivedDateTime = FormatDateTime(SiriusDateTime, document.ReceivedDateTime, SiriusDate)
 	}
-	d.Documents = list
+	return documents
 }

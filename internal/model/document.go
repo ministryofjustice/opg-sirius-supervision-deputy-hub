@@ -1,9 +1,5 @@
 package model
 
-type Response struct {
-	Documents []Document `json:"documents"`
-}
-
 type Document struct {
 	DisplayDate         string        `json:"displayDate"`
 	Id                  int           `json:"id"`
