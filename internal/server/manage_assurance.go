@@ -16,7 +16,7 @@ import (
 type ManageAssuranceClient interface {
 	UpdateAssurance(ctx sirius.Context, manageAssuranceForm sirius.UpdateAssuranceDetails, deputyId, visitId int) error
 	GetVisitors(ctx sirius.Context) ([]model.Visitor, error)
-	GetRagRatingTypes(ctx sirius.Context) ([]model.RagRatingType, error)
+	GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error)
 	GetVisitOutcomeTypes(ctx sirius.Context) ([]model.VisitOutcomeType, error)
 	GetPdrOutcomeTypes(ctx sirius.Context) ([]model.PdrOutcomeType, error)
 	GetAssuranceById(ctx sirius.Context, deputyId int, visitId int) (model.Assurance, error)
@@ -24,7 +24,7 @@ type ManageAssuranceClient interface {
 
 type ManageAssuranceVars struct {
 	Visitors          []model.Visitor
-	RagRatingTypes    []model.RagRatingType
+	RagRatingTypes    []model.RAGRating
 	VisitOutcomeTypes []model.VisitOutcomeType
 	PdrOutcomeTypes   []model.PdrOutcomeType
 	Assurance         model.Assurance
@@ -41,7 +41,7 @@ func parseAssuranceForm(assuranceForm sirius.UpdateAssuranceDetails) model.Assur
 		VisitOutcome:       model.VisitOutcomeType{Label: assuranceForm.VisitOutcome},
 		PdrOutcome:         model.PdrOutcomeType{Label: assuranceForm.PdrOutcome},
 		ReportReviewDate:   assuranceForm.ReportReviewDate,
-		ReportMarkedAs:     model.RagRatingType{Label: assuranceForm.ReportMarkedAs},
+		ReportMarkedAs:     model.RAGRating{Label: assuranceForm.ReportMarkedAs},
 		ReviewedBy:         model.User{ID: assuranceForm.ReviewedBy},
 		Note:               assuranceForm.Note,
 	}

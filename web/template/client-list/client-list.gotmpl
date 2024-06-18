@@ -78,11 +78,11 @@
                 {{ if ne .LatestCompletedVisit.VisitCompletedDate "" }}
                     {{ .LatestCompletedVisit.VisitCompletedDate }}
                     <span class="secondary">
-                                            {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency.Label }}
-                                        </span>
-                    {{ $rag := .LatestCompletedVisit.GetRAGRating }}
-                    {{ if $rag.Colour }}
-                        <span><strong class="govuk-tag govuk-tag--{{ $rag.Colour }}">{{ $rag.Name }}</strong></span>
+                        {{ printf "%v visit" .LatestCompletedVisit.VisitUrgency.Label }}
+                    </span>
+                    {{ $risk := .LatestCompletedVisit.VisitReportMarkedAs.GetRiskMarker }}
+                    {{ if $risk.Colour }}
+                        <span><strong class="govuk-tag govuk-tag--{{ $risk.Colour }}">{{ $risk.Name }}</strong></span>
                     {{ else }}
                         -
                     {{ end }}

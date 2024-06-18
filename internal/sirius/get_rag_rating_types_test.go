@@ -39,7 +39,7 @@ func TestGetRagRatingTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []model.RagRatingType{
+	expectedResponse := []model.RAGRating{
 		{
 			Handle: "RED",
 			Label:  "Red",
@@ -70,7 +70,7 @@ func TestGetRagRatingTypesReturnsNewStatusError(t *testing.T) {
 
 	ragRatingTypes, err := client.GetRagRatingTypes(getContext(nil))
 
-	assert.Equal(t, []model.RagRatingType(nil), ragRatingTypes)
+	assert.Equal(t, []model.RAGRating(nil), ragRatingTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/ragRating",
@@ -89,5 +89,5 @@ func TestGetRagRatingTypesReturnsUnauthorisedClientError(t *testing.T) {
 	ragRatingTypes, err := client.GetRagRatingTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []model.RagRatingType(nil), ragRatingTypes)
+	assert.Equal(t, []model.RAGRating(nil), ragRatingTypes)
 }

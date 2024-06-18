@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetRagRatingTypes(ctx Context) ([]model.RagRatingType, error) {
-	var v []model.RagRatingType
+func (c *Client) GetRagRatingTypes(ctx Context) ([]model.RAGRating, error) {
+	var v []model.RAGRating
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/ragRating", nil)
 	if err != nil {

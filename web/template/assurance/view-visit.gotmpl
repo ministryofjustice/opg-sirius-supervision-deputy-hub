@@ -93,8 +93,9 @@
         <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key">Report marked as</dt>
             <dd class="govuk-summary-list__value hook_report_marked_as">
-                {{ if .ReportMarkedAs.Label }}
-                    {{ .ReportMarkedAs.Label }}
+                {{ $risk := .ReportMarkedAs.GetRiskMarker }}
+                {{ if $risk.Colour }}
+                    <span><strong class="govuk-tag govuk-tag--{{ $risk.Colour }}">{{ $risk.Name }}</strong></span>
                 {{ else }}
                     -
                 {{ end }}
