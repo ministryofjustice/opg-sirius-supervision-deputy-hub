@@ -8,7 +8,7 @@ import (
 )
 
 type AddDocumentClient interface {
-	AddDocument(ctx sirius.Context, file multipart.File, documentType string, direction string, date string, notes string) error
+	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string) error
 }
 
 type AddDocumentVars struct {
@@ -35,7 +35,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				fmt.Println(err)
 			}
 
-			file, _, err := r.FormFile("document-upload")
+			file, handler, err := r.FormFile("document-upload")
 			if err != nil {
 				fmt.Println(err)
 				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
@@ -79,7 +79,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			fmt.Println(notes)
 
 			ctx := getContext(r)
-			err = client.AddDocument(ctx, file, documentType, direction, date, notes)
+			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes)
 
 			if err != nil {
 				panic(err)
