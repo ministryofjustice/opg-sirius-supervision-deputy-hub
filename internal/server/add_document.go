@@ -2,18 +2,22 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"mime/multipart"
 	"net/http"
 )
 
 type AddDocumentClient interface {
-	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string) error
+	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
+	GetRefData(ctx sirius.Context, refDataUrlType string) ([]model.RefData, error)
 }
 
 type AddDocumentVars struct {
 	SuccessMessage string
 	AppVars
+	DocumentDirectionRefData []model.RefData
+	DocumentTypes            []model.RefData
 }
 
 func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handler {
@@ -22,8 +26,19 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 
 		vars := AddDocumentVars{
 			AppVars: app,
-			//SuccessMessage: successMessage,
 		}
+
+		documentDirectionRefData, err := client.GetRefData(getContext(r), "documentDirection")
+		if err != nil {
+			return err
+		}
+		vars.DocumentDirectionRefData = documentDirectionRefData
+
+		documentTypes, err := client.GetRefData(getContext(r), "deputyDocumentType")
+		if err != nil {
+			return err
+		}
+		vars.DocumentTypes = documentTypes
 
 		if r.Method == http.MethodPost {
 			vars.Errors = sirius.ValidationErrors{}
@@ -41,12 +56,12 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
 			}
 
-			//fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-			//fmt.Printf("File Size: %+v\n", handler.Size)
-			//fmt.Printf("MIME Header: %+v\n", handler.Header)
-
 			documentType := r.PostFormValue("type")
 			direction := r.PostFormValue("direction")
+
+			fmt.Println("direction")
+			fmt.Println(direction)
+
 			date := r.PostFormValue("date")
 			notes := r.PostFormValue("notes")
 
@@ -62,24 +77,8 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			//defer file.Close()
-
-			// Temporarily upload it to temp-files
-			// Then, pass the filename to the sirius side, who can upload it as a request
-			// It'd be better if we can pass this formFile directly to the sirius side to add to a new request, but we'll see
-			//tempFile, err := os.OpenFile("./temp-files/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-			//if err != nil {
-			//	fmt.Println(err)
-			//}
-			//
-			//defer tempFile.Close()
-			//io.Copy(tempFile, file)
-
-			fmt.Println(documentType)
-			fmt.Println(notes)
-
 			ctx := getContext(r)
-			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes)
+			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
 
 			if err != nil {
 				panic(err)

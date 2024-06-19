@@ -32,39 +32,24 @@
                             Type of document
                         </legend>
                         {{ template "error-message" (index .Errors "type") }}
+
+
                         <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="type-catch-up-call"
-                                       name="type" type="radio"
-                                       value="CATCH UP CALL" />
-                                <label class="govuk-label govuk-radios__label" for="type-catch-up-call">
-                                    Catch up call
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="type-correspondence"
-                                       name="type" type="radio"
-                                       value="CORRESPONDENCE" />
-                                <label class="govuk-label govuk-radios__label" for="type-correspondence">
-                                    Correspondence
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="type-non-compliance"
-                                       name="type" type="radio"
-                                       value="NON COMPLIANCE" />
-                                <label class="govuk-label govuk-radios__label" for="type-non-compliance">
-                                    Non-compliance
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="type-visit"
-                                       name="type" type="radio"
-                                       value="VISIT" />
-                                <label class="govuk-label govuk-radios__label" for="type-visit">
-                                    Visit
-                                </label>
-                            </div>
+                            {{ range $i, $documentType := .DocumentTypes }}
+                                <div class="govuk-radios__item">
+                                     <div class="govuk-radios">
+                                         <div class="govuk-radios__item">
+                                             <input class="govuk-radios__input" id="type-{{.Label}}"
+                                                        name="type" type="radio"
+                                                        value="{{.Handle}}" />
+                                                    <label class="govuk-label govuk-radios__label" for="type-{{.Label}}">
+                                                        {{.Label}}
+                                                    </label>
+                                             </input>
+                                         </div>
+                                     </div>
+                                </div>
+                            {{end}}
                         </div>
                     </fieldset>
                 </div>
@@ -75,32 +60,19 @@
                             Direction (required)
                         </legend>
                         {{ template "error-message" (index .Errors "direction") }}
-                        <div class="govuk-radios">
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="direction-incoming"
-                                       name="direction" type="radio"
-                                       value="INCOMING" />
-                                <label class="govuk-label govuk-radios__label" for="direction-incoming">
-                                    Incoming
-                                </label>
+
+                        {{ range $i, $documentDirection := .DocumentDirectionRefData }}
+                            <div class="govuk-radios">
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="direction-incoming"
+                                           name="direction" type="radio"
+                                           value="{{.Handle}}" />
+                                    <label class="govuk-label govuk-radios__label" for="direction-{{.Label}}">
+                                        {{.Label}}
+                                    </label>
+                                </div>
                             </div>
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="direction-outgoing"
-                                       name="direction" type="radio"
-                                       value="OUTGOING" />
-                                <label class="govuk-label govuk-radios__label" for="direction-outgoing">
-                                    Outgoing
-                                </label>
-                            </div>
-                            <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="direction-internal"
-                                       name="direction" type="radio"
-                                       value="INTERNAL" />
-                                <label class="govuk-label govuk-radios__label" for="direction-internal">
-                                    Internal
-                                </label>
-                            </div>
-                        </div>
+                        {{end}}
                     </fieldset>
                 </div>
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -57,15 +58,18 @@ type EncodedFile struct {
 	Type   string `json:"type"`
 }
 
-func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string) error {
+func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	var body bytes.Buffer
 
 	defer file.Close()
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
+
+	fmt.Print("documentType")
+	fmt.Println(documentType)
 
 	source := base64.StdEncoding.EncodeToString(buf.Bytes())
 
@@ -77,30 +81,30 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		},
 		FileName:   filename,
 		FileSource: source,
-		PersonId:   43,
-		Date:       "19/06/2024",
+		PersonId:   deputyId,
+		Date:       "01/01/2020",
 		Type: struct {
 			Handle string `json:"handle"`
 			Label  string `json:"label"`
 		}{
-			Handle: "CASE_NOTE",
-			Label:  "Case note",
+			Handle: documentType,
 		},
 		Direction: struct {
 			Handle string `json:"handle"`
 			Label  string `json:"label"`
 		}{
-			Handle: "INCOMING",
-			Label:  "Incoming",
+			Handle: direction,
 		},
 	}
+
+	//date is received date time (I think)
 
 	err := json.NewEncoder(&body).Encode(requestBody)
 
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, "/api/v1/notes", &body)
+	req, err := c.newRequest(ctx, http.MethodPost, "/api/public/v1/documents/deputies", &body)
 
 	if err != nil {
 		return err
