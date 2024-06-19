@@ -33,6 +33,7 @@ type Client interface {
 	AddTasksClient
 	TasksClient
 	DocumentsClient
+	AddDocumentClient
 	ManageTasks
 	CompleteTask
 }

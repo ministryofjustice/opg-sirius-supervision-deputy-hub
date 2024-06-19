@@ -2,16 +2,13 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"io"
+	"mime/multipart"
 	"net/http"
-	"os"
 )
 
 type AddDocumentClient interface {
-	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
-	GetDocument(ctx sirius.Context, documentId int) (model.Document, error)
+	AddDocument(ctx sirius.Context, file multipart.File, documentType string, direction string, date string, notes string) error
 }
 
 type AddDocumentVars struct {
@@ -22,9 +19,14 @@ type AddDocumentVars struct {
 func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		app.PageName = "Add a document"
-		if r.Method != http.MethodGet {
-			//routeVars := mux.Vars(r)
-			//deputyId, _ := strconv.Atoi(routeVars["id"])
+
+		vars := AddDocumentVars{
+			AppVars: app,
+			//SuccessMessage: successMessage,
+		}
+
+		if r.Method == http.MethodPost {
+			vars.Errors = sirius.ValidationErrors{}
 
 			// Specify max file size to 100mb
 			err := r.ParseMultipartForm(100 << 20)
@@ -33,31 +35,57 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				fmt.Println(err)
 			}
 
-			file, handler, err := r.FormFile("document-upload")
+			file, _, err := r.FormFile("document-upload")
 			if err != nil {
-				fmt.Println("Error Retrieving the File")
 				fmt.Println(err)
+				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
 			}
-
-			defer file.Close()
 
 			//fmt.Printf("Uploaded File: %+v\n", handler.Filename)
 			//fmt.Printf("File Size: %+v\n", handler.Size)
 			//fmt.Printf("MIME Header: %+v\n", handler.Header)
 
-			tempFile, err := os.OpenFile("./temp-files/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-			if err != nil {
-				fmt.Println(err)
+			documentType := r.PostFormValue("type")
+			direction := r.PostFormValue("direction")
+			date := r.PostFormValue("date")
+			notes := r.PostFormValue("notes")
+
+			if direction == "" {
+				vars.Errors["direction"] = map[string]string{"": "Select a direction"}
 			}
-			defer tempFile.Close()
-			io.Copy(tempFile, file)
+
+			if date == "" {
+				vars.Errors["date"] = map[string]string{"": "Select a date"}
+			}
+
+			if len(vars.Errors) > 0 {
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			//defer file.Close()
+
+			// Temporarily upload it to temp-files
+			// Then, pass the filename to the sirius side, who can upload it as a request
+			// It'd be better if we can pass this formFile directly to the sirius side to add to a new request, but we'll see
+			//tempFile, err := os.OpenFile("./temp-files/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+			//if err != nil {
+			//	fmt.Println(err)
+			//}
+			//
+			//defer tempFile.Close()
+			//io.Copy(tempFile, file)
+
+			fmt.Println(documentType)
+			fmt.Println(notes)
+
+			ctx := getContext(r)
+			err = client.AddDocument(ctx, file, documentType, direction, date, notes)
+
+			if err != nil {
+				panic(err)
+			}
 
 			return StatusError(http.StatusMethodNotAllowed)
-		}
-
-		vars := AddDocumentVars{
-			AppVars: app,
-			//SuccessMessage: successMessage,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
