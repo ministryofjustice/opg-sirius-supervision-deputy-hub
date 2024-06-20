@@ -1,12 +1,14 @@
 package server
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"io"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"strings"
 	"testing"
 
@@ -48,7 +50,7 @@ var addDocumentVars = AddDocumentVars{
 	AppVars: AppVars{},
 }
 
-func TestAddDocument(t *testing.T) {
+func TestPostAddDocument(t *testing.T) {
 	assert := assert.New(t)
 
 	client := &mockAddDocumentClient{}
@@ -58,31 +60,42 @@ func TestAddDocument(t *testing.T) {
 		DeputyDetails: sirius.DeputyDetails{ID: 123},
 	}
 
-	//body := new(bytes.Buffer)
-	//writer := multipart.NewWriter(body)
-	//// create a new form-data header name data and filename data.txt
-	//dataPart, _ := writer.CreateFormFile("data", "data.txt")
-	//_, _ = io.CopyBuffer(dataPart, []byte("test"))
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
 
-	//var mockForm *multipart.Form
-	//mockForm
+	// create a new form-data header name data and filename data.txt
+	dataPart, _ := writer.CreateFormFile("document-upload", "data.txt")
+	_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
 
-	form := url.Values{
-		"type":            {"ABC"},
-		"direction":       {"INCOMING"},
-		"date":            {"2020-01-01"},
-		"notes":           {"Notes on this file"},
-		"document-upload": {"some content"},
+	typeWriter, _ := writer.CreateFormField("type")
+	typeWriter.Write([]byte("ABC"))
+
+	direction, err := writer.CreateFormField("direction")
+	if err != nil {
+		return
 	}
 
+	direction.Write([]byte("INCOMING"))
+
+	date, err := writer.CreateFormField("date")
+	if err != nil {
+		return
+	}
+
+	date.Write([]byte("2020-01-01"))
+
+	notes, err := writer.CreateFormField("notes")
+	if err != nil {
+		return
+	}
+	notes.Write([]byte("Notes on this file"))
+
+	writer.Close()
+
 	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
+	r, _ := http.NewRequest("POST", "/123", body)
 
-	//var v any
-	//json.NewDecoder(body).Decode(&v)
-	//fmt.Print(v)
-
-	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	r.Header.Add("Content-Type", writer.FormDataContentType())
 
 	var res error
 
@@ -93,7 +106,7 @@ func TestAddDocument(t *testing.T) {
 
 	testHandler.ServeHTTP(w, r)
 
-	assert.Equal(res, Redirect("123/documents?success=addDocument&filename=%s"))
+	assert.Equal(res, Redirect(fmt.Sprintf("/123/documents?success=addDocument&filename=%s", "data.txt")))
 }
 
 //
