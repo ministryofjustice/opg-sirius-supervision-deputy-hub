@@ -34,7 +34,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 		}
 		vars.DocumentDirectionRefData = documentDirectionRefData
 
-		documentTypes, err := client.GetRefData(getContext(r), "?filter=NoteType:deputy")
+		documentTypes, err := client.GetRefData(getContext(r), "?filter=noteType:deputy")
 		if err != nil {
 			return err
 		}
