@@ -28,18 +28,11 @@ func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, pa
 	return m.deputyClientData, m.err
 }
 
-func (m *mockDeputyHubClientInformation) GetAccommodationTypes(ctx sirius.Context) ([]model.RefData, error) {
+func (m *mockDeputyHubClientInformation) GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
 	return m.accommodationTypes, m.err
-}
-
-func (m *mockDeputyHubClientInformation) GetSupervisionLevels(ctx sirius.Context) ([]model.RefData, error) {
-	m.count += 1
-	m.lastCtx = ctx
-
-	return m.supervisionLevels, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {

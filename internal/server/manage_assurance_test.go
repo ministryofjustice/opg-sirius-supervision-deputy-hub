@@ -17,22 +17,10 @@ type mockManageAssuranceClient struct {
 	mock.Mock
 }
 
-func (m *mockManageAssuranceClient) GetVisitOutcomeTypes(ctx sirius.Context) ([]model.VisitOutcomeType, error) {
-	args := m.Called(ctx)
+func (m *mockManageAssuranceClient) GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error) {
+	args := m.Called(ctx, refDataTypeUrl)
 
-	return args.Get(0).([]model.VisitOutcomeType), args.Error(1)
-}
-
-func (m *mockManageAssuranceClient) GetPdrOutcomeTypes(ctx sirius.Context) ([]model.PdrOutcomeType, error) {
-	args := m.Called(ctx)
-
-	return args.Get(0).([]model.PdrOutcomeType), args.Error(1)
-}
-
-func (m *mockManageAssuranceClient) GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error) {
-	args := m.Called(ctx)
-
-	return args.Get(0).([]model.RAGRating), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
 func (m *mockManageAssuranceClient) GetVisitors(ctx sirius.Context) ([]model.Visitor, error) {
@@ -65,18 +53,18 @@ func TestGetManageAssurance(t *testing.T) {
 	manageAssuranceAppVars.PageName = "Manage assurance visit"
 
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
-	ragRatingTypes := []model.RAGRating{{Handle: "x", Label: "y"}}
-	visitOutcomeTypes := []model.VisitOutcomeType{{Handle: "x", Label: "w"}}
-	pdrOutcomeTypes := []model.PdrOutcomeType{{Handle: "x", Label: "z"}}
+	ragRatingTypes := []model.RefData{{Handle: "x", Label: "y"}}
+	visitOutcomeTypes := []model.RefData{{Handle: "x", Label: "w"}}
+	pdrOutcomeTypes := []model.RefData{{Handle: "x", Label: "z"}}
 	assurance := model.Assurance{Id: 1, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceClient{}
 	client.On("GetAssuranceById", mock.Anything, manageAssuranceAppVars.DeputyId(), 0).Return(assurance, nil)
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return(visitors, nil)
-	client.On("GetRagRatingTypes", mock.Anything).Return(ragRatingTypes, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return(visitOutcomeTypes, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return(pdrOutcomeTypes, nil)
+	client.On("GetRefData", mock.Anything, "/ragRating").Return(ragRatingTypes, nil)
+	client.On("GetRefData", mock.Anything, "/visitOutcome").Return(visitOutcomeTypes, nil)
+	client.On("GetRefData", mock.Anything, "/pdrOutcome").Return(pdrOutcomeTypes, nil)
 
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}
@@ -110,9 +98,9 @@ func TestPostManageAssurance(t *testing.T) {
 	client.On("GetAssuranceById", mock.Anything, 123, 1).Return(model.Assurance{}, nil)
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return([]model.Visitor{}, nil)
-	client.On("GetRagRatingTypes", mock.Anything).Return([]model.RAGRating{}, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.VisitOutcomeType{}, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.PdrOutcomeType{}, nil)
+	client.On("GetRefData", mock.Anything, "/ragRating").Return([]model.RefData{}, nil)
+	client.On("GetRefData", mock.Anything, "/visitOutcome").Return([]model.RefData{}, nil)
+	client.On("GetRefData", mock.Anything, "/pdrOutcome").Return([]model.RefData{}, nil)
 	client.On("UpdateAssurance", mock.Anything, sirius.UpdateAssuranceDetails{}, 123, 1).Return(nil)
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}
@@ -139,18 +127,18 @@ func TestGetManagePDR(t *testing.T) {
 	manageAssuranceAppVars.PageName = "Manage PDR"
 
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
-	ragRatingTypes := []model.RAGRating{{Handle: "x", Label: "y"}}
-	visitOutcomeTypes := []model.VisitOutcomeType{{Handle: "x", Label: "w"}}
-	pdrOutcomeTypes := []model.PdrOutcomeType{{Handle: "x", Label: "z"}}
+	ragRatingTypes := []model.RefData{{Handle: "x", Label: "y"}}
+	visitOutcomeTypes := []model.RefData{{Handle: "x", Label: "w"}}
+	pdrOutcomeTypes := []model.RefData{{Handle: "x", Label: "z"}}
 	assurance := model.Assurance{Id: 1, Type: model.AssuranceType{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceClient{}
 	client.On("GetAssuranceById", mock.Anything, manageAssuranceAppVars.DeputyId(), 0).Return(assurance, nil)
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return(visitors, nil)
-	client.On("GetRagRatingTypes", mock.Anything).Return(ragRatingTypes, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return(visitOutcomeTypes, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return(pdrOutcomeTypes, nil)
+	client.On("GetRefData", mock.Anything, "/ragRating").Return(ragRatingTypes, nil)
+	client.On("GetRefData", mock.Anything, "/visitOutcome").Return(visitOutcomeTypes, nil)
+	client.On("GetRefData", mock.Anything, "/pdrOutcome").Return(pdrOutcomeTypes, nil)
 
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}
@@ -184,9 +172,9 @@ func TestPostManagePDR(t *testing.T) {
 	client.On("GetAssuranceById", mock.Anything, 123, 1).Return(model.Assurance{Type: model.AssuranceType{Handle: "PDR", Label: "PDR"}}, nil)
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return([]model.Visitor{}, nil)
-	client.On("GetRagRatingTypes", mock.Anything).Return([]model.RAGRating{}, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.VisitOutcomeType{}, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.PdrOutcomeType{}, nil)
+	client.On("GetRefData", mock.Anything, "/ragRating").Return([]model.RefData{}, nil)
+	client.On("GetRefData", mock.Anything, "/visitOutcome").Return([]model.RefData{}, nil)
+	client.On("GetRefData", mock.Anything, "/pdrOutcome").Return([]model.RefData{}, nil)
 	client.On("UpdateAssurance", mock.Anything, sirius.UpdateAssuranceDetails{}, 123, 1).Return(nil)
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}

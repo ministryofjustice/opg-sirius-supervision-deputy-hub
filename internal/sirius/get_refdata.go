@@ -67,7 +67,7 @@ func unmarshalFilteredRefData(body io.ReadCloser, filter string) ([]model.RefDat
 	data, dataExists := dataMap[filter].([]interface{})
 
 	if !dataExists {
-		fmt.Sprintln("Cannot find key %s in json", filter)
+		fmt.Println(fmt.Sprintf("Cannot find key %s in json\n", filter))
 		return refData, err
 	}
 

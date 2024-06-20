@@ -16,17 +16,15 @@ import (
 type ManageAssuranceClient interface {
 	UpdateAssurance(ctx sirius.Context, manageAssuranceForm sirius.UpdateAssuranceDetails, deputyId, visitId int) error
 	GetVisitors(ctx sirius.Context) ([]model.Visitor, error)
-	GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error)
-	GetVisitOutcomeTypes(ctx sirius.Context) ([]model.VisitOutcomeType, error)
-	GetPdrOutcomeTypes(ctx sirius.Context) ([]model.PdrOutcomeType, error)
+	GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error)
 	GetAssuranceById(ctx sirius.Context, deputyId int, visitId int) (model.Assurance, error)
 }
 
 type ManageAssuranceVars struct {
 	Visitors          []model.Visitor
-	RagRatingTypes    []model.RAGRating
-	VisitOutcomeTypes []model.VisitOutcomeType
-	PdrOutcomeTypes   []model.PdrOutcomeType
+	RagRatingTypes    []model.RefData
+	VisitOutcomeTypes []model.RefData
+	PdrOutcomeTypes   []model.RefData
 	Assurance         model.Assurance
 	ErrorNote         string
 	AppVars
@@ -84,7 +82,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			ragRatingTypes, err := client.GetRagRatingTypes(ctx.With(groupCtx))
+			ragRatingTypes, err := client.GetRefData(ctx.With(groupCtx), "/ragRating")
 			if err != nil {
 				return err
 			}
@@ -94,7 +92,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			visitOutcomeTypes, err := client.GetVisitOutcomeTypes(ctx.With(groupCtx))
+			visitOutcomeTypes, err := client.GetRefData(ctx.With(groupCtx), "/visitOutcome")
 			if err != nil {
 				return err
 			}
@@ -104,7 +102,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(ctx.With(groupCtx))
+			pdrOutcomeTypes, err := client.GetRefData(ctx.With(groupCtx), "/pdrOutcome")
 			if err != nil {
 				return err
 			}

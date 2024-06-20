@@ -14,8 +14,7 @@ import (
 
 type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
-	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
-	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
+	GetRefData(sirius.Context, string) ([]model.RefData, error)
 }
 
 type ListClientsVars struct {
@@ -119,7 +118,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		})
 
 		group.Go(func() error {
-			accommodationTypes, err := client.GetAccommodationTypes(ctx.With(groupCtx))
+			accommodationTypes, err := client.GetRefData(ctx.With(groupCtx), "/clientAccommodation")
 			if err != nil {
 				return err
 			}
@@ -128,7 +127,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		})
 
 		group.Go(func() error {
-			supervisionLevels, err := client.GetSupervisionLevels(ctx.With(groupCtx))
+			supervisionLevels, err := client.GetRefData(ctx.With(groupCtx), "/supervisionLevel")
 			if err != nil {
 				return err
 			}

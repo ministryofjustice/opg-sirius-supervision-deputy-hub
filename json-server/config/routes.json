@@ -12,13 +12,6 @@
     "/deputies/:id/contacts/:contactId": "/contacts/:contactId",
     "/deputies/:id/tasks*": "/tasks/:id",
     "/firm": "/addFirm",
-    "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
-    "/reference-data/deputyBooleanType": "/deputyBooleanType",
-    "/reference-data/deputyReportSystem": "/deputyReportSystem",
-    "/reference-data/visitOutcome": "/visitOutcome",
-    "/reference-data/pdrOutcome": "/pdrOutcome",
-    "/reference-data/ragRating": "/ragRating",
-    "/reference-data?filter=clientAccommodation": "/clientAccommodation",
-    "/reference-data?filter=supervisionLevel": "/supervisionLevel",
+    "/reference-data/*": "/$1",
     "/tasktypes/deputy": "/tasktypes"
 }
