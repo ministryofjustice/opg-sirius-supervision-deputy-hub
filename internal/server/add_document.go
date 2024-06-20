@@ -46,13 +46,11 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			// Specify max file size to 100mb
 			err := r.ParseMultipartForm(100 << 20)
 			if err != nil {
-				fmt.Println("Error Parsing the Form")
 				fmt.Println(err)
 			}
 
 			file, handler, err := r.FormFile("document-upload")
 			if err != nil {
-				fmt.Println(err)
 				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
 			}
 
@@ -70,6 +68,14 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				vars.Errors["date"] = map[string]string{"": "Select a date"}
 			}
 
+			if documentType == "" {
+				vars.Errors["type"] = map[string]string{"": "Select a date"}
+			}
+
+			if len(notes) > 1000 {
+				vars.Errors["notes"] = map[string]string{"": "The note must be 1000 characters or fewer"}
+			}
+
 			if len(vars.Errors) > 0 {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -81,7 +87,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				fmt.Println(err)
 			}
 
-			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument", app.DeputyId()))
+			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument&filename=%s", app.DeputyId(), handler.Filename))
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

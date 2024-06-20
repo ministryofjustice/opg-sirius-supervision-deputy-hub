@@ -2,11 +2,9 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
 
 type DocumentsClient interface {
@@ -22,28 +20,30 @@ type DocumentsVars struct {
 
 func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
+		if r.Method != http.MethodGet {
+			return StatusError(http.StatusMethodNotAllowed)
+		}
+
 		app.PageName = "Documents"
 
 		var successMessage string
 		switch r.URL.Query().Get("success") {
 		case "addDocument":
-			successMessage = "Document <document-filename> added"
+			filename := r.URL.Query().Get("filename")
+			successMessage = fmt.Sprintf("Document %s added", filename)
 		}
 
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		documentId, _ := strconv.Atoi(routeVars["documentId"])
+		//routeVars := mux.Vars(r)
+		//documentId, _ := strconv.Atoi(routeVars["documentId"])
 
-		if documentId != 0 {
-			document, err := client.GetDocument(ctx, documentId)
-			if err != nil {
-				return err
-			}
-			fmt.Println(document)
-		}
+		//if documentId != 0 {
+		// Base64 decode the document, put it in a file and put that in the header
+		//	document, err := client.GetDocument(ctx, documentId)
+		//	if err != nil {
+		//		return err
+		//	}
+		//}
 
 		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId())
 		if err != nil {

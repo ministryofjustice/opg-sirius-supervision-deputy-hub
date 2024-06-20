@@ -29,7 +29,7 @@
                 <div class="govuk-form-group{{ if index .Errors "type" }} govuk-form-group--error{{ end }}">
                     <fieldset class="govuk-fieldset" aria-describedby="type" id="f-type">
                         <legend class="govuk-fieldset__legend">
-                            Type of document
+                            Type of document (required)
                         </legend>
                         {{ template "error-message" (index .Errors "type") }}
 

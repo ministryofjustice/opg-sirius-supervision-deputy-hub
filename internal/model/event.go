@@ -29,7 +29,6 @@ type Event struct {
 	Direction            string    `json:"direction"`
 	Type                 string    `json:"type"`
 	Filename             string    `json:"filename"`
-	DocumentNotes        string    `json:"notes"`
 	ReceivedDate         string    `json:"receivedDate"`
 }
 

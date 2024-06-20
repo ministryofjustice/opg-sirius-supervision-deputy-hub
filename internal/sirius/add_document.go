@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"io"
 	"mime/multipart"
@@ -29,17 +28,26 @@ type EncodedFile struct {
 	Type   string `json:"type"`
 }
 
-func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
-	var body bytes.Buffer
-
+func EncodeFileToBase64(file multipart.File) (string, error) {
 	defer file.Close()
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
-	source := base64.StdEncoding.EncodeToString(buf.Bytes())
+	file.Close()
+
+	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
+}
+
+func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
+	var body bytes.Buffer
+
+	source, err := EncodeFileToBase64(file)
+	if err != nil {
+		return err
+	}
 
 	requestBody := CreateDocumentRequest{
 		File: EncodedFile{
@@ -61,9 +69,7 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		Description: notes,
 	}
 
-	file.Close()
-
-	err := json.NewEncoder(&body).Encode(requestBody)
+	err = json.NewEncoder(&body).Encode(requestBody)
 
 	if err != nil {
 		return err
