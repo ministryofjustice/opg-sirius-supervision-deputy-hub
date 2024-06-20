@@ -1,0 +1,27 @@
+{{ define "document-created" }}
+    <div class="moj-timeline__item" data-cy="document-created-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">
+                Document {{ .Event.Filename }}
+            </h2>
+            <p class="moj-timeline__byline">
+                {{ printf "added by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+       <div class="moj-timeline__description">
+           <ul class="govuk-list govuk-list--bullet">
+               <li>Document type: {{ .Event.Type }}</li>
+               <li>Direction: {{ .Event.Direction }}</li>
+               <li>Date: {{ .Event.ReceivedDate }}</li>
+           </ul>
+       </div>
+       <div class="moj-timeline__description">
+         <p>
+            {{ .Event.DocumentNotes }}
+         </p>
+       </div>
+    </div>
+{{ end }}

@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-type CreateNote struct {
+type CreateDocumentRequest struct {
 	Date        string        `json:"date"`
 	Description string        `json:"description"`
 	Direction   model.RefData `json:"direction"`
@@ -41,7 +41,7 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 
 	source := base64.StdEncoding.EncodeToString(buf.Bytes())
 
-	requestBody := CreateNote{
+	requestBody := CreateDocumentRequest{
 		File: EncodedFile{
 			Name:   filename,
 			Source: source,
@@ -57,7 +57,11 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		Direction: model.RefData{
 			Handle: direction,
 		},
+		Name:        "Document Uploaded",
+		Description: notes,
 	}
+
+	file.Close()
 
 	err := json.NewEncoder(&body).Encode(requestBody)
 

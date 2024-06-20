@@ -59,9 +59,6 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			documentType := r.PostFormValue("type")
 			direction := r.PostFormValue("direction")
 
-			fmt.Println("direction")
-			fmt.Println(direction)
-
 			date := r.PostFormValue("date")
 			notes := r.PostFormValue("notes")
 
@@ -81,7 +78,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
 
 			if err != nil {
-				panic(err)
+				fmt.Println(err)
 			}
 
 			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument", app.DeputyId()))
