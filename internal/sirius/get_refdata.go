@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
+	"strings"
 )
+
+type T struct {
+	NoteType []model.RefData `json:"noteType:deputy"`
+}
 
 func (c *Client) GetRefData(ctx Context, refDataType string) ([]model.RefData, error) {
 	var v []model.RefData
-
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/reference-data/%s", refDataType), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/reference-data%s", refDataType), nil)
 	if err != nil {
 		return v, err
 	}
@@ -30,10 +34,15 @@ func (c *Client) GetRefData(ctx Context, refDataType string) ([]model.RefData, e
 		return v, newStatusError(resp)
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&v)
+	if strings.Contains(refDataType, "?filter=") {
+		var f T
 
-	fmt.Print("ref data")
-	fmt.Println(v)
+		err = json.NewDecoder(resp.Body).Decode(&f)
+
+		return f.NoteType, err
+	}
+
+	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	return v, err
 }

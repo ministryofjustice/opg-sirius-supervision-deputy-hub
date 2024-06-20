@@ -64,7 +64,7 @@
                         {{ range $i, $documentDirection := .DocumentDirectionRefData }}
                             <div class="govuk-radios">
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="direction-incoming"
+                                    <input class="govuk-radios__input" id="direction-{{.Label}}"
                                            name="direction" type="radio"
                                            value="{{.Handle}}" />
                                     <label class="govuk-label govuk-radios__label" for="direction-{{.Label}}">
@@ -82,7 +82,7 @@
                     </label>
                     {{ template "error-message" (index .Errors "date") }}
                     <input id="f-date"
-                           class="govuk-input govuk-input--width-10 min-date-today{{ if index .Errors "date" }} govuk-input--error{{ end }}"
+                           class="govuk-input govuk-input--width-10 {{ if index .Errors "date" }} govuk-input--error{{ end }}"
                            name="date"
                            value=""
                            type="date">

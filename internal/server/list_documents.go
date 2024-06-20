@@ -23,6 +23,13 @@ type DocumentsVars struct {
 func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		app.PageName = "Documents"
+
+		var successMessage string
+		switch r.URL.Query().Get("success") {
+		case "addDocument":
+			successMessage = "Document <document-filename> added"
+		}
+
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
@@ -44,9 +51,9 @@ func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 		}
 
 		vars := DocumentsVars{
-			AppVars:      app,
-			DocumentList: documentList,
-			//SuccessMessage: successMessage,
+			AppVars:        app,
+			DocumentList:   documentList,
+			SuccessMessage: successMessage,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

@@ -5,51 +5,22 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"io"
 	"mime/multipart"
 	"net/http"
 )
 
-type CreateDocument struct {
-	Type          string `json:"assuranceType"`
-	RequestedDate string `json:"requestedDate"`
-	RequestedBy   int    `json:"requestedBy"`
-}
-
-type TestFile struct {
-	Name   string `json:"name"`
-	Source string `json:"source"`
-	Type   string `json:"type"`
-}
-
-type AddDocumentRequest struct {
-	Type          string   `json:"type"`
-	CaseRecNumber string   `json:"caseRecNumber"`
-	ParentUuid    string   `json:"parentUuid"`
-	Metadata      string   `json:"metadata"`
-	File          TestFile `json:"file"`
-}
-
 type CreateNote struct {
-	Date        string `json:"date"`
-	Description string `json:"description"`
-	Direction   struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
-	} `json:"direction"`
-	Name string `json:"name"`
-	Type struct {
-		Handle string `json:"handle"`
-		Label  string `json:"label"`
-	} `json:"type"`
-	PersonId   int    `json:"personId"`
-	FileName   string `json:"fileName"`
-	FileSource string `json:"fileSource"`
-	File       struct {
-		Name   string `json:"name"`
-		Source string `json:"source"`
-		Type   string `json:"type"`
-	} `json:"file"`
+	Date        string        `json:"date"`
+	Description string        `json:"description"`
+	Direction   model.RefData `json:"direction"`
+	Name        string        `json:"name"`
+	Type        model.RefData `json:"type"`
+	PersonId    int           `json:"personId"`
+	FileName    string        `json:"fileName"`
+	FileSource  string        `json:"fileSource"`
+	File        EncodedFile   `json:"file"`
 }
 
 type EncodedFile struct {
@@ -68,9 +39,6 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		fmt.Println(err)
 	}
 
-	fmt.Print("documentType")
-	fmt.Println(documentType)
-
 	source := base64.StdEncoding.EncodeToString(buf.Bytes())
 
 	requestBody := CreateNote{
@@ -82,22 +50,14 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		FileName:   filename,
 		FileSource: source,
 		PersonId:   deputyId,
-		Date:       "01/01/2020",
-		Type: struct {
-			Handle string `json:"handle"`
-			Label  string `json:"label"`
-		}{
+		Date:       date,
+		Type: model.RefData{
 			Handle: documentType,
 		},
-		Direction: struct {
-			Handle string `json:"handle"`
-			Label  string `json:"label"`
-		}{
+		Direction: model.RefData{
 			Handle: direction,
 		},
 	}
-
-	//date is received date time (I think)
 
 	err := json.NewEncoder(&body).Encode(requestBody)
 
@@ -115,8 +75,6 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 	if err != nil {
 		return err
 	}
-
-	//io.Copy(os.Stdout, resp.Body)
 
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusUnauthorized {

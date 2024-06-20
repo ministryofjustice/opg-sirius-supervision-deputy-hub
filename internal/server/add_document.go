@@ -28,13 +28,13 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			AppVars: app,
 		}
 
-		documentDirectionRefData, err := client.GetRefData(getContext(r), "documentDirection")
+		documentDirectionRefData, err := client.GetRefData(getContext(r), "/documentDirection")
 		if err != nil {
 			return err
 		}
 		vars.DocumentDirectionRefData = documentDirectionRefData
 
-		documentTypes, err := client.GetRefData(getContext(r), "deputyDocumentType")
+		documentTypes, err := client.GetRefData(getContext(r), "?filter=NoteType:deputy")
 		if err != nil {
 			return err
 		}
@@ -84,7 +84,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				panic(err)
 			}
 
-			return StatusError(http.StatusMethodNotAllowed)
+			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument", app.DeputyId()))
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
