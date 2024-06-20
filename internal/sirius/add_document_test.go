@@ -7,26 +7,34 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
-func TestAddNotePa(t *testing.T) {
+func TestAddDocument(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
 	json := `{
-	"personId":76,
-	"userId":51,
-	"userDisplayName":"case manager",
-	"userEmail":"case.manager@opgtest.com",
-	"userPhoneNumber":"12345678",
-	"id":127,
-	"type":null,
-	"noteType":"PA_DEPUTY_NOTE_CREATED",
-	"description":"fake note text",
-	"name":"fake note title",
-	"createdTime":"28\/09\/2021 09:30:27",
-	"direction":null
+		"date": "14/06/2024",
+		"description": "<p>Note content</p>",
+		"direction": {
+			"handle": "INCOMING",
+			"label": "Incoming"
+		},
+		"name": "Test",
+		"type": {
+			"handle": "CASE_FORUM",
+			"label": "Case forum"
+		},
+		"personId": 68,
+		"fileName": "testfile.png",
+		"file": {
+			"name": "testfile.png",
+			"type": "image/png",
+			"source": "VBORw0KGgoAAAANSUhEUgAABg0AAAMOCA",
+		},
+		"fileSource" : "VBORw0KGgoAAAANSUhEUgAABg0AAAMOCA"
 	}`
 
 	r := io.NopCloser(bytes.NewReader([]byte(json)))
@@ -38,20 +46,24 @@ func TestAddNotePa(t *testing.T) {
 		}, nil
 	}
 
-	err := client.AddNote(getContext(nil), "fake note title", "fake note text", 76, 51, "PA")
+	tempFile, err := os.Create("testfile.txt")
+
+	err = client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
 	assert.Nil(t, err)
 }
 
-func TestGetNoteType(t *testing.T) {
-	expectedResponsePro := "PRO_DEPUTY_NOTE_CREATED"
-	expectedResponsePA := "PA_DEPUTY_NOTE_CREATED"
+//func TestEncodeFileToBase64(t *testing.T) {
+//	tempFile, _ := os.Create("testfile.txt")
+//	_, _ = tempFile.Write([]byte("test string"))
+//
+//	fileFromSirius, _ := EncodeFileToBase64(tempFile)
+//	assert.Equal(t, fileFromSirius, base64.StdEncoding.EncodeToString([]byte("test string")))
+//}
 
-	assert.Equal(t, expectedResponsePro, getNoteType("PRO"))
-	assert.Equal(t, expectedResponsePA, getNoteType("PA"))
+func TestAddDocumentReturnsNewStatusError(t *testing.T) {
+	tempFile, _ := os.Create("testfile.txt")
+	_, _ = tempFile.Write([]byte("test string"))
 
-}
-
-func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		_, _ = w.Write([]byte("{}"))
@@ -60,16 +72,19 @@ func TestAddDeputyNoteReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51, "PA")
+	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/notes",
+		URL:    svr.URL + "/api/public/v1/documents/deputies",
 		Method: http.MethodPost,
 	}, err)
 }
 
-func TestAddDeputyNotesReturnsUnauthorisedClientError(t *testing.T) {
+func TestAddDocumentReturnsUnauthorisedClientError(t *testing.T) {
+	tempFile, _ := os.Create("testfile.txt")
+	_, _ = tempFile.Write([]byte("test string"))
+
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -77,7 +92,7 @@ func TestAddDeputyNotesReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddNote(getContext(nil), "test title", "test note", 76, 51, "PA")
+	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }
