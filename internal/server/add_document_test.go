@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -17,19 +18,20 @@ import (
 )
 
 type mockAddDocumentClient struct {
-	count          int
-	lastCtx        sirius.Context
-	refData        []model.RefData
-	addDocumentErr error
-	getRefDataErr  error
-	successMessage string
+	count                       int
+	lastCtx                     sirius.Context
+	refData                     []model.RefData
+	AddDocumentErr              error
+	GetDocumentTypesRefData     error
+	GetDocumentDirectionRefData error
+	successMessage              string
 }
 
 func (m *mockAddDocumentClient) AddDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.addDocumentErr
+	return m.AddDocumentErr
 }
 
 func (m *mockAddDocumentClient) GetRefData(ctx sirius.Context, refDataUrlType string) ([]model.RefData, error) {
@@ -43,18 +45,41 @@ func (m *mockAddDocumentClient) GetRefData(ctx sirius.Context, refDataUrlType st
 		},
 	}
 
-	return refData, m.getRefDataErr
+	return refData, m.GetDocumentTypesRefData
 }
 
-var addDocumentVars = AddDocumentVars{
-	AppVars: AppVars{},
+var addDocumentVars = AppVars{
+	DeputyDetails: sirius.DeputyDetails{
+		ID:              123,
+		DeputyFirstName: "Test",
+		DeputySurname:   "Dep",
+	},
+}
+
+func TestGetAddDocument(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddDocumentClient{}
+	template := &mockTemplates{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("GET", "/123", strings.NewReader(""))
+
+	handler := renderTemplateForAddDocument(client, template)
+	err := handler(addDocumentVars, w, r)
+
+	assert.Nil(err)
+
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+
+	assert.Equal(1, template.count)
+	assert.Equal("page", template.lastName)
 }
 
 func TestPostAddDocument(t *testing.T) {
 	assert := assert.New(t)
 
 	client := &mockAddDocumentClient{}
-
 	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: sirius.DeputyDetails{ID: 123},
@@ -63,38 +88,10 @@ func TestPostAddDocument(t *testing.T) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
-	// create a new form-data header name data and filename data.txt
-	dataPart, _ := writer.CreateFormFile("document-upload", "data.txt")
-	_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
-
-	typeWriter, _ := writer.CreateFormField("type")
-	typeWriter.Write([]byte("ABC"))
-
-	direction, err := writer.CreateFormField("direction")
-	if err != nil {
-		return
-	}
-
-	direction.Write([]byte("INCOMING"))
-
-	date, err := writer.CreateFormField("date")
-	if err != nil {
-		return
-	}
-
-	date.Write([]byte("2020-01-01"))
-
-	notes, err := writer.CreateFormField("notes")
-	if err != nil {
-		return
-	}
-	notes.Write([]byte("Notes on this file"))
-
-	writer.Close()
+	body, _ = CreateDocForTest(body, writer, true, true, true, true)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
-
 	r.Header.Add("Content-Type", writer.FormDataContentType())
 
 	var res error
@@ -109,126 +106,257 @@ func TestPostAddDocument(t *testing.T) {
 	assert.Equal(res, Redirect(fmt.Sprintf("/123/documents?success=addDocument&filename=%s", "data.txt")))
 }
 
-//
-//func TestPostAddDocument(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockAddDocumentClient{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForAddFirm(client, nil)(addFirmAppVars, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//	assert.Equal(returnedError, Redirect("/123?success=newFirm"))
-//}
+func TestPostAddDocumentReturnsValidationErrorsFromSirius(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddDocumentClient{}
+	app := AppVars{
+		Path:          "/path",
+		DeputyDetails: sirius.DeputyDetails{ID: 123},
+	}
 
-//func TestAddFirmValidationErrors(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockFirmInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"stringLengthTooLong": "The firm name must be 255 characters or fewer",
-//		},
-//	}
-//
-//	client.AddFirmDetailsErr = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-//	returnedError := renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
-//
-//	assert.Equal(addFirmVars{
-//		AppVars: AppVars{
-//			Errors:   validationErrors,
-//			PageName: "Create new firm",
-//		},
-//	}, template.lastVars)
-//
-//	assert.Nil(returnedError)
-//}
-//
-//func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
-//	assert := assert.New(t)
-//	client := &mockFirmInformation{}
-//
-//	validationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"isEmpty": "The firm name is required and can't be empty",
-//		},
-//	}
-//
-//	client.AddFirmDetailsErr = sirius.ValidationError{
-//		Errors: validationErrors,
-//	}
-//
-//	template := &mockTemplates{}
-//
-//	w := httptest.NewRecorder()
-//	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
-//
-//	var returnedError error
-//
-//	testHandler := mux.NewRouter()
-//	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-//		returnedError = renderTemplateForAddFirm(client, template)(addFirmAppVars, w, r)
-//	})
-//
-//	testHandler.ServeHTTP(w, r)
-//
-//	expectedValidationErrors := sirius.ValidationErrors{
-//		"firmName": {
-//			"isEmpty": "The firm name is required and can't be empty",
-//		},
-//	}
-//
-//	assert.Equal(addFirmVars{
-//		AppVars: AppVars{
-//			DeputyDetails: testDeputy,
-//			Errors:        expectedValidationErrors,
-//			PageName:      "Create new firm",
-//		},
-//	}, template.lastVars)
-//
-//	assert.Nil(returnedError)
-//}
-//
-//func TestAddFirmHandlesErrorsInOtherClientFiles(t *testing.T) {
-//	returnedError := sirius.StatusError{Code: 500}
-//	tests := []struct {
-//		Client *mockFirmInformation
-//	}{
-//		{
-//			Client: &mockFirmInformation{
-//				AddFirmDetailsErr: returnedError,
-//			},
-//		},
-//		{
-//			Client: &mockFirmInformation{
-//				AssignDeputyToFirmErr: returnedError,
-//			},
-//		},
-//	}
-//	for k, tc := range tests {
-//		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
-//
-//			client := tc.Client
-//			template := &mockTemplates{}
-//			w := httptest.NewRecorder()
-//			r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
-//
-//			addFirmReturnedError := renderTemplateForAddFirm(client, template)(AppVars{}, w, r)
-//			assert.Equal(t, returnedError, addFirmReturnedError)
-//		})
-//	}
-//}
+	template := &mockTemplates{}
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	body, _ = CreateDocForTest(body, writer, true, true, true, true)
+
+	validationErrors := sirius.ValidationErrors{
+		"addDeputyDocument": {
+			"stringLengthTooLong": "The notes must be 1000 characters or fewer",
+		},
+	}
+
+	client.AddDocumentErr = sirius.ValidationError{
+		Errors: validationErrors,
+	}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", body)
+	r.Header.Add("Content-Type", writer.FormDataContentType())
+	returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+
+	assert.Equal(AddDocumentVars{
+		AppVars: AppVars{
+			DeputyDetails: sirius.DeputyDetails{ID: 123},
+			Errors:        validationErrors,
+			PageName:      "Add a document",
+			Path:          "/path",
+		},
+		DocumentDirectionRefData: []model.RefData{
+			{
+				Handle: "HANDLE",
+				Label:  "label",
+			},
+		},
+		DocumentTypes: []model.RefData{
+			{
+				Handle: "HANDLE",
+				Label:  "label",
+			},
+		},
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
+
+func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockAddDocumentClient{
+		AddDocumentErr: sirius.StatusError{Code: 500},
+	}
+	app := AppVars{
+		Path:          "/path",
+		DeputyDetails: sirius.DeputyDetails{ID: 123},
+	}
+
+	template := &mockTemplates{}
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	body, _ = CreateDocForTest(body, writer, true, true, true, true)
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", body)
+	r.Header.Add("Content-Type", writer.FormDataContentType())
+	returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+
+	assert.Equal(client.AddDocumentErr, returnedError)
+}
+
+func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
+	tests := []struct {
+		ExpectedError sirius.ValidationErrors
+		hasType       bool
+		hasDirection  bool
+		hasDate       bool
+		hasNotesError bool
+	}{
+		{
+			ExpectedError: sirius.ValidationErrors{
+				"type": {
+					"": "Select a type",
+				},
+			},
+			hasType:       false,
+			hasDirection:  true,
+			hasDate:       true,
+			hasNotesError: false,
+		},
+		{
+			ExpectedError: sirius.ValidationErrors{
+				"direction": {
+					"": "Select a direction",
+				},
+			},
+			hasType:       true,
+			hasDirection:  false,
+			hasDate:       true,
+			hasNotesError: false,
+		},
+		{
+			ExpectedError: sirius.ValidationErrors{
+				"date": {
+					"": "Select a date",
+				},
+			},
+			hasType:       true,
+			hasDirection:  true,
+			hasDate:       false,
+			hasNotesError: false,
+		},
+		//{
+		//	ExpectedError: sirius.ValidationErrors{
+		//		"notes": {
+		//			"": "The note must be 1000 characters or fewer",
+		//		},
+		//	},
+		//	hasType:       true,
+		//	hasDirection:  true,
+		//	hasDate:       true,
+		//	hasNotesError: true,
+		//},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+			assert := assert.New(t)
+
+			client := &mockAddDocumentClient{}
+			template := &mockTemplates{}
+			app := AppVars{
+				Path:          "/path",
+				DeputyDetails: sirius.DeputyDetails{ID: 123},
+			}
+			body := new(bytes.Buffer)
+			writer := multipart.NewWriter(body)
+			body, _ = CreateDocForTest(body, writer, tc.hasType, tc.hasDirection, tc.hasDate, tc.hasNotesError)
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/123", body)
+			r.Header.Add("Content-Type", writer.FormDataContentType())
+			returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+
+			assert.Equal(AddDocumentVars{
+				AppVars: AppVars{
+					DeputyDetails: sirius.DeputyDetails{ID: 123},
+					Errors:        tc.ExpectedError,
+					PageName:      "Add a document",
+					Path:          "/path",
+				},
+				DocumentDirectionRefData: []model.RefData{
+					{
+						Handle: "HANDLE",
+						Label:  "label",
+					},
+				},
+				DocumentTypes: []model.RefData{
+					{
+						Handle: "HANDLE",
+						Label:  "label",
+					},
+				},
+			}, template.lastVars)
+
+			assert.Nil(returnedError)
+		})
+	}
+}
+
+func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
+	returnedError := sirius.StatusError{Code: 500}
+	tests := []struct {
+		Client *mockAddDocumentClient
+	}{
+		{
+			Client: &mockAddDocumentClient{
+				GetDocumentDirectionRefData: returnedError,
+			},
+		},
+		{
+			Client: &mockAddDocumentClient{
+				GetDocumentTypesRefData: returnedError,
+			},
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
+
+			client := tc.Client
+			template := &mockTemplates{}
+			app := AppVars{
+				Path:          "/path",
+				DeputyDetails: sirius.DeputyDetails{ID: 123},
+			}
+			body := new(bytes.Buffer)
+			writer := multipart.NewWriter(body)
+			body, _ = CreateDocForTest(body, writer, true, true, true, true)
+			w := httptest.NewRecorder()
+			r, _ := http.NewRequest("POST", "/123", body)
+			r.Header.Add("Content-Type", writer.FormDataContentType())
+			returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+
+			refDataReturnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+			assert.Equal(t, returnedError, refDataReturnedError)
+		})
+	}
+}
+
+func CreateDocForTest(body *bytes.Buffer, writer *multipart.Writer, hasType, hasDirection, hasDate, hasNotesError bool) (*bytes.Buffer, error) {
+	// create a new form-data header name data and filename data.txt
+	dataPart, _ := writer.CreateFormFile("document-upload", "data.txt")
+	_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
+
+	if hasType {
+		typeWriter, err := writer.CreateFormField("type")
+		if err != nil {
+			return body, err
+		}
+		typeWriter.Write([]byte("ABC"))
+	}
+
+	if hasDirection {
+		direction, err := writer.CreateFormField("direction")
+		if err != nil {
+			return body, err
+		}
+		direction.Write([]byte("INCOMING"))
+	}
+
+	if hasDate {
+		date, err := writer.CreateFormField("date")
+		if err != nil {
+			return body, err
+		}
+		date.Write([]byte("2020-01-01"))
+	}
+
+	notes, err := writer.CreateFormField("notes")
+	if err != nil {
+		return body, err
+	}
+
+	if !hasNotesError {
+		notes.Write([]byte("Notes on this file"))
+	}
+
+	writer.Close()
+	return body, nil
+}

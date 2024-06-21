@@ -53,10 +53,18 @@ func TestAddDocument(t *testing.T) {
 }
 
 //func TestEncodeFileToBase64(t *testing.T) {
-//	tempFile, _ := os.Create("testfile.txt")
-//	_, _ = tempFile.Write([]byte("test string"))
+//	writer := multipart.NewWriter(nil)
+//	file, _ := writer.CreateFormFile("document-upload", "data.txt")
+//	_, _ = io.Copy(file, strings.NewReader("blarg"))
+//	f1, err := writer.CreateFormField("type")
+//	f1.Write([]byte("INCOMING"))
+//	writer.Close()
 //
-//	fileFromSirius, _ := EncodeFileToBase64(tempFile)
+//	fileFromSirius, err := EncodeFileToBase64(file)
+//	assert.Nil(t, err)
+//
+//	fmt.Println("test")
+//	fmt.Print(fileFromSirius)
 //	assert.Equal(t, fileFromSirius, base64.StdEncoding.EncodeToString([]byte("test string")))
 //}
 

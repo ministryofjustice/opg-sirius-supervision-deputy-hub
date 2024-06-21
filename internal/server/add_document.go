@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"mime/multipart"
 	"net/http"
 )
@@ -46,7 +47,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			// Specify max file size to 100mb
 			err := r.ParseMultipartForm(100 << 20)
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 
 			file, handler, err := r.FormFile("document-upload")
@@ -69,7 +70,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			}
 
 			if documentType == "" {
-				vars.Errors["type"] = map[string]string{"": "Select a date"}
+				vars.Errors["type"] = map[string]string{"": "Select a type"}
 			}
 
 			if len(notes) > 1000 {
@@ -83,8 +84,12 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			ctx := getContext(r)
 			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
 
+			if verr, ok := err.(sirius.ValidationError); ok {
+				vars.Errors = util.RenameErrors(verr.Errors)
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
 			if err != nil {
-				fmt.Println(err)
+				return err
 			}
 
 			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument&filename=%s", app.DeputyId(), handler.Filename))
