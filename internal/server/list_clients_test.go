@@ -13,12 +13,11 @@ import (
 )
 
 type mockDeputyHubClientInformation struct {
-	count              int
-	lastCtx            sirius.Context
-	err                error
-	deputyClientData   sirius.ClientList
-	accommodationTypes []model.RefData
-	supervisionLevels  []model.RefData
+	count            int
+	lastCtx          sirius.Context
+	err              error
+	deputyClientData sirius.ClientList
+	refData          []model.RefData
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, params sirius.ClientListParams) (sirius.ClientList, error) {
@@ -32,7 +31,7 @@ func (m *mockDeputyHubClientInformation) GetRefData(ctx sirius.Context, refDataT
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.accommodationTypes, m.err
+	return m.refData, m.err
 }
 
 func TestNavigateToClientTab(t *testing.T) {

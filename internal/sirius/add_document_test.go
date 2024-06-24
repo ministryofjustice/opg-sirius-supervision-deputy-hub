@@ -49,9 +49,9 @@ func TestAddDocument(t *testing.T) {
 		}, nil
 	}
 
-	tempFile, err := os.Create("testfile.txt")
+	tempFile, _ := os.Create("testfile.txt")
 
-	err = client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
+	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
 	assert.Nil(t, err)
 }
 
@@ -66,9 +66,9 @@ func TestEncodeFileToBase64(t *testing.T) {
 
 	buffReader := bytes.NewReader(buff.Bytes())
 	formReader := multipart.NewReader(buffReader, formWriter.Boundary())
-	multipartForm, err := formReader.ReadForm(1 << 20)
+	multipartForm, _ := formReader.ReadForm(1 << 20)
 
-	multipartFiles, _ := multipartForm.File["document-upload"]
+	multipartFiles := multipartForm.File["document-upload"]
 	multipartFile, _ := multipartFiles[0].Open()
 
 	base64File, err := EncodeFileToBase64(multipartFile)

@@ -111,10 +111,6 @@ func New(logger *logging.Logger, client Client, templates map[string]*template.T
 		wrap(
 			renderTemplateForAddDocument(client, templates["add-document.gotmpl"])))
 
-	pageRouter.Handle("/documents/{documentId}",
-		wrap(
-			renderTemplateForDocuments(client, templates["documents.gotmpl"])))
-
 	pageRouter.Handle("/manage-team-details",
 		wrap(
 			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))

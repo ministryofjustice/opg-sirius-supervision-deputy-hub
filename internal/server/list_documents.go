@@ -2,14 +2,12 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
 
 type DocumentsClient interface {
 	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
-	GetDocument(ctx sirius.Context, documentId int) (model.Document, error)
 }
 
 type DocumentsVars struct {
@@ -34,16 +32,6 @@ func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 		}
 
 		ctx := getContext(r)
-		//routeVars := mux.Vars(r)
-		//documentId, _ := strconv.Atoi(routeVars["documentId"])
-
-		//if documentId != 0 {
-		// Base64 decode the document, put it in a file and put that in the header
-		//	document, err := client.GetDocument(ctx, documentId)
-		//	if err != nil {
-		//		return err
-		//	}
-		//}
 
 		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId())
 		if err != nil {

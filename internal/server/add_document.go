@@ -74,7 +74,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			}
 
 			if len(notes) > 1000 {
-				vars.Errors["notes"] = map[string]string{"": "The note must be 1000 characters or fewer"}
+				vars.Errors["notes"] = map[string]string{"stringLengthTooLong": "The note must be 1000 characters or fewer"}
 			}
 
 			if len(vars.Errors) > 0 {

@@ -54,20 +54,17 @@ func unmarshalFilteredRefData(body io.ReadCloser, filter string) ([]model.RefDat
 
 	err = json.NewDecoder(body).Decode(&result)
 	if err != nil {
-		fmt.Println("Error:", err)
 		return refData, err
 	}
 
 	dataMap, ok := result.(map[string]interface{})
 	if !ok {
-		fmt.Println("Invalid JSON structure")
 		return refData, err
 	}
 
 	data, dataExists := dataMap[filter].([]interface{})
 
 	if !dataExists {
-		fmt.Println(fmt.Sprintf("Cannot find key %s in json\n", filter))
 		return refData, err
 	}
 
