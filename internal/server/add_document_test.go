@@ -38,12 +38,7 @@ func (m *mockAddDocumentClient) GetRefData(ctx sirius.Context, refDataUrlType st
 	m.count += 1
 	m.lastCtx = ctx
 
-	refData := []model.RefData{
-		{
-			Handle: "HANDLE",
-			Label:  "label",
-		},
-	}
+	refData := []model.RefData{}
 
 	return refData, m.GetDocumentTypesRefData
 }
@@ -88,7 +83,7 @@ func TestPostAddDocument(t *testing.T) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
-	body, _ = CreateDocForTest(body, writer, true, true, true, true)
+	body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, true)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -118,7 +113,7 @@ func TestPostAddDocumentReturnsValidationErrorsFromSirius(t *testing.T) {
 
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateDocForTest(body, writer, true, true, true, true)
+	body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, true)
 
 	validationErrors := sirius.ValidationErrors{
 		"addDeputyDocument": {
@@ -142,18 +137,8 @@ func TestPostAddDocumentReturnsValidationErrorsFromSirius(t *testing.T) {
 			PageName:      "Add a document",
 			Path:          "/path",
 		},
-		DocumentDirectionRefData: []model.RefData{
-			{
-				Handle: "HANDLE",
-				Label:  "label",
-			},
-		},
-		DocumentTypes: []model.RefData{
-			{
-				Handle: "HANDLE",
-				Label:  "label",
-			},
-		},
+		DocumentDirectionRefData: []model.RefData{},
+		DocumentTypes:            []model.RefData{},
 	}, template.lastVars)
 
 	assert.Nil(returnedError)
@@ -173,7 +158,7 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateDocForTest(body, writer, true, true, true, true)
+	body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, true)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -248,7 +233,7 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateDocForTest(body, writer, tc.hasType, tc.hasDirection, tc.hasDate, tc.hasNotesError)
+			body, _ = CreateAddDocumentFormBody(body, writer, tc.hasType, tc.hasDirection, tc.hasDate, tc.hasNotesError)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -261,18 +246,8 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					PageName:      "Add a document",
 					Path:          "/path",
 				},
-				DocumentDirectionRefData: []model.RefData{
-					{
-						Handle: "HANDLE",
-						Label:  "label",
-					},
-				},
-				DocumentTypes: []model.RefData{
-					{
-						Handle: "HANDLE",
-						Label:  "label",
-					},
-				},
+				DocumentDirectionRefData: []model.RefData{},
+				DocumentTypes:            []model.RefData{},
 			}, template.lastVars)
 
 			assert.Nil(returnedError)
@@ -307,7 +282,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateDocForTest(body, writer, true, true, true, true)
+			body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, true)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -319,8 +294,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 	}
 }
 
-func CreateDocForTest(body *bytes.Buffer, writer *multipart.Writer, hasType, hasDirection, hasDate, hasNotesError bool) (*bytes.Buffer, error) {
-	// create a new form-data header name data and filename data.txt
+func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, hasType, hasDirection, hasDate, hasNotesError bool) (*bytes.Buffer, error) {
 	dataPart, _ := writer.CreateFormFile("document-upload", "data.txt")
 	_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
 
@@ -353,9 +327,7 @@ func CreateDocForTest(body *bytes.Buffer, writer *multipart.Writer, hasType, has
 		return body, err
 	}
 
-	if !hasNotesError {
-		notes.Write([]byte("Notes on this file"))
-	}
+	notes.Write([]byte("Notes on this file"))
 
 	writer.Close()
 	return body, nil
