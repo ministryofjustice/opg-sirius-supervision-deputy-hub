@@ -35,13 +35,15 @@
 
 
                         <div class="govuk-radios">
+                            {{ $selectedType := .DocumentType }}
                             {{ range $i, $documentType := .DocumentTypes }}
                                 <div class="govuk-radios__item">
                                      <div class="govuk-radios">
                                          <div class="govuk-radios__item">
                                              <input class="govuk-radios__input" id="type-{{.Label}}"
                                                         name="type" type="radio"
-                                                        value="{{.Handle}}" />
+                                                        value="{{.Handle}}"
+                                                        {{ if eq .Handle $selectedType }}checked{{end}}/>
                                                     <label class="govuk-label govuk-radios__label" for="type-{{.Label}}">
                                                         {{.Label}}
                                                     </label>
@@ -62,11 +64,14 @@
                         {{ template "error-message" (index .Errors "direction") }}
 
                         <div class="govuk-radios">
+                            {{ $selectedDirection := .Direction }}
                             {{ range $i, $documentDirection := .DocumentDirectionRefData }}
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="direction-{{.Label}}"
                                            name="direction" type="radio"
-                                           value="{{.Handle}}" />
+                                           value="{{.Handle}}"
+                                           {{ if eq .Handle $selectedDirection }}checked{{end}}
+                                            />
                                     <label class="govuk-label govuk-radios__label" for="direction-{{.Label}}">
                                         {{.Label}}
                                     </label>
@@ -84,7 +89,7 @@
                     <input id="f-date"
                            class="govuk-input govuk-input--width-10 {{ if index .Errors "date" }} govuk-input--error{{ end }}"
                            name="date"
-                           value=""
+                           value="{{ .Date }}"
                            type="date">
                 </div>
 
@@ -104,7 +109,7 @@
                                 name="notes"
                                 rows="10"
                                 aria-describedby="f-notes-info notes-hint"
-                            ></textarea>
+                            >{{ .Notes }}</textarea>
                             <div
                                 id="f-notes-info"
                                 class="govuk-hint govuk-character-count__message"

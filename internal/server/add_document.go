@@ -19,6 +19,10 @@ type AddDocumentVars struct {
 	AppVars
 	DocumentDirectionRefData []model.RefData
 	DocumentTypes            []model.RefData
+	DocumentType             string
+	Direction                string
+	Date                     string
+	Notes                    string
 }
 
 func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handler {
@@ -57,9 +61,13 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 
 			documentType := r.PostFormValue("type")
 			direction := r.PostFormValue("direction")
-
 			date := r.PostFormValue("date")
 			notes := r.PostFormValue("notes")
+
+			vars.DocumentType = documentType
+			vars.Direction = direction
+			vars.Date = date
+			vars.Notes = notes
 
 			if direction == "" {
 				vars.Errors["direction"] = map[string]string{"": "Select a direction"}
