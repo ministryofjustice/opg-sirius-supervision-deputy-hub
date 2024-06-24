@@ -8,7 +8,6 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
-	"os"
 )
 
 type CreateDocumentRequest struct {
@@ -44,8 +43,6 @@ func EncodeFileToBase64(file multipart.File) (string, error) {
 
 func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	var body bytes.Buffer
-
-	io.Copy(os.Stdout, file)
 
 	source, err := EncodeFileToBase64(file)
 	if err != nil {

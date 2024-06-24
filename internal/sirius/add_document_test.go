@@ -2,12 +2,15 @@ package sirius
 
 import (
 	"bytes"
+	"encoding/base64"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -52,21 +55,27 @@ func TestAddDocument(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-//func TestEncodeFileToBase64(t *testing.T) {
-//	writer := multipart.NewWriter(nil)
-//	file, _ := writer.CreateFormFile("document-upload", "data.txt")
-//	_, _ = io.Copy(file, strings.NewReader("blarg"))
-//	f1, err := writer.CreateFormField("type")
-//	f1.Write([]byte("INCOMING"))
-//	writer.Close()
-//
-//	fileFromSirius, err := EncodeFileToBase64(file)
-//	assert.Nil(t, err)
-//
-//	fmt.Println("test")
-//	fmt.Print(fileFromSirius)
-//	assert.Equal(t, fileFromSirius, base64.StdEncoding.EncodeToString([]byte("test string")))
-//}
+func TestEncodeFileToBase64(t *testing.T) {
+	var buff bytes.Buffer
+
+	formWriter := multipart.NewWriter(io.Writer(&buff))
+	file, _ := formWriter.CreateFormFile("document-upload", "data.txt")
+	_, _ = io.Copy(file, strings.NewReader("test-string"))
+
+	formWriter.Close()
+
+	buffReader := bytes.NewReader(buff.Bytes())
+	formReader := multipart.NewReader(buffReader, formWriter.Boundary())
+	multipartForm, err := formReader.ReadForm(1 << 20)
+
+	multipartFiles, _ := multipartForm.File["document-upload"]
+	multipartFile, _ := multipartFiles[0].Open()
+
+	base64File, err := EncodeFileToBase64(multipartFile)
+
+	assert.Nil(t, err)
+	assert.Equal(t, base64.StdEncoding.EncodeToString([]byte("test-string")), base64File)
+}
 
 func TestAddDocumentReturnsNewStatusError(t *testing.T) {
 	tempFile, _ := os.Create("testfile.txt")

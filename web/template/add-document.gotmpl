@@ -61,8 +61,8 @@
                         </legend>
                         {{ template "error-message" (index .Errors "direction") }}
 
-                        {{ range $i, $documentDirection := .DocumentDirectionRefData }}
-                            <div class="govuk-radios">
+                        <div class="govuk-radios">
+                            {{ range $i, $documentDirection := .DocumentDirectionRefData }}
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="direction-{{.Label}}"
                                            name="direction" type="radio"
@@ -71,8 +71,8 @@
                                         {{.Label}}
                                     </label>
                                 </div>
-                            </div>
-                        {{end}}
+                            {{end}}
+                        </div>
                     </fieldset>
                 </div>
 
