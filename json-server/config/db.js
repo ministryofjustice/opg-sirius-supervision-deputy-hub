@@ -2730,6 +2730,44 @@ module.exports = function () {
                 "caseOwnerTask":false
             },
         ],
+        "deputy-note-type": {
+            "noteType:deputy":[
+                {
+                    "handle":"ASSURANCE_VISIT",
+                    "label":"Assurance visit"
+                },
+                {
+                    "handle":"CATCH_UP_CALL",
+                    "label":"Catch-up call"
+                },
+                {
+                    "handle":"CORRESPONDENCE",
+                    "label":"Correspondence"
+                },
+                {
+                    "handle":"GENERAL",
+                    "label":"General"
+                },
+                {
+                    "handle":"NON_COMPLIANCE",
+                    "label":"Non-compliance"
+                }
+            ]
+        },
+        "doc-direction": [
+              {
+                  "handle": "INCOMING",
+                  "label": "Incoming"
+              },
+              {
+                  "handle": "OUTGOING",
+                  "label": "Outgoing"
+              },
+              {
+                  "handle": "INTERNAL",
+                  "label": "Internal"
+              }
+        ],
         "documents" : {
             "limit":25,
             "metadata":{

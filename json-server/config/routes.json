@@ -12,7 +12,8 @@
     "/deputies/:id/contacts/:contactId": "/contacts/:contactId",
     "/deputies/:id/tasks*": "/tasks/:id",
     "/firm": "/addFirm",
-    "/reference-data/": "/$1",
+    "/reference-data/documentDirection": "/doc-direction",
+    "/reference-data?filter=noteType:deputy": "/deputy-note-type",
     "/reference-data/*": "/$1",
     "/tasktypes/deputy": "/tasktypes",
     "/persons/:personId/documents": "/documents"
