@@ -2126,6 +2126,13 @@ module.exports = function () {
                 "FirmNumber": 1000002
             }
         ],
+        "add-document":
+        [
+            {
+                "id": 1,
+                "add-document": []
+           }
+        ],
         "assurances": [
             {
                 "id": 1,

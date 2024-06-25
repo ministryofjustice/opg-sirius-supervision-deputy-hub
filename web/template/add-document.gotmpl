@@ -40,11 +40,11 @@
                                 <div class="govuk-radios__item">
                                      <div class="govuk-radios">
                                          <div class="govuk-radios__item">
-                                             <input class="govuk-radios__input" id="type-{{.Label}}"
+                                             <input class="govuk-radios__input" id="type-{{.Handle}}"
                                                         name="type" type="radio"
                                                         value="{{.Handle}}"
                                                         {{ if eq .Handle $selectedType }}checked{{end}}/>
-                                                    <label class="govuk-label govuk-radios__label" for="type-{{.Label}}">
+                                                    <label class="govuk-label govuk-radios__label" for="type-{{.Handle}}">
                                                         {{.Label}}
                                                     </label>
                                              </input>
@@ -67,12 +67,12 @@
                             {{ $selectedDirection := .Direction }}
                             {{ range $i, $documentDirection := .DocumentDirectionRefData }}
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="direction-{{.Label}}"
+                                    <input class="govuk-radios__input" id="direction-{{.Handle}}"
                                            name="direction" type="radio"
                                            value="{{.Handle}}"
                                            {{ if eq .Handle $selectedDirection }}checked{{end}}
                                             />
-                                    <label class="govuk-label govuk-radios__label" for="direction-{{.Label}}">
+                                    <label class="govuk-label govuk-radios__label" for="direction-{{.Handle}}">
                                         {{.Label}}
                                     </label>
                                 </div>
@@ -122,12 +122,14 @@
 
                 <div class="govuk-button-group govuk-!-margin-top-7">
                     <button
+                        id="add-document-submit-form"
                         type="submit"
                         class="govuk-button"
                         data-module="govuk-button">
                         Save document
                     </button>
                    <a
+                       id="add-document-cancel-button"
                        class="govuk-link"
                        href="{{ prefix (printf "/%d/documents" .DeputyDetails.ID) }}">
                        Cancel

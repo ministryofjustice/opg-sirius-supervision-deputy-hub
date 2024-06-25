@@ -17,7 +17,7 @@
             <td
                 id="document-name"
                 class="govuk-table__cell nowrap">
-                <a
+                <a id="document-download-link"
                     class="govuk-link"
                     href="{{ sirius (printf "/api/v1/documents/%d/download" .Id) }}">
                     {{ if .FriendlyDescription }}

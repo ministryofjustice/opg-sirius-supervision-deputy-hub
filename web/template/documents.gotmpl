@@ -15,6 +15,7 @@
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
+                    id="add-a-document-button"
                     class="govuk-button moj-button-menu__item govuk-button--secondary"
                     href="{{ prefix (printf "/%d/documents/add" .DeputyDetails.ID) }}"
                     role="button"
@@ -25,7 +26,7 @@
             </div>
         </div>
     </header>
-    <section data-module="filters">
+    <section>
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div id="table-column" class="govuk-grid-column-three-quarters">
                 <div class="govuk-grid-row">
