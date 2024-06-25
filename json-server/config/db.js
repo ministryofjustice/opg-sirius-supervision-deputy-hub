@@ -2730,6 +2730,107 @@ module.exports = function () {
                 "caseOwnerTask":false
             },
         ],
+        "documents" : {
+            "limit":25,
+            "metadata":{
+                "doctype":{
+                    "correspondence":0,
+                    "order":0,
+                    "report":0,
+                    "visit":0,
+                    "finance":0,
+                    "other":1
+                },
+                "direction":{
+                    "Incoming":2,
+                    "Outgoing":4,
+                    "Internal":1
+                }
+            },
+            "pages":{
+                "current":1,
+                "total":1
+            },
+            "total":3,
+            "documents":[
+                {
+                    "displayDate":"30\/05\/2024 01:00:00",
+                    "id":5,
+                    "uuid":"f64b6b38-7f99-4f4e-82d3-bd908c6589f2",
+                    "type":"Catch-up call",
+                    "friendlyDescription":"Order_documents.pdf",
+                    "title":"Correspondence",
+                    "createdDate":"24\/06\/2024 15:17:32",
+                    "direction":"Internal",
+                    "filename":"3311d50c3d744d3bab02e0ad5e8e5eeb_Screenshot_2024_06_21_at_14_12_30.pdf",
+                    "mimeType":"image\/png",
+                    "caseItems":[],
+                    "persons":[{"uId":"7000-0000-1276"}],
+                    "createdBy":{
+                        "id":23,
+                        "name":"case",
+                        "displayName":"case manager",
+                        "email":"case.manager@opgtest.com",
+                        "surname":"manager"
+                    },
+                    "receivedDateTime":"30\/05\/2024 01:00:00",
+                    "documentSource":"UPLOAD",
+                    "childCount":0,
+                    "subtype":"Catch-up call"
+                },
+                {
+                    "displayDate":"01\/06\/2024 01:00:00",
+                    "id":6,
+                    "uuid":"1a382bbb-f14f-451f-81f4-6ff1d0c4ce64",
+                    "type":"General",
+                    "friendlyDescription":"Screenshot_2024_06_21_at_15_23_12.png",
+                    "title":"Correspondence",
+                    "createdDate":"24\/06\/2024 15:20:05",
+                    "direction":"Outgoing",
+                    "filename":"1245b837fa40441e986a1b576db37592_Screenshot_2024_06_21_at_15_23_12.png",
+                    "mimeType":"image\/png",
+                    "caseItems":[],
+                    "persons":[{"uId":"7000-0000-1276"}],
+                    "createdBy":{
+                        "id":51,
+                        "name":"system",
+                        "displayName":"system admin",
+                        "email":"system.admin@opgtest.com",
+                        "surname":"admin"
+                    },
+                    "receivedDateTime":"01\/06\/2024 01:00:00",
+                    "documentSource":"UPLOAD",
+                    "childCount":0,
+                    "subtype":"General"
+                },
+                {
+                    "displayDate":"14\/06\/2024 01:00:00",
+                    "id":7,
+                    "uuid":"4cb1fe6c-d6a1-4a9f-8517-0078f0eb8a87",
+                    "type":"Non-compliance",
+                    "friendlyDescription":"Screenshot_2024_06_21_at_14_12_30.png",
+                    "title":"Correspondence",
+                    "createdDate":"24\/06\/2024 15:22:08",
+                    "direction":"Incoming",
+                    "filename":"8162ff2661274500a8f6578ca0b42fac_Screenshot_2024_06_21_at_14_12_30.png",
+                    "mimeType":"image\/png",
+                    "caseItems":[],
+                    "persons":[{"uId":"7000-0000-1276"}],
+                    "createdBy":
+                    {
+                        "id":42,
+                        "name":"lay",
+                        "displayName":"layTeam1 - (Supervision)",
+                        "email":"LayTeam1.team@opgtest.com",
+                        "surname":"Team1"
+                    },
+                    "receivedDateTime":"14\/06\/2024 01:00:00",
+                    "documentSource":"UPLOAD",
+                    "childCount":0,
+                    "subtype":"Non-compliance"
+                },
+            ],
+        },
         "tasktypes": {
             "task_types": {
                 "SAP": {

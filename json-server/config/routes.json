@@ -12,6 +12,8 @@
     "/deputies/:id/contacts/:contactId": "/contacts/:contactId",
     "/deputies/:id/tasks*": "/tasks/:id",
     "/firm": "/addFirm",
+    "/reference-data/": "/$1",
     "/reference-data/*": "/$1",
-    "/tasktypes/deputy": "/tasktypes"
+    "/tasktypes/deputy": "/tasktypes",
+    "/persons/:personId/documents": "/documents"
 }

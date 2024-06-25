@@ -52,7 +52,7 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 make build cypress
 ```
 ## Run Cypress tests in UI
-- `make up`
+- `make dev-up`
 - `yarn && yarn cypress`
 
 ---

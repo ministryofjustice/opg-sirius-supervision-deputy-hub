@@ -38,7 +38,6 @@ func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, er
 	if resp.StatusCode != http.StatusOK {
 		return documentList, newStatusError(resp)
 	}
-
 	if err = json.NewDecoder(resp.Body).Decode(&documentList); err != nil {
 		return documentList, err
 	}
