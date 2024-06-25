@@ -79,7 +79,7 @@ func TestPostAddDocument(t *testing.T) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
-	body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, false, false)
+	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -111,7 +111,7 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, false, false)
+	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -124,10 +124,10 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 	tests := []struct {
 		ExpectedError          sirius.ValidationErrors
-		hasType                bool
-		hasDirection           bool
-		hasDate                bool
-		hasNotesError          bool
+		Type                   string
+		Direction              string
+		Date                   string
+		Notes                  string
 		hasDocumentUploadError bool
 	}{
 		{
@@ -136,10 +136,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					"": "Select a type",
 				},
 			},
-			hasType:                false,
-			hasDirection:           true,
-			hasDate:                true,
-			hasNotesError:          false,
+			Type:                   "",
+			Direction:              "OUTGOING",
+			Date:                   "2024-01-01",
+			Notes:                  "",
 			hasDocumentUploadError: false,
 		},
 		{
@@ -148,10 +148,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					"": "Select a direction",
 				},
 			},
-			hasType:                true,
-			hasDirection:           false,
-			hasDate:                true,
-			hasNotesError:          false,
+			Type:                   "OUTGOING",
+			Direction:              "",
+			Date:                   "2024-01-01",
+			Notes:                  "",
 			hasDocumentUploadError: false,
 		},
 		{
@@ -160,11 +160,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					"": "Select a date",
 				},
 			},
-			hasType:                true,
-			hasDirection:           true,
-			hasDate:                false,
-			hasNotesError:          false,
-			hasDocumentUploadError: false,
+			Type:      "GENERAL",
+			Direction: "OUTGOING",
+			Date:      "",
+			Notes:     "",
 		},
 		{
 			ExpectedError: sirius.ValidationErrors{
@@ -172,10 +171,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					"stringLengthTooLong": "The note must be 1000 characters or fewer",
 				},
 			},
-			hasType:                true,
-			hasDirection:           true,
-			hasDate:                true,
-			hasNotesError:          true,
+			Type:                   "GENERAL",
+			Direction:              "OUTGOING",
+			Date:                   "2024-01-01",
+			Notes:                  strings.Repeat("a", 1001),
 			hasDocumentUploadError: false,
 		},
 		{
@@ -184,10 +183,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 					"": "Error uploading the file",
 				},
 			},
-			hasType:                true,
-			hasDirection:           true,
-			hasDate:                true,
-			hasNotesError:          false,
+			Type:                   "GENERAL",
+			Direction:              "OUTGOING",
+			Date:                   "2024-01-01",
+			Notes:                  "",
 			hasDocumentUploadError: true,
 		},
 	}
@@ -203,7 +202,7 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateAddDocumentFormBody(body, writer, tc.hasType, tc.hasDirection, tc.hasDate, tc.hasNotesError, tc.hasDocumentUploadError)
+			body, _ = CreateAddDocumentFormBody(body, writer, tc.Type, tc.Direction, tc.Date, tc.Notes, tc.hasDocumentUploadError)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -218,6 +217,10 @@ func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
 				},
 				DocumentDirectionRefData: []model.RefData{},
 				DocumentTypes:            []model.RefData{},
+				DocumentType:             tc.Type,
+				Direction:                tc.Direction,
+				Date:                     tc.Date,
+				Notes:                    tc.Notes,
 			}, template.lastVars)
 
 			assert.Nil(returnedError)
@@ -252,7 +255,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateAddDocumentFormBody(body, writer, true, true, true, false, false)
+			body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -264,8 +267,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 	}
 }
 
-func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, hasType, hasDirection, hasDate, hasNotesError, documentUploadError bool) (*bytes.Buffer, error) {
-
+func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentType, direction, date, notes string, documentUploadError bool) (*bytes.Buffer, error) {
 	if documentUploadError {
 		_, _ = writer.CreateFormFile("document-upload", "")
 	} else {
@@ -273,51 +275,44 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, has
 		_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
 	}
 
-	if hasType {
+	if documentType != "" {
 		typeWriter, err := writer.CreateFormField("type")
 		if err != nil {
 			return body, err
 		}
-		_, err = typeWriter.Write([]byte("ABC"))
+		_, err = typeWriter.Write([]byte(documentType))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if hasDirection {
-		direction, err := writer.CreateFormField("direction")
+	if direction != "" {
+		directionWriter, err := writer.CreateFormField("direction")
 		if err != nil {
 			return body, err
 		}
-		_, err = direction.Write([]byte("INCOMING"))
+		_, err = directionWriter.Write([]byte(direction))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if hasDate {
-		date, err := writer.CreateFormField("date")
+	if date != "" {
+		dateWriter, err := writer.CreateFormField("date")
 		if err != nil {
 			return body, err
 		}
-		_, err = date.Write([]byte("2020-01-01"))
+		_, err = dateWriter.Write([]byte(date))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	notes, err := writer.CreateFormField("notes")
+	notesWriter, err := writer.CreateFormField("notes")
 	if err != nil {
 		return body, err
 	}
-
-	count := 1
-	if hasNotesError {
-		count = 101
-	}
-
-	content := strings.Repeat("1234567890", count)
-	_, err = notes.Write([]byte(content))
+	_, err = notesWriter.Write([]byte(notes))
 	if err != nil {
 		return nil, err
 	}

@@ -84,7 +84,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			"taskId": 249,
 			"taskType": "AVFU",
 			"dueDate": "2023-07-13 00:00:00",
-			"description": "This is a note",
+			"notes": "This is a note",
 			"name": "",
 			"assignee": "PA Team Workflow",
 			"isCaseOwnerTask": false,
@@ -111,7 +111,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 				"taskId": 184,
 				"taskType": "AVFU",
 				"dueDate": "2023-03-01 00:00:00",
-				"description": "Edited notes for edited task",
+				"notes": "Edited notes for edited task",
 				"name": "",
 				"assigneeId": 21,
 				"assignee": "Lay Team 1 - (Supervision)",
@@ -131,7 +131,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 						"type": "string"
 					},
 					{
-						"fieldName": "description",
+						"fieldName": "notes",
 						"oldValue": "OG notes for edited task",
 						"newValue": "Edited notes for edited task",
 						"type": "string"
@@ -194,7 +194,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 						NewValue:  "01/03/2023",
 					},
 					{
-						FieldName: "description",
+						FieldName: "notes",
 						OldValue:  "OG notes for edited task",
 						NewValue:  "Edited notes for edited task",
 					},
