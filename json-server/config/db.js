@@ -2730,7 +2730,7 @@ module.exports = function () {
                 "caseOwnerTask":false
             },
         ],
-        "deputy-note-type": {
+        "noteType:deputy": {
             "noteType:deputy":[
                 {
                     "handle":"ASSURANCE_VISIT",
@@ -2754,7 +2754,7 @@ module.exports = function () {
                 }
             ]
         },
-        "doc-direction": [
+        "documentDirection": [
               {
                   "handle": "INCOMING",
                   "label": "Incoming"
