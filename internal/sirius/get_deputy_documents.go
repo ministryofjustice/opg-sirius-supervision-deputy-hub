@@ -7,13 +7,11 @@ import (
 	"net/http"
 )
 
-type Documents []model.Document
-
 type DocumentList struct {
-	Documents      Documents
-	Pages          Page
-	TotalDocuments int
-	Metadata       Metadata
+	Documents      []model.Document `json:"documents"`
+	Pages          Page             `json:"pages"`
+	TotalDocuments int              `json:"total"`
+	Metadata       Metadata         `json:"metadata"`
 }
 
 func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, error) {
@@ -38,7 +36,10 @@ func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, er
 	if resp.StatusCode != http.StatusOK {
 		return documentList, newStatusError(resp)
 	}
+
 	if err = json.NewDecoder(resp.Body).Decode(&documentList); err != nil {
+		fmt.Println("err")
+		fmt.Println(err)
 		return documentList, err
 	}
 

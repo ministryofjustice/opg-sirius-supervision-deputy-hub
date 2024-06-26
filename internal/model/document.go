@@ -7,12 +7,6 @@ type Document struct {
 	CreatedDate         string `json:"createdDate"`
 	Direction           string `json:"direction"`
 	Filename            string `json:"filename"`
-	CreatedBy           struct {
-		Id          int    `json:"id"`
-		Name        string `json:"name"`
-		DisplayName string `json:"displayName"`
-		Email       string `json:"email"`
-		Surname     string `json:"surname"`
-	} `json:"createdBy"`
-	ReceivedDateTime string `json:"receivedDateTime"`
+	CreatedBy           User
+	ReceivedDateTime    string `json:"receivedDateTime"`
 }

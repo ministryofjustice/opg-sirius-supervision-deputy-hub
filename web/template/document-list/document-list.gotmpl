@@ -35,8 +35,8 @@
                 {{ end }}
             </td>
             <td class="govuk-table__cell" id="document-added-by">
-             {{ if ne .CreatedBy.DisplayName "" }}
-                 {{ .CreatedBy.DisplayName }}
+             {{ if ne .CreatedBy.Name "" }}
+                 {{ .CreatedBy.Name }}
              {{ else }}
                        -
              {{ end }}

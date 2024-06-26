@@ -108,7 +108,7 @@ func TestGetRefDataWithoutFilter(t *testing.T) {
 		},
 	}
 
-	booleanTypes, err := client.GetRefData(getContext(nil), "deputyBooleanType")
+	booleanTypes, err := client.GetRefData(getContext(nil), "/deputyBooleanType")
 
 	assert.Equal(t, expectedResponse, booleanTypes)
 	assert.Equal(t, nil, err)
@@ -140,7 +140,7 @@ func TestTestGetRefDataReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	booleanTypes, err := client.GetRefData(getContext(nil), "deputyBooleanType")
+	booleanTypes, err := client.GetRefData(getContext(nil), "/deputyBooleanType")
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, []model.RefData(nil), booleanTypes)

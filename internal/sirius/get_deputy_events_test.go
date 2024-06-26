@@ -178,7 +178,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        369,
 			Timestamp: AmendDateForDST("31/07/2023 08:45:22"),
 			EventType: "TaskEdited",
-			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 			Event: model.Event{
 				DeputyID:        "78",
 				DeputyName:      "Bobby Deputiser",
@@ -205,7 +205,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        300,
 			Timestamp: AmendDateForDST("09/09/2021 14:01:59"),
 			EventType: "DeputyLinkedToOrder",
-			User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678"},
+			User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678", Email: "system.admin@opgtest.com"},
 			Event: model.Event{
 				DeputyID:    "76",
 				DeputyName:  "Mx Bob Builder",
@@ -219,7 +219,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        397,
 			Timestamp: AmendDateForDST("10/01/2021 15:01:59"),
 			EventType: "TaskCreated",
-			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 			Event: model.Event{
 				DeputyID:   "78",
 				DeputyName: "Bobby Deputiser",
