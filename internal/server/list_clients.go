@@ -118,7 +118,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		})
 
 		group.Go(func() error {
-			accommodationTypes, err := client.GetRefData(ctx.With(groupCtx), "/clientAccommodation")
+			accommodationTypes, err := client.GetRefData(ctx.With(groupCtx), "?filter=clientAccommodation")
 			if err != nil {
 				return err
 			}
@@ -127,7 +127,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		})
 
 		group.Go(func() error {
-			supervisionLevels, err := client.GetRefData(ctx.With(groupCtx), "/supervisionLevel")
+			supervisionLevels, err := client.GetRefData(ctx.With(groupCtx), "?filter=supervisionLevel")
 			if err != nil {
 				return err
 			}
