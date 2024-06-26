@@ -56,8 +56,7 @@
             <link href="{{ prefix "/stylesheets/all.css" }}" rel="stylesheet" />
         </head>
 
-        <body class="
-            govuk-template__body
+        <body class="govuk-template__body
             {{ block "bodyClass" . }}
                 {{ if eq .DeputyType "PRO" }}
                     sirius-prohub
@@ -65,8 +64,8 @@
                     sirius-pahub
                 {{ end }}
             {{ end }}
-            govuk-frontend-supported
-        ">
+            govuk-frontend-supported"
+            >
 
         <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
