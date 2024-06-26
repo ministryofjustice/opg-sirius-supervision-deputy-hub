@@ -278,7 +278,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	if documentType != "" {
 		typeWriter, err := writer.CreateFormField("type")
 		if err != nil {
-			return body, err
+			return nil, err
 		}
 		_, err = typeWriter.Write([]byte(documentType))
 		if err != nil {
@@ -289,7 +289,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	if direction != "" {
 		directionWriter, err := writer.CreateFormField("direction")
 		if err != nil {
-			return body, err
+			return nil, err
 		}
 		_, err = directionWriter.Write([]byte(direction))
 		if err != nil {
@@ -300,7 +300,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	if date != "" {
 		dateWriter, err := writer.CreateFormField("date")
 		if err != nil {
-			return body, err
+			return nil, err
 		}
 		_, err = dateWriter.Write([]byte(date))
 		if err != nil {
@@ -310,7 +310,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 
 	notesWriter, err := writer.CreateFormField("notes")
 	if err != nil {
-		return body, err
+		return nil, err
 	}
 	_, err = notesWriter.Write([]byte(notes))
 	if err != nil {
