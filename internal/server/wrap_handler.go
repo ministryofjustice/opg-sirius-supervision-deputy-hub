@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-go-common/logging"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"log/slog"
 	"net/http"
 )
 
@@ -42,7 +42,29 @@ type DeputyHubClient interface {
 	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
 }
 
-func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Template, envVars EnvironmentVars) func(next Handler) http.Handler {
+type ExpandedError interface {
+	Title() string
+	Data() interface{}
+}
+
+func LoggerRequest(l *slog.Logger, r *http.Request, err error) {
+	if ee, ok := err.(ExpandedError); ok {
+		l.Info(ee.Title(),
+			slog.String("request_method", r.Method),
+			slog.String("request_uri", r.URL.String()),
+			slog.Any("data", ee.Data()))
+	} else if err != nil {
+		l.Info(err.Error(),
+			slog.String("request_method", r.Method),
+			slog.String("request_uri", r.URL.String()))
+	} else {
+		l.Info("",
+			slog.String("request_method", r.Method),
+			slog.String("request_uri", r.URL.String()))
+	}
+}
+
+func wrapHandler(logger *slog.Logger, client DeputyHubClient, tmplError Template, envVars EnvironmentVars) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vars, err := NewAppVars(client, r, envVars)
@@ -68,7 +90,7 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 					return
 				}
 
-				logger.Request(r, err)
+				LoggerRequest(logger, r, err)
 
 				code := http.StatusInternalServerError
 				if serverStatusError, ok := err.(StatusError); ok {
@@ -87,7 +109,7 @@ func wrapHandler(logger *logging.Logger, client DeputyHubClient, tmplError Templ
 				err = tmplError.ExecuteTemplate(w, "page", errVars)
 
 				if err != nil {
-					logger.Request(r, err)
+					LoggerRequest(logger, r, err)
 					http.Error(w, err.Error(), http.StatusInternalServerError)
 				}
 			}
