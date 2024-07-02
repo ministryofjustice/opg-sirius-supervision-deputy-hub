@@ -1,15 +1,10 @@
 package server
 
 import (
-	"fmt"
-	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
-	"golang.org/x/sync/errgroup"
-	"net/http"
 	"net/url"
-	"strconv"
 )
 
 type DeputyHubClientInformation interface {
@@ -61,128 +56,129 @@ func (lcv ListClientsVars) GetAppliedFilters() []string {
 	return appliedFilters
 }
 
-func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
-
-		ctx := getContext(r)
-		group, groupCtx := errgroup.WithContext(ctx.Context)
-		urlParams := r.URL.Query()
-		page := paginate.GetRequestedPage(urlParams.Get("page"))
-		perPageOptions := []int{25, 50, 100}
-		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
-		search, _ := strconv.Atoi(r.FormValue("page"))
-
-		orderStatuses := []model.OrderStatus{
-			{
-				Handle:      "ACTIVE",
-				Incomplete:  "Active",
-				Category:    "Active",
-				Complete:    "Active",
-				StatusCount: 0,
-			},
-			{
-				Handle:      "CLOSED",
-				Incomplete:  "Closed",
-				Category:    "Closed",
-				Complete:    "Closed",
-				StatusCount: 0,
-			},
-		}
-
-		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "orderMadeDate", "visitDate", "reportDue", "crec"})
-
-		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
-
-		params := sirius.ClientListParams{
-			DeputyId:           app.DeputyId(),
-			Limit:              perPage,
-			Search:             search,
-			DeputyType:         app.DeputyType(),
-			Sort:               fmt.Sprintf("%s:%s", sort.OrderBy, sort.GetDirection()),
-			OrderStatuses:      selectedOrderStatuses,
-			AccommodationTypes: selectedAccommodationTypes,
-			SupervisionLevels:  selectedSupervisionLevels,
-		}
-
-		var vars ListClientsVars
-
-		group.Go(func() error {
-			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
-			if err != nil {
-				return err
-			}
-			vars.Clients = clients
-			return nil
-		})
-
-		group.Go(func() error {
-			accommodationTypes, err := client.GetAccommodationTypes(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-			vars.AccommodationTypes = accommodationTypes
-			return nil
-		})
-
-		group.Go(func() error {
-			supervisionLevels, err := client.GetSupervisionLevels(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-			vars.SupervisionLevels = supervisionLevels
-			return nil
-		})
-
-		if err := group.Wait(); err != nil {
-			return err
-		}
-
-		app.PageName = "Clients"
-		vars.PerPage = perPage
-
-		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
-		vars.OrderStatuses = orderStatuses
-		vars.SelectedOrderStatuses = selectedOrderStatuses
-		vars.SelectedAccommodationTypes = selectedAccommodationTypes
-		vars.SelectedSupervisionLevels = selectedSupervisionLevels
-
-		vars.AppliedFilters = vars.GetAppliedFilters()
-
-		vars.OrderStatusOptions = []model.RefData{
-			{
-				Handle: "ACTIVE",
-				Label:  "Active",
-			},
-			{
-				Handle: "CLOSED",
-				Label:  "Closed",
-			},
-		}
-
-		vars.AppVars = app
-		vars.Sort = sort
-		vars.UrlBuilder = vars.CreateUrlBuilder()
-
-		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
-			return Redirect(vars.UrlBuilder.GetPaginationUrl(vars.Clients.Pages.PageTotal, perPage))
-		}
-
-		vars.Pagination = paginate.Pagination{
-			CurrentPage:     vars.Clients.Pages.PageCurrent,
-			TotalPages:      vars.Clients.Pages.PageTotal,
-			TotalElements:   vars.Clients.TotalClients,
-			ElementsPerPage: vars.PerPage,
-			ElementName:     "clients",
-			PerPageOptions:  perPageOptions,
-			UrlBuilder:      vars.UrlBuilder,
-		}
-
-		return tmpl.ExecuteTemplate(w, "page", vars)
-	}
-}
+//
+//func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
+//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
+//		if r.Method != http.MethodGet {
+//			return StatusError(http.StatusMethodNotAllowed)
+//		}
+//
+//		ctx := getContext(r)
+//		group, groupCtx := errgroup.WithContext(ctx.Context)
+//		urlParams := r.URL.Query()
+//		page := paginate.GetRequestedPage(urlParams.Get("page"))
+//		perPageOptions := []int{25, 50, 100}
+//		perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
+//		search, _ := strconv.Atoi(r.FormValue("page"))
+//
+//		orderStatuses := []model.OrderStatus{
+//			{
+//				Handle:      "ACTIVE",
+//				Incomplete:  "Active",
+//				Category:    "Active",
+//				Complete:    "Active",
+//				StatusCount: 0,
+//			},
+//			{
+//				Handle:      "CLOSED",
+//				Incomplete:  "Closed",
+//				Category:    "Closed",
+//				Complete:    "Closed",
+//				StatusCount: 0,
+//			},
+//		}
+//
+//		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "orderMadeDate", "visitDate", "reportDue", "crec"})
+//
+//		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
+//
+//		params := sirius.ClientListParams{
+//			DeputyId:           app.DeputyId(),
+//			Limit:              perPage,
+//			Search:             search,
+//			DeputyType:         app.DeputyType(),
+//			Sort:               fmt.Sprintf("%s:%s", sort.OrderBy, sort.GetDirection()),
+//			OrderStatuses:      selectedOrderStatuses,
+//			AccommodationTypes: selectedAccommodationTypes,
+//			SupervisionLevels:  selectedSupervisionLevels,
+//		}
+//
+//		var vars ListClientsVars
+//
+//		group.Go(func() error {
+//			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
+//			if err != nil {
+//				return err
+//			}
+//			vars.Clients = clients
+//			return nil
+//		})
+//
+//		group.Go(func() error {
+//			accommodationTypes, err := client.GetAccommodationTypes(ctx.With(groupCtx))
+//			if err != nil {
+//				return err
+//			}
+//			vars.AccommodationTypes = accommodationTypes
+//			return nil
+//		})
+//
+//		group.Go(func() error {
+//			supervisionLevels, err := client.GetSupervisionLevels(ctx.With(groupCtx))
+//			if err != nil {
+//				return err
+//			}
+//			vars.SupervisionLevels = supervisionLevels
+//			return nil
+//		})
+//
+//		if err := group.Wait(); err != nil {
+//			return err
+//		}
+//
+//		app.PageName = "Clients"
+//		vars.PerPage = perPage
+//
+//		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
+//		vars.OrderStatuses = orderStatuses
+//		vars.SelectedOrderStatuses = selectedOrderStatuses
+//		vars.SelectedAccommodationTypes = selectedAccommodationTypes
+//		vars.SelectedSupervisionLevels = selectedSupervisionLevels
+//
+//		vars.AppliedFilters = vars.GetAppliedFilters()
+//
+//		vars.OrderStatusOptions = []model.RefData{
+//			{
+//				Handle: "ACTIVE",
+//				Label:  "Active",
+//			},
+//			{
+//				Handle: "CLOSED",
+//				Label:  "Closed",
+//			},
+//		}
+//
+//		vars.AppVars = app
+//		vars.Sort = sort
+//		vars.UrlBuilder = vars.CreateUrlBuilder()
+//
+//		if page > vars.Clients.Pages.PageTotal && vars.Clients.Pages.PageTotal > 0 {
+//			return Redirect(vars.UrlBuilder.GetPaginationUrl(vars.Clients.Pages.PageTotal, perPage))
+//		}
+//
+//		vars.Pagination = paginate.Pagination{
+//			CurrentPage:     vars.Clients.Pages.PageCurrent,
+//			TotalPages:      vars.Clients.Pages.PageTotal,
+//			TotalElements:   vars.Clients.TotalClients,
+//			ElementsPerPage: vars.PerPage,
+//			ElementName:     "clients",
+//			PerPageOptions:  perPageOptions,
+//			UrlBuilder:      vars.UrlBuilder,
+//		}
+//
+//		return tmpl.ExecuteTemplate(w, "page", vars)
+//	}
+//}
 
 func getFiltersFromParams(params url.Values) ([]string, []string, []string) {
 	var selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels []string

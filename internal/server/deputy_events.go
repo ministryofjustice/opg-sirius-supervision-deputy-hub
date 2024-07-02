@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"net/http"
 )
 
 type DeputyHubEventInformation interface {
@@ -14,25 +13,25 @@ type deputyHubEventVars struct {
 	AppVars
 }
 
-func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
-
-		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId())
-		if err != nil {
-			return err
-		}
-
-		app.PageName = "Timeline"
-
-		vars := deputyHubEventVars{
-			DeputyEvents: deputyEvents,
-			AppVars:      app,
-		}
-
-		return tmpl.ExecuteTemplate(w, "page", vars)
-	}
-}
+//func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
+//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
+//		if r.Method != http.MethodGet {
+//			return StatusError(http.StatusMethodNotAllowed)
+//		}
+//
+//		ctx := getContext(r)
+//		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId())
+//		if err != nil {
+//			return err
+//		}
+//
+//		app.PageName = "Timeline"
+//
+//		vars := deputyHubEventVars{
+//			DeputyEvents: deputyEvents,
+//			AppVars:      app,
+//		}
+//
+//		return tmpl.ExecuteTemplate(w, "page", vars)
+//	}
+//}

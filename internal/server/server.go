@@ -1,10 +1,9 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/securityheaders"
-	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"html/template"
 	"io"
 	"log/slog"
@@ -12,144 +11,163 @@ import (
 	"net/url"
 )
 
-type Client interface {
+type ApiClient interface {
 	DeputyHubClient
-	DeputyHubInformation
-	DeputyHubClientInformation
+	//DeputyHubInformation
+	//DeputyHubClientInformation
 	DeputyHubContactInformation
-	DeputyHubEventInformation
-	DeputyHubNotesInformation
-	EditDeputyHubInformation
-	ChangeECMInformation
-	FirmInformation
-	DeputyContactDetailsInformation
-	ManageProDeputyImportantInformation
-	DeputyChangeFirmInformation
-	AddAssuranceClient
-	GetAssurancesClient
-	ManageAssuranceClient
+	//DeputyHubEventInformation
+	//DeputyHubNotesInformation
+	//EditDeputyHubInformation
+	//ChangeECMInformation
+	//FirmInformation
+	//DeputyContactDetailsInformation
+	//ManageProDeputyImportantInformation
+	//DeputyChangeFirmInformation
+	//AddAssuranceClient
+	//GetAssurancesClient
+	//ManageAssuranceClient
 	ManageContact
-	DeleteContact
-	DeleteDeputy
-	AddTasksClient
-	TasksClient
-	ManageTasks
-	CompleteTask
+	//DeleteContact
+	//DeleteDeputy
+	//AddTasksClient
+	//TasksClient
+	//ManageTasks
+	//CompleteTask
 }
 
 type Template interface {
+	Execute(wr io.Writer, data any) error
 	ExecuteTemplate(io.Writer, string, interface{}) error
 }
 
-func New(logger *slog.Logger, client Client, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {
+type router interface {
+	Client() ApiClient
+	execute(http.ResponseWriter, *http.Request, any) error
+}
+
+func New(logger *slog.Logger, client ApiClient, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {
 	wrap := wrapHandler(logger, client, templates["error.gotmpl"], envVars)
+	mux := http.NewServeMux()
 
-	router := mux.NewRouter().StrictSlash(true)
-	router.Handle("/health-check", healthCheck())
+	mux.Handle("GET /contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("GET /contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("POST /contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 
-	pageRouter := router.PathPrefix("/{id}").Subrouter()
-	pageRouter.Use(telemetry.Middleware(logger))
+	//router := mux.NewRouter().StrictSlash(true)
+	//router.Handle("/health-check", healthCheck())
+	//
+	//pageRouter := router.PathPrefix("/{id}").Subrouter()
+	//pageRouter.Use(telemetry.Middleware(logger))
+	//
+	//pageRouter.Handle("",
+	//	wrap(
+	//		renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
+	//
+	//pageRouter.Handle("/contacts",
+	//	wrap(
+	//		renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
+	//
+	//pageRouter.Handle("/contacts/add-contact",
+	//	wrap(
+	//		renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	//
+	//pageRouter.Handle("/contacts/{contactId}",
+	//	wrap(
+	//		renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	//
+	//pageRouter.Handle("/contacts/{contactId}/delete",
+	//	wrap(
+	//		renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
+	//
+	//pageRouter.Handle("/clients",
+	//	wrap(
+	//		renderTemplateForClientTab(client, templates["clients.gotmpl"])))
+	//
+	//pageRouter.Handle("/timeline",
+	//	wrap(
+	//		renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
+	//
+	//pageRouter.Handle("/notes",
+	//	wrap(
+	//		renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
+	//
+	//pageRouter.Handle("/notes/add-note",
+	//	wrap(
+	//		renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
+	//
+	//pageRouter.Handle("/tasks",
+	//	wrap(
+	//		renderTemplateForTasks(client, templates["tasks.gotmpl"])))
+	//
+	//pageRouter.Handle("/tasks/add-task",
+	//	wrap(
+	//		renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
+	//
+	//pageRouter.Handle("/tasks/{taskId}",
+	//	wrap(
+	//		renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
+	//
+	//pageRouter.Handle("/tasks/complete/{taskId}",
+	//	wrap(
+	//		renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
+	//
+	//pageRouter.Handle("/manage-team-details",
+	//	wrap(
+	//		renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
+	//
+	//pageRouter.Handle("/change-ecm",
+	//	wrap(
+	//		renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
+	//
+	//pageRouter.Handle("/change-firm",
+	//	wrap(
+	//		renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
+	//
+	//pageRouter.Handle("/delete-deputy",
+	//	wrap(
+	//		renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
+	//
+	//pageRouter.Handle("/add-firm",
+	//	wrap(
+	//		renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
+	//
+	//pageRouter.Handle("/manage-deputy-contact-details",
+	//	wrap(
+	//		renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
+	//
+	//pageRouter.Handle("/manage-important-information",
+	//	wrap(
+	//		renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
+	//
+	//pageRouter.Handle("/assurances",
+	//	wrap(
+	//		renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
+	//
+	//pageRouter.Handle("/add-assurance",
+	//	wrap(
+	//		renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
+	//
+	//pageRouter.Handle("/manage-assurance/{visitId}",
+	//	wrap(
+	//		renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
 
-	pageRouter.Handle("",
-		wrap(
-			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
+	//static := staticFileHandler(envVars.WebDir)
+	//router.PathPrefix("/assets/").Handler(static)
+	//router.PathPrefix("/javascript/").Handler(static)
+	//router.PathPrefix("/stylesheets/").Handler(static)
+	//
+	mux.Handle("/health-check", healthCheck())
 
-	pageRouter.Handle("/contacts",
-		wrap(
-			renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
+	static := http.FileServer(http.Dir(envVars.WebDir + "/static"))
+	mux.Handle("/assets/", static)
+	mux.Handle("/javascript/", static)
+	mux.Handle("/stylesheets/", static)
 
-	pageRouter.Handle("/contacts/add-contact",
-		wrap(
-			renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	return otelhttp.NewHandler(http.StripPrefix(envVars.Prefix, securityheaders.Use(mux)), "supervision-deputy-hub")
 
-	pageRouter.Handle("/contacts/{contactId}",
-		wrap(
-			renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	//router.NotFoundHandler = wrap(notFoundHandler(templates["error.gotmpl"], envVars))
 
-	pageRouter.Handle("/contacts/{contactId}/delete",
-		wrap(
-			renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
-
-	pageRouter.Handle("/clients",
-		wrap(
-			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
-
-	pageRouter.Handle("/timeline",
-		wrap(
-			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
-
-	pageRouter.Handle("/notes",
-		wrap(
-			renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
-
-	pageRouter.Handle("/notes/add-note",
-		wrap(
-			renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
-
-	pageRouter.Handle("/tasks",
-		wrap(
-			renderTemplateForTasks(client, templates["tasks.gotmpl"])))
-
-	pageRouter.Handle("/tasks/add-task",
-		wrap(
-			renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
-
-	pageRouter.Handle("/tasks/{taskId}",
-		wrap(
-			renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
-
-	pageRouter.Handle("/tasks/complete/{taskId}",
-		wrap(
-			renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
-
-	pageRouter.Handle("/manage-team-details",
-		wrap(
-			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
-
-	pageRouter.Handle("/change-ecm",
-		wrap(
-			renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
-
-	pageRouter.Handle("/change-firm",
-		wrap(
-			renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
-
-	pageRouter.Handle("/delete-deputy",
-		wrap(
-			renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
-
-	pageRouter.Handle("/add-firm",
-		wrap(
-			renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
-
-	pageRouter.Handle("/manage-deputy-contact-details",
-		wrap(
-			renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
-
-	pageRouter.Handle("/manage-important-information",
-		wrap(
-			renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
-
-	pageRouter.Handle("/assurances",
-		wrap(
-			renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
-
-	pageRouter.Handle("/add-assurance",
-		wrap(
-			renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
-
-	pageRouter.Handle("/manage-assurance/{visitId}",
-		wrap(
-			renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
-
-	static := staticFileHandler(envVars.WebDir)
-	router.PathPrefix("/assets/").Handler(static)
-	router.PathPrefix("/javascript/").Handler(static)
-	router.PathPrefix("/stylesheets/").Handler(static)
-
-	router.NotFoundHandler = wrap(notFoundHandler(templates["error.gotmpl"], envVars))
-
-	return http.StripPrefix(envVars.Prefix, securityheaders.Use(router))
 }
 
 func notFoundHandler(tmplError Template, envVars EnvironmentVars) Handler {

@@ -29,7 +29,7 @@ func (e StatusError) Code() int {
 	return int(e)
 }
 
-type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
+//type Handler func(v AppVars, w http.ResponseWriter, r *http.Request) error
 
 type ErrorVars struct {
 	Code  int
@@ -64,13 +64,19 @@ func LoggerRequest(l *slog.Logger, r *http.Request, err error) {
 	}
 }
 
+type Handler interface {
+	render(app AppVars, w http.ResponseWriter, r *http.Request) error
+}
+
 func wrapHandler(logger *slog.Logger, client DeputyHubClient, tmplError Template, envVars EnvironmentVars) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vars, err := NewAppVars(client, r, envVars)
 
 			if err == nil {
-				err = next(*vars, w, r)
+				if err == nil {
+					err = next.render(vars, w, r)
+				}
 			}
 
 			if err != nil {

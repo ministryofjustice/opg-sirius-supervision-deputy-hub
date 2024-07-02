@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
 	"net/http"
@@ -32,10 +31,10 @@ type AppVarsClient interface {
 	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
 }
 
-func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (*AppVars, error) {
+func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)
-	deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
+	deputyId, _ := strconv.Atoi(r.PathValue("id"))
 
 	vars := AppVars{
 		Path:            r.URL.Path,
@@ -61,8 +60,8 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 	})
 
 	if err := group.Wait(); err != nil {
-		return nil, err
+		return AppVars{}, err
 	}
 
-	return &vars, nil
+	return vars, nil
 }
