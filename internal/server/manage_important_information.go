@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
@@ -12,15 +13,13 @@ import (
 
 type ManageProDeputyImportantInformation interface {
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
-	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
-	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
-	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
+	GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error)
 }
 
 type manageDeputyImportantInformationVars struct {
-	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	DeputyBooleanTypes        []sirius.DeputyBooleanTypes
-	DeputyReportSystemTypes   []sirius.DeputyReportSystemTypes
+	AnnualBillingInvoiceTypes []model.RefData
+	DeputyBooleanTypes        []model.RefData
+	DeputyReportSystemTypes   []model.RefData
 	AppVars
 }
 
@@ -35,7 +34,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 
 		group.Go(func() error {
-			annualBillingInvoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(ctx.With(groupCtx))
+			annualBillingInvoiceTypes, err := client.GetRefData(ctx.With(groupCtx), "/annualBillingInvoice")
 			if err != nil {
 				return err
 			}
@@ -45,7 +44,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		})
 
 		group.Go(func() error {
-			deputyBooleanTypes, err := client.GetDeputyBooleanTypes(ctx.With(groupCtx))
+			deputyBooleanTypes, err := client.GetRefData(ctx.With(groupCtx), "/deputyBooleanType")
 			if err != nil {
 				return err
 			}
@@ -55,7 +54,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		})
 
 		group.Go(func() error {
-			deputyReportSystemTypes, err := client.GetDeputyReportSystemTypes(ctx.With(groupCtx))
+			deputyReportSystemTypes, err := client.GetRefData(ctx.With(groupCtx), "/deputyReportSystem")
 			if err != nil {
 				return err
 			}
