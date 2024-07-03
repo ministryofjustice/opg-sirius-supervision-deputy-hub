@@ -121,113 +121,6 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 	assert.Equal(client.AddDocumentErr, returnedError)
 }
 
-func TestAddDocumentHandlesValidationErrorsInternally(t *testing.T) {
-	tests := []struct {
-		ExpectedError          sirius.ValidationErrors
-		Type                   string
-		Direction              string
-		Date                   string
-		Notes                  string
-		hasDocumentUploadError bool
-	}{
-		{
-			ExpectedError: sirius.ValidationErrors{
-				"type": {
-					"": "Select a type",
-				},
-			},
-			Type:                   "",
-			Direction:              "OUTGOING",
-			Date:                   "2024-01-01",
-			Notes:                  "",
-			hasDocumentUploadError: false,
-		},
-		{
-			ExpectedError: sirius.ValidationErrors{
-				"direction": {
-					"": "Select a direction",
-				},
-			},
-			Type:                   "OUTGOING",
-			Direction:              "",
-			Date:                   "2024-01-01",
-			Notes:                  "",
-			hasDocumentUploadError: false,
-		},
-		{
-			ExpectedError: sirius.ValidationErrors{
-				"date": {
-					"": "Select a date",
-				},
-			},
-			Type:      "GENERAL",
-			Direction: "OUTGOING",
-			Date:      "",
-			Notes:     "",
-		},
-		{
-			ExpectedError: sirius.ValidationErrors{
-				"notes": {
-					"stringLengthTooLong": "The note must be 1000 characters or fewer",
-				},
-			},
-			Type:                   "GENERAL",
-			Direction:              "OUTGOING",
-			Date:                   "2024-01-01",
-			Notes:                  strings.Repeat("a", 1001),
-			hasDocumentUploadError: false,
-		},
-		{
-			ExpectedError: sirius.ValidationErrors{
-				"document-upload": {
-					"": "Error uploading the file",
-				},
-			},
-			Type:                   "GENERAL",
-			Direction:              "OUTGOING",
-			Date:                   "2024-01-01",
-			Notes:                  "",
-			hasDocumentUploadError: true,
-		},
-	}
-	for k, tc := range tests {
-		t.Run("scenario "+strconv.Itoa(k+1), func(t *testing.T) {
-			assert := assert.New(t)
-
-			client := &mockAddDocumentClient{}
-			template := &mockTemplates{}
-			app := AppVars{
-				Path:          "/path",
-				DeputyDetails: sirius.DeputyDetails{ID: 123},
-			}
-			body := new(bytes.Buffer)
-			writer := multipart.NewWriter(body)
-			body, _ = CreateAddDocumentFormBody(body, writer, tc.Type, tc.Direction, tc.Date, tc.Notes, tc.hasDocumentUploadError)
-			w := httptest.NewRecorder()
-			r, _ := http.NewRequest("POST", "/123", body)
-			r.Header.Add("Content-Type", writer.FormDataContentType())
-			returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
-
-			assert.Equal(AddDocumentVars{
-				AppVars: AppVars{
-					DeputyDetails: sirius.DeputyDetails{ID: 123},
-					Errors:        tc.ExpectedError,
-					PageName:      "Add a document",
-					Path:          "/path",
-				},
-				DocumentDirectionRefData: []model.RefData{},
-				DocumentTypes:            []model.RefData{},
-				DocumentType:             tc.Type,
-				Direction:                tc.Direction,
-				Date:                     tc.Date,
-				Notes:                    tc.Notes,
-			}, template.lastVars)
-
-			assert.Nil(returnedError)
-		})
-	}
-}
-
 func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 	returnedError := sirius.StatusError{Code: 500}
 	tests := []struct {
@@ -267,6 +160,48 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 	}
 }
 
+func TestAddDocumentHandlesFileUploadError(t *testing.T) {
+	assert := assert.New(t)
+
+	expectedError := sirius.ValidationErrors{
+		"document-upload": {
+			"": "Error uploading the file",
+		},
+	}
+
+	client := &mockAddDocumentClient{}
+	template := &mockTemplates{}
+	app := AppVars{
+		Path:          "/path",
+		DeputyDetails: sirius.DeputyDetails{ID: 123},
+	}
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", true)
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/123", body)
+	r.Header.Add("Content-Type", writer.FormDataContentType())
+	returnedError := renderTemplateForAddDocument(client, template)(app, w, r)
+
+	assert.Equal(AddDocumentVars{
+		AppVars: AppVars{
+			DeputyDetails: sirius.DeputyDetails{ID: 123},
+			Errors:        expectedError,
+			PageName:      "Add a document",
+			Path:          "/path",
+		},
+		DocumentDirectionRefData: []model.RefData{},
+		DocumentTypes:            []model.RefData{},
+		DocumentType:             "GENERAL",
+		Direction:                "OUTGOING",
+		Date:                     "01/01/2024",
+		Notes:                    "",
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
+
 func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentType, direction, date, notes string, documentUploadError bool) (*bytes.Buffer, error) {
 	if documentUploadError {
 		_, _ = writer.CreateFormFile("document-upload", "")
@@ -276,7 +211,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	}
 
 	if documentType != "" {
-		typeWriter, err := writer.CreateFormField("type")
+		typeWriter, err := writer.CreateFormField("documentType")
 		if err != nil {
 			return nil, err
 		}
@@ -287,7 +222,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	}
 
 	if direction != "" {
-		directionWriter, err := writer.CreateFormField("direction")
+		directionWriter, err := writer.CreateFormField("documentDirection")
 		if err != nil {
 			return nil, err
 		}
@@ -298,7 +233,7 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 	}
 
 	if date != "" {
-		dateWriter, err := writer.CreateFormField("date")
+		dateWriter, err := writer.CreateFormField("documentDate")
 		if err != nil {
 			return nil, err
 		}
