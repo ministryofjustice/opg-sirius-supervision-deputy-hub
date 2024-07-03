@@ -26,12 +26,12 @@
                            type="file">
                 </div>
 
-                <div class="govuk-form-group{{ if index .Errors "type" }} govuk-form-group--error{{ end }}">
-                    <fieldset class="govuk-fieldset" aria-describedby="type" id="f-type">
+                <div class="govuk-form-group{{ if index .Errors "documentType" }} govuk-form-group--error{{ end }}">
+                    <fieldset class="govuk-fieldset" aria-describedby="type" id="f-documentType">
                         <legend class="govuk-fieldset__legend">
                             Type of document (required)
                         </legend>
-                        {{ template "error-message" (index .Errors "type") }}
+                        {{ template "error-message" (index .Errors "documentType") }}
 
 
                         <div class="govuk-radios">
@@ -41,7 +41,7 @@
                                      <div class="govuk-radios">
                                          <div class="govuk-radios__item">
                                              <input class="govuk-radios__input" id="type-{{.Handle}}"
-                                                        name="type" type="radio"
+                                                        name="documentType" type="radio"
                                                         value="{{.Handle}}"
                                                         {{ if eq .Handle $selectedType }}checked{{end}}/>
                                                     <label class="govuk-label govuk-radios__label" for="type-{{.Handle}}">
@@ -56,19 +56,19 @@
                     </fieldset>
                 </div>
 
-                <div class="govuk-form-group{{ if index .Errors "direction" }} govuk-form-group--error{{ end }}">
-                    <fieldset class="govuk-fieldset" aria-describedby="direction" id="f-direction">
+                <div class="govuk-form-group{{ if index .Errors "documentDirection" }} govuk-form-group--error{{ end }}">
+                    <fieldset class="govuk-fieldset" aria-describedby="direction" id="f-documentDirection">
                         <legend class="govuk-fieldset__legend">
                             Direction (required)
                         </legend>
-                        {{ template "error-message" (index .Errors "direction") }}
+                        {{ template "error-message" (index .Errors "documentDirection") }}
 
                         <div class="govuk-radios">
                             {{ $selectedDirection := .Direction }}
                             {{ range $i, $documentDirection := .DocumentDirectionRefData }}
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="direction-{{.Handle}}"
-                                           name="direction" type="radio"
+                                           name="documentDirection" type="radio"
                                            value="{{.Handle}}"
                                            {{ if eq .Handle $selectedDirection }}checked{{end}}
                                             />
@@ -81,14 +81,14 @@
                     </fieldset>
                 </div>
 
-                <div class="govuk-form-group{{ if index .Errors "date" }} govuk-form-group--error{{ end }}">
-                    <label class="govuk-label" for="f-date">
+                <div class="govuk-form-group{{ if index .Errors "documentDate" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-documentDate">
                         Date (required)
                     </label>
-                    {{ template "error-message" (index .Errors "date") }}
-                    <input id="f-date"
-                           class="govuk-input govuk-input--width-10 {{ if index .Errors "date" }} govuk-input--error{{ end }}"
-                           name="date"
+                    {{ template "error-message" (index .Errors "documentDate") }}
+                    <input id="f-documentDate"
+                           class="govuk-input govuk-input--width-10 {{ if index .Errors "documentDate" }} govuk-input--error{{ end }}"
+                           name="documentDate"
                            value="{{ .Date }}"
                            type="date">
                 </div>

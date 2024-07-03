@@ -11,11 +11,11 @@ import (
 )
 
 type CreateDocumentRequest struct {
-	Date        string        `json:"date"`
+	Date        string        `json:"documentDate"`
 	Description string        `json:"description"`
-	Direction   model.RefData `json:"direction"`
+	Direction   model.RefData `json:"documentDirection"`
 	Name        string        `json:"name"`
-	Type        model.RefData `json:"type"`
+	Type        model.RefData `json:"documentType"`
 	PersonId    int           `json:"personId"`
 	FileName    string        `json:"fileName"`
 	FileSource  string        `json:"fileSource"`

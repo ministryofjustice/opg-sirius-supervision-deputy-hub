@@ -7,6 +7,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"mime/multipart"
 	"net/http"
+	"time"
 )
 
 type AddDocumentClient interface {
@@ -31,6 +32,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 
 		vars := AddDocumentVars{
 			AppVars: app,
+			Date:    time.Now().Format("2006-01-02"),
 		}
 
 		documentDirectionRefData, err := client.GetRefData(getContext(r), "/documentDirection")
@@ -59,31 +61,15 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
 			}
 
-			documentType := r.PostFormValue("type")
-			direction := r.PostFormValue("direction")
-			date := r.PostFormValue("date")
+			documentType := r.PostFormValue("documentType")
+			direction := r.PostFormValue("documentDirection")
+			date := r.PostFormValue("documentDate")
 			notes := r.PostFormValue("notes")
 
 			vars.DocumentType = documentType
 			vars.Direction = direction
 			vars.Date = date
 			vars.Notes = notes
-
-			if direction == "" {
-				vars.Errors["direction"] = map[string]string{"": "Select a direction"}
-			}
-
-			if date == "" {
-				vars.Errors["date"] = map[string]string{"": "Select a date"}
-			}
-
-			if documentType == "" {
-				vars.Errors["type"] = map[string]string{"": "Select a type"}
-			}
-
-			if len(notes) > 1000 {
-				vars.Errors["notes"] = map[string]string{"stringLengthTooLong": "The note must be 1000 characters or fewer"}
-			}
 
 			if len(vars.Errors) > 0 {
 				return tmpl.ExecuteTemplate(w, "page", vars)

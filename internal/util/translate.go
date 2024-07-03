@@ -167,6 +167,15 @@ var validationMappings = map[string]map[string]pair{
 	"reportReviewDate": {
 		"invalid-lte": pair{"reportReviewDate", "Report review date - This must be on or before " + currentDate},
 	},
+	"documentType": {
+		"isEmpty": pair{"documentType", "Select the type of document"},
+	},
+	"documentDirection": {
+		"isEmpty": pair{"documentDirection", "Select the document direction"},
+	},
+	"documentDate": {
+		"invalid-lte": pair{"documentDate", "The date must be today or in the past"},
+	},
 }
 
 func RenameErrors(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
