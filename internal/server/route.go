@@ -1,26 +1,15 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"golang.org/x/sync/errgroup"
+	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
-	"strconv"
 )
-
-//type AppVars struct {
-//	Path          string
-//	XSRFToken     string
-//	UserDetails   sirius.UserDetails
-//	DeputyDetails sirius.DeputyDetails
-//	PageName      string
-//	Error         string
-//	Errors        sirius.ValidationErrors
-//	EnvironmentVars
-//}
 
 type PageData struct {
 	Data           AppVars
 	SuccessMessage string
+	MyDetails      sirius.UserDetails
 }
 
 type route struct {
@@ -36,45 +25,18 @@ func (r route) Client() ApiClient {
 // execute is an abstraction of the Template execute functions in order to conditionally render either a full template or
 // a block, in response to a header added by HTMX. If the header is not present, the function will also fetch all
 // additional data needed by the page for a full page load.
-func (r route) execute(w http.ResponseWriter, req *http.Request, data any, envVars EnvironmentVars) error {
+func (r route) execute(w http.ResponseWriter, req *http.Request, data any, appVars AppVars) error {
 	if r.isHxRequest(req) {
 		return r.tmpl.ExecuteTemplate(w, r.partial, data)
 	} else {
-		ctx := getContext(req)
-		group, groupCtx := errgroup.WithContext(ctx.Context)
-		deputyId, _ := strconv.Atoi(mux.Vars(req)["id"])
-
-		pageInfo := PageData{
-			Data: AppVars{
-				Path:            req.URL.Path,
-				XSRFToken:       ctx.XSRFToken,
-				EnvironmentVars: envVars,
-			},
-			SuccessMessage: "",
-		}
-
-		group.Go(func() error {
-			user, err := r.client.GetUserDetails(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-			pageInfo.Data.UserDetails = user
-			return nil
-		})
-		group.Go(func() error {
-			deputy, err := r.client.GetDeputyDetails(ctx.With(groupCtx), pageInfo.Data.DefaultPaTeam, pageInfo.Data.DefaultProTeam, deputyId)
-			if err != nil {
-				return err
-			}
-			pageInfo.Data.DeputyDetails = deputy
-			return nil
-		})
-
-		if err := group.Wait(); err != nil {
-			return err
-		}
-
-		pageInfo.SuccessMessage = r.getSuccess(req)
+		storedData := appVars
+		fmt.Println("do i have user details")
+		fmt.Println(storedData.UserDetails)
+		fmt.Println("do i have deputy details")
+		fmt.Println(storedData.DeputyDetails)
+		//data.SuccessMessage = r.getSuccess(req)
+		fmt.Println("in route go")
+		fmt.Println(data)
 		return r.tmpl.Execute(w, data)
 	}
 }

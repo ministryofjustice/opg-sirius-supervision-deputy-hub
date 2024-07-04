@@ -18,7 +18,7 @@ type TaskList struct {
 	Pages      PageInformation `json:"pages"`
 }
 
-func (c *Client) GetTasks(ctx Context, deputyId int) (TaskList, error) {
+func (c *ApiClient) GetTasks(ctx Context, deputyId int) (TaskList, error) {
 	var t TaskList
 
 	requestURL := fmt.Sprintf("/api/v1/deputies/%d/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)

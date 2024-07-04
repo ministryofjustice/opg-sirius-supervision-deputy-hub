@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoing, deputyDetails DeputyDetails) error {
+func (c *ApiClient) ChangeECM(ctx Context, changeECMForm ExecutiveCaseManagerOutgoing, deputyDetails DeputyDetails) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(ExecutiveCaseManagerOutgoing{EcmId: changeECMForm.EcmId})

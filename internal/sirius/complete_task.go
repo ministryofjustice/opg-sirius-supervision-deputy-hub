@@ -11,7 +11,7 @@ type taskCompletedNotes struct {
 	Notes string `json:"taskCompletedNotes"`
 }
 
-func (c *Client) CompleteTask(ctx Context, taskId int, notes string) error {
+func (c *ApiClient) CompleteTask(ctx Context, taskId int, notes string) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(taskCompletedNotes{
 		Notes: notes,

@@ -10,7 +10,7 @@ type DeputyReportSystemTypes struct {
 	Label  string `json:"label"`
 }
 
-func (c *Client) GetDeputyReportSystemTypes(ctx Context) ([]DeputyReportSystemTypes, error) {
+func (c *ApiClient) GetDeputyReportSystemTypes(ctx Context) ([]DeputyReportSystemTypes, error) {
 	var v []DeputyReportSystemTypes
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/deputyReportSystem", nil)

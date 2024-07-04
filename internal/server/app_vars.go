@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
 	"net/http"
@@ -34,7 +35,10 @@ type AppVarsClient interface {
 func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)
-	deputyId, _ := strconv.Atoi(r.PathValue("id"))
+	deputyId, _ := strconv.Atoi(r.PathValue("deputyId"))
+
+	fmt.Println("deputy Id in new app vars")
+	fmt.Println(deputyId)
 
 	vars := AppVars{
 		Path:            r.URL.Path,
@@ -50,6 +54,7 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 		vars.UserDetails = user
 		return nil
 	})
+
 	group.Go(func() error {
 		deputy, err := client.GetDeputyDetails(ctx.With(groupCtx), vars.DefaultPaTeam, vars.DefaultProTeam, deputyId)
 		if err != nil {
@@ -60,8 +65,7 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 	})
 
 	if err := group.Wait(); err != nil {
-		return AppVars{}, err
+		return vars, err
 	}
-
 	return vars, nil
 }

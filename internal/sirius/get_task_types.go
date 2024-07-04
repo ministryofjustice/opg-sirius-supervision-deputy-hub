@@ -13,7 +13,7 @@ type TaskTypes struct {
 	TaskTypes TaskTypeMap `json:"task_types"`
 }
 
-func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]model.TaskType, error) {
+func (c *ApiClient) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]model.TaskType, error) {
 	taskTypes, err := c.getTaskTypesMap(ctx)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]mo
 	return deputyTaskTypes, err
 }
 
-func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
+func (c *ApiClient) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/tasktypes/deputy", nil)
 
 	if err != nil {

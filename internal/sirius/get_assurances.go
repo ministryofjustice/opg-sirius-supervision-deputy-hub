@@ -11,7 +11,7 @@ type AssurancesList struct {
 	Assurances []model.Assurance `json:"assurances"`
 }
 
-func (c *Client) GetAssurances(ctx Context, deputyId int) ([]model.Assurance, error) {
+func (c *ApiClient) GetAssurances(ctx Context, deputyId int) ([]model.Assurance, error) {
 	var k AssurancesList
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/assurances", deputyId), nil)

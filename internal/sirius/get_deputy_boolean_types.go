@@ -10,7 +10,7 @@ type DeputyBooleanTypes struct {
 	Label  string `json:"label"`
 }
 
-func (c *Client) GetDeputyBooleanTypes(ctx Context) ([]DeputyBooleanTypes, error) {
+func (c *ApiClient) GetDeputyBooleanTypes(ctx Context) ([]DeputyBooleanTypes, error) {
 	var v []DeputyBooleanTypes
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/deputyBooleanType", nil)

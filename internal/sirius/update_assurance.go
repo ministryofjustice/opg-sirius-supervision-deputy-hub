@@ -20,7 +20,7 @@ type UpdateAssuranceDetails struct {
 	Note               string `json:"note"`
 }
 
-func (c *Client) UpdateAssurance(ctx Context, form UpdateAssuranceDetails, deputyId, visitId int) error {
+func (c *ApiClient) UpdateAssurance(ctx Context, form UpdateAssuranceDetails, deputyId, visitId int) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(form)

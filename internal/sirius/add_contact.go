@@ -18,7 +18,7 @@ type ContactForm struct {
 	IsMainContact    string `json:"isMainContact"`
 }
 
-func (c *Client) AddContact(ctx Context, deputyId int, addContactForm ContactForm) error {
+func (c *ApiClient) AddContact(ctx Context, deputyId int, addContactForm ContactForm) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addContactForm)
 	if err != nil {

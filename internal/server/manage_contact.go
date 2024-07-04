@@ -35,7 +35,7 @@ type ManageContactsHandler struct {
 func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
 	ctx := getContext(r)
 
-	deputyId, _ := strconv.Atoi(r.PathValue("id"))
+	deputyId, _ := strconv.Atoi(r.PathValue("deputyId"))
 	contactId, _ := strconv.Atoi(r.PathValue("contactId"))
 
 	v.PageName = "Add new contact"
@@ -67,7 +67,7 @@ func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http
 			vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
 			vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
 		}
-		return h.execute(w, r, vars)
+		return h.execute(w, r, vars, vars.AppVars)
 
 	case http.MethodPost:
 		var successVar string
@@ -104,7 +104,7 @@ func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http
 			vars.IsMainContact = manageContactForm.IsMainContact
 			vars.IsNewContact = contactId == 0
 
-			return h.execute(w, r, vars)
+			return h.execute(w, r, vars, vars.AppVars)
 		}
 
 		if err != nil {

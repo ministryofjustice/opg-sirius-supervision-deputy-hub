@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) DeleteDeputy(ctx Context, deputyId int) error {
+func (c *ApiClient) DeleteDeputy(ctx Context, deputyId int) error {
 	var body bytes.Buffer
 
 	url := fmt.Sprintf("/supervision-api/v1/deputies/%d", deputyId)

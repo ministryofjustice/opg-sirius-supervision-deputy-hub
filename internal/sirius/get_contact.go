@@ -17,7 +17,7 @@ type Contact struct {
 	IsMainContact    bool   `json:"isMainContact"`
 }
 
-func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Contact, error) {
+func (c *ApiClient) GetContactById(ctx Context, deputyId int, contactId int) (Contact, error) {
 	var contact Contact
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts/%d", deputyId, contactId), nil)

@@ -16,7 +16,7 @@ type updateTask struct {
 	IsDeputyTask  bool   `json:"isDeputyTask"`
 }
 
-func (c *Client) UpdateTask(ctx Context, deputyId int, taskId int, dueDate string, notes string, assigneeId int) error {
+func (c *ApiClient) UpdateTask(ctx Context, deputyId int, taskId int, dueDate string, notes string, assigneeId int) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(updateTask{
 		DueDate:       FormatDateTime(IsoDate, dueDate, SiriusDate),

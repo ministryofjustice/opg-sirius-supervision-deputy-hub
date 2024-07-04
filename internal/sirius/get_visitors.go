@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetVisitors(ctx Context) ([]model.Visitor, error) {
+func (c *ApiClient) GetVisitors(ctx Context) ([]model.Visitor, error) {
 	var v []model.Visitor
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/visitors", nil)

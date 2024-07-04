@@ -14,7 +14,7 @@ type AccommodationTypeList struct {
 	} `json:"clientAccommodation"`
 }
 
-func (c *Client) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
+func (c *ApiClient) GetAccommodationTypes(ctx Context) ([]model.RefData, error) {
 	endpoint := "/api/v1/reference-data?filter=clientAccommodation"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)

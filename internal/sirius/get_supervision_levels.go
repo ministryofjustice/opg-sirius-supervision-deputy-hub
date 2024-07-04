@@ -14,7 +14,7 @@ type SupervisionLevelList struct {
 	} `json:"supervisionLevel"`
 }
 
-func (c *Client) GetSupervisionLevels(ctx Context) ([]model.RefData, error) {
+func (c *ApiClient) GetSupervisionLevels(ctx Context) ([]model.RefData, error) {
 	endpoint := "/api/v1/reference-data?filter=supervisionLevel"
 
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)

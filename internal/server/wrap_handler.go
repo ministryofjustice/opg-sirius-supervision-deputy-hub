@@ -68,7 +68,7 @@ type Handler interface {
 	render(app AppVars, w http.ResponseWriter, r *http.Request) error
 }
 
-func wrapHandler(logger *slog.Logger, client DeputyHubClient, tmplError Template, envVars EnvironmentVars) func(next Handler) http.Handler {
+func wrapHandler(client DeputyHubClient, logger *slog.Logger, tmplError Template, envVars EnvironmentVars) func(next Handler) http.Handler {
 	return func(next Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			vars, err := NewAppVars(client, r, envVars)

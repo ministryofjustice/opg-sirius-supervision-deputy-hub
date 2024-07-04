@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetPdrOutcomeTypes(ctx Context) ([]model.PdrOutcomeType, error) {
+func (c *ApiClient) GetPdrOutcomeTypes(ctx Context) ([]model.PdrOutcomeType, error) {
 	var v []model.PdrOutcomeType
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/pdrOutcome", nil)

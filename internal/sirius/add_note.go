@@ -14,7 +14,7 @@ type addNoteRequest struct {
 	NoteType string `json:"noteType"`
 }
 
-func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int, deputyType string) error {
+func (c *ApiClient) AddNote(ctx Context, title, note string, deputyId, userId int, deputyType string) error {
 	var noteType = getNoteType(deputyType)
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addNoteRequest{

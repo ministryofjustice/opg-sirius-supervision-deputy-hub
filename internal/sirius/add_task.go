@@ -15,7 +15,7 @@ type addTask struct {
 	AssigneeId int    `json:"assigneeId"`
 }
 
-func (c *Client) AddTask(ctx Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {
+func (c *ApiClient) AddTask(ctx Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addTask{
 		TaskType:   taskType,

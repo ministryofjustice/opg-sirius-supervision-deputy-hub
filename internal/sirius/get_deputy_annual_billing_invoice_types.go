@@ -10,7 +10,7 @@ type DeputyAnnualBillingInvoiceTypes struct {
 	Label  string `json:"label"`
 }
 
-func (c *Client) GetDeputyAnnualInvoiceBillingTypes(ctx Context) ([]DeputyAnnualBillingInvoiceTypes, error) {
+func (c *ApiClient) GetDeputyAnnualInvoiceBillingTypes(ctx Context) ([]DeputyAnnualBillingInvoiceTypes, error) {
 	var v []DeputyAnnualBillingInvoiceTypes
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/annualBillingInvoice", nil)

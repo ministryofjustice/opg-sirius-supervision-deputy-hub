@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetVisitOutcomeTypes(ctx Context) ([]model.VisitOutcomeType, error) {
+func (c *ApiClient) GetVisitOutcomeTypes(ctx Context) ([]model.VisitOutcomeType, error) {
 	var v []model.VisitOutcomeType
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/visitOutcome", nil)

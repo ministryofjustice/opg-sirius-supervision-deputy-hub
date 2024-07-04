@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) UpdateContact(ctx Context, deputyId int, contactId int, manageContactForm ContactForm) error {
+func (c *ApiClient) UpdateContact(ctx Context, deputyId int, contactId int, manageContactForm ContactForm) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(manageContactForm)
 	if err != nil {

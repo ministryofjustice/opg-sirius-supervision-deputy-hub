@@ -70,7 +70,7 @@ type ClientListParams struct {
 	SupervisionLevels  []string
 }
 
-func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
+func (c *ApiClient) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
 
 	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
