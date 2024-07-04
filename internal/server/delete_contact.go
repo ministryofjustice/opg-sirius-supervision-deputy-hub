@@ -1,7 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
+	"strconv"
 )
 
 type DeleteContact interface {
@@ -15,39 +18,39 @@ type DeleteContactVars struct {
 	AppVars
 }
 
-//func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler {
-//	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
-//		ctx := getContext(r)
-//		routeVars := mux.Vars(r)
-//		deputyId, _ := strconv.Atoi(routeVars["id"])
-//		contactId, _ := strconv.Atoi(routeVars["contactId"])
-//
-//		appVars.PageName = "Delete contact"
-//		vars := DeleteContactVars{
-//			AppVars: appVars,
-//		}
-//
-//		contact, err := client.GetContactById(ctx, deputyId, contactId)
-//		if err != nil {
-//			return err
-//		}
-//
-//		switch r.Method {
-//		case http.MethodGet:
-//			vars.ContactName = contact.ContactName
-//
-//			return tmpl.ExecuteTemplate(w, "page", vars)
-//
-//		case http.MethodPost:
-//			err := client.DeleteContact(ctx, deputyId, contactId)
-//
-//			if err != nil {
-//				return err
-//			}
-//
-//			return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact&contactName=%s", deputyId, contact.ContactName))
-//		default:
-//			return StatusError(http.StatusMethodNotAllowed)
-//		}
-//	}
-//}
+type DeleteContactHandler struct {
+	router
+}
+
+func (h *DeleteContactHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+
+	deputyId, _ := strconv.Atoi(r.PathValue("deputyId"))
+	contactId, _ := strconv.Atoi(r.PathValue("contactId"))
+
+	v.PageName = "Delete contact"
+	vars := DeleteContactVars{
+		AppVars: v,
+	}
+
+	contact, err := h.Client().GetContactById(ctx, deputyId, contactId)
+	if err != nil {
+		return err
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		vars.ContactName = contact.ContactName
+		return h.execute(w, r, vars, v)
+
+	case http.MethodPost:
+		err := h.Client().DeleteContact(ctx, deputyId, contactId)
+		if err != nil {
+			return err
+		}
+		return Redirect(fmt.Sprintf("/%d/contacts?success=deletedContact&contactName=%s", deputyId, contact.ContactName))
+
+	default:
+		return StatusError(http.StatusMethodNotAllowed)
+	}
+}

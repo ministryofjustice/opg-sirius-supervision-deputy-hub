@@ -15,9 +15,15 @@ type ApiClient interface {
 	DeputyHubClient
 	//DeputyHubInformation
 	//DeputyHubClientInformation
-	DeputyHubContactInformation
-	//DeputyHubEventInformation
-	//DeputyHubNotesInformation
+	Contacts
+	DeleteContact
+	ManageContact
+	Notes
+	Tasks
+	AddTask
+	ManageTasks
+	CompleteTask
+	Timeline
 	//EditDeputyHubInformation
 	//ChangeECMInformation
 	//FirmInformation
@@ -27,13 +33,8 @@ type ApiClient interface {
 	//AddAssuranceClient
 	//GetAssurancesClient
 	//ManageAssuranceClient
-	ManageContact
-	//DeleteContact
 	//DeleteDeputy
-	//AddTasksClient
-	//TasksClient
-	//ManageTasks
-	//CompleteTask
+
 }
 
 type Template interface {
@@ -53,65 +54,35 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("GET /{deputyId}/contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["contacts.gotmpl"], partial: "contacts"}}))
 	mux.Handle("GET /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("GET /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("POST /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("GET /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
+	mux.Handle("POST /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
 
-	//router := mux.NewRouter().StrictSlash(true)
-	//router.Handle("/health-check", healthCheck())
-	//
-	//pageRouter := router.PathPrefix("/{id}").Subrouter()
-	//pageRouter.Use(telemetry.Middleware(logger))
-	//
+	mux.Handle("GET /{deputyId}/timeline", wrap(&TimelineHandler{&route{client: client, tmpl: templates["timeline.gotmpl"], partial: "timeline"}}))
+
+	mux.Handle("GET /{deputyId}/notes", wrap(&NotesHandler{&route{client: client, tmpl: templates["notes.gotmpl"], partial: "notes"}}))
+	mux.Handle("GET /{deputyId}/notes/add-note", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
+	mux.Handle("POST /{deputyId}/notes/add-note", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
+
+	mux.Handle("GET /{deputyId}/tasks", wrap(&TasksHandler{&route{client: client, tmpl: templates["tasks.gotmpl"], partial: "tasks"}}))
+	mux.Handle("GET /{deputyId}/tasks/add-task", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
+	mux.Handle("POST /{deputyId}/tasks/add-task", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
+	mux.Handle("GET /{deputyId}/tasks/{taskId}", wrap(&ManageTaskHandler{&route{client: client, tmpl: templates["manage-task.gotmpl"], partial: "manage-task"}}))
+	mux.Handle("POST /{deputyId}/tasks/{taskId}", wrap(&ManageTaskHandler{&route{client: client, tmpl: templates["manage-task.gotmpl"], partial: "manage-task"}}))
+	mux.Handle("GET /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
+	mux.Handle("POST /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
+
 	//pageRouter.Handle("",
 	//	wrap(
 	//		renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
 	//
-	//pageRouter.Handle("/contacts",
-	//	wrap(
-	//		renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
-	//
-	//pageRouter.Handle("/contacts/add-contact",
-	//	wrap(
-	//		renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
-	//
-	//pageRouter.Handle("/contacts/{contactId}",
-	//	wrap(
-	//		renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
-	//
-	//pageRouter.Handle("/contacts/{contactId}/delete",
-	//	wrap(
-	//		renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
-	//
+
 	//pageRouter.Handle("/clients",
 	//	wrap(
 	//		renderTemplateForClientTab(client, templates["clients.gotmpl"])))
 	//
-	//pageRouter.Handle("/timeline",
-	//	wrap(
-	//		renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
-	//
-	//pageRouter.Handle("/notes",
-	//	wrap(
-	//		renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
-	//
-	//pageRouter.Handle("/notes/add-note",
-	//	wrap(
-	//		renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
-	//
-	//pageRouter.Handle("/tasks",
-	//	wrap(
-	//		renderTemplateForTasks(client, templates["tasks.gotmpl"])))
-	//
-	//pageRouter.Handle("/tasks/add-task",
-	//	wrap(
-	//		renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
-	//
-	//pageRouter.Handle("/tasks/{taskId}",
-	//	wrap(
-	//		renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
-	//
-	//pageRouter.Handle("/tasks/complete/{taskId}",
-	//	wrap(
-	//		renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
-	//
+
 	//pageRouter.Handle("/manage-team-details",
 	//	wrap(
 	//		renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))

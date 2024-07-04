@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
+	"net/http"
+	"strconv"
 )
 
 type ManageTasks interface {
@@ -22,87 +25,88 @@ type manageTaskVars struct {
 	AppVars
 }
 
-//func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
-//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-//		ctx := getContext(r)
-//		routeVars := mux.Vars(r)
-//		taskId, _ := strconv.Atoi(routeVars["taskId"])
-//
-//		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyType())
-//		if err != nil {
-//			return err
-//		}
-//
-//		taskDetails, err := client.GetTask(ctx, taskId)
-//		if err != nil {
-//			return err
-//		}
-//
-//		taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
-//		taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
-//
-//		assignees, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
-//		if err != nil {
-//			return err
-//		}
-//
-//		app.PageName = "Manage " + taskDetails.Type + " Task"
-//
-//		vars := manageTaskVars{
-//			AppVars:           app,
-//			TaskDetails:       taskDetails,
-//			Assignees:         assignees,
-//			IsCurrentAssignee: true,
-//		}
-//
-//		switch r.Method {
-//		case http.MethodGet:
-//			return tmpl.ExecuteTemplate(w, "page", vars)
-//
-//		case http.MethodPost:
-//			var (
-//				dueDate    = r.PostFormValue("duedate")
-//				notes      = r.PostFormValue("notes")
-//				ecm        = r.PostFormValue("assignedto")
-//				assignedTo = r.PostFormValue("select-assignedto")
-//			)
-//
-//			var assigneeId int
-//			if ecm == "other" {
-//				assigneeId, _ = strconv.Atoi(assignedTo)
-//			} else {
-//				assigneeId, _ = strconv.Atoi(ecm)
-//			}
-//
-//			if (dueDate == taskDetails.DueDate) && (notes == taskDetails.Notes) && (assigneeId == taskDetails.Assignee.Id) {
-//				updateTaskError := sirius.ValidationErrors{
-//					"Manage task": {"": "Please update the task information"},
-//				}
-//
-//				vars.Errors = util.RenameErrors(updateTaskError)
-//				return tmpl.ExecuteTemplate(w, "page", vars)
-//			}
-//
-//			err := client.UpdateTask(ctx, app.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
-//
-//			if verr, ok := err.(sirius.ValidationError); ok {
-//				vars.Errors = RenameErrors(verr.Errors, app.DeputyDetails.DeputyType.Label)
-//				vars.TaskDetails, vars.IsCurrentAssignee = RetainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
-//
-//				w.WriteHeader(http.StatusBadRequest)
-//				return tmpl.ExecuteTemplate(w, "page", vars)
-//			}
-//			if err != nil {
-//				return err
-//			}
-//
-//			return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", app.DeputyId(), taskDetails.Type))
-//
-//		default:
-//			return StatusError(http.StatusMethodNotAllowed)
-//		}
-//	}
-//}
+type ManageTaskHandler struct {
+	router
+}
+
+func (h *ManageTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+	taskId, _ := strconv.Atoi(r.PathValue("taskId"))
+
+	taskTypes, err := h.Client().GetTaskTypesForDeputyType(ctx, v.DeputyType())
+	if err != nil {
+		return err
+	}
+
+	taskDetails, err := h.Client().GetTask(ctx, taskId)
+	if err != nil {
+		return err
+	}
+
+	taskDetails.DueDate = sirius.FormatDateTime(sirius.SiriusDate, taskDetails.DueDate, sirius.IsoDate)
+	taskDetails.Type = getTaskName(taskDetails.Type, taskTypes)
+
+	assignees, err := h.Client().GetDeputyTeamMembers(ctx, v.DefaultPaTeam, v.DeputyDetails)
+	if err != nil {
+		return err
+	}
+
+	v.PageName = "Manage " + taskDetails.Type + " Task"
+
+	vars := manageTaskVars{
+		AppVars:           v,
+		TaskDetails:       taskDetails,
+		Assignees:         assignees,
+		IsCurrentAssignee: true,
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		return h.execute(w, r, vars, vars.AppVars)
+
+	case http.MethodPost:
+		var (
+			dueDate    = r.PostFormValue("duedate")
+			notes      = r.PostFormValue("notes")
+			ecm        = r.PostFormValue("assignedto")
+			assignedTo = r.PostFormValue("select-assignedto")
+		)
+
+		var assigneeId int
+		if ecm == "other" {
+			assigneeId, _ = strconv.Atoi(assignedTo)
+		} else {
+			assigneeId, _ = strconv.Atoi(ecm)
+		}
+
+		if (dueDate == taskDetails.DueDate) && (notes == taskDetails.Notes) && (assigneeId == taskDetails.Assignee.Id) {
+			updateTaskError := sirius.ValidationErrors{
+				"Manage task": {"": "Please update the task information"},
+			}
+
+			vars.Errors = util.RenameErrors(updateTaskError)
+			return h.execute(w, r, vars, vars.AppVars)
+		}
+
+		err := h.Client().UpdateTask(ctx, v.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
+
+		if verr, ok := err.(sirius.ValidationError); ok {
+			vars.Errors = RenameErrors(verr.Errors, v.DeputyDetails.DeputyType.Label)
+			vars.TaskDetails, vars.IsCurrentAssignee = RetainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
+
+			w.WriteHeader(http.StatusBadRequest)
+			return h.execute(w, r, vars, vars.AppVars)
+		}
+		if err != nil {
+			return err
+		}
+
+		return Redirect(fmt.Sprintf("/%d/tasks?success=manage&taskType=%s", v.DeputyId(), taskDetails.Type))
+
+	default:
+		return StatusError(http.StatusMethodNotAllowed)
+	}
+}
 
 func GetAssigneeFromId(id int, teamMembers []model.TeamMember) model.Assignee {
 	var teams []model.Team

@@ -1,11 +1,13 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
-type TasksClient interface {
+type Tasks interface {
 	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
 	GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error)
 }
@@ -20,48 +22,46 @@ type TasksVars struct {
 	AppVars
 }
 
-//func renderTemplateForTasks(client TasksClient, tmpl Template) Handler {
-//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-//		if r.Method != http.MethodGet {
-//			return StatusError(http.StatusMethodNotAllowed)
-//		}
-//		ctx := getContext(r)
-//
-//		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyType())
-//		if err != nil {
-//			return err
-//		}
-//
-//		taskType := r.URL.Query().Get("taskType")
-//
-//		var successMessage string
-//		switch r.URL.Query().Get("success") {
-//		case "add":
-//			successMessage = fmt.Sprintf("%s task added", taskType)
-//		case "manage":
-//			successMessage = fmt.Sprintf("%s task updated", taskType)
-//		case "complete":
-//			successMessage = fmt.Sprintf("%s task completed", taskType)
-//		default:
-//			successMessage = ""
-//		}
-//
-//		taskList, err := client.GetTasks(ctx, app.DeputyId())
-//		if err != nil {
-//			return err
-//		}
-//
-//		app.PageName = "Deputy tasks"
-//
-//		vars := TasksVars{
-//			AppVars:        app,
-//			TaskTypes:      taskTypes,
-//			TaskList:       taskList,
-//			SuccessMessage: successMessage,
-//		}
-//
-//		return tmpl.ExecuteTemplate(w, "page", vars)
-//
-//	}
-//
-//}
+type TasksHandler struct {
+	router
+}
+
+func (h *TasksHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+
+	taskTypes, err := h.Client().GetTaskTypesForDeputyType(ctx, v.DeputyType())
+	if err != nil {
+		return err
+	}
+
+	taskType := r.URL.Query().Get("taskType")
+
+	taskList, err := h.Client().GetTasks(ctx, v.DeputyId())
+	if err != nil {
+		return err
+	}
+
+	var successMessage string
+
+	switch r.URL.Query().Get("success") {
+	case "add":
+		successMessage = fmt.Sprintf("%s task added", taskType)
+	case "manage":
+		successMessage = fmt.Sprintf("%s task updated", taskType)
+	case "complete":
+		successMessage = fmt.Sprintf("%s task completed", taskType)
+	default:
+		successMessage = ""
+	}
+
+	v.PageName = "Deputy tasks"
+
+	vars := TasksVars{
+		AppVars:        v,
+		TaskTypes:      taskTypes,
+		TaskList:       taskList,
+		SuccessMessage: successMessage,
+	}
+
+	return h.execute(w, r, vars, v)
+}

@@ -1,15 +1,19 @@
 package server
 
 import (
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
+	"net/http"
+	"strings"
 )
 
-type DeputyHubNotesInformation interface {
+type Notes interface {
 	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
 	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
 }
 
-type deputyHubNotesVars struct {
+type notesVars struct {
 	DeputyNotes    sirius.DeputyNoteCollection
 	SuccessMessage string
 	AppVars
@@ -21,63 +25,63 @@ type addNoteVars struct {
 	AppVars
 }
 
-//func renderTemplateForDeputyHubNotes(client DeputyHubNotesInformation, tmpl Template) Handler {
-//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-//		ctx := getContext(r)
-//
-//		switch r.Method {
-//		case http.MethodGet:
-//
-//			deputyNotes, err := client.GetDeputyNotes(ctx, app.DeputyId())
-//			if err != nil {
-//				return err
-//			}
-//
-//			successMessage := ""
-//			if r.URL.Query().Get("success") == "true" {
-//				successMessage = "Note added"
-//			}
-//
-//			app.PageName = "Notes"
-//			if strings.Contains(app.Path, "add-note") {
-//				app.PageName = "Add a note"
-//			}
-//
-//			vars := deputyHubNotesVars{
-//				DeputyNotes:    deputyNotes,
-//				SuccessMessage: successMessage,
-//				AppVars:        app,
-//			}
-//
-//			return tmpl.ExecuteTemplate(w, "page", vars)
-//
-//		case http.MethodPost:
-//			var vars addNoteVars
-//			var (
-//				title = r.PostFormValue("title")
-//				note  = r.PostFormValue("note")
-//			)
-//
-//			err := client.AddNote(ctx, title, note, app.DeputyId(), app.UserDetails.ID, app.DeputyType())
-//
-//			if verr, ok := err.(sirius.ValidationError); ok {
-//				vars = addNoteVars{
-//					Title:   title,
-//					Note:    note,
-//					AppVars: app,
-//				}
-//				vars.Errors = util.RenameErrors(verr.Errors)
-//
-//				w.WriteHeader(http.StatusBadRequest)
-//				return tmpl.ExecuteTemplate(w, "page", vars)
-//			} else if err != nil {
-//				return err
-//			}
-//
-//			return Redirect(fmt.Sprintf("/%d/notes?success=true", app.DeputyId()))
-//
-//		default:
-//			return StatusError(http.StatusMethodNotAllowed)
-//		}
-//	}
-//}
+type NotesHandler struct {
+	router
+}
+
+func (h *NotesHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+	v.PageName = "Notes"
+	if strings.Contains(v.Path, "add-note") {
+		v.PageName = "Add a note"
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+
+		deputyNotes, err := h.Client().GetDeputyNotes(ctx, v.DeputyId())
+		if err != nil {
+			return err
+		}
+
+		successMessage := ""
+		if r.URL.Query().Get("success") == "true" {
+			successMessage = "Note added"
+		}
+
+		vars := notesVars{
+			DeputyNotes:    deputyNotes,
+			SuccessMessage: successMessage,
+			AppVars:        v,
+		}
+
+		return h.execute(w, r, vars, v)
+
+	case http.MethodPost:
+		var vars addNoteVars
+		var (
+			title = r.PostFormValue("title")
+			note  = r.PostFormValue("note")
+		)
+
+		err := h.Client().AddNote(ctx, title, note, v.DeputyId(), v.UserDetails.ID, v.DeputyType())
+
+		if verr, ok := err.(sirius.ValidationError); ok {
+			vars = addNoteVars{
+				Title:   title,
+				Note:    note,
+				AppVars: v,
+			}
+			vars.Errors = util.RenameErrors(verr.Errors)
+
+			w.WriteHeader(http.StatusBadRequest)
+			return h.execute(w, r, vars, v)
+		} else if err != nil {
+			return err
+		}
+
+		return Redirect(fmt.Sprintf("/%d/notes?success=true", v.DeputyId()))
+	default:
+		return StatusError(http.StatusMethodNotAllowed)
+	}
+}
