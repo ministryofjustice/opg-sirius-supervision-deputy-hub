@@ -51,9 +51,8 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux := http.NewServeMux()
 
 	mux.Handle("GET /{deputyId}/contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["contacts.gotmpl"], partial: "contacts"}}))
-	mux.Handle("GET /contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
-	mux.Handle("GET /contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
-	mux.Handle("POST /contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("GET /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("POST /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 
 	//router := mux.NewRouter().StrictSlash(true)
 	//router.Handle("/health-check", healthCheck())
@@ -166,9 +165,6 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	//mux.Handle("/stylesheets/", static)
 
 	return otelhttp.NewHandler(http.StripPrefix(envVars.Prefix, securityheaders.Use(mux)), "supervision-deputy-hub")
-
-	//router.NotFoundHandler = wrap(notFoundHandler(templates["error.gotmpl"], envVars))
-
 }
 
 //func notFoundHandler(tmplError Template, envVars EnvironmentVars) Handler {

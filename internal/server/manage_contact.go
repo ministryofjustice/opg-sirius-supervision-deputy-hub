@@ -104,7 +104,7 @@ func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http
 			vars.IsMainContact = manageContactForm.IsMainContact
 			vars.IsNewContact = contactId == 0
 
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars, v)
 		}
 
 		if err != nil {

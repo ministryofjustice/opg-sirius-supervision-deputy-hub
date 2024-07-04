@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
@@ -54,11 +53,8 @@ func (h *ListContactsHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 		ContactList:    contactList,
 		SuccessMessage: successMessage,
 	}
-	fmt.Print("trying to render template")
-	fmt.Println("vars")
-	fmt.Println(vars)
 
-	return h.router.execute(w, r, vars, v)
+	return h.execute(w, r, vars, v)
 }
 
 //func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Template) Handler {
