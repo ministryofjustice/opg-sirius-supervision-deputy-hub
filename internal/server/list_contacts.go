@@ -57,7 +57,8 @@ func (h *ListContactsHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 	fmt.Print("trying to render template")
 	fmt.Println("vars")
 	fmt.Println(vars)
-	return h.execute(w, r, vars, vars.AppVars)
+
+	return h.router.execute(w, r, vars, v)
 }
 
 //func renderTemplateForContactTab(client DeputyHubContactInformation, tmpl Template) Handler {
