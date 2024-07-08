@@ -66,7 +66,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="pdr-outcome-{{ .Label }}"
                                            name="pdr-outcome" type="radio"
-                                           value="{{ .Label }}" {{ if ne $currentPdrOutcomeLabel "" }}{{ if eq $currentPdrOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                           value="{{ .Handle }}" {{ if ne $currentPdrOutcomeLabel "" }}{{ if eq $currentPdrOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
                                     <label class="govuk-label govuk-radios__label" for="pdr-outcome-{{ .Label }}">
                                         {{ .Label }}
                                     </label>
@@ -106,7 +106,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="visit-report-marked-as-{{ .Label }}"
                                            name="visit-report-marked-as" type="radio"
-                                           value="{{ .Label }}" {{ if ne $currentReportMarkedAsLabel "" }}{{ if eq $currentReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                           value="{{ .Handle }}" {{ if ne $currentReportMarkedAsLabel "" }}{{ if eq $currentReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
                                     <label class="govuk-label govuk-radios__label"
                                            for="visit-report-marked-as-{{ .Label }}">
                                         {{ .Label }}
