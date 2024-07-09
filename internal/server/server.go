@@ -33,6 +33,8 @@ type Client interface {
 	DeleteDeputy
 	AddTasksClient
 	TasksClient
+	DocumentsClient
+	AddDocumentClient
 	ManageTasks
 	CompleteTask
 }
@@ -101,6 +103,14 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 	pageRouter.Handle("/tasks/complete/{taskId}",
 		wrap(
 			renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
+
+	pageRouter.Handle("/documents",
+		wrap(
+			renderTemplateForDocuments(client, templates["documents.gotmpl"])))
+
+	pageRouter.Handle("/documents/add",
+		wrap(
+			renderTemplateForAddDocument(client, templates["add-document.gotmpl"])))
 
 	pageRouter.Handle("/manage-team-details",
 		wrap(

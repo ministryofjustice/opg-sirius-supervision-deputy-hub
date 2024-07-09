@@ -85,5 +85,4 @@ func TestAddFirmReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, 0, int)
-
 }

@@ -1,0 +1,142 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" .Errors }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 assurance-visit">
+            {{ .PageName }}
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form enctype="multipart/form-data" id="add-document-form" method="post" autocomplete="off">
+                <input type="hidden"
+                       name="xsrfToken"
+                       value="{{ .XSRFToken }}" />
+
+                <div class="govuk-form-group{{ if index .Errors "document-upload" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-document-upload">
+                        Upload the document (required)
+                    </label>
+                    {{ template "error-message" (index .Errors "document-upload") }}
+                    <input id="f-document-upload"
+                           class="govuk-file-upload {{ if index .Errors "document-upload" }} govuk-input--error{{ end }}"
+                           name="document-upload"
+                           value=""
+                           type="file">
+                </div>
+
+                <div class="govuk-form-group{{ if index .Errors "documentType" }} govuk-form-group--error{{ end }}">
+                    <fieldset class="govuk-fieldset" aria-describedby="type" id="f-documentType">
+                        <legend class="govuk-fieldset__legend">
+                            Type of document (required)
+                        </legend>
+                        {{ template "error-message" (index .Errors "documentType") }}
+
+
+                        <div class="govuk-radios">
+                            {{ $selectedType := .DocumentType }}
+                            {{ range $i, $documentType := .DocumentTypes }}
+                                <div class="govuk-radios__item">
+                                     <div class="govuk-radios">
+                                         <div class="govuk-radios__item">
+                                             <input class="govuk-radios__input" id="type-{{.Handle}}"
+                                                        name="documentType" type="radio"
+                                                        value="{{.Handle}}"
+                                                        {{ if eq .Handle $selectedType }}checked{{end}}/>
+                                                    <label class="govuk-label govuk-radios__label" for="type-{{.Handle}}">
+                                                        {{.Label}}
+                                                    </label>
+                                             </input>
+                                         </div>
+                                     </div>
+                                </div>
+                            {{end}}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group{{ if index .Errors "documentDirection" }} govuk-form-group--error{{ end }}">
+                    <fieldset class="govuk-fieldset" aria-describedby="direction" id="f-documentDirection">
+                        <legend class="govuk-fieldset__legend">
+                            Direction (required)
+                        </legend>
+                        {{ template "error-message" (index .Errors "documentDirection") }}
+
+                        <div class="govuk-radios">
+                            {{ $selectedDirection := .Direction }}
+                            {{ range $i, $documentDirection := .DocumentDirectionRefData }}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="direction-{{.Handle}}"
+                                           name="documentDirection" type="radio"
+                                           value="{{.Handle}}"
+                                           {{ if eq .Handle $selectedDirection }}checked{{end}}
+                                            />
+                                    <label class="govuk-label govuk-radios__label" for="direction-{{.Handle}}">
+                                        {{.Label}}
+                                    </label>
+                                </div>
+                            {{end}}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="govuk-form-group{{ if index .Errors "documentDate" }} govuk-form-group--error{{ end }}">
+                    <label class="govuk-label" for="f-documentDate">
+                        Date (required)
+                    </label>
+                    {{ template "error-message" (index .Errors "documentDate") }}
+                    <input id="f-documentDate"
+                           class="govuk-input govuk-input--width-10 {{ if index .Errors "documentDate" }} govuk-input--error{{ end }}"
+                           name="documentDate"
+                           value="{{ .Date }}"
+                           type="date">
+                </div>
+
+                <div class="govuk-form-group{{ if index .Errors "notes" }} govuk-form-group--error{{ end }}">
+                    <div
+                        class="govuk-character-count"
+                        data-module="govuk-character-count"
+                        data-maxlength="1000">
+                        <div class="govuk-form-group">
+                            <label class="govuk-label" for="f-notes">
+                                Notes
+                            </label>
+                            {{ template "error-message" (index .Errors "notes") }}
+                            <textarea
+                                class="govuk-textarea govuk-js-character-count{{ if index .Errors "notes" }} govuk-input--error{{ end }}"
+                                id="f-notes"
+                                name="notes"
+                                rows="10"
+                                aria-describedby="f-notes-info notes-hint"
+                            >{{ .Notes }}</textarea>
+                            <div
+                                id="f-notes-info"
+                                class="govuk-hint govuk-character-count__message"
+                                aria-live="polite">
+                                You have 1,000 characters remaining
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        id="add-document-submit-form"
+                        type="submit"
+                        class="govuk-button"
+                        data-module="govuk-button">
+                        Save document
+                    </button>
+                   <a
+                       id="add-document-cancel-button"
+                       class="govuk-link"
+                       href="{{ prefix (printf "/%d/documents" .DeputyDetails.ID) }}">
+                       Cancel
+                   </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{{ end }}
