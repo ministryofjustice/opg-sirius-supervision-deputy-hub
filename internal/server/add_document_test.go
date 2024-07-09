@@ -79,7 +79,7 @@ func TestPostAddDocument(t *testing.T) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
-	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
+	body, _ = CreateAddDocumentFormBody(body, writer, false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -111,7 +111,7 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
+	body, _ = CreateAddDocumentFormBody(body, writer, false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -148,7 +148,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", false)
+			body, _ = CreateAddDocumentFormBody(body, writer, false)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -165,7 +165,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 
 	expectedError := sirius.ValidationErrors{
 		"document-upload": {
-			"": "Error uploading the file",
+			"": "Select a file to attach",
 		},
 	}
 
@@ -177,7 +177,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 	}
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateAddDocumentFormBody(body, writer, "GENERAL", "OUTGOING", "01/01/2024", "", true)
+	body, _ = CreateAddDocumentFormBody(body, writer, true)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -202,7 +202,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 	assert.Nil(returnedError)
 }
 
-func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentType, direction, date, notes string, documentUploadError bool) (*bytes.Buffer, error) {
+func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentUploadError bool) (*bytes.Buffer, error) {
 	if documentUploadError {
 		_, _ = writer.CreateFormFile("document-upload", "")
 	} else {
@@ -210,44 +210,38 @@ func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, doc
 		_, _ = io.Copy(dataPart, strings.NewReader("blarg"))
 	}
 
-	if documentType != "" {
-		typeWriter, err := writer.CreateFormField("documentType")
-		if err != nil {
-			return nil, err
-		}
-		_, err = typeWriter.Write([]byte(documentType))
-		if err != nil {
-			return nil, err
-		}
+	typeWriter, err := writer.CreateFormField("documentType")
+	if err != nil {
+		return nil, err
+	}
+	_, err = typeWriter.Write([]byte("GENERAL"))
+	if err != nil {
+		return nil, err
 	}
 
-	if direction != "" {
-		directionWriter, err := writer.CreateFormField("documentDirection")
-		if err != nil {
-			return nil, err
-		}
-		_, err = directionWriter.Write([]byte(direction))
-		if err != nil {
-			return nil, err
-		}
+	directionWriter, err := writer.CreateFormField("documentDirection")
+	if err != nil {
+		return nil, err
+	}
+	_, err = directionWriter.Write([]byte("OUTGOING"))
+	if err != nil {
+		return nil, err
 	}
 
-	if date != "" {
-		dateWriter, err := writer.CreateFormField("documentDate")
-		if err != nil {
-			return nil, err
-		}
-		_, err = dateWriter.Write([]byte(date))
-		if err != nil {
-			return nil, err
-		}
+	dateWriter, err := writer.CreateFormField("documentDate")
+	if err != nil {
+		return nil, err
+	}
+	_, err = dateWriter.Write([]byte("01/01/2024"))
+	if err != nil {
+		return nil, err
 	}
 
 	notesWriter, err := writer.CreateFormField("notes")
 	if err != nil {
 		return nil, err
 	}
-	_, err = notesWriter.Write([]byte(notes))
+	_, err = notesWriter.Write([]byte(""))
 	if err != nil {
 		return nil, err
 	}

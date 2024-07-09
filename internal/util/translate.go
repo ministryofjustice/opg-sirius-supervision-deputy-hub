@@ -174,6 +174,7 @@ var validationMappings = map[string]map[string]pair{
 		"isEmpty": pair{"documentDirection", "Select the document direction"},
 	},
 	"documentDate": {
+		"isEmpty":     pair{"documentDate", "Enter a date"},
 		"invalid-lte": pair{"documentDate", "The date must be today or in the past"},
 	},
 }

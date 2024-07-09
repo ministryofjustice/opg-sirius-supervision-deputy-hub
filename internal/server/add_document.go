@@ -58,7 +58,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 
 			file, handler, err := r.FormFile("document-upload")
 			if err != nil {
-				vars.Errors["document-upload"] = map[string]string{"": "Error uploading the file"}
+				vars.Errors["document-upload"] = map[string]string{"": "Select a file to attach"}
 			}
 
 			documentType := r.PostFormValue("documentType")

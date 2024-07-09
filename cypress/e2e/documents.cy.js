@@ -59,8 +59,8 @@ describe("Documents", () => {
         it("shows error messages when submitting invalid data", () => {
             cy.get("#add-a-document-button").contains("Add a document").click();
             cy.get('#add-document-submit-form').click();
-            cy.get('.govuk-error-summary').contains("Error uploading the file")
-            cy.get('#add-document-form > :nth-child(2)').contains("Error uploading the file")
+            cy.get('.govuk-error-summary').contains("Select a file to attach")
+            cy.get('#add-document-form > :nth-child(2)').contains("Select a file to attach")
         });
     });
 });
