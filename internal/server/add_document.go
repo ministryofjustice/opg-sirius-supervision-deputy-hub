@@ -7,6 +7,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"mime/multipart"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -28,6 +29,7 @@ type AddDocumentVars struct {
 
 func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
+		var wg sync.WaitGroup
 		app.PageName = "Add a document"
 
 		vars := AddDocumentVars{
@@ -35,16 +37,27 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			Date:    time.Now().Format("2006-01-02"),
 		}
 
-		documentDirectionRefData, err := client.GetRefData(getContext(r), "/documentDirection")
+		var documentDirectionRefData []model.RefData
+		var documentTypes []model.RefData
+		var err error
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			documentDirectionRefData, err = client.GetRefData(getContext(r), "/documentDirection")
+		}()
+
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			documentTypes, err = client.GetRefData(getContext(r), "?filter=noteType:deputy")
+		}()
+
+		wg.Wait()
 		if err != nil {
 			return err
 		}
 		vars.DocumentDirectionRefData = documentDirectionRefData
-
-		documentTypes, err := client.GetRefData(getContext(r), "?filter=noteType:deputy")
-		if err != nil {
-			return err
-		}
 		vars.DocumentTypes = documentTypes
 
 		if r.Method == http.MethodPost {

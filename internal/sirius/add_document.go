@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"io"
 	"mime/multipart"
@@ -74,7 +75,7 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, "/api/public/v1/documents/deputies", &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/documents", deputyId), &body)
 
 	if err != nil {
 		return err
