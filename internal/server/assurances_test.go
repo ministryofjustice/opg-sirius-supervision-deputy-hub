@@ -31,7 +31,7 @@ func TestGetAssurances_LatestNotReviewed(t *testing.T) {
 	client := &mockGetAssurancesClient{}
 	template := &mockTemplates{}
 
-	client.assurances = append(client.assurances, model.Assurance{Type: model.AssuranceType{
+	client.assurances = append(client.assurances, model.Assurance{Type: model.RefData{
 		Handle: "VISIT",
 		Label:  "Assurance",
 	}})
@@ -62,14 +62,14 @@ func TestGetAssurances_LatestReviewed(t *testing.T) {
 					Label:  "RED",
 					Handle: "RED",
 				},
-				Type: model.AssuranceType{
+				Type: model.RefData{
 					Handle: "VISIT",
 					Label:  "Assurance",
 				},
 			},
 			{
 				ReportReviewDate: "01/01/2021",
-				Type: model.AssuranceType{
+				Type: model.RefData{
 					Handle: "VISIT",
 					Label:  "Assurance",
 				},
@@ -116,7 +116,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Label:  "RED",
 						Handle: "RED",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -131,7 +131,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			assurances: []model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -149,13 +149,13 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Label:  "RED",
 						Handle: "RED",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
 				},
 				{
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -168,7 +168,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest PDR visit has no review date",
 			[]model.Assurance{
 				{
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -183,7 +183,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			[]model.Assurance{
 				{
 					ReportReviewDate: "01/01/2022",
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -203,7 +203,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 						Label:  "RED",
 						Handle: "RED",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -216,7 +216,7 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest PDR visit not reviewed but previous one is",
 			[]model.Assurance{
 				{
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -236,11 +236,11 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest visit is cancelled",
 			[]model.Assurance{
 				{
-					VisitOutcome: model.VisitOutcomeType{
+					VisitOutcome: model.RefData{
 						Label:  "Cancelled",
 						Handle: "CANCELLED",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -254,11 +254,11 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest PDR visit is not received",
 			[]model.Assurance{
 				{
-					PdrOutcome: model.PdrOutcomeType{
+					PdrOutcome: model.RefData{
 						Label:  "Not received",
 						Handle: "NOT_RECEIVED",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
@@ -276,11 +276,11 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest visit is not cancelled",
 			[]model.Assurance{
 				{
-					VisitOutcome: model.VisitOutcomeType{
+					VisitOutcome: model.RefData{
 						Label:  "Successful",
 						Handle: "SUCCESSFUL",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "VISIT",
 						Label:  "Assurance",
 					},
@@ -294,11 +294,11 @@ func TestIsCurrentVisitReviewedOrCancelled(t *testing.T) {
 			"Latest PDR visit is not cancelled",
 			[]model.Assurance{
 				{
-					PdrOutcome: model.PdrOutcomeType{
+					PdrOutcome: model.RefData{
 						Label:  "Successful",
 						Handle: "SUCCESSFUL",
 					},
-					Type: model.AssuranceType{
+					Type: model.RefData{
 						Handle: "PDR",
 						Label:  "PDR",
 					},
