@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -17,22 +18,22 @@ type mockManageDeputyImportantInformation struct {
 	mock.Mock
 }
 
-func (m *mockManageDeputyImportantInformation) GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error) {
+func (m *mockManageDeputyImportantInformation) GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error) {
 	args := m.Called(ctx)
 
-	return args.Get(0).([]sirius.DeputyAnnualBillingInvoiceTypes), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
-func (m *mockManageDeputyImportantInformation) GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error) {
+func (m *mockManageDeputyImportantInformation) GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error) {
 	args := m.Called(ctx)
 
-	return args.Get(0).([]sirius.DeputyBooleanTypes), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
-func (m *mockManageDeputyImportantInformation) GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error) {
+func (m *mockManageDeputyImportantInformation) GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error) {
 	args := m.Called(ctx)
 
-	return args.Get(0).([]sirius.DeputyReportSystemTypes), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
 func (m *mockManageDeputyImportantInformation) UpdateImportantInformation(ctx sirius.Context, deputyID int, form sirius.ImportantInformationDetails) error {
@@ -49,9 +50,9 @@ func TestGetManageImportantInformation(t *testing.T) {
 		DeputyDetails: deputyDetails,
 		PageName:      "Manage important information",
 	}
-	invoiceTypes := []sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}
-	booleanTypes := []sirius.DeputyBooleanTypes{{Handle: "x", Label: "w"}}
-	reportTypes := []sirius.DeputyReportSystemTypes{{Handle: "x", Label: "z"}}
+	invoiceTypes := []model.RefData{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}
+	booleanTypes := []model.RefData{{Handle: "x", Label: "w"}}
+	reportTypes := []model.RefData{{Handle: "x", Label: "z"}}
 
 	client := &mockManageDeputyImportantInformation{}
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
@@ -135,9 +136,9 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
-			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]sirius.DeputyAnnualBillingInvoiceTypes{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}, nil)
-			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]sirius.DeputyBooleanTypes{}, nil)
-			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]sirius.DeputyReportSystemTypes{}, nil)
+			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]model.RefData{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}, nil)
+			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]model.RefData{}, nil)
+			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]model.RefData{}, nil)
 			client.On("UpdateImportantInformation", mock.Anything, 123, tc.importantInformationDetails).Return(nil)
 
 			template := &mockTemplates{}

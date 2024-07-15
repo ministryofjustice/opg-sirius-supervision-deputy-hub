@@ -1,0 +1,42 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.DocumentsClient*/ -}}
+{{ template "page" . }}
+
+{{ define "main" }}
+    {{ if .SuccessMessage }}
+        {{ template "success-banner" . }}
+    {{ end }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
+
+    <header>
+        <h1 class="govuk-heading-l govuk-!-margin-top-0 govuk-!-margin-bottom-0">
+            {{ .PageName }}
+        </h1>
+        <div class="moj-button-menu">
+            <div class="moj-button-menu__wrapper">
+                <a
+                    id="add-a-document-button"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
+                    href="{{ prefix (printf "/%d/documents/add" .DeputyDetails.ID) }}"
+                    role="button"
+                    draggable="false"
+                    data-module="govuk-button">
+                    Add a document
+                </a>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="govuk-grid-row govuk-!-margin-top-6">
+            <div id="table-column" class="govuk-grid-column-three-quarters">
+                <div class="govuk-grid-row">
+                    <div class="govuk-grid-column-full">
+                        <form method="post">
+                            {{ template "document-list" . }}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{{ end }}
