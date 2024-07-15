@@ -5,15 +5,16 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
+	"golang.org/x/sync/errgroup"
 	"mime/multipart"
 	"net/http"
-	"sync"
 	"time"
 )
 
 type AddDocumentClient interface {
 	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
-	GetRefData(ctx sirius.Context, refDataUrlType string) ([]model.RefData, error)
+	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
+	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
 }
 
 type AddDocumentVars struct {
@@ -29,36 +30,12 @@ type AddDocumentVars struct {
 
 func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		var wg sync.WaitGroup
 		app.PageName = "Add a document"
 
 		vars := AddDocumentVars{
 			AppVars: app,
 			Date:    time.Now().Format("2006-01-02"),
 		}
-
-		var documentDirectionRefData []model.RefData
-		var documentTypes []model.RefData
-		var err error
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			documentDirectionRefData, err = client.GetRefData(getContext(r), "/documentDirection")
-		}()
-
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			documentTypes, err = client.GetRefData(getContext(r), "?filter=noteType:deputy")
-		}()
-
-		wg.Wait()
-		if err != nil {
-			return err
-		}
-		vars.DocumentDirectionRefData = documentDirectionRefData
-		vars.DocumentTypes = documentTypes
 
 		if r.Method == http.MethodPost {
 			vars.Errors = sirius.ValidationErrors{}
@@ -102,8 +79,32 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument&filename=%s", app.DeputyId(), handler.Filename))
 		}
 
-		return tmpl.ExecuteTemplate(w, "page", vars)
+		ctx := getContext(r)
+		group, groupCtx := errgroup.WithContext(ctx.Context)
 
+		group.Go(func() error {
+			documentDirectionRefData, err := client.GetDocumentDirections(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.DocumentDirectionRefData = documentDirectionRefData
+			return nil
+		})
+
+		group.Go(func() error {
+			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.DocumentTypes = documentTypes
+			return nil
+		})
+
+		if err := group.Wait(); err != nil {
+			return err
+		}
+
+		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 
 }

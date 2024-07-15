@@ -93,7 +93,7 @@ func TestAddDocumentReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/public/v1/documents/deputies",
+		URL:    svr.URL + "/api/v1/deputies/68/documents",
 		Method: http.MethodPost,
 	}, err)
 }

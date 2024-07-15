@@ -59,7 +59,7 @@ func TestGetRefDataWithFilter(t *testing.T) {
 		},
 	}
 
-	accommodationTypes, err := client.GetRefData(getContext(nil), "?filter=clientAccommodation")
+	accommodationTypes, err := client.getRefData(getContext(nil), "?filter=clientAccommodation")
 
 	assert.Equal(t, expectedResponse, accommodationTypes)
 	assert.Equal(t, nil, err)
@@ -108,7 +108,7 @@ func TestGetRefDataWithoutFilter(t *testing.T) {
 		},
 	}
 
-	booleanTypes, err := client.GetRefData(getContext(nil), "/deputyBooleanType")
+	booleanTypes, err := client.getRefData(getContext(nil), "/deputyBooleanType")
 
 	assert.Equal(t, expectedResponse, booleanTypes)
 	assert.Equal(t, nil, err)
@@ -122,7 +122,7 @@ func TestGetRefDataReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	accommodationTypes, err := client.GetRefData(getContext(nil), "?filter=clientAccommodation")
+	accommodationTypes, err := client.getRefData(getContext(nil), "?filter=clientAccommodation")
 
 	assert.Equal(t, []model.RefData(nil), accommodationTypes)
 	assert.Equal(t, StatusError{
@@ -140,7 +140,7 @@ func TestTestGetRefDataReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	booleanTypes, err := client.GetRefData(getContext(nil), "/deputyBooleanType")
+	booleanTypes, err := client.getRefData(getContext(nil), "/deputyBooleanType")
 
 	assert.Equal(t, ErrUnauthorized, err)
 	assert.Equal(t, []model.RefData(nil), booleanTypes)

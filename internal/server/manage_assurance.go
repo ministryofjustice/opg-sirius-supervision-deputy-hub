@@ -16,13 +16,15 @@ import (
 type ManageAssuranceClient interface {
 	UpdateAssurance(ctx sirius.Context, manageAssuranceForm sirius.UpdateAssuranceDetails, deputyId, visitId int) error
 	GetVisitors(ctx sirius.Context) ([]model.Visitor, error)
-	GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error)
+	GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error)
+	GetVisitOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetPdrOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
 	GetAssuranceById(ctx sirius.Context, deputyId int, visitId int) (model.Assurance, error)
 }
 
 type ManageAssuranceVars struct {
 	Visitors          []model.Visitor
-	RagRatingTypes    []model.RefData
+	RagRatingTypes    []model.RAGRating
 	VisitOutcomeTypes []model.RefData
 	PdrOutcomeTypes   []model.RefData
 	Assurance         model.Assurance
@@ -36,8 +38,8 @@ func parseAssuranceForm(assuranceForm sirius.UpdateAssuranceDetails) model.Assur
 		VisitorAllocated:   assuranceForm.VisitorAllocated,
 		ReportDueDate:      assuranceForm.ReportDueDate,
 		ReportReceivedDate: assuranceForm.ReportReceivedDate,
-		VisitOutcome:       model.VisitOutcomeType{Label: assuranceForm.VisitOutcome},
-		PdrOutcome:         model.PdrOutcomeType{Label: assuranceForm.PdrOutcome},
+		VisitOutcome:       model.RefData{Label: assuranceForm.VisitOutcome},
+		PdrOutcome:         model.RefData{Label: assuranceForm.PdrOutcome},
 		ReportReviewDate:   assuranceForm.ReportReviewDate,
 		ReportMarkedAs:     model.RAGRating{Label: assuranceForm.ReportMarkedAs},
 		ReviewedBy:         model.User{ID: assuranceForm.ReviewedBy},
@@ -82,7 +84,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			ragRatingTypes, err := client.GetRefData(ctx.With(groupCtx), "/ragRating")
+			ragRatingTypes, err := client.GetRagRatingTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}
@@ -92,7 +94,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			visitOutcomeTypes, err := client.GetRefData(ctx.With(groupCtx), "/visitOutcome")
+			visitOutcomeTypes, err := client.GetVisitOutcomeTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}
@@ -102,7 +104,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 		})
 
 		group.Go(func() error {
-			pdrOutcomeTypes, err := client.GetRefData(ctx.With(groupCtx), "/pdrOutcome")
+			pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}

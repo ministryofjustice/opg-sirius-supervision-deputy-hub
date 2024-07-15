@@ -32,11 +32,18 @@ func (m *mockAddDocumentClient) AddDocument(ctx sirius.Context, file multipart.F
 	return m.AddDocumentErr
 }
 
-func (m *mockAddDocumentClient) GetRefData(ctx sirius.Context, refDataUrlType string) ([]model.RefData, error) {
+func (m *mockAddDocumentClient) GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
 	return []model.RefData{}, m.GetDocumentTypesRefData
+}
+
+func (m *mockAddDocumentClient) GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return []model.RefData{}, m.GetDocumentDirectionRefData
 }
 
 var addDocumentVars = AppVars{
@@ -191,8 +198,8 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 			PageName:      "Add a document",
 			Path:          "/path",
 		},
-		DocumentDirectionRefData: []model.RefData{},
-		DocumentTypes:            []model.RefData{},
+		DocumentDirectionRefData: []model.RefData(nil),
+		DocumentTypes:            []model.RefData(nil),
 		DocumentType:             "GENERAL",
 		Direction:                "OUTGOING",
 		Date:                     "01/01/2024",

@@ -18,8 +18,20 @@ type mockManageDeputyImportantInformation struct {
 	mock.Mock
 }
 
-func (m *mockManageDeputyImportantInformation) GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error) {
-	args := m.Called(ctx, refDataTypeUrl)
+func (m *mockManageDeputyImportantInformation) GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error) {
+	args := m.Called(ctx)
+
+	return args.Get(0).([]model.RefData), args.Error(1)
+}
+
+func (m *mockManageDeputyImportantInformation) GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error) {
+	args := m.Called(ctx)
+
+	return args.Get(0).([]model.RefData), args.Error(1)
+}
+
+func (m *mockManageDeputyImportantInformation) GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error) {
+	args := m.Called(ctx)
 
 	return args.Get(0).([]model.RefData), args.Error(1)
 }
@@ -44,9 +56,9 @@ func TestGetManageImportantInformation(t *testing.T) {
 
 	client := &mockManageDeputyImportantInformation{}
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
-	client.On("GetRefData", mock.Anything, "/annualBillingInvoice").Return(invoiceTypes, nil)
-	client.On("GetRefData", mock.Anything, "/deputyBooleanType").Return(booleanTypes, nil)
-	client.On("GetRefData", mock.Anything, "/deputyReportSystem").Return(reportTypes, nil)
+	client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return(invoiceTypes, nil)
+	client.On("GetDeputyBooleanTypes", mock.Anything).Return(booleanTypes, nil)
+	client.On("GetDeputyReportSystemTypes", mock.Anything).Return(reportTypes, nil)
 
 	template := &mockTemplates{}
 
@@ -124,9 +136,9 @@ func TestPostManageImportantInformation(t *testing.T) {
 
 			client := &mockManageDeputyImportantInformation{}
 			client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{}, nil)
-			client.On("GetRefData", mock.Anything, "/annualBillingInvoice").Return([]model.RefData{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}, nil)
-			client.On("GetRefData", mock.Anything, "/deputyBooleanType").Return([]model.RefData{}, nil)
-			client.On("GetRefData", mock.Anything, "/deputyReportSystem").Return([]model.RefData{}, nil)
+			client.On("GetDeputyAnnualInvoiceBillingTypes", mock.Anything).Return([]model.RefData{{Handle: "TYPEA", Label: "TypeA"}, {Handle: "TYPEB", Label: "TypeB"}}, nil)
+			client.On("GetDeputyBooleanTypes", mock.Anything).Return([]model.RefData{}, nil)
+			client.On("GetDeputyReportSystemTypes", mock.Anything).Return([]model.RefData{}, nil)
 			client.On("UpdateImportantInformation", mock.Anything, 123, tc.importantInformationDetails).Return(nil)
 
 			template := &mockTemplates{}

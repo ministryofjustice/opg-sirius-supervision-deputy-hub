@@ -13,7 +13,9 @@ import (
 
 type ManageProDeputyImportantInformation interface {
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
-	GetRefData(ctx sirius.Context, refDataTypeUrl string) ([]model.RefData, error)
+	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error)
 }
 
 type manageDeputyImportantInformationVars struct {
@@ -34,7 +36,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 
 		group.Go(func() error {
-			annualBillingInvoiceTypes, err := client.GetRefData(ctx.With(groupCtx), "/annualBillingInvoice")
+			annualBillingInvoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}
@@ -44,7 +46,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		})
 
 		group.Go(func() error {
-			deputyBooleanTypes, err := client.GetRefData(ctx.With(groupCtx), "/deputyBooleanType")
+			deputyBooleanTypes, err := client.GetDeputyBooleanTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}
@@ -54,7 +56,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 		})
 
 		group.Go(func() error {
-			deputyReportSystemTypes, err := client.GetRefData(ctx.With(groupCtx), "/deputyReportSystem")
+			deputyReportSystemTypes, err := client.GetDeputyReportSystemTypes(ctx.With(groupCtx))
 			if err != nil {
 				return err
 			}
