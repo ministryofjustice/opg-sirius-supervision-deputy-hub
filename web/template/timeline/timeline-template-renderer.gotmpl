@@ -59,4 +59,7 @@
     {{ if eq .EventType "TaskReassigned" }}
         {{ template "task-reassigned" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyDocumentCreated" }}
+        {{ template "document-created" . }}
+    {{ end }}
 {{ end }}

@@ -35,7 +35,7 @@ func TestGetPdrOutcomeTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []model.PdrOutcomeType{
+	expectedResponse := []model.RefData{
 		{
 			Handle: "RECEIVED",
 			Label:  "Received",
@@ -62,7 +62,7 @@ func TestGetPdrOutcomeTypesReturnsNewStatusError(t *testing.T) {
 
 	pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(getContext(nil))
 
-	assert.Equal(t, []model.PdrOutcomeType(nil), pdrOutcomeTypes)
+	assert.Equal(t, []model.RefData(nil), pdrOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/pdrOutcome",
@@ -81,5 +81,5 @@ func TestGetPdrOutcomeTypesReturnsUnauthorisedClientError(t *testing.T) {
 	pdrOutcomeTypes, err := client.GetPdrOutcomeTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []model.PdrOutcomeType(nil), pdrOutcomeTypes)
+	assert.Equal(t, []model.RefData(nil), pdrOutcomeTypes)
 }
