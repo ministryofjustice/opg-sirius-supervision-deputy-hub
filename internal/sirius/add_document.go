@@ -58,7 +58,6 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 		},
 		FileName:   filename,
 		FileSource: source,
-		PersonId:   deputyId,
 		Date:       date,
 		Type: model.RefData{
 			Handle: documentType,
