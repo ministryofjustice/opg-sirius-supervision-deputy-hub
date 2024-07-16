@@ -39,7 +39,7 @@ func TestGetVisitOutcomeTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []model.VisitOutcomeType{
+	expectedResponse := []model.RefData{
 		{
 			Handle: "SUCCESSFUL",
 			Label:  "Successful",
@@ -70,7 +70,7 @@ func TestGetVisitOutcomeTypesReturnsNewStatusError(t *testing.T) {
 
 	visitOutcomeTypes, err := client.GetVisitOutcomeTypes(getContext(nil))
 
-	assert.Equal(t, []model.VisitOutcomeType(nil), visitOutcomeTypes)
+	assert.Equal(t, []model.RefData(nil), visitOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/visitOutcome",
@@ -89,5 +89,5 @@ func TestGetVisitOutcomeTypesReturnsUnauthorisedClientError(t *testing.T) {
 	visitOutcomeTypes, err := client.GetVisitOutcomeTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []model.VisitOutcomeType(nil), visitOutcomeTypes)
+	assert.Equal(t, []model.RefData(nil), visitOutcomeTypes)
 }

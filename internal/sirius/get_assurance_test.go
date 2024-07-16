@@ -66,14 +66,14 @@ func TestAssuranceReturned(t *testing.T) {
 
 	expectedResponse := model.Assurance{
 		Id:                 3,
-		Type:               model.AssuranceType{Handle: "VISIT", Label: "Assurance"},
+		Type:               model.RefData{Handle: "VISIT", Label: "Assurance"},
 		RequestedDate:      "2022-06-25",
 		RequestedBy:        model.User{ID: 53, Name: "case manager"},
 		CommissionedDate:   "2022-01-01",
 		ReportDueDate:      "2022-01-07",
 		ReportReceivedDate: "2022-01-07",
-		VisitOutcome:       model.VisitOutcomeType{Label: "Cancelled", Handle: "CANCELLED"},
-		PdrOutcome:         model.PdrOutcomeType{Label: "Received", Handle: "RECEIVED"},
+		VisitOutcome:       model.RefData{Label: "Cancelled", Handle: "CANCELLED"},
+		PdrOutcome:         model.RefData{Label: "Received", Handle: "RECEIVED"},
 		ReportReviewDate:   "2022-02-02",
 		ReportMarkedAs:     model.RAGRating{Label: "Red", Handle: "RED"},
 		Note:               "This is just to see the notes and it is below 1000 characters",
