@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -54,34 +55,34 @@ func TestGetDeputyReportSystemTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []DeputyReportSystemTypes{
+	expectedResponse := []model.RefData{
 		{
-			"CASPAR",
-			"Caspar",
+			Handle: "CASPAR",
+			Label:  "Caspar",
 		},
 		{
-			"SOFTBOX",
-			"Softbox",
+			Handle: "SOFTBOX",
+			Label:  "Softbox",
 		},
 		{
-			"CONTROCC",
-			"Controcc",
+			Handle: "CONTROCC",
+			Label:  "Controcc",
 		},
 		{
-			"CASHFAC",
-			"CASHFAC",
+			Handle: "CASHFAC",
+			Label:  "CASHFAC",
 		},
 		{
-			"OPGDIGITAL",
-			"OPG Digital",
+			Handle: "OPGDIGITAL",
+			Label:  "OPG Digital",
 		},
 		{
-			"OPGPAPER",
-			"OPG Paper",
+			Handle: "OPGPAPER",
+			Label:  "OPG Paper",
 		},
 		{
-			"UNKNOWN",
-			"Unknown",
+			Handle: "UNKNOWN",
+			Label:  "Unknown",
 		},
 	}
 
@@ -101,7 +102,7 @@ func TestGetDeputyReportSystemTypesReturnsNewStatusError(t *testing.T) {
 
 	deputyReportSystemTypes, err := client.GetDeputyReportSystemTypes(getContext(nil))
 
-	assert.Equal(t, []DeputyReportSystemTypes(nil), deputyReportSystemTypes)
+	assert.Equal(t, []model.RefData(nil), deputyReportSystemTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
 		URL:    svr.URL + "/api/v1/reference-data/deputyReportSystem",
@@ -120,5 +121,5 @@ func TestGetDeputyReportSystemTypesReturnsUnauthorisedClientError(t *testing.T) 
 	deputyReportSystemTypes, err := client.GetDeputyReportSystemTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []DeputyReportSystemTypes(nil), deputyReportSystemTypes)
+	assert.Equal(t, []model.RefData(nil), deputyReportSystemTypes)
 }

@@ -84,7 +84,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			"taskId": 249,
 			"taskType": "AVFU",
 			"dueDate": "2023-07-13 00:00:00",
-			"description": "This is a note",
+			"notes": "This is a note",
 			"name": "",
 			"assignee": "PA Team Workflow",
 			"isCaseOwnerTask": false,
@@ -111,7 +111,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 				"taskId": 184,
 				"taskType": "AVFU",
 				"dueDate": "2023-03-01 00:00:00",
-				"description": "Edited notes for edited task",
+				"notes": "Edited notes for edited task",
 				"name": "",
 				"assigneeId": 21,
 				"assignee": "Lay Team 1 - (Supervision)",
@@ -131,7 +131,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 						"type": "string"
 					},
 					{
-						"fieldName": "description",
+						"fieldName": "notes",
 						"oldValue": "OG notes for edited task",
 						"newValue": "Edited notes for edited task",
 						"type": "string"
@@ -178,7 +178,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        369,
 			Timestamp: AmendDateForDST("31/07/2023 08:45:22"),
 			EventType: "TaskEdited",
-			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 			Event: model.Event{
 				DeputyID:        "78",
 				DeputyName:      "Bobby Deputiser",
@@ -194,7 +194,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 						NewValue:  "01/03/2023",
 					},
 					{
-						FieldName: "description",
+						FieldName: "notes",
 						OldValue:  "OG notes for edited task",
 						NewValue:  "Edited notes for edited task",
 					},
@@ -205,7 +205,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        300,
 			Timestamp: AmendDateForDST("09/09/2021 14:01:59"),
 			EventType: "DeputyLinkedToOrder",
-			User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678"},
+			User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678", Email: "system.admin@opgtest.com"},
 			Event: model.Event{
 				DeputyID:    "76",
 				DeputyName:  "Mx Bob Builder",
@@ -219,7 +219,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			ID:        397,
 			Timestamp: AmendDateForDST("10/01/2021 15:01:59"),
 			EventType: "TaskCreated",
-			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789"},
+			User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 			Event: model.Event{
 				DeputyID:   "78",
 				DeputyName: "Bobby Deputiser",
