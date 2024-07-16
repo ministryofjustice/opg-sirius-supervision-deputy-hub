@@ -37,6 +37,31 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			Date:    time.Now().Format("2006-01-02"),
 		}
 
+		ctx := getContext(r)
+		group, groupCtx := errgroup.WithContext(ctx.Context)
+
+		group.Go(func() error {
+			documentDirectionRefData, err := client.GetDocumentDirections(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.DocumentDirectionRefData = documentDirectionRefData
+			return nil
+		})
+
+		group.Go(func() error {
+			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
+			if err != nil {
+				return err
+			}
+			vars.DocumentTypes = documentTypes
+			return nil
+		})
+
+		if err := group.Wait(); err != nil {
+			return err
+		}
+
 		if r.Method == http.MethodPost {
 			vars.Errors = sirius.ValidationErrors{}
 
@@ -77,31 +102,6 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			}
 
 			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument&filename=%s", app.DeputyId(), handler.Filename))
-		}
-
-		ctx := getContext(r)
-		group, groupCtx := errgroup.WithContext(ctx.Context)
-
-		group.Go(func() error {
-			documentDirectionRefData, err := client.GetDocumentDirections(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-			vars.DocumentDirectionRefData = documentDirectionRefData
-			return nil
-		})
-
-		group.Go(func() error {
-			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
-			if err != nil {
-				return err
-			}
-			vars.DocumentTypes = documentTypes
-			return nil
-		})
-
-		if err := group.Wait(); err != nil {
-			return err
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
