@@ -1,9 +1,7 @@
 package sirius
 
 import (
-	"encoding/json"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"net/http"
 )
 
 type SupervisionLevelList struct {
@@ -17,4 +15,4 @@ type SupervisionLevelList struct {
 func (c *ApiClient) GetSupervisionLevels(ctx Context) ([]model.RefData, error) {
 	supervisionLevels, err := c.getRefData(ctx, "?filter=supervisionLevel")
 	return supervisionLevels, err
-}∂
+}

@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type DocumentsClient interface {
+type Documents interface {
 	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
 }
 
@@ -16,36 +16,32 @@ type DocumentsVars struct {
 	AppVars
 }
 
-func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+type ListDocumentsHandler struct {
+	router
+}
 
-		app.PageName = "Documents"
+func (h *ListDocumentsHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
 
-		var successMessage string
-		switch r.URL.Query().Get("success") {
-		case "addDocument":
-			filename := r.URL.Query().Get("filename")
-			successMessage = fmt.Sprintf("Document %s added", filename)
-		}
+	v.PageName = "Documents"
 
-		ctx := getContext(r)
-
-		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId())
-		if err != nil {
-			return err
-		}
-
-		vars := DocumentsVars{
-			AppVars:        app,
-			DocumentList:   documentList,
-			SuccessMessage: successMessage,
-		}
-
-		return tmpl.ExecuteTemplate(w, "page", vars)
-
+	var successMessage string
+	switch r.URL.Query().Get("success") {
+	case "addDocument":
+		filename := r.URL.Query().Get("filename")
+		successMessage = fmt.Sprintf("Document %s added", filename)
 	}
 
+	documentList, err := h.Client().GetDeputyDocuments(ctx, v.DeputyId())
+	if err != nil {
+		return err
+	}
+
+	vars := DocumentsVars{
+		AppVars:        v,
+		DocumentList:   documentList,
+		SuccessMessage: successMessage,
+	}
+
+	return h.execute(w, r, vars, v)
 }

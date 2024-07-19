@@ -18,6 +18,8 @@ type ApiClient interface {
 	Contacts
 	DeleteContact
 	ManageContact
+	AddDocument
+	Documents
 	Notes
 	Tasks
 	AddTask
@@ -58,6 +60,10 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("POST /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("GET /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
+
+	mux.Handle("GET /{deputyId}/documents", wrap(&ListDocumentsHandler{&route{client: client, tmpl: templates["documents.gotmpl"], partial: "documents"}}))
+	mux.Handle("GET /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
+	mux.Handle("POST /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
 
 	mux.Handle("GET /{deputyId}/timeline", wrap(&TimelineHandler{&route{client: client, tmpl: templates["timeline.gotmpl"], partial: "timeline"}}))
 

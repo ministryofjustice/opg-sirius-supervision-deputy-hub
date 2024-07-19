@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type mockAddDocumentClient struct {
+type mockAddDocument struct {
 	count                       int
 	lastCtx                     sirius.Context
 	AddDocumentErr              error
@@ -25,21 +25,21 @@ type mockAddDocumentClient struct {
 	GetDocumentDirectionRefData error
 }
 
-func (m *mockAddDocumentClient) AddDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
+func (m *mockAddDocument) AddDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	m.count += 1
 	m.lastCtx = ctx
 
 	return m.AddDocumentErr
 }
 
-func (m *mockAddDocumentClient) GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error) {
+func (m *mockAddDocument) GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
 	return []model.RefData{}, m.GetDocumentTypesRefData
 }
 
-func (m *mockAddDocumentClient) GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error) {
+func (m *mockAddDocument) GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
@@ -56,7 +56,7 @@ var addDocumentVars = AppVars{
 
 func TestGetAddDocument(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockAddDocumentClient{}
+	client := &mockAddDocument{}
 	template := &mockTemplates{}
 
 	w := httptest.NewRecorder()
@@ -77,7 +77,7 @@ func TestGetAddDocument(t *testing.T) {
 func TestPostAddDocument(t *testing.T) {
 	assert := assert.New(t)
 
-	client := &mockAddDocumentClient{}
+	client := &mockAddDocument{}
 	app := AppVars{
 		Path:          "/path",
 		DeputyDetails: sirius.DeputyDetails{ID: 123},
@@ -106,7 +106,7 @@ func TestPostAddDocument(t *testing.T) {
 
 func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 	assert := assert.New(t)
-	client := &mockAddDocumentClient{
+	client := &mockAddDocument{
 		AddDocumentErr: sirius.StatusError{Code: 500},
 	}
 	app := AppVars{
@@ -131,15 +131,15 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 	returnedError := sirius.StatusError{Code: 500}
 	tests := []struct {
-		Client *mockAddDocumentClient
+		Client *mockAddDocument
 	}{
 		{
-			Client: &mockAddDocumentClient{
+			Client: &mockAddDocument{
 				GetDocumentDirectionRefData: returnedError,
 			},
 		},
 		{
-			Client: &mockAddDocumentClient{
+			Client: &mockAddDocument{
 				GetDocumentTypesRefData: returnedError,
 			},
 		},
@@ -176,7 +176,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 		},
 	}
 
-	client := &mockAddDocumentClient{}
+	client := &mockAddDocument{}
 	template := &mockTemplates{}
 	app := AppVars{
 		Path:          "/path",
