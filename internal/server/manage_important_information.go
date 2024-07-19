@@ -1,20 +1,21 @@
 package server
 
 import (
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type ManageProDeputyImportantInformation interface {
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
-	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
-	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
-	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
+	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error)
 }
 
 type manageDeputyImportantInformationVars struct {
-	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	DeputyBooleanTypes        []sirius.DeputyBooleanTypes
-	DeputyReportSystemTypes   []sirius.DeputyReportSystemTypes
+	AnnualBillingInvoiceTypes []model.RefData
+	DeputyBooleanTypes        []model.RefData
+	DeputyReportSystemTypes   []model.RefData
 	AppVars
 }
 

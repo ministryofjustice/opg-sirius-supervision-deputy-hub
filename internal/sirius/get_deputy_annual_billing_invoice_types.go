@@ -1,8 +1,7 @@
 package sirius
 
 import (
-	"encoding/json"
-	"net/http"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 )
 
 type DeputyAnnualBillingInvoiceTypes struct {
@@ -10,30 +9,7 @@ type DeputyAnnualBillingInvoiceTypes struct {
 	Label  string `json:"label"`
 }
 
-func (c *ApiClient) GetDeputyAnnualInvoiceBillingTypes(ctx Context) ([]DeputyAnnualBillingInvoiceTypes, error) {
-	var v []DeputyAnnualBillingInvoiceTypes
-
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/annualBillingInvoice", nil)
-	if err != nil {
-		return v, err
-	}
-
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return v, err
-	}
-
-	defer resp.Body.Close()
-
-	if resp.StatusCode == http.StatusUnauthorized {
-		return v, ErrUnauthorized
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return v, newStatusError(resp)
-	}
-
-	err = json.NewDecoder(resp.Body).Decode(&v)
-
-	return v, err
+func (c *ApiClient) GetDeputyAnnualInvoiceBillingTypes(ctx Context) ([]model.RefData, error) {
+	deputyAnnualBillingInvoiceTypes, err := c.getRefData(ctx, "/annualBillingInvoice")
+	return deputyAnnualBillingInvoiceTypes, err
 }

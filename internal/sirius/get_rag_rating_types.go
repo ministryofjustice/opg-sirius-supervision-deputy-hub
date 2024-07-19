@@ -8,7 +8,6 @@ import (
 
 func (c *ApiClient) GetRagRatingTypes(ctx Context) ([]model.RAGRating, error) {
 	var v []model.RAGRating
-
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/reference-data/ragRating", nil)
 	if err != nil {
 		return v, err

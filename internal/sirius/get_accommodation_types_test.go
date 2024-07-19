@@ -34,12 +34,13 @@ func TestGetAccommodationTypes(t *testing.T) {
 
 	expectedResponse := []model.RefData{
 		{
-			Handle: "HIGH RISK LIVING",
-			Label:  "High Risk Living",
-		},
-		{
 			Handle: "NO ACCOMMODATION TYPE",
 			Label:  "No Accommodation Type",
+		},
+		{
+			Handle:     "COUNCIL RENTED",
+			Label:      "Council Rented",
+			Deprecated: true,
 		},
 	}
 
