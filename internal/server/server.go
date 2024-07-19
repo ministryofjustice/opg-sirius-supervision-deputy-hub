@@ -13,11 +13,12 @@ import (
 
 type ApiClient interface {
 	DeputyHubClient
-	//DeputyHubInformation
-	//DeputyHubClientInformation
+	Clients
 	Contacts
 	DeleteContact
 	ManageContact
+	Deputy
+	DeleteDeputy
 	AddDocument
 	Documents
 	Notes
@@ -53,6 +54,21 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	wrap := wrapHandler(client, logger, templates["error.gotmpl"], envVars)
 	mux := http.NewServeMux()
 
+	http.Handle("/assets/", http.StripPrefix("/static/", http.FileServer(http.Dir(envVars.WebDir+"/assets"))))
+	http.Handle("/javascript/", http.StripPrefix("/static/", http.FileServer(http.Dir(envVars.WebDir+"/javascript"))))
+	http.Handle("/stylesheets/", http.StripPrefix("/static/", http.FileServer(http.Dir(envVars.WebDir+"/stylesheets"))))
+
+	//mux.Handle("/assets/", static)
+	//mux.Handle("/javascript/", static)
+	//mux.Handle("/stylesheets/", static)
+
+	mux.Handle("GET /{deputyId}/clients", wrap(&ClientHandler{&route{client: client, tmpl: templates["clients.gotmpl"], partial: "clients"}}))
+
+	//pageRouter.Handle("/manage-deputy-contact-details",
+	//	wrap(
+	//		renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
+	//
+
 	mux.Handle("GET /{deputyId}/contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["contacts.gotmpl"], partial: "contacts"}}))
 	mux.Handle("GET /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
@@ -60,6 +76,10 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("POST /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("GET /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
+
+	mux.Handle("GET /{deputyId}", wrap(&DeputyHandler{&route{client: client, tmpl: templates["deputy-details.gotmpl"], partial: "deputy-details"}}))
+	mux.Handle("GET /{deputyId}/delete-deputy", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
+	mux.Handle("POST /{deputyId}/delete-deputy", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
 
 	mux.Handle("GET /{deputyId}/documents", wrap(&ListDocumentsHandler{&route{client: client, tmpl: templates["documents.gotmpl"], partial: "documents"}}))
 	mux.Handle("GET /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
@@ -79,16 +99,6 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("GET /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
 	mux.Handle("POST /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
 
-	//pageRouter.Handle("",
-	//	wrap(
-	//		renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
-	//
-
-	//pageRouter.Handle("/clients",
-	//	wrap(
-	//		renderTemplateForClientTab(client, templates["clients.gotmpl"])))
-	//
-
 	//pageRouter.Handle("/manage-team-details",
 	//	wrap(
 	//		renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
@@ -101,22 +111,17 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	//	wrap(
 	//		renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
 	//
-	//pageRouter.Handle("/delete-deputy",
-	//	wrap(
-	//		renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
-	//
+
 	//pageRouter.Handle("/add-firm",
 	//	wrap(
 	//		renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
 	//
-	//pageRouter.Handle("/manage-deputy-contact-details",
-	//	wrap(
-	//		renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
-	//
+
 	//pageRouter.Handle("/manage-important-information",
 	//	wrap(
 	//		renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
 	//
+
 	//pageRouter.Handle("/assurances",
 	//	wrap(
 	//		renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
@@ -133,13 +138,8 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	//router.PathPrefix("/assets/").Handler(static)
 	//router.PathPrefix("/javascript/").Handler(static)
 	//router.PathPrefix("/stylesheets/").Handler(static)
-	//
-	mux.Handle("/health-check", healthCheck())
-
-	//static := http.FileServer(http.Dir(envVars.WebDir + "/static"))
-	//mux.Handle("/assets/", static)
-	//mux.Handle("/javascript/", static)
-	//mux.Handle("/stylesheets/", static)
+	////
+	mux.Handle("GET /health-check", healthCheck())
 
 	return otelhttp.NewHandler(http.StripPrefix(envVars.Prefix, securityheaders.Use(mux)), "supervision-deputy-hub")
 }
