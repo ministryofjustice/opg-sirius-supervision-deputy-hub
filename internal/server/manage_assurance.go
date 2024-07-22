@@ -6,6 +6,8 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
+	"slices"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -78,6 +80,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 			if err != nil {
 				return err
 			}
+			sort.Sort(ByName(visitors))
 			vars.Visitors = visitors
 
 			return nil
@@ -168,4 +171,46 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
+}
+
+type ByName []model.Visitor
+
+func (visitors ByName) Len() int      { return len(visitors) }
+func (visitors ByName) Swap(i, j int) { visitors[i], visitors[j] = visitors[j], visitors[i] }
+func (visitors ByName) Less(i, j int) bool {
+	firstNameI, middleNameI, lastNameI := parseName(visitors[i].Name)
+	firstNameJ, middleNameJ, lastNameJ := parseName(visitors[j].Name)
+
+	if firstNameI != firstNameJ {
+		return firstNameI < firstNameJ
+	}
+
+	if middleNameI != middleNameJ {
+		return middleNameI < middleNameJ
+	}
+
+	return lastNameI < lastNameJ
+}
+
+func parseName(fullName string) (firstName, middleName, lastName string) {
+	titles := []string{"Mr", "Mrs", "Ms", "Miss", "Dr"}
+
+	parts := strings.Fields(fullName)
+	if len(parts) > 0 && slices.Contains(titles, parts[0]) {
+		parts = parts[1:]
+	}
+
+	n := len(parts)
+	if n == 0 {
+		return "", "", ""
+	}
+
+	lastName = parts[n-1]
+	firstName = parts[0]
+
+	if n > 2 {
+		middleName = strings.Join(parts[1:n-1], " ")
+	}
+
+	return firstName, middleName, lastName
 }
