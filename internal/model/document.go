@@ -9,4 +9,7 @@ type Document struct {
 	Filename            string `json:"filename"`
 	CreatedBy           User   `json:"createdBy"`
 	ReceivedDateTime    string `json:"receivedDateTime"`
+	Note                struct {
+		Description string `json:"description"`
+	} `json:"note"`
 }

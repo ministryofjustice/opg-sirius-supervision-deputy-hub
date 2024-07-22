@@ -14,9 +14,9 @@ type DocumentList struct {
 	Metadata       Metadata         `json:"metadata"`
 }
 
-func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, error) {
+func (c *Client) GetDeputyDocuments(ctx Context, deputyId int, sort string) (DocumentList, error) {
 	var documentList DocumentList
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/persons/%d/documents", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/persons/%d/documents?&sort=%s", deputyId, sort), nil)
 
 	if err != nil {
 		return documentList, err
@@ -38,8 +38,6 @@ func (c *Client) GetDeputyDocuments(ctx Context, deputyId int) (DocumentList, er
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&documentList); err != nil {
-		fmt.Println("err")
-		fmt.Println(err)
 		return documentList, err
 	}
 

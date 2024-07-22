@@ -26,6 +26,18 @@
                       -
                     {{ end }}
                 </a>
+                {{ if .Note }}
+                    <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
+                          <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                              Notes
+                            </span>
+                          </summary>
+                          <div class="govuk-details__text">
+                            {{ .Note.Description }}
+                          </div>
+                    </details>
+                {{ end }}
             </td>
             <td class="govuk-table__cell" id="document-type">
                 {{ if .Type }}
