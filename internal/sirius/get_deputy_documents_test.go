@@ -122,7 +122,7 @@ func TestDeputyDocumentsReturned(t *testing.T) {
 		Pages:          Page{PageCurrent: 1},
 	}
 
-	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 1)
+	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 1, "receiveddatetime:desc")
 
 	assert.Equal(t, expectedResponse, deputyDocuments)
 	assert.Equal(t, nil, err)
@@ -136,14 +136,14 @@ func TestGetDeputyDocumentsReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 76)
+	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 76, "receiveddatetime:desc")
 
 	expectedResponse := DocumentList{}
 
 	assert.Equal(t, expectedResponse, deputyDocuments)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/persons/76/documents",
+		URL:    svr.URL + "/api/v1/persons/76/documents?&sort=receiveddatetime:desc",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -156,7 +156,7 @@ func TestGetDeputyDocumentsReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 76)
+	deputyDocuments, err := client.GetDeputyDocuments(getContext(nil), 76, "receiveddatetime:desc")
 
 	expectedResponse := DocumentList{}
 
