@@ -26,7 +26,7 @@
                       -
                     {{ end }}
                 </a>
-                {{ if .Note }}
+                {{ if ne .Note.Description "" }}
                     <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
                           <summary class="govuk-details__summary">
                             <span class="govuk-details__summary-text">
