@@ -2,24 +2,27 @@ package server
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"mime/multipart"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 type ReplaceDocumentClient interface {
-	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
+	ReplaceDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error
 	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
 	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDocumentById(ctx sirius.Context, documentId int) (model.Document2, error)
 }
 
 type ReplaceDocumentVars struct {
 	SuccessMessage   string
-	OriginalDocument model.Document
+	OriginalDocument model.Document2
 	AppVars
 	DocumentDirectionRefData []model.RefData
 	DocumentTypes            []model.RefData
@@ -29,16 +32,19 @@ type ReplaceDocumentVars struct {
 	Notes                    string
 }
 
-func renderTemplateForReplaceDocument(client AddDocumentClient, tmpl Template) Handler {
+func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		app.PageName = "Add a document"
+		app.PageName = "Replace a document"
 
-		vars := AddDocumentVars{
+		ctx := getContext(r)
+		routeVars := mux.Vars(r)
+		documentId, _ := strconv.Atoi(routeVars["documentId"])
+
+		vars := ReplaceDocumentVars{
 			AppVars: app,
 			Date:    time.Now().Format("2006-01-02"),
 		}
 
-		ctx := getContext(r)
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 
 		group.Go(func() error {
@@ -60,7 +66,7 @@ func renderTemplateForReplaceDocument(client AddDocumentClient, tmpl Template) H
 		})
 
 		group.Go(func() error {
-			originalDocument, err := client.GetDocumentById(ctx.With(groupCtx))
+			originalDocument, err := client.GetDocumentById(ctx.With(groupCtx), documentId)
 			if err != nil {
 				return err
 			}
@@ -101,7 +107,7 @@ func renderTemplateForReplaceDocument(client AddDocumentClient, tmpl Template) H
 			}
 
 			ctx := getContext(r)
-			err = client.AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
+			err = client.ReplaceDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID, vars.OriginalDocument.Id)
 
 			if verr, ok := err.(sirius.ValidationError); ok {
 				vars.Errors = util.RenameErrors(verr.Errors)
@@ -111,7 +117,7 @@ func renderTemplateForReplaceDocument(client AddDocumentClient, tmpl Template) H
 				return err
 			}
 
-			return Redirect(fmt.Sprintf("/%d/documents?success=addDocument&filename=%s", app.DeputyId(), handler.Filename))
+			return Redirect(fmt.Sprintf("/%d/documents?success=replaceDocument&filename=%s", app.DeputyId(), handler.Filename))
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

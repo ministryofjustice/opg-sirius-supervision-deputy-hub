@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type DeputyEvent struct {
 	ID         int    `json:"id"`
 	Timestamp  string `json:"timestamp"`
@@ -31,10 +33,20 @@ type Event struct {
 	Filename             string    `json:"filename"`
 	ReceivedDate         string    `json:"receivedDate"`
 	Notes                string    `json:"notes"`
+	IsPersonAndCaseEvent bool      `json:"isPersonAndCaseEvent"`
+	IsPersonEvent        bool      `json:"isPersonEvent"`
+	IsCaseEvent          bool      `json:"isCaseEvent"`
+	DocumentId           string    `json:"documentId"`
+	CreatedBy            string    `json:"createdBy"`
+	CreatedDate          time.Time `json:"createdDate"`
+	Reason               string    `json:"reason"`
+	PersonType           string    `json:"personType"`
+	PersonUid            string    `json:"personUid"`
 }
 
 type Changes struct {
 	FieldName string `json:"fieldName"`
 	OldValue  string `json:"oldValue"`
 	NewValue  string `json:"newValue"`
+	Type      string `json:"type"`
 }

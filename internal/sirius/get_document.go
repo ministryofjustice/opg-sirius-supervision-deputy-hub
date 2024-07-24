@@ -4,13 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"io"
 	"net/http"
-	"os"
 )
 
-func (c *Client) GetDocumentById(ctx Context, documentId int) (model.Document, error) {
-	var document model.Document
+func (c *Client) GetDocumentById(ctx Context, documentId int) (model.Document2, error) {
+	var document model.Document2
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/documents/%d", documentId), nil)
 
@@ -24,7 +22,6 @@ func (c *Client) GetDocumentById(ctx Context, documentId int) (model.Document, e
 		return document, err
 	}
 
-	io.Copy(os.Stdout, resp.Body)
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {

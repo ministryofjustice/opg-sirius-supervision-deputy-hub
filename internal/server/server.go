@@ -34,6 +34,7 @@ type Client interface {
 	AddTasksClient
 	TasksClient
 	DocumentsClient
+	ReplaceDocumentClient
 	AddDocumentClient
 	ManageTasks
 	CompleteTask
@@ -112,9 +113,9 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 		wrap(
 			renderTemplateForAddDocument(client, templates["add-document.gotmpl"])))
 
-	pageRouter.Handle("/documents/replace",
+	pageRouter.Handle("/documents/{documentId}/replace",
 		wrap(
-			renderTemplateForReplaceDocument(client, templates["add-document.gotmpl"])))
+			renderTemplateForReplaceDocument(client, templates["replace-document.gotmpl"])))
 
 	pageRouter.Handle("/manage-team-details",
 		wrap(
