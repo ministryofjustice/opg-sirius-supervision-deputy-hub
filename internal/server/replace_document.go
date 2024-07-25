@@ -73,6 +73,10 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			vars.OriginalDocument = originalDocument
 
 			newTime, err := time.Parse("02/01/2006 15:04:05", originalDocument.ReceivedDateTime)
+			if err != nil {
+				return err
+			}
+
 			vars.OriginalDocument.ReformattedTime = newTime.Format("02/01/2006")
 			return nil
 		})
