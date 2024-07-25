@@ -7,10 +7,10 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetDocumentById(ctx Context, documentId int) (model.Document2, error) {
-	var document model.Document2
+func (c *Client) GetDocumentById(ctx Context, deputyId, documentId int) (model.Document, error) {
+	var document model.Document
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/documents/%d", documentId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/documents/%d", deputyId, documentId), nil)
 
 	if err != nil {
 		return document, err
