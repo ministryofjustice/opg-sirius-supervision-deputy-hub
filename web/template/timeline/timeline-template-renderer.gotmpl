@@ -62,7 +62,7 @@
     {{ if eq .EventType "DeputyDocumentCreated" }}
         {{ template "document-created" . }}
     {{ end }}
-    {{ if eq .EventType "ReplacedDocumentFile" }}
+    {{ if eq .EventType "DeputyDocumentReplaced" }}
         {{ template "document-replaced" . }}
     {{ end }}
 {{ end }}
