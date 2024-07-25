@@ -7,36 +7,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"mime/multipart"
 	"net/http"
-	"time"
 )
-
-type T struct {
-	Class   string `json:"class"`
-	Payload struct {
-		IsPersonAndCaseEvent bool      `json:"isPersonAndCaseEvent"`
-		IsPersonEvent        bool      `json:"isPersonEvent"`
-		IsCaseEvent          bool      `json:"isCaseEvent"`
-		DocumentId           string    `json:"documentId"`
-		Filename             string    `json:"filename"`
-		Description          string    `json:"description"`
-		CreatedBy            string    `json:"createdBy"`
-		CreatedDate          time.Time `json:"createdDate"`
-		Direction            string    `json:"direction"`
-		ReceivedDate         time.Time `json:"receivedDate"`
-		Reason               string    `json:"reason"`
-		Type                 string    `json:"type"`
-		PersonType           string    `json:"personType"`
-		PersonId             string    `json:"personId"`
-		PersonUid            string    `json:"personUid"`
-		PersonName           string    `json:"personName"`
-		Changes              []struct {
-			FieldName string      `json:"fieldName"`
-			OldValue  string      `json:"oldValue,omitempty"`
-			NewValue  interface{} `json:"newValue"`
-			Type      string      `json:"type"`
-		} `json:"changes"`
-	} `json:"payload"`
-}
 
 func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error {
 	var body bytes.Buffer

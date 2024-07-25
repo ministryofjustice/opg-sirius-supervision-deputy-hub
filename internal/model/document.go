@@ -13,4 +13,5 @@ type Document struct {
 		Description string `json:"description"`
 		Name        string `json:"name"`
 	} `json:"note"`
+	ReformattedTime string
 }
