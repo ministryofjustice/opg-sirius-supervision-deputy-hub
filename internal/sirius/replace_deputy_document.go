@@ -23,9 +23,8 @@ func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, doc
 			Source: source,
 			Type:   "application/json",
 		},
-		FileName:   filename,
-		FileSource: source,
-		Date:       date,
+		FileName: filename,
+		Date:     date,
 		Type: model.RefData{
 			Handle: documentType,
 		},
