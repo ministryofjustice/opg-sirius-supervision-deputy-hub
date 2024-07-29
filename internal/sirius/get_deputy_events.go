@@ -25,7 +25,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 	if err != nil {
 		return de, err
 	}
-	
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
