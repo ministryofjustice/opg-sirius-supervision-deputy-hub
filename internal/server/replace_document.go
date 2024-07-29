@@ -56,8 +56,6 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			return nil
 		})
 
-		fmt.Println("after get doc directions")
-
 		group.Go(func() error {
 			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
 			if err != nil {
@@ -66,8 +64,6 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			vars.DocumentTypes = documentTypes
 			return nil
 		})
-
-		fmt.Println("after get doc types")
 
 		group.Go(func() error {
 			originalDocument, err := client.GetDocumentById(ctx.With(groupCtx), vars.DeputyDetails.ID, documentId)
@@ -85,15 +81,11 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			return nil
 		})
 
-		fmt.Println("after get doc by id")
-
 		if err := group.Wait(); err != nil {
 			return err
 		}
-		fmt.Println("before post")
 
 		if r.Method == http.MethodPost {
-			fmt.Println("in post")
 
 			vars.Errors = sirius.ValidationErrors{}
 
@@ -107,7 +99,6 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			if err != nil {
 				vars.Errors["document-upload"] = map[string]string{"": "Select a file to attach"}
 			}
-			fmt.Println("after select file to attach")
 
 			documentType := r.PostFormValue("documentType")
 			direction := r.PostFormValue("documentDirection")
@@ -122,7 +113,6 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			if len(vars.Errors) > 0 {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
-			fmt.Println("after if errors more than 0")
 
 			ctx := getContext(r)
 			err = client.ReplaceDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID, vars.OriginalDocument.Id)
@@ -132,13 +122,9 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			fmt.Println("after validation errors")
-
 			if err != nil {
 				return err
 			}
-
-			fmt.Println("after errors")
 
 			return Redirect(fmt.Sprintf("/%d/documents?success=replaceDocument&previousFilename=%s&filename=%s", app.DeputyId(), vars.OriginalDocument.FriendlyDescription, handler.Filename))
 		}
