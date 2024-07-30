@@ -2796,7 +2796,6 @@ module.exports = function () {
                 "current":1,
                 "total":1
             },
-            "total":3,
             "documents":[
                 {
                     "displayDate":"30\/05\/2024 01:00:00",
@@ -2819,6 +2818,9 @@ module.exports = function () {
                         "surname":"manager"
                     },
                     "receivedDateTime":"30\/05\/2024 01:00:00",
+                    "note":{
+                        "description":"This is an admirable document"
+                    },
                     "documentSource":"UPLOAD",
                     "childCount":0,
                     "subtype":"Catch-up call"
@@ -2828,11 +2830,11 @@ module.exports = function () {
                     "id":6,
                     "uuid":"1a382bbb-f14f-451f-81f4-6ff1d0c4ce64",
                     "type":"General",
-                    "friendlyDescription":"Screenshot_2024_06_21_at_15_23_12.png",
+                    "friendlyDescription":"important_file.png",
                     "title":"Correspondence",
                     "createdDate":"24\/06\/2024 15:20:05",
                     "direction":"Outgoing",
-                    "filename":"1245b837fa40441e986a1b576db37592_Screenshot_2024_06_21_at_15_23_12.png",
+                    "filename":"1245b837fa40441e986a1b576db37592_important_file.png",
                     "mimeType":"image\/png",
                     "caseItems":[],
                     "persons":[{"uId":"7000-0000-1276"}],
@@ -2853,11 +2855,11 @@ module.exports = function () {
                     "id":7,
                     "uuid":"4cb1fe6c-d6a1-4a9f-8517-0078f0eb8a87",
                     "type":"Non-compliance",
-                    "friendlyDescription":"Screenshot_2024_06_21_at_14_12_30.png",
+                    "friendlyDescription":"coolfile.png",
                     "title":"Correspondence",
                     "createdDate":"24\/06\/2024 15:22:08",
                     "direction":"Incoming",
-                    "filename":"8162ff2661274500a8f6578ca0b42fac_Screenshot_2024_06_21_at_14_12_30.png",
+                    "filename":"8162ff2661274500a8f6578ca0b42fac_coolfile.png",
                     "mimeType":"image\/png",
                     "caseItems":[],
                     "persons":[{"uId":"7000-0000-1276"}],
@@ -2870,6 +2872,9 @@ module.exports = function () {
                         "surname":"Team1"
                     },
                     "receivedDateTime":"14\/06\/2024 01:00:00",
+                    "note":{
+                       "description":"Looks like a file to me"
+                    },
                     "documentSource":"UPLOAD",
                     "childCount":0,
                     "subtype":"Non-compliance"

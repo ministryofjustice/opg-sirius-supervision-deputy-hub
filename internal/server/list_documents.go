@@ -3,17 +3,19 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 )
 
 type DocumentsClient interface {
-	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
+	GetDeputyDocuments(ctx sirius.Context, deputyId int, sort string) (sirius.DocumentList, error)
 }
 
 type DocumentsVars struct {
 	DocumentList   sirius.DocumentList
 	SuccessMessage string
 	AppVars
+	Sort string
 }
 
 func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
@@ -32,8 +34,10 @@ func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 		}
 
 		ctx := getContext(r)
+		urlParams := r.URL.Query()
+		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"receiveddatetime"})
 
-		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId())
+		documentList, err := client.GetDeputyDocuments(ctx, app.DeputyId(), fmt.Sprintf("%s:%s", sort.OrderBy, "desc"))
 		if err != nil {
 			return err
 		}

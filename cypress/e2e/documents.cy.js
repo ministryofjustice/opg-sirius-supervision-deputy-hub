@@ -18,6 +18,8 @@ describe("Documents", () => {
 
         it("shows correct body", () => {
             cy.get("#document-name").contains("Order_documents.pdf");
+            cy.get("#notes-summary").should("exist");
+            cy.get("#notes-description").contains("This is an admirable document");
             cy.contains("a","Order_documents.pdf").invoke('attr','href')
                .should('include','api/v1/documents/5/download')
             cy.get("#document-type").contains("Catch-up call");
@@ -25,6 +27,11 @@ describe("Documents", () => {
             cy.get("#document-direction").contains("Internal");
             cy.get("#document-date").contains("30/05/2024");
         });
+
+         it("only shows note drop down if the document has notes", () => {
+            cy.get(':nth-child(2) > #document-name').contains("important_file.png");
+            cy.get(':nth-child(2) > #notes-summary').should("not.exist");
+         });
     });
 
     describe("Add document", () => {
