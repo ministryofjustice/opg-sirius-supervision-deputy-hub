@@ -86,7 +86,7 @@ func TestPostAddDocument(t *testing.T) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
-	body, _ = CreateAddDocumentFormBody(body, writer, false)
+	body, _ = CreateDocumentFormBody(body, writer, false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -118,7 +118,7 @@ func TestPostAddDocumentReturnsErrorsFromSirius(t *testing.T) {
 
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateAddDocumentFormBody(body, writer, false)
+	body, _ = CreateDocumentFormBody(body, writer, false)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -155,7 +155,7 @@ func TestAddDocumentHandlesErrorsInOtherClientFiles(t *testing.T) {
 			}
 			body := new(bytes.Buffer)
 			writer := multipart.NewWriter(body)
-			body, _ = CreateAddDocumentFormBody(body, writer, false)
+			body, _ = CreateDocumentFormBody(body, writer, false)
 			w := httptest.NewRecorder()
 			r, _ := http.NewRequest("POST", "/123", body)
 			r.Header.Add("Content-Type", writer.FormDataContentType())
@@ -184,7 +184,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 	}
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
-	body, _ = CreateAddDocumentFormBody(body, writer, true)
+	body, _ = CreateDocumentFormBody(body, writer, true)
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", body)
@@ -209,7 +209,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 	assert.Nil(returnedError)
 }
 
-func CreateAddDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentUploadError bool) (*bytes.Buffer, error) {
+func CreateDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, documentUploadError bool) (*bytes.Buffer, error) {
 	if documentUploadError {
 		_, _ = writer.CreateFormFile("document-upload", "")
 	} else {
