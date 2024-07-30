@@ -31,6 +31,10 @@ func renderTemplateForDocuments(client DocumentsClient, tmpl Template) Handler {
 		case "addDocument":
 			filename := r.URL.Query().Get("filename")
 			successMessage = fmt.Sprintf("Document %s added", filename)
+		case "replaceDocument":
+			previousFilename := r.URL.Query().Get("previousFilename")
+			filename := r.URL.Query().Get("filename")
+			successMessage = fmt.Sprintf("Document %s has been replaced by %s", previousFilename, filename)
 		}
 
 		ctx := getContext(r)
