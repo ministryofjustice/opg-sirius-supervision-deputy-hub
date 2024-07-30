@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 type mockReplaceDocumentClient struct {
@@ -113,7 +114,7 @@ func TestGetReplaceDocument(t *testing.T) {
 		},
 		DocumentDirectionRefData: []model.RefData{},
 		DocumentTypes:            []model.RefData{},
-		Date:                     "2024-07-29",
+		Date:                     time.Now().Format("2006-01-02"),
 		Notes:                    "",
 	}, template.lastVars)
 }
