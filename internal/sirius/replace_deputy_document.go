@@ -9,28 +9,11 @@ import (
 	"net/http"
 )
 
-type CreateDocumentRequest struct {
-	Date        string        `json:"documentDate"`
-	Description string        `json:"description"`
-	Direction   model.RefData `json:"documentDirection"`
-	Name        string        `json:"name"`
-	Type        model.RefData `json:"documentType"`
-	PersonId    int           `json:"personId"`
-	FileName    string        `json:"fileName"`
-	FileSource  string        `json:"fileSource"`
-	File        EncodedFile   `json:"file"`
-}
-
-type EncodedFile struct {
-	Name   string `json:"name"`
-	Source string `json:"source"`
-	Type   string `json:"type"`
-}
-
-func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
+func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error {
 	var body bytes.Buffer
 
 	source, err := model.EncodeFileToBase64(file)
+
 	if err != nil {
 		return err
 	}
@@ -41,9 +24,8 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 			Source: source,
 			Type:   "application/json",
 		},
-		FileName:   filename,
-		FileSource: source,
-		Date:       date,
+		FileName: filename,
+		Date:     date,
 		Type: model.RefData{
 			Handle: documentType,
 		},
@@ -59,7 +41,7 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/documents", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/deputies/%d/documents/%d", deputyId, documentId), &body)
 
 	if err != nil {
 		return err
