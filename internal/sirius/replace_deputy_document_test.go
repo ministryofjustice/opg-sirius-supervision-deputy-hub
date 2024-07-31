@@ -79,7 +79,7 @@ func TestReplaceDocumentReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/68/documents/5/replace-file",
+		URL:    svr.URL + "/api/v1/deputies/68/documents/5",
 		Method: http.MethodPut,
 	}, err)
 }

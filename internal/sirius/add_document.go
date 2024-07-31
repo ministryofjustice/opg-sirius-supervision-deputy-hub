@@ -2,11 +2,9 @@ package sirius
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"io"
 	"mime/multipart"
 	"net/http"
 )
@@ -29,23 +27,10 @@ type EncodedFile struct {
 	Type   string `json:"type"`
 }
 
-func EncodeFileToBase64(file multipart.File) (string, error) {
-	defer file.Close()
-
-	buf := bytes.NewBuffer(nil)
-	if _, err := io.Copy(buf, file); err != nil {
-		return "", err
-	}
-
-	file.Close()
-
-	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
-}
-
 func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	var body bytes.Buffer
 
-	source, err := EncodeFileToBase64(file)
+	source, err := model.EncodeFileToBase64(file)
 	if err != nil {
 		return err
 	}

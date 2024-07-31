@@ -12,7 +12,8 @@ import (
 func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error {
 	var body bytes.Buffer
 
-	source, err := EncodeFileToBase64(file)
+	source, err := model.EncodeFileToBase64(file)
+
 	if err != nil {
 		return err
 	}
@@ -40,7 +41,7 @@ func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, doc
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/deputies/%d/documents/%d/replace-file", deputyId, documentId), &body)
+	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/deputies/%d/documents/%d", deputyId, documentId), &body)
 
 	if err != nil {
 		return err
