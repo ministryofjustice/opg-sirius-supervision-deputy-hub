@@ -3,15 +3,16 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestAddDocument(t *testing.T) {
+func TestReplaceDocument(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -48,11 +49,11 @@ func TestAddDocument(t *testing.T) {
 
 	tempFile, _ := os.Create("testfile.txt")
 
-	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
+	err := client.ReplaceDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68, 5)
 	assert.Nil(t, err)
 }
 
-func TestAddDocumentReturnsNewStatusError(t *testing.T) {
+func TestReplaceDocumentReturnsNewStatusError(t *testing.T) {
 	tempFile, _ := os.Create("testfile.txt")
 	_, _ = tempFile.Write([]byte("test string"))
 
@@ -64,16 +65,26 @@ func TestAddDocumentReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
+	err := client.ReplaceDocument(
+		getContext(nil),
+		tempFile,
+		"file_title.pdf",
+		"Call",
+		"INCOMING",
+		"2020-01-01",
+		"Some notes about my file",
+		68,
+		5,
+	)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/68/documents",
-		Method: http.MethodPost,
+		URL:    svr.URL + "/api/v1/deputies/68/documents/5",
+		Method: http.MethodPut,
 	}, err)
 }
 
-func TestAddDocumentReturnsUnauthorisedClientError(t *testing.T) {
+func TestReplaceDocumentReturnsUnauthorisedClientError(t *testing.T) {
 	tempFile, _ := os.Create("testfile.txt")
 	_, _ = tempFile.Write([]byte("test string"))
 
@@ -81,10 +92,18 @@ func TestAddDocumentReturnsUnauthorisedClientError(t *testing.T) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
 	defer svr.Close()
-
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	err := client.AddDocument(getContext(nil), tempFile, "file_title.pdf", "Call", "INCOMING", "2020-01-01", "Some notes about my file", 68)
-
+	err := client.ReplaceDocument(
+		getContext(nil),
+		tempFile,
+		"file_title.pdf",
+		"Call",
+		"INCOMING",
+		"2020-01-01",
+		"Some notes about my file",
+		68,
+		5,
+	)
 	assert.Equal(t, ErrUnauthorized, err)
 }

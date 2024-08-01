@@ -3,17 +3,19 @@ package server
 import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 )
 
 type Documents interface {
-	GetDeputyDocuments(ctx sirius.Context, deputyId int) (sirius.DocumentList, error)
+	GetDeputyDocuments(ctx sirius.Context, deputyId int, sort string) (sirius.DocumentList, error)
 }
 
 type DocumentsVars struct {
 	DocumentList   sirius.DocumentList
 	SuccessMessage string
 	AppVars
+	Sort string
 }
 
 type ListDocumentsHandler struct {
@@ -30,9 +32,16 @@ func (h *ListDocumentsHandler) render(v AppVars, w http.ResponseWriter, r *http.
 	case "addDocument":
 		filename := r.URL.Query().Get("filename")
 		successMessage = fmt.Sprintf("Document %s added", filename)
+	case "replaceDocument":
+		previousFilename := r.URL.Query().Get("previousFilename")
+		filename := r.URL.Query().Get("filename")
+		successMessage = fmt.Sprintf("Document %s has been replaced by %s", previousFilename, filename)
 	}
 
-	documentList, err := h.Client().GetDeputyDocuments(ctx, v.DeputyId())
+	urlParams := r.URL.Query()
+	sort := urlbuilder.CreateSortFromURL(urlParams, []string{"receiveddatetime"})
+
+	documentList, err := h.Client().GetDeputyDocuments(ctx, v.DeputyId(), fmt.Sprintf("%s:%s", sort.OrderBy, "desc"))
 	if err != nil {
 		return err
 	}

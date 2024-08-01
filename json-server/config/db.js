@@ -2040,6 +2040,112 @@ module.exports = function () {
                 "isMainContact": true
             },
         ],
+        "document": [
+            {
+                "id":5,
+                "uuid":"f64b6b38-7f99-4f4e-82d3-bd908c6589f2",
+                "type":"Catch-up call",
+                "friendlyDescription":"Order_documents.pdf",
+                "title":"Correspondence",
+                "createdDate":"24\/06\/2024 15:17:32",
+                "direction":"Internal",
+                "filename":"3311d50c3d744d3bab02e0ad5e8e5eeb_Screenshot_2024_06_21_at_14_12_30.pdf",
+                "mimeType":"image\/png",
+                "note":{
+                    "id":16,
+                    "type":"Catch-up call",
+                    "description":"test",
+                    "name":"I liked this file more",
+                    "createdTime":"23\/07\/2024 16:02:58","direction":"Incoming"
+                },
+                "caseItems":[],
+                "persons":[
+                    {
+                        "id":67,
+                        "uId":"7000-0000-1276"
+                    }
+                ],
+                "createdBy":{
+                    "id":23,
+                    "name":"case",
+                    "displayName":"case manager",
+                    "email":"case.manager@opgtest.com",
+                    "surname":"manager"
+                },
+                "receivedDateTime":"30\/05\/2024 01:00:00",
+                "documentSource":"UPLOAD",
+                "metadata":[],
+                "childCount":0,
+                "subtype":"Catch-up call"
+            },
+            {
+                "id": 6,
+                "uuid":"1a382bbb-f14f-451f-81f4-6ff1d0c4ce64",
+                "type":"General",
+                "friendlyDescription":"Screenshot_2024_06_21_at_15_23_12.png",
+                "title":"Correspondence",
+                "createdDate":"24\/06\/2024 15:20:05",
+                "direction":"Outgoing",
+                "filename":"1245b837fa40441e986a1b576db37592_Screenshot_2024_06_21_at_15_23_12.png",
+                "mimeType":"image\/png",
+                "caseItems":[],
+                "persons":[
+                    {
+                        "id":67,
+                        "uId":"7000-0000-1276"
+                    }
+                ],
+                "createdBy":{
+                    "id":51,
+                    "name":"system",
+                    "displayName":"system admin",
+                    "email":"system.admin@opgtest.com",
+                    "surname":"admin"
+                },
+                "receivedDateTime":"01\/06\/2024 01:00:00",
+                "documentSource":"UPLOAD",
+                "metadata":[],
+                "childCount":0,
+                 "subtype":"General"
+            },
+            {
+                "id": 7,
+                "uuid":"4cb1fe6c-d6a1-4a9f-8517-0078f0eb8a87",
+                "type":"Non-compliance",
+                "friendlyDescription":"Screenshot_2024_06_21_at_14_12_30.png",
+                "title":"Correspondence",
+                "createdDate":"24\/06\/2024 15:22:08",
+                "direction":"Incoming",
+                "filename":"8162ff2661274500a8f6578ca0b42fac_Screenshot_2024_06_21_at_14_12_30.png",
+                "mimeType":"image\/png",
+                "note":{
+                    "id":16,
+                    "type":"Catch-up call",
+                    "description":"test",
+                    "name":"I replaced this file for some reason",
+                    "createdTime":"23\/07\/2024 16:02:58","direction":"Incoming"
+                },
+                "caseItems":[],
+                "persons":[
+                    {
+                        "id":67,
+                        "uId":"7000-0000-1276"
+                    }
+                ],
+                "createdBy":{
+                    "id":42,
+                    "name":"lay",
+                    "displayName":"layTeam1 - (Supervision)",
+                    "email":"LayTeam1.team@opgtest.com",
+                    "surname":"Team1"
+                },
+                "receivedDateTime":"14\/06\/2024 01:00:00",
+                "documentSource":"UPLOAD",
+                "metadata":[],
+                "childCount":0,
+                "subtype":"Non-compliance"
+            },
+        ],
         "annualBillingInvoice": [
             {
                 "handle": "INVOICE",
@@ -2131,6 +2237,13 @@ module.exports = function () {
             {
                 "id": 1,
                 "add-document": []
+           }
+        ],
+       "replace-document":
+        [
+            {
+                "id": 1,
+                "replace-document": []
            }
         ],
         "assurances": [
@@ -2796,7 +2909,6 @@ module.exports = function () {
                 "current":1,
                 "total":1
             },
-            "total":3,
             "documents":[
                 {
                     "displayDate":"30\/05\/2024 01:00:00",
@@ -2819,6 +2931,9 @@ module.exports = function () {
                         "surname":"manager"
                     },
                     "receivedDateTime":"30\/05\/2024 01:00:00",
+                    "note":{
+                        "description":"This is an admirable document"
+                    },
                     "documentSource":"UPLOAD",
                     "childCount":0,
                     "subtype":"Catch-up call"
@@ -2828,11 +2943,11 @@ module.exports = function () {
                     "id":6,
                     "uuid":"1a382bbb-f14f-451f-81f4-6ff1d0c4ce64",
                     "type":"General",
-                    "friendlyDescription":"Screenshot_2024_06_21_at_15_23_12.png",
+                    "friendlyDescription":"important_file.png",
                     "title":"Correspondence",
                     "createdDate":"24\/06\/2024 15:20:05",
                     "direction":"Outgoing",
-                    "filename":"1245b837fa40441e986a1b576db37592_Screenshot_2024_06_21_at_15_23_12.png",
+                    "filename":"1245b837fa40441e986a1b576db37592_important_file.png",
                     "mimeType":"image\/png",
                     "caseItems":[],
                     "persons":[{"uId":"7000-0000-1276"}],
@@ -2853,11 +2968,11 @@ module.exports = function () {
                     "id":7,
                     "uuid":"4cb1fe6c-d6a1-4a9f-8517-0078f0eb8a87",
                     "type":"Non-compliance",
-                    "friendlyDescription":"Screenshot_2024_06_21_at_14_12_30.png",
+                    "friendlyDescription":"coolfile.png",
                     "title":"Correspondence",
                     "createdDate":"24\/06\/2024 15:22:08",
                     "direction":"Incoming",
-                    "filename":"8162ff2661274500a8f6578ca0b42fac_Screenshot_2024_06_21_at_14_12_30.png",
+                    "filename":"8162ff2661274500a8f6578ca0b42fac_coolfile.png",
                     "mimeType":"image\/png",
                     "caseItems":[],
                     "persons":[{"uId":"7000-0000-1276"}],
@@ -2870,6 +2985,9 @@ module.exports = function () {
                         "surname":"Team1"
                     },
                     "receivedDateTime":"14\/06\/2024 01:00:00",
+                    "note":{
+                       "description":"Looks like a file to me"
+                    },
                     "documentSource":"UPLOAD",
                     "childCount":0,
                     "subtype":"Non-compliance"
