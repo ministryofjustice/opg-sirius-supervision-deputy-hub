@@ -2,13 +2,8 @@ package server
 
 import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
-
-type Assurances interface {
-	GetAssurances(ctx sirius.Context, deputyId int) ([]model.Assurance, error)
-}
 
 type AssurancesVars struct {
 	AddVisitDisabled bool
@@ -52,7 +47,7 @@ func (h *AssurancesHandler) render(v AppVars, w http.ResponseWriter, r *http.Req
 
 	vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(assurances)
 
-	return h.execute(w, r, vars, vars.AppVars)
+	return h.execute(w, r, vars)
 }
 
 func isAddVisitDisabled(assurances []model.Assurance) (bool, string) {

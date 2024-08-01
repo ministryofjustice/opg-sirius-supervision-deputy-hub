@@ -7,11 +7,6 @@ import (
 	"net/http"
 )
 
-type Tasks interface {
-	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-	GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error)
-}
-
 type TasksVars struct {
 	TaskTypes      []model.TaskType
 	TaskList       sirius.TaskList
@@ -63,5 +58,5 @@ func (h *TasksHandler) render(v AppVars, w http.ResponseWriter, r *http.Request)
 		SuccessMessage: successMessage,
 	}
 
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }

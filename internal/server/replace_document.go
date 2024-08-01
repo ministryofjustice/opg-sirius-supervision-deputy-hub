@@ -88,7 +88,7 @@ func (h *ReplaceDocumentHandler) render(v AppVars, w http.ResponseWriter, r *htt
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 	case http.MethodPost:
 
 		vars.Errors = sirius.ValidationErrors{}
@@ -115,7 +115,7 @@ func (h *ReplaceDocumentHandler) render(v AppVars, w http.ResponseWriter, r *htt
 		vars.Notes = notes
 
 		if len(vars.Errors) > 0 {
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 
 		ctx := getContext(r)
@@ -123,7 +123,7 @@ func (h *ReplaceDocumentHandler) render(v AppVars, w http.ResponseWriter, r *htt
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 
 		if err != nil {

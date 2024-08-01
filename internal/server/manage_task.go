@@ -9,13 +9,6 @@ import (
 	"strconv"
 )
 
-type ManageTasks interface {
-	GetTask(sirius.Context, int) (model.Task, error)
-	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
-	UpdateTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
-	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-}
-
 type manageTaskVars struct {
 	TaskDetails       model.Task
 	Success           bool
@@ -62,7 +55,7 @@ func (h *ManageTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Req
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var (
@@ -85,7 +78,7 @@ func (h *ManageTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Req
 			}
 
 			vars.Errors = util.RenameErrors(updateTaskError)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		err := h.Client().UpdateTask(ctx, v.DeputyId(), taskDetails.Id, dueDate, notes, assigneeId)
@@ -95,7 +88,7 @@ func (h *ManageTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Req
 			vars.TaskDetails, vars.IsCurrentAssignee = RetainFormData(vars.TaskDetails, assignees, dueDate, notes, assigneeId)
 
 			w.WriteHeader(http.StatusBadRequest)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

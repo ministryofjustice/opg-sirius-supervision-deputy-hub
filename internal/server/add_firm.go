@@ -7,11 +7,6 @@ import (
 	"net/http"
 )
 
-type AddFirm interface {
-	AddFirmDetails(sirius.Context, sirius.FirmDetails) (int, error)
-	AssignDeputyToFirm(sirius.Context, int, int) error
-}
-
 type addFirmVars struct {
 	AppVars
 }
@@ -30,7 +25,7 @@ func (h *AddFirmHandler) render(v AppVars, w http.ResponseWriter, r *http.Reques
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 
@@ -50,7 +45,7 @@ func (h *AddFirmHandler) render(v AppVars, w http.ResponseWriter, r *http.Reques
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

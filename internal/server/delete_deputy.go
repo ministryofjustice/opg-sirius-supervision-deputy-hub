@@ -8,10 +8,6 @@ import (
 	"strconv"
 )
 
-type DeleteDeputy interface {
-	DeleteDeputy(sirius.Context, int) error
-}
-
 type DeleteDeputyVars struct {
 	SuccessMessage string
 	AppVars
@@ -31,7 +27,7 @@ func (h *DeleteDeputyHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 	case http.MethodPost:
 		err := h.Client().DeleteDeputy(ctx, deputyId)
 
@@ -39,7 +35,7 @@ func (h *DeleteDeputyHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 			vars.Errors = util.RenameErrors(verr.Errors)
 
 			w.WriteHeader(http.StatusBadRequest)
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		} else if err != nil {
 			return err
 		}

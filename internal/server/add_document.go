@@ -6,16 +6,9 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
-	"mime/multipart"
 	"net/http"
 	"time"
 )
-
-type AddDocument interface {
-	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
-	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
-	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
-}
 
 type AddDocumentVars struct {
 	SuccessMessage string
@@ -67,7 +60,7 @@ func (h *AddDocumentHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		vars.Errors = sirius.ValidationErrors{}
@@ -94,14 +87,14 @@ func (h *AddDocumentHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 		vars.Notes = notes
 
 		if len(vars.Errors) > 0 {
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 
 		err = h.Client().AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 
 		if err != nil {

@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type EditDeputyTeam interface {
-	EditDeputyTeamDetails(sirius.Context, sirius.DeputyDetails) error
-}
-
 type editDeputyTeamVars struct {
 	AppVars
 }
@@ -30,7 +26,7 @@ func (h *EditDeputyTeamHandler) render(v AppVars, w http.ResponseWriter, r *http
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		editDeputyDetailForm := sirius.DeputyDetails{
@@ -51,7 +47,7 @@ func (h *EditDeputyTeamHandler) render(v AppVars, w http.ResponseWriter, r *http
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

@@ -27,11 +27,6 @@ func (a AppVars) DeputyType() string {
 	return a.DeputyDetails.DeputyType.Handle
 }
 
-type AppVarsClient interface {
-	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
-	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
-}
-
 func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)

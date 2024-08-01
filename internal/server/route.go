@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 )
@@ -25,18 +24,10 @@ func (r route) Client() ApiClient {
 // execute is an abstraction of the Template execute functions in order to conditionally render either a full template or
 // a block, in response to a header added by HTMX. If the header is not present, the function will also fetch all
 // additional data needed by the page for a full page load.
-func (r route) execute(w http.ResponseWriter, req *http.Request, data any, appVars AppVars) error {
+func (r route) execute(w http.ResponseWriter, req *http.Request, data any) error {
 	if r.isHxRequest(req) {
 		return r.tmpl.ExecuteTemplate(w, r.partial, data)
 	} else {
-		storedData := appVars
-		fmt.Println("do i have user details")
-		fmt.Println(storedData.UserDetails)
-		fmt.Println("do i have deputy details")
-		fmt.Println(storedData.DeputyDetails)
-		//data.SuccessMessage = r.getSuccess(req)
-		fmt.Println("in route go")
-		fmt.Println(data)
 		return r.tmpl.Execute(w, data)
 	}
 }

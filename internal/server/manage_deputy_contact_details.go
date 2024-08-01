@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type EditContact interface {
-	UpdateDeputyContactDetails(sirius.Context, int, sirius.DeputyContactDetails) error
-}
-
 type editContactVars struct {
 	AppVars
 }
@@ -27,7 +23,7 @@ func (h *EditContactHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		form := sirius.DeputyContactDetails{
@@ -49,7 +45,7 @@ func (h *EditContactHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		} else if err != nil {
 			return err
 		}

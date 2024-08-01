@@ -8,11 +8,6 @@ import (
 	"strconv"
 )
 
-type EditFirm interface {
-	GetFirms(sirius.Context) ([]sirius.FirmForList, error)
-	AssignDeputyToFirm(sirius.Context, int, int) error
-}
-
 type changeFirmVars struct {
 	Firms          []sirius.FirmForList
 	Success        bool
@@ -40,7 +35,7 @@ func (h *EditFirmHandler) render(v AppVars, w http.ResponseWriter, r *http.Reque
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var vars changeFirmVars
@@ -63,7 +58,7 @@ func (h *EditFirmHandler) render(v AppVars, w http.ResponseWriter, r *http.Reque
 
 		if verr, ok := assignDeputyToFirmErr.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		if assignDeputyToFirmErr != nil {

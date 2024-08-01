@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-type Notes interface {
-	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
-	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
-}
-
 type notesVars struct {
 	DeputyNotes    sirius.DeputyNoteCollection
 	SuccessMessage string
@@ -55,7 +50,7 @@ func (h *NotesHandler) render(v AppVars, w http.ResponseWriter, r *http.Request)
 			AppVars:        v,
 		}
 
-		return h.execute(w, r, vars, v)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var vars addNoteVars
@@ -75,7 +70,7 @@ func (h *NotesHandler) render(v AppVars, w http.ResponseWriter, r *http.Request)
 			vars.Errors = util.RenameErrors(verr.Errors)
 
 			w.WriteHeader(http.StatusBadRequest)
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		} else if err != nil {
 			return err
 		}

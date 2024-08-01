@@ -12,12 +12,6 @@ import (
 	"strconv"
 )
 
-type Clients interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
-	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
-	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
-}
-
 type ClientVars struct {
 	Clients sirius.ClientList
 	ListPage
@@ -184,7 +178,7 @@ func (h *ClientHandler) render(v AppVars, w http.ResponseWriter, r *http.Request
 		UrlBuilder:      vars.UrlBuilder,
 	}
 
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }
 
 func getFiltersFromParams(params url.Values) ([]string, []string, []string) {

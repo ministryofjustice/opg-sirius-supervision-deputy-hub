@@ -37,11 +37,6 @@ type ErrorVars struct {
 	EnvironmentVars
 }
 
-type DeputyHubClient interface {
-	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
-	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
-}
-
 type ExpandedError interface {
 	Title() string
 	Data() interface{}

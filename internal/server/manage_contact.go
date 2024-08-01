@@ -8,12 +8,6 @@ import (
 	"strconv"
 )
 
-type ManageContact interface {
-	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
-	AddContact(sirius.Context, int, sirius.ContactForm) error
-	UpdateContact(sirius.Context, int, int, sirius.ContactForm) error
-}
-
 type ManageContactVars struct {
 	ContactId        int
 	ContactName      string
@@ -67,7 +61,7 @@ func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http
 			vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
 			vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
 		}
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var successVar string
@@ -104,7 +98,7 @@ func (h *ManageContactsHandler) render(v AppVars, w http.ResponseWriter, r *http
 			vars.IsMainContact = manageContactForm.IsMainContact
 			vars.IsNewContact = contactId == 0
 
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 
 		if err != nil {

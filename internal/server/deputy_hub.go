@@ -7,10 +7,6 @@ import (
 	"net/url"
 )
 
-type Deputy interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
-}
-
 type DeputyVars struct {
 	SuccessMessage    template.HTML
 	ActiveClientCount int
@@ -49,7 +45,7 @@ func (h *DeputyHandler) render(v AppVars, w http.ResponseWriter, r *http.Request
 		ActiveClientCount: clientList.Metadata.TotalActiveClients,
 		SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, v.DeputyDetails)),
 	}
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }
 
 func getSuccessFromUrl(url *url.URL, deputyDetails sirius.DeputyDetails) string {

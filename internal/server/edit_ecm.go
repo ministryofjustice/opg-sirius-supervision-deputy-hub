@@ -9,11 +9,6 @@ import (
 	"strconv"
 )
 
-type EditDeputyEcm interface {
-	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]model.TeamMember, error)
-	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
-}
-
 type editDeputyEcm struct {
 	EcmTeamDetails []model.TeamMember
 	SuccessMessage string
@@ -48,7 +43,7 @@ func (h *EditDeputyEcmHandler) render(v AppVars, w http.ResponseWriter, r *http.
 		}
 
 		vars.SuccessMessage = successMessage
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		if err != nil {
@@ -63,7 +58,7 @@ func (h *EditDeputyEcmHandler) render(v AppVars, w http.ResponseWriter, r *http.
 			}
 
 			vars.Errors = util.RenameErrors(selectECMError)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		EcmIdValue, err := strconv.Atoi(EcmIdStringValue)
@@ -78,7 +73,7 @@ func (h *EditDeputyEcmHandler) render(v AppVars, w http.ResponseWriter, r *http.
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
 
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		if err != nil {

@@ -9,12 +9,6 @@ import (
 	"strconv"
 )
 
-type AddTask interface {
-	AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error
-	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-	GetDeputyTeamMembers(ctx sirius.Context, defaultPATeam int, deputy sirius.DeputyDetails) ([]model.TeamMember, error)
-}
-
 type AddTaskVars struct {
 	TaskTypes      []model.TaskType
 	Assignees      []model.TeamMember
@@ -51,7 +45,7 @@ func (h *AddTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Reques
 	}
 
 	if r.Method == http.MethodGet {
-		return h.execute(w, r, vars, v)
+		return h.execute(w, r, vars)
 	} else {
 		var (
 			taskType   = r.PostFormValue("tasktype")
@@ -79,7 +73,7 @@ func (h *AddTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.Reques
 			vars.Notes = notes
 			vars.Errors = util.RenameErrors(verr.Errors)
 			w.WriteHeader(http.StatusBadRequest)
-			return h.execute(w, r, vars, v)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

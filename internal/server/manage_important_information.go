@@ -10,13 +10,6 @@ import (
 	"strconv"
 )
 
-type EditProImportantInformation interface {
-	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
-	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error)
-}
-
 type editProImportantInformation struct {
 	AnnualBillingInvoiceTypes []model.RefData
 	DeputyBooleanTypes        []model.RefData
@@ -72,7 +65,7 @@ func (h *EditProImportantInformationHandler) render(v AppVars, w http.ResponseWr
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var panelDeputyBool bool
@@ -109,7 +102,7 @@ func (h *EditProImportantInformationHandler) render(v AppVars, w http.ResponseWr
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		} else if err != nil {
 			return err
 		}

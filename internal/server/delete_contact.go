@@ -7,11 +7,6 @@ import (
 	"strconv"
 )
 
-type DeleteContact interface {
-	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
-	DeleteContact(sirius.Context, int, int) error
-}
-
 // Could just use ErrorVars?
 type DeleteContactVars struct {
 	ContactName string
@@ -41,7 +36,7 @@ func (h *DeleteContactHandler) render(v AppVars, w http.ResponseWriter, r *http.
 	switch r.Method {
 	case http.MethodGet:
 		vars.ContactName = contact.ContactName
-		return h.execute(w, r, vars, v)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		err := h.Client().DeleteContact(ctx, deputyId, contactId)

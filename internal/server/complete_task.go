@@ -9,12 +9,6 @@ import (
 	"strconv"
 )
 
-type CompleteTask interface {
-	GetTask(sirius.Context, int) (model.Task, error)
-	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
-	CompleteTask(sirius.Context, int, string) error
-}
-
 type completeTaskVars struct {
 	TaskDetails    model.Task
 	CompletedNotes string
@@ -52,7 +46,7 @@ func (h *CompleteTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var (
@@ -67,7 +61,7 @@ func (h *CompleteTaskHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 			vars.CompletedNotes = notes
 
 			w.WriteHeader(http.StatusBadRequest)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

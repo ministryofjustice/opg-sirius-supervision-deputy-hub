@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type AddAssurance interface {
-	AddAssurance(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
-}
-
 type AddAssuranceVars struct {
 	AppVars
 }
@@ -29,7 +25,7 @@ func (h *AddAssuranceHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		var assuranceType = r.PostFormValue("assurance-type")
@@ -48,14 +44,14 @@ func (h *AddAssuranceHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 		vars.Errors = util.RenameErrors(vars.Errors)
 
 		if len(vars.Errors) > 0 {
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		err := h.Client().AddAssurance(ctx, assuranceType, requestedDate, v.UserDetails.ID, v.DeputyId())
 
 		if verr, ok := err.(sirius.ValidationError); ok {
 			vars.Errors = util.RenameErrors(verr.Errors)
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 		if err != nil {
 			return err

@@ -11,15 +11,6 @@ import (
 	"strings"
 )
 
-type ManageAssurance interface {
-	UpdateAssurance(ctx sirius.Context, manageAssuranceForm sirius.UpdateAssuranceDetails, deputyId, visitId int) error
-	GetVisitors(ctx sirius.Context) ([]model.Visitor, error)
-	GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error)
-	GetVisitOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetPdrOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetAssuranceById(ctx sirius.Context, deputyId int, visitId int) (model.Assurance, error)
-}
-
 type ManageAssuranceVars struct {
 	Visitors          []model.Visitor
 	RagRatingTypes    []model.RAGRating
@@ -120,7 +111,7 @@ func (h *ManageAssuranceHandler) render(v AppVars, w http.ResponseWriter, r *htt
 
 	switch r.Method {
 	case http.MethodGet:
-		return h.execute(w, r, vars, vars.AppVars)
+		return h.execute(w, r, vars)
 
 	case http.MethodPost:
 		reportReviewDate := r.PostFormValue("report-review-date")
@@ -156,7 +147,7 @@ func (h *ManageAssuranceHandler) render(v AppVars, w http.ResponseWriter, r *htt
 			vars.ErrorNote = r.PostFormValue("note")
 			vars.Assurance = parseAssuranceForm(manageAssuranceForm)
 
-			return h.execute(w, r, vars, vars.AppVars)
+			return h.execute(w, r, vars)
 		}
 
 		success := "manageVisit"

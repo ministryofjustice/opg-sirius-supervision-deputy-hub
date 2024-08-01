@@ -2,51 +2,73 @@ package server
 
 import (
 	"github.com/ministryofjustice/opg-go-common/securityheaders"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"html/template"
 	"io"
 	"log/slog"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 )
 
 type ApiClient interface {
-	Assurances
-	AddAssurance
-	ManageAssurance
-	Clients
-	Contacts
-	EditContact
-	DeleteContact
-	ManageContact
-	Deputy
-	DeleteDeputy
-	DeputyHubClient
-	EditDeputyTeam
-	EditDeputyEcm
-	Documents
-	AddDocument
-	ReplaceDocument
-	AddFirm
-	EditFirm
-	Notes
-	EditProImportantInformation
-	Tasks
-	AddTask
-	CompleteTask
-	ManageTasks
-	Timeline
-}
-
-type Template interface {
-	Execute(wr io.Writer, data any) error
-	ExecuteTemplate(io.Writer, string, interface{}) error
+	AddFirmDetails(sirius.Context, sirius.FirmDetails) (int, error)
+	AssignDeputyToFirm(sirius.Context, int, int) error
+	GetAssurances(ctx sirius.Context, deputyId int) ([]model.Assurance, error)
+	AddAssurance(ctx sirius.Context, assuranceType string, requestedDate string, userId, deputyId int) error
+	UpdateAssurance(ctx sirius.Context, manageAssuranceForm sirius.UpdateAssuranceDetails, deputyId, visitId int) error
+	GetVisitors(ctx sirius.Context) ([]model.Visitor, error)
+	GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error)
+	GetVisitOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetPdrOutcomeTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetAssuranceById(ctx sirius.Context, deputyId int, visitId int) (model.Assurance, error)
+	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
+	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
+	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
+	GetDeputyContacts(sirius.Context, int) (sirius.ContactList, error)
+	UpdateDeputyContactDetails(sirius.Context, int, sirius.DeputyContactDetails) error
+	GetContactById(ctx sirius.Context, deputyId int, contactId int) (sirius.Contact, error)
+	DeleteContact(sirius.Context, int, int) error
+	AddContact(sirius.Context, int, sirius.ContactForm) error
+	UpdateContact(sirius.Context, int, int, sirius.ContactForm) error
+	DeleteDeputy(sirius.Context, int) error
+	GetUserDetails(ctx sirius.Context) (sirius.UserDetails, error)
+	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
+	EditDeputyTeamDetails(sirius.Context, sirius.DeputyDetails) error
+	GetDeputyTeamMembers(sirius.Context, int, sirius.DeputyDetails) ([]model.TeamMember, error)
+	ChangeECM(sirius.Context, sirius.ExecutiveCaseManagerOutgoing, sirius.DeputyDetails) error
+	GetDeputyDocuments(ctx sirius.Context, deputyId int, sort string) (sirius.DocumentList, error)
+	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
+	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
+	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
+	ReplaceDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error
+	GetDocumentById(ctx sirius.Context, deputyId, documentId int) (model.Document, error)
+	GetFirms(sirius.Context) ([]sirius.FirmForList, error)
+	GetDeputyNotes(sirius.Context, int) (sirius.DeputyNoteCollection, error)
+	AddNote(ctx sirius.Context, title, note string, deputyId, userId int, deputyType string) error
+	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
+	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetTaskTypesForDeputyType(ctx sirius.Context, deputyType string) ([]model.TaskType, error)
+	GetTasks(ctx sirius.Context, deputyId int) (sirius.TaskList, error)
+	AddTask(ctx sirius.Context, deputyId int, taskType string, typeName string, dueDate string, notes string, assigneeId int) error
+	GetTask(sirius.Context, int) (model.Task, error)
+	CompleteTask(sirius.Context, int, string) error
+	UpdateTask(ctx sirius.Context, deputyId, taskId int, dueDate, notes string, assigneeId int) error
+	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
 }
 
 type router interface {
 	Client() ApiClient
-	execute(http.ResponseWriter, *http.Request, any, AppVars) error
+	execute(http.ResponseWriter, *http.Request, any) error
+}
+
+type Template interface {
+	Execute(wr io.Writer, data any) error
+	ExecuteTemplate(wr io.Writer, name string, data any) error
 }
 
 func New(logger *slog.Logger, client ApiClient, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {

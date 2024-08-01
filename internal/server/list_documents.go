@@ -7,10 +7,6 @@ import (
 	"net/http"
 )
 
-type Documents interface {
-	GetDeputyDocuments(ctx sirius.Context, deputyId int, sort string) (sirius.DocumentList, error)
-}
-
 type DocumentsVars struct {
 	DocumentList   sirius.DocumentList
 	SuccessMessage string
@@ -52,5 +48,5 @@ func (h *ListDocumentsHandler) render(v AppVars, w http.ResponseWriter, r *http.
 		SuccessMessage: successMessage,
 	}
 
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }

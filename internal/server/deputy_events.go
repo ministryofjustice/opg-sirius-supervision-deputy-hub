@@ -5,10 +5,6 @@ import (
 	"net/http"
 )
 
-type Timeline interface {
-	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
-}
-
 type timelineVars struct {
 	DeputyEvents sirius.DeputyEvents
 	AppVars
@@ -32,5 +28,5 @@ func (h *TimelineHandler) render(v AppVars, w http.ResponseWriter, r *http.Reque
 		AppVars:      v,
 	}
 
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }

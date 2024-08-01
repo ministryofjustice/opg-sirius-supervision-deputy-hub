@@ -5,10 +5,6 @@ import (
 	"net/http"
 )
 
-type Contacts interface {
-	GetDeputyContacts(sirius.Context, int) (sirius.ContactList, error)
-}
-
 type ListContactsVars struct {
 	SuccessMessage string
 	ContactList    sirius.ContactList
@@ -54,5 +50,5 @@ func (h *ListContactsHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 		SuccessMessage: successMessage,
 	}
 
-	return h.execute(w, r, vars, v)
+	return h.execute(w, r, vars)
 }
