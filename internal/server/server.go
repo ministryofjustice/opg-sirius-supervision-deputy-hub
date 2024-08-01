@@ -12,6 +12,9 @@ import (
 )
 
 type ApiClient interface {
+	Assurances
+	AddAssurance
+	ManageAssurance
 	DeputyHubClient
 	Clients
 	Contacts
@@ -21,6 +24,7 @@ type ApiClient interface {
 	DeleteDeputy
 	AddDocument
 	Documents
+	ReplaceDocument
 	Notes
 	Tasks
 	AddTask
@@ -58,16 +62,16 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	http.Handle("/javascript/", http.StripPrefix("/static/", http.FileServer(http.Dir(envVars.WebDir+"/javascript"))))
 	http.Handle("/stylesheets/", http.StripPrefix("/static/", http.FileServer(http.Dir(envVars.WebDir+"/stylesheets"))))
 
-	//mux.Handle("/assets/", static)
-	//mux.Handle("/javascript/", static)
-	//mux.Handle("/stylesheets/", static)
-
 	mux.Handle("GET /{deputyId}/clients", wrap(&ClientHandler{&route{client: client, tmpl: templates["clients.gotmpl"], partial: "clients"}}))
 
-	//pageRouter.Handle("/manage-deputy-contact-details",
-	//	wrap(
-	//		renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
-	//
+	mux.Handle("GET /{deputyId}/assurances", wrap(&AssurancesHandler{&route{client: client, tmpl: templates["assurances.gotmpl"], partial: "assurances"}}))
+	mux.Handle("GET /{deputyId}/add-assurance", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
+	mux.Handle("POST /{deputyId}/add-assurance", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
+	mux.Handle("GET /{deputyId}/manage-visit/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-visit.gotmpl"], partial: "manage-visit"}}))
+	mux.Handle("GET /{deputyId}/manage-assurance/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-pdr.gotmpl"], partial: "manage-pdr"}}))
+
+	mux.Handle("POST /{deputyId}/manage-visit/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-visit.gotmpl"], partial: "manage-visit"}}))
+	mux.Handle("POST /{deputyId}/manage-assurance/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-pdr.gotmpl"], partial: "manage-pdr"}}))
 
 	mux.Handle("GET /{deputyId}/contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["contacts.gotmpl"], partial: "contacts"}}))
 	mux.Handle("GET /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
@@ -84,6 +88,8 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("GET /{deputyId}/documents", wrap(&ListDocumentsHandler{&route{client: client, tmpl: templates["documents.gotmpl"], partial: "documents"}}))
 	mux.Handle("GET /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
 	mux.Handle("POST /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
+	mux.Handle("GET /{deputyId}/documents/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
+	mux.Handle("POST /{deputyId}/documents/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
 
 	mux.Handle("GET /{deputyId}/timeline", wrap(&TimelineHandler{&route{client: client, tmpl: templates["timeline.gotmpl"], partial: "timeline"}}))
 
@@ -121,18 +127,6 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	//	wrap(
 	//		renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
 	//
-
-	//pageRouter.Handle("/assurances",
-	//	wrap(
-	//		renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
-	//
-	//pageRouter.Handle("/add-assurance",
-	//	wrap(
-	//		renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
-	//
-	//pageRouter.Handle("/manage-assurance/{visitId}",
-	//	wrap(
-	//		renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
 
 	//static := staticFileHandler(envVars.WebDir)
 	//router.PathPrefix("/assets/").Handler(static)

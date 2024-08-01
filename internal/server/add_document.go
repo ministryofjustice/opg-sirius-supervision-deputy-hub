@@ -67,7 +67,6 @@ func (h *AddDocumentHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 
 	switch r.Method {
 	case http.MethodGet:
-		//implement me!
 		return h.execute(w, r, vars, vars.AppVars)
 
 	case http.MethodPost:
@@ -94,9 +93,9 @@ func (h *AddDocumentHandler) render(v AppVars, w http.ResponseWriter, r *http.Re
 		vars.Date = date
 		vars.Notes = notes
 
-		//if len(vars.Errors) > 0 {
-		//	return tmpl.ExecuteTemplate(w, "page", vars)
-		//}
+		if len(vars.Errors) > 0 {
+			return h.execute(w, r, vars, v)
+		}
 
 		err = h.Client().AddDocument(ctx, file, handler.Filename, documentType, direction, date, notes, vars.DeputyDetails.ID)
 

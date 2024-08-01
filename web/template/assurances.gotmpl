@@ -46,19 +46,27 @@
         </div>
         {{ if eq $i 0 }}
             <div class="moj-button-menu__wrapper">
-                <a
-                    href="{{ prefix (printf "/%d/manage-assurance/%d" $assurance.DeputyId $assurance.Id) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary"
-                    id="hook-manage-a-visit"
-                    data-module="govuk-button">
-                    {{ if eq $assurance.Type.Label "PDR" }}
+                {{ if eq $assurance.Type.Label "PDR" }}
+                    <a
+                        href="{{ prefix (printf "/%d/manage-assurance/%d" $assurance.DeputyId $assurance.Id) }}"
+                        role="button"
+                        draggable="false"
+                        class="govuk-button moj-button-menu__item govuk-button--secondary"
+                        id="hook-manage-a-visit"
+                        data-module="govuk-button">
                         Manage PDR
-                    {{ else }}
+                    </a>
+                {{ else }}
+                     <a
+                        href="{{ prefix (printf "/%d/manage-visit/%d" $assurance.DeputyId $assurance.Id) }}"
+                        role="button"
+                        draggable="false"
+                        class="govuk-button moj-button-menu__item govuk-button--secondary"
+                        id="hook-manage-a-visit"
+                        data-module="govuk-button">
                         Manage assurance visit
-                    {{ end }}
-                </a>
+                    </a>
+                {{ end }}
             </div>
         {{ end }}
         {{ if not (is_last $i $.Assurances) }}

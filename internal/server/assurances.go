@@ -3,9 +3,10 @@ package server
 import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"net/http"
 )
 
-type GetAssurancesClient interface {
+type Assurances interface {
 	GetAssurances(ctx sirius.Context, deputyId int) ([]model.Assurance, error)
 }
 
@@ -17,41 +18,42 @@ type AssurancesVars struct {
 	AppVars
 }
 
-//
-//func renderTemplateForAssurances(client GetAssurancesClient, tmpl Template) Handler {
-//	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-//		ctx := getContext(r)
-//
-//		var successMessage string
-//		switch r.URL.Query().Get("success") {
-//		case "addAssurance":
-//			successMessage = "Assurance process updated"
-//		case "manageVisit":
-//			successMessage = "Assurance visit updated"
-//		case "managePDR":
-//			successMessage = "PDR updated"
-//		default:
-//			successMessage = ""
-//		}
-//
-//		assurances, err := client.GetAssurances(ctx, app.DeputyId())
-//		if err != nil {
-//			return err
-//		}
-//
-//		app.PageName = "Assurance visits"
-//
-//		vars := AssurancesVars{
-//			SuccessMessage: successMessage,
-//			Assurances:     assurances,
-//			AppVars:        app,
-//		}
-//
-//		vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(assurances)
-//
-//		return tmpl.ExecuteTemplate(w, "page", vars)
-//	}
-//}
+type AssurancesHandler struct {
+	router
+}
+
+func (h *AssurancesHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+
+	var successMessage string
+	switch r.URL.Query().Get("success") {
+	case "addAssurance":
+		successMessage = "Assurance process updated"
+	case "manageVisit":
+		successMessage = "Assurance visit updated"
+	case "managePDR":
+		successMessage = "PDR updated"
+	default:
+		successMessage = ""
+	}
+
+	assurances, err := h.Client().GetAssurances(ctx, v.DeputyId())
+	if err != nil {
+		return err
+	}
+
+	v.PageName = "Assurance visits"
+
+	vars := AssurancesVars{
+		SuccessMessage: successMessage,
+		Assurances:     assurances,
+		AppVars:        v,
+	}
+
+	vars.AddVisitDisabled, vars.ErrorMessage = isAddVisitDisabled(assurances)
+
+	return h.execute(w, r, vars, vars.AppVars)
+}
 
 func isAddVisitDisabled(assurances []model.Assurance) (bool, string) {
 	if len(assurances) > 0 {
