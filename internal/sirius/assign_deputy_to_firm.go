@@ -11,7 +11,7 @@ type FirmId struct {
 	FirmId int `json:"firmId"`
 }
 
-func (c *Client) AssignDeputyToFirm(ctx Context, deputyId int, firmId int) error {
+func (c *ApiClient) AssignDeputyToFirm(ctx Context, deputyId int, firmId int) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(FirmId{
 		FirmId: firmId,

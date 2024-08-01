@@ -7,54 +7,51 @@ import (
 	"net/http"
 )
 
-type DeputyContactDetailsInformation interface {
-	UpdateDeputyContactDetails(sirius.Context, int, sirius.DeputyContactDetails) error
-}
-
-type manageDeputyContactDetailsVars struct {
+type editContactVars struct {
 	AppVars
 }
 
-func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInformation, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		ctx := getContext(r)
+type EditContactHandler struct {
+	router
+}
 
-		app.PageName = "Manage deputy contact details"
+func (h *EditContactHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+	v.PageName = "Manage deputy contact details"
 
-		vars := manageDeputyContactDetailsVars{AppVars: app}
+	vars := editContactVars{AppVars: v}
 
-		switch r.Method {
-		case http.MethodGet:
-			return tmpl.ExecuteTemplate(w, "page", vars)
+	switch r.Method {
+	case http.MethodGet:
+		return h.execute(w, r, vars)
 
-		case http.MethodPost:
-			form := sirius.DeputyContactDetails{
-				DeputySubType:    app.DeputyDetails.DeputySubType.SubType,
-				DeputyFirstName:  r.PostFormValue("deputy-first-name"),
-				DeputySurname:    r.PostFormValue("deputy-last-name"),
-				OrganisationName: r.PostFormValue("organisation-name"),
-				AddressLine1:     r.PostFormValue("address-line-1"),
-				AddressLine2:     r.PostFormValue("address-line-2"),
-				AddressLine3:     r.PostFormValue("address-line-3"),
-				Town:             r.PostFormValue("town"),
-				County:           r.PostFormValue("county"),
-				Postcode:         r.PostFormValue("postcode"),
-				PhoneNumber:      r.PostFormValue("telephone"),
-				Email:            r.PostFormValue("email"),
-			}
-
-			err := client.UpdateDeputyContactDetails(ctx, app.DeputyId(), form)
-
-			if verr, ok := err.(sirius.ValidationError); ok {
-				vars.Errors = util.RenameErrors(verr.Errors)
-				return tmpl.ExecuteTemplate(w, "page", vars)
-			} else if err != nil {
-				return err
-			}
-
-			return Redirect(fmt.Sprintf("/%d?success=deputyDetails", app.DeputyId()))
-		default:
-			return StatusError(http.StatusMethodNotAllowed)
+	case http.MethodPost:
+		form := sirius.DeputyContactDetails{
+			DeputySubType:    v.DeputyDetails.DeputySubType.SubType,
+			DeputyFirstName:  r.PostFormValue("deputy-first-name"),
+			DeputySurname:    r.PostFormValue("deputy-last-name"),
+			OrganisationName: r.PostFormValue("organisation-name"),
+			AddressLine1:     r.PostFormValue("address-line-1"),
+			AddressLine2:     r.PostFormValue("address-line-2"),
+			AddressLine3:     r.PostFormValue("address-line-3"),
+			Town:             r.PostFormValue("town"),
+			County:           r.PostFormValue("county"),
+			Postcode:         r.PostFormValue("postcode"),
+			PhoneNumber:      r.PostFormValue("telephone"),
+			Email:            r.PostFormValue("email"),
 		}
+
+		err := h.Client().UpdateDeputyContactDetails(ctx, v.DeputyId(), form)
+
+		if verr, ok := err.(sirius.ValidationError); ok {
+			vars.Errors = util.RenameErrors(verr.Errors)
+			return h.execute(w, r, vars)
+		} else if err != nil {
+			return err
+		}
+
+		return Redirect(fmt.Sprintf("/%d?success=deputyDetails", v.DeputyId()))
+	default:
+		return StatusError(http.StatusMethodNotAllowed)
 	}
 }

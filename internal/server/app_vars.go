@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
+	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
 	"net/http"
@@ -27,15 +27,13 @@ func (a AppVars) DeputyType() string {
 	return a.DeputyDetails.DeputyType.Handle
 }
 
-type AppVarsClient interface {
-	GetUserDetails(sirius.Context) (sirius.UserDetails, error)
-	GetDeputyDetails(sirius.Context, int, int, int) (sirius.DeputyDetails, error)
-}
-
-func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (*AppVars, error) {
+func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)
-	deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
+	deputyId, _ := strconv.Atoi(r.PathValue("deputyId"))
+
+	fmt.Println("deputy Id in new app vars")
+	fmt.Println(deputyId)
 
 	vars := AppVars{
 		Path:            r.URL.Path,
@@ -51,6 +49,7 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 		vars.UserDetails = user
 		return nil
 	})
+
 	group.Go(func() error {
 		deputy, err := client.GetDeputyDetails(ctx.With(groupCtx), vars.DefaultPaTeam, vars.DefaultProTeam, deputyId)
 		if err != nil {
@@ -61,8 +60,7 @@ func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) 
 	})
 
 	if err := group.Wait(); err != nil {
-		return nil, err
+		return vars, err
 	}
-
-	return &vars, nil
+	return vars, nil
 }

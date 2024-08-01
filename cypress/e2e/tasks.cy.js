@@ -13,7 +13,7 @@ describe("Tasks", () => {
            cy.contains(".govuk-heading-l", "Deputy tasks");
 
            cy.contains(".govuk-button", "Add a new task").click();
-           cy.url().should("include","/supervision/deputies/1/tasks/add-task");
+           cy.url().should("include","/supervision/deputies/1/tasks/add");
 
            cy.contains(".govuk-link", "Cancel").click();
            cy.url().should("include", "/supervision/deputies/1/tasks");
@@ -55,7 +55,7 @@ describe("Tasks", () => {
 
     describe("Adding a Task", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/1/tasks/add-task");
+            cy.visit("/supervision/deputies/1/tasks/add");
         });
 
         it("should add a task successfully", () => {

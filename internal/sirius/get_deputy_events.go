@@ -12,7 +12,7 @@ import (
 
 type DeputyEvents []model.DeputyEvent
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
+func (c *ApiClient) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
 	var de DeputyEvents
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)

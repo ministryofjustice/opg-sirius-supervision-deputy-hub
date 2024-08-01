@@ -32,7 +32,7 @@ type DeputyContact struct {
 
 type ContactList []DeputyContact
 
-func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, error) {
+func (c *ApiClient) GetDeputyContacts(ctx Context, deputyId int) (ContactList, error) {
 	var contactList ContactList
 	var apiContacts []ApiContact
 

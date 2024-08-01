@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) GetTask(ctx Context, taskId int) (model.Task, error) {
+func (c *ApiClient) GetTask(ctx Context, taskId int) (model.Task, error) {
 	var t model.Task
 	requestURL := fmt.Sprintf("/api/v1/tasks/%d", taskId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)

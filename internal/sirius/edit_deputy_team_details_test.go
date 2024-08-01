@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEditDeputyDetails(t *testing.T) {
+func TestEditDeputyTeamDetails(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -52,11 +52,11 @@ func TestEditDeputyDetails(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyTeamDetails(getContext(nil), editDeputyDetailForm)
 	assert.Nil(t, err)
 }
 
-func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
+func TestEditDeputyTeamDetailsReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		_, _ = w.Write([]byte("{}"))
@@ -79,7 +79,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyTeamDetails(getContext(nil), editDeputyDetailForm)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
@@ -88,7 +88,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 	}, err)
 }
 
-func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
+func TestEditDeputyTeamDetailsReturnsUnauthorisedClientError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 	}))
@@ -110,7 +110,7 @@ func TestEditDeputyDetailsReturnsUnauthorisedClientError(t *testing.T) {
 		Postcode:                         "postcode",
 	}
 
-	err := client.EditDeputyDetails(getContext(nil), editDeputyDetailForm)
+	err := client.EditDeputyTeamDetails(getContext(nil), editDeputyDetailForm)
 
 	assert.Equal(t, ErrUnauthorized, err)
 }

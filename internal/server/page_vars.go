@@ -60,7 +60,7 @@ func (lp ListPage) HasFilterBy(page interface{}, filter string) bool {
 	return false
 }
 
-func (lcv ListClientsVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []model.OrderStatus) []string {
+func (lcv ClientVars) ValidateSelectedOrderStatuses(selectedOrderStatuses []string, orderStatuses []model.OrderStatus) []string {
 	var validSelectedOrderStatuses []string
 	for _, selectedOrderStatus := range selectedOrderStatuses {
 		for _, orderStatus := range orderStatuses {

@@ -23,7 +23,7 @@ type DeputyNote struct {
 	Direction       string `json:"direction"`
 }
 
-func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
+func (c *ApiClient) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
 	var v DeputyNoteCollection
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/notes", deputyId), nil)

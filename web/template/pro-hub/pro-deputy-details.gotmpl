@@ -12,7 +12,7 @@
         <div class="moj-button-menu">
             <div class="moj-button-menu__wrapper">
                 <a
-                    href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
+                    href="{{ prefix (printf "/%d/delete" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
@@ -28,7 +28,7 @@
                     Download schedule
                 </a>
                 <a
-                    href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}"
+                    href="{{ prefix (printf "/%d/firm/change" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     class="govuk-button moj-button-menu__item govuk-button--secondary "

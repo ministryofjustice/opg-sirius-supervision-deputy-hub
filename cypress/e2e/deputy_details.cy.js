@@ -126,9 +126,9 @@ describe("Deputy details tab", () => {
 
     describe("Delete a deputy", () => {
         it("can't delete a deputy", () => {
-            cy.visit("/supervision/deputies/2/delete-deputy");
+            cy.visit("/supervision/deputies/2/delete");
             cy.setCookie("fail-route", "deleteDeputy");
-            cy.get('[data-cy="delete-deputy"]').click();
+            cy.get('[data-cy="delete"]').click();
             cy.get('.govuk-error-summary').should('be.visible');
             cy.get(".govuk-error-summary__title").should(
                 "contain",
@@ -143,9 +143,9 @@ describe("Deputy details tab", () => {
         it("can delete a deputy", () => {
             cy.visit("/supervision/deputies/2");
             cy.setCookie("success-route", "/deputies/2");
-            cy.get('[href="/supervision/deputies/2/delete-deputy"]').click();
-            cy.url().should("contain", "supervision/deputies/2/delete-deputy");
-            cy.get('[data-cy="delete-deputy"]').click();
+            cy.get('[href="/supervision/deputies/2/delete"]').click();
+            cy.url().should("contain", "supervision/deputies/2/delete");
+            cy.get('[data-cy="delete"]').click();
             cy.get('.moj-banner--success').should('be.visible');
             cy.get('.moj-banner--success').should('contain.text', 'Second Test Organisation 23 has been deleted');
         });

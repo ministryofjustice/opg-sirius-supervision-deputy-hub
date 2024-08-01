@@ -5,34 +5,28 @@ import (
 	"net/http"
 )
 
-type DeputyHubEventInformation interface {
-	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
-}
-
-type deputyHubEventVars struct {
+type timelineVars struct {
 	DeputyEvents sirius.DeputyEvents
 	AppVars
 }
 
-func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+type TimelineHandler struct {
+	router
+}
 
-		ctx := getContext(r)
-		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId())
-		if err != nil {
-			return err
-		}
-
-		app.PageName = "Timeline"
-
-		vars := deputyHubEventVars{
-			DeputyEvents: deputyEvents,
-			AppVars:      app,
-		}
-
-		return tmpl.ExecuteTemplate(w, "page", vars)
+func (h *TimelineHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	ctx := getContext(r)
+	deputyEvents, err := h.Client().GetDeputyEvents(ctx, v.DeputyId())
+	if err != nil {
+		return err
 	}
+
+	v.PageName = "Timeline"
+
+	vars := timelineVars{
+		DeputyEvents: deputyEvents,
+		AppVars:      v,
+	}
+
+	return h.execute(w, r, vars)
 }

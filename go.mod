@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/ministryofjustice/opg-go-common v1.8.0
 	github.com/stretchr/testify v1.9.0
+	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.52.0
 	golang.org/x/sync v0.7.0
 )
 
@@ -15,6 +16,7 @@ require (
 	github.com/brunoscheufler/aws-ecs-metadata-go v0.0.0-20221221133751-67e37ae746cd // indirect
 	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect

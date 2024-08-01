@@ -22,7 +22,7 @@ type DeputyContactDetails struct {
 	DeputySubType    string `json:"deputySubType"`
 }
 
-func (c *Client) UpdateDeputyContactDetails(ctx Context, deputyId int, deputyDetails DeputyContactDetails) error {
+func (c *ApiClient) UpdateDeputyContactDetails(ctx Context, deputyId int, deputyDetails DeputyContactDetails) error {
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(deputyDetails)
 	if err != nil {

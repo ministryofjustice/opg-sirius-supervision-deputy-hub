@@ -19,7 +19,7 @@ type FirmDetails struct {
 	PhoneNumber  string `json:"phoneNumber"`
 }
 
-func (c *Client) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, error) {
+func (c *ApiClient) AddFirmDetails(ctx Context, addFirmForm FirmDetails) (int, error) {
 	var k FirmDetails
 	var body bytes.Buffer
 	err := json.NewEncoder(&body).Encode(addFirmForm)

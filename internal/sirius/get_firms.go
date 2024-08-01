@@ -11,7 +11,7 @@ type FirmForList struct {
 	FirmNumber int    `json:"firmNumber"`
 }
 
-func (c *Client) GetFirms(ctx Context) ([]FirmForList, error) {
+func (c *ApiClient) GetFirms(ctx Context) ([]FirmForList, error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/firms", nil)
 	if err != nil {
 		return nil, err

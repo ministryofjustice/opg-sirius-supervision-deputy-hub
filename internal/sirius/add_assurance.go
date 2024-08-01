@@ -13,7 +13,7 @@ type CreateAssurance struct {
 	RequestedBy   int    `json:"requestedBy"`
 }
 
-func (c *Client) AddAssurance(ctx Context, assuranceType string, requestedDate string, userId, deputyId int) error {
+func (c *ApiClient) AddAssurance(ctx Context, assuranceType string, requestedDate string, userId, deputyId int) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(CreateAssurance{

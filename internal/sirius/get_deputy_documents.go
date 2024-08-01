@@ -14,7 +14,7 @@ type DocumentList struct {
 	Metadata       Metadata         `json:"metadata"`
 }
 
-func (c *Client) GetDeputyDocuments(ctx Context, deputyId int, sort string) (DocumentList, error) {
+func (c *ApiClient) GetDeputyDocuments(ctx Context, deputyId int, sort string) (DocumentList, error) {
 	var documentList DocumentList
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/persons/%d/documents?&sort=%s", deputyId, sort), nil)
 

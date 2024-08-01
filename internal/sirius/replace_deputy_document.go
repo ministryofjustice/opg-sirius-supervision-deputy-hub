@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error {
+func (c *ApiClient) ReplaceDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error {
 	var body bytes.Buffer
 
 	source, err := model.EncodeFileToBase64(file)

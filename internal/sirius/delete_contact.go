@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (c *Client) DeleteContact(ctx Context, deputyId int, contactId int) error {
+func (c *ApiClient) DeleteContact(ctx Context, deputyId int, contactId int) error {
 	var body bytes.Buffer
 
 	url := fmt.Sprintf("/api/v1/deputies/%d/contacts/%d", deputyId, contactId)

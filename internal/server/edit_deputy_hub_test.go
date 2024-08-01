@@ -18,7 +18,7 @@ type mockEditDeputyHubInformation struct {
 	err     error
 }
 
-func (m *mockEditDeputyHubInformation) EditDeputyDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
+func (m *mockEditDeputyHubInformation) EditDeputyTeamDetails(ctx sirius.Context, deputyDetails sirius.DeputyDetails) error {
 	m.count += 1
 	m.lastCtx = ctx
 

@@ -75,7 +75,7 @@ type DeputyDetails struct {
 	Firm                             Firm                       `json:"firm"`
 }
 
-func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam int, deputyId int) (DeputyDetails, error) {
+func (c *ApiClient) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam int, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d", deputyId), nil)

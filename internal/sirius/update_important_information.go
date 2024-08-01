@@ -20,7 +20,7 @@ type ImportantInformationDetails struct {
 	PanelDeputy               bool   `json:"panelDeputy"`
 }
 
-func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, importantInfoForm ImportantInformationDetails) error {
+func (c *ApiClient) UpdateImportantInformation(ctx Context, deputyId int, importantInfoForm ImportantInformationDetails) error {
 
 	var body bytes.Buffer
 

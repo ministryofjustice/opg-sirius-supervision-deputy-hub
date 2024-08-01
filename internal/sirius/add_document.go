@@ -27,7 +27,7 @@ type EncodedFile struct {
 	Type   string `json:"type"`
 }
 
-func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
+func (c *ApiClient) AddDocument(ctx Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId int) error {
 	var body bytes.Buffer
 
 	source, err := model.EncodeFileToBase64(file)

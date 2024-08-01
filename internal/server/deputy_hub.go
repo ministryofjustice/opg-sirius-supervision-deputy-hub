@@ -7,49 +7,45 @@ import (
 	"net/url"
 )
 
-type DeputyHubInformation interface {
-	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
-}
-
-type deputyHubVars struct {
+type DeputyVars struct {
 	SuccessMessage    template.HTML
 	ActiveClientCount int
 	AppVars
 }
 
-func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
-			return StatusError(http.StatusMethodNotAllowed)
-		}
+type DeputyHandler struct {
+	router
+}
 
-		ctx := getContext(r)
-
-		var selectedOrderStatuses []string
-		selectedOrderStatuses = append(selectedOrderStatuses, "ACTIVE")
-
-		params := sirius.ClientListParams{
-			DeputyId:      app.DeputyId(),
-			Search:        1,
-			DeputyType:    app.DeputyType(),
-			OrderStatuses: selectedOrderStatuses,
-		}
-
-		clientList, err := client.GetDeputyClients(ctx, params)
-		if err != nil {
-			return err
-		}
-
-		app.PageName = "Deputy details"
-
-		vars := deputyHubVars{
-			AppVars:           app,
-			ActiveClientCount: clientList.Metadata.TotalActiveClients,
-			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
-		}
-
-		return tmpl.ExecuteTemplate(w, "page", vars)
+func (h *DeputyHandler) render(v AppVars, w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodGet {
+		return StatusError(http.StatusMethodNotAllowed)
 	}
+	ctx := getContext(r)
+	v.PageName = "Deputy details"
+	var selectedOrderStatuses []string
+	selectedOrderStatuses = append(selectedOrderStatuses, "ACTIVE")
+
+	params := sirius.ClientListParams{
+		DeputyId:      v.DeputyId(),
+		Search:        1,
+		DeputyType:    v.DeputyType(),
+		OrderStatuses: selectedOrderStatuses,
+	}
+
+	clientList, err := h.Client().GetDeputyClients(ctx, params)
+	if err != nil {
+		return err
+	}
+
+	v.PageName = "Deputy details"
+
+	vars := DeputyVars{
+		AppVars:           v,
+		ActiveClientCount: clientList.Metadata.TotalActiveClients,
+		SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, v.DeputyDetails)),
+	}
+	return h.execute(w, r, vars)
 }
 
 func getSuccessFromUrl(url *url.URL, deputyDetails sirius.DeputyDetails) string {
