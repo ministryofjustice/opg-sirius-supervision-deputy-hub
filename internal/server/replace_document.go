@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
@@ -40,8 +39,7 @@ func (h *ReplaceDocumentHandler) render(v AppVars, w http.ResponseWriter, r *htt
 	ctx := getContext(r)
 	v.PageName = "Replace a document"
 
-	routeVars := mux.Vars(r)
-	documentId, _ := strconv.Atoi(routeVars["documentId"])
+	documentId, _ := strconv.Atoi(r.PathValue("documentId"))
 
 	vars := ReplaceDocumentVars{
 		AppVars: v,

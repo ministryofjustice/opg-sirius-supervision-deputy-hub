@@ -15,33 +15,28 @@ type ApiClient interface {
 	Assurances
 	AddAssurance
 	ManageAssurance
-	DeputyHubClient
 	Clients
 	Contacts
+	EditContact
 	DeleteContact
 	ManageContact
 	Deputy
 	DeleteDeputy
-	AddDocument
+	DeputyHubClient
+	EditDeputyTeam
+	EditDeputyEcm
 	Documents
+	AddDocument
 	ReplaceDocument
+	AddFirm
+	EditFirm
 	Notes
+	EditProImportantInformation
 	Tasks
 	AddTask
-	ManageTasks
 	CompleteTask
+	ManageTasks
 	Timeline
-	//EditDeputyHubInformation
-	//ChangeECMInformation
-	//FirmInformation
-	//DeputyContactDetailsInformation
-	//ManageProDeputyImportantInformation
-	//DeputyChangeFirmInformation
-	//AddAssuranceClient
-	//GetAssurancesClient
-	//ManageAssuranceClient
-	//DeleteDeputy
-
 }
 
 type Template interface {
@@ -65,68 +60,56 @@ func New(logger *slog.Logger, client ApiClient, templates map[string]*template.T
 	mux.Handle("GET /{deputyId}/clients", wrap(&ClientHandler{&route{client: client, tmpl: templates["clients.gotmpl"], partial: "clients"}}))
 
 	mux.Handle("GET /{deputyId}/assurances", wrap(&AssurancesHandler{&route{client: client, tmpl: templates["assurances.gotmpl"], partial: "assurances"}}))
-	mux.Handle("GET /{deputyId}/add-assurance", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
-	mux.Handle("POST /{deputyId}/add-assurance", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
+	mux.Handle("GET /{deputyId}/assurance/add", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
+	mux.Handle("POST /{deputyId}/assurance/add", wrap(&AddAssuranceHandler{&route{client: client, tmpl: templates["add-assurance.gotmpl"], partial: "add-assurance"}}))
 	mux.Handle("GET /{deputyId}/manage-visit/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-visit.gotmpl"], partial: "manage-visit"}}))
 	mux.Handle("GET /{deputyId}/manage-assurance/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-pdr.gotmpl"], partial: "manage-pdr"}}))
-
 	mux.Handle("POST /{deputyId}/manage-visit/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-visit.gotmpl"], partial: "manage-visit"}}))
 	mux.Handle("POST /{deputyId}/manage-assurance/{visitId}", wrap(&ManageAssuranceHandler{&route{client: client, tmpl: templates["manage-pdr.gotmpl"], partial: "manage-pdr"}}))
 
 	mux.Handle("GET /{deputyId}/contacts", wrap(&ListContactsHandler{&route{client: client, tmpl: templates["contacts.gotmpl"], partial: "contacts"}}))
-	mux.Handle("GET /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
-	mux.Handle("POST /{deputyId}/contacts/add-contact", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("GET /{deputyId}/contacts/add", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
+	mux.Handle("POST /{deputyId}/contacts/add", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("GET /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/{contactId}", wrap(&ManageContactsHandler{&route{client: client, tmpl: templates["manage-contact.gotmpl"], partial: "manage-contact"}}))
 	mux.Handle("GET /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
 	mux.Handle("POST /{deputyId}/contacts/{contactId}/delete", wrap(&DeleteContactHandler{&route{client: client, tmpl: templates["delete-contact.gotmpl"], partial: "delete-contact"}}))
 
 	mux.Handle("GET /{deputyId}", wrap(&DeputyHandler{&route{client: client, tmpl: templates["deputy-details.gotmpl"], partial: "deputy-details"}}))
-	mux.Handle("GET /{deputyId}/delete-deputy", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
-	mux.Handle("POST /{deputyId}/delete-deputy", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
+	mux.Handle("GET /{deputyId}/delete", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
+	mux.Handle("POST /{deputyId}/delete", wrap(&DeleteDeputyHandler{&route{client: client, tmpl: templates["delete-deputy.gotmpl"], partial: "delete-deputy"}}))
+
+	mux.Handle("GET /{deputyId}/edit-deputy-team", wrap(&EditDeputyTeamHandler{&route{client: client, tmpl: templates["manage-deputy-team.gotmpl"], partial: "manage-team-details"}}))
+	mux.Handle("POST /{deputyId}/edit-deputy-team", wrap(&EditDeputyTeamHandler{&route{client: client, tmpl: templates["manage-deputy-team.gotmpl"], partial: "manage-team-details"}}))
+	mux.Handle("GET /{deputyId}/edit-important-information", wrap(&EditDeputyEcmHandler{&route{client: client, tmpl: templates["manage-important-information.gotmpl"], partial: "manage-important-information"}}))
+	mux.Handle("POST /{deputyId}/edit-important-information", wrap(&EditDeputyEcmHandler{&route{client: client, tmpl: templates["manage-important-information.gotmpl"], partial: "manage-important-information"}}))
+	mux.Handle("GET /{deputyId}/change-ecm", wrap(&EditDeputyEcmHandler{&route{client: client, tmpl: templates["change-ecm.gotmpl"], partial: "change-ecm"}}))
+	mux.Handle("POST /{deputyId}/change-ecm", wrap(&EditDeputyEcmHandler{&route{client: client, tmpl: templates["change-ecm.gotmpl"], partial: "change-ecm"}}))
+
+	mux.Handle("GET /{deputyId}/firm/add", wrap(&AddFirmHandler{&route{client: client, tmpl: templates["add-firm.gotmpl"], partial: "add-firm"}}))
+	mux.Handle("POST /{deputyId}/firm/add", wrap(&AddFirmHandler{&route{client: client, tmpl: templates["add-firm.gotmpl"], partial: "add-firm"}}))
+	mux.Handle("GET /{deputyId}/firm/change", wrap(&EditFirmHandler{&route{client: client, tmpl: templates["change-firm.gotmpl"], partial: "change-firm"}}))
+	mux.Handle("POST /{deputyId}/firm/change", wrap(&EditFirmHandler{&route{client: client, tmpl: templates["change-firm.gotmpl"], partial: "change-firm"}}))
 
 	mux.Handle("GET /{deputyId}/documents", wrap(&ListDocumentsHandler{&route{client: client, tmpl: templates["documents.gotmpl"], partial: "documents"}}))
 	mux.Handle("GET /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
 	mux.Handle("POST /{deputyId}/documents/add", wrap(&AddDocumentHandler{&route{client: client, tmpl: templates["add-document.gotmpl"], partial: "add-document"}}))
-	mux.Handle("GET /{deputyId}/documents/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
-	mux.Handle("POST /{deputyId}/documents/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
+	mux.Handle("GET /{deputyId}/documents/{documentId}/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
+	mux.Handle("POST /{deputyId}/documents/{documentId}/replace", wrap(&ReplaceDocumentHandler{&route{client: client, tmpl: templates["replace-document.gotmpl"], partial: "replace-document"}}))
+
+	mux.Handle("GET /{deputyId}/notes", wrap(&NotesHandler{&route{client: client, tmpl: templates["notes.gotmpl"], partial: "notes"}}))
+	mux.Handle("GET /{deputyId}/notes/add", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
+	mux.Handle("POST /{deputyId}/notes/add", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
 
 	mux.Handle("GET /{deputyId}/timeline", wrap(&TimelineHandler{&route{client: client, tmpl: templates["timeline.gotmpl"], partial: "timeline"}}))
 
-	mux.Handle("GET /{deputyId}/notes", wrap(&NotesHandler{&route{client: client, tmpl: templates["notes.gotmpl"], partial: "notes"}}))
-	mux.Handle("GET /{deputyId}/notes/add-note", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
-	mux.Handle("POST /{deputyId}/notes/add-note", wrap(&NotesHandler{&route{client: client, tmpl: templates["add-notes.gotmpl"], partial: "add-notes"}}))
-
 	mux.Handle("GET /{deputyId}/tasks", wrap(&TasksHandler{&route{client: client, tmpl: templates["tasks.gotmpl"], partial: "tasks"}}))
-	mux.Handle("GET /{deputyId}/tasks/add-task", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
-	mux.Handle("POST /{deputyId}/tasks/add-task", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
+	mux.Handle("GET /{deputyId}/tasks/add", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
+	mux.Handle("POST /{deputyId}/tasks/add", wrap(&AddTaskHandler{&route{client: client, tmpl: templates["add-task.gotmpl"], partial: "add-task"}}))
 	mux.Handle("GET /{deputyId}/tasks/{taskId}", wrap(&ManageTaskHandler{&route{client: client, tmpl: templates["manage-task.gotmpl"], partial: "manage-task"}}))
 	mux.Handle("POST /{deputyId}/tasks/{taskId}", wrap(&ManageTaskHandler{&route{client: client, tmpl: templates["manage-task.gotmpl"], partial: "manage-task"}}))
-	mux.Handle("GET /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
-	mux.Handle("POST /{deputyId}/tasks/complete/{taskId}", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
-
-	//pageRouter.Handle("/manage-team-details",
-	//	wrap(
-	//		renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
-	//
-	//pageRouter.Handle("/change-ecm",
-	//	wrap(
-	//		renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
-	//
-	//pageRouter.Handle("/change-firm",
-	//	wrap(
-	//		renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
-	//
-
-	//pageRouter.Handle("/add-firm",
-	//	wrap(
-	//		renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
-	//
-
-	//pageRouter.Handle("/manage-important-information",
-	//	wrap(
-	//		renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
-	//
+	mux.Handle("GET /{deputyId}/tasks/{taskId}/complete", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
+	mux.Handle("POST /{deputyId}/tasks/{taskId}/complete", wrap(&CompleteTaskHandler{&route{client: client, tmpl: templates["complete-task.gotmpl"], partial: "complete-task"}}))
 
 	//static := staticFileHandler(envVars.WebDir)
 	//router.PathPrefix("/assets/").Handler(static)

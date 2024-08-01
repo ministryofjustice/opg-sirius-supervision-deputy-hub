@@ -16,7 +16,7 @@ describe("Contacts", () => {
 
     describe("Adding a Contact", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/1/contacts/add-contact");
+            cy.visit("/supervision/deputies/1/contacts/add");
         })
 
         it("shows content", () => {
@@ -217,7 +217,7 @@ describe("Contacts", () => {
 
     describe("Named deputy contact", () => {
         it("should not display 'Named Deputy' radio buttons for Pro deputies", () => {
-            cy.visit("/supervision/deputies/3/contacts/add-contact");
+            cy.visit("/supervision/deputies/3/contacts/add");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").should("not.be.visible");
         });
     })

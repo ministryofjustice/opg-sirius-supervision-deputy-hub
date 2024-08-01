@@ -110,7 +110,7 @@ func TestPostFirmRedirectsIfNewFirmChosen(t *testing.T) {
 
 	returnedError := renderTemplateForChangeFirm(client, template)(AppVars{}, w, r)
 
-	assert.Equal(Redirect("/0/add-firm"), returnedError)
+	assert.Equal(Redirect("/0/firm/add"), returnedError)
 }
 
 func TestPostFirmReturnsValidationErrors(t *testing.T) {

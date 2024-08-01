@@ -26,7 +26,7 @@ describe("Change Firm", () => {
             cy.get(".govuk-button")
                 .should("contain", "Save and continue")
                 .click();
-            cy.url().should("contain", "/supervision/deputies/3/add-firm");
+            cy.url().should("contain", "/supervision/deputies/3/firm/add");
         });
 
         it("has a cancel button that can redirect to deputy details page", () => {
@@ -39,7 +39,7 @@ describe("Change Firm", () => {
 
     describe("Changing a firm to use existing firm", () => {
         beforeEach(() => {
-            cy.visit("/supervision/deputies/3/change-firm");
+            cy.visit("/supervision/deputies/3/firm/change");
         });
 
         it("has a dropdown with the existing firm options", () => {

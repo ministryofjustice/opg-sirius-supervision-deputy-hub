@@ -12,7 +12,7 @@ type Deputy struct {
 	Label  string `json:"label"`
 }
 
-type editDeputyDetails struct {
+type editDeputyTeamDetails struct {
 	ID                               int    `json:"id"`
 	OrganisationName                 string `json:"organisationName"`
 	OrganisationTeamOrDepartmentName string `json:"organisationTeamOrDepartmentName"`
@@ -33,9 +33,9 @@ type editDeputyDetails struct {
 	DeputyType                       Deputy `json:"deputyType"`
 }
 
-func (c *ApiClient) EditDeputyDetails(ctx Context, editDeputyDetailForm DeputyDetails) error {
+func (c *ApiClient) EditDeputyTeamDetails(ctx Context, editDeputyDetailForm DeputyDetails) error {
 	var body bytes.Buffer
-	err := json.NewEncoder(&body).Encode(editDeputyDetails{
+	err := json.NewEncoder(&body).Encode(editDeputyTeamDetails{
 		ID:                               editDeputyDetailForm.ID,
 		OrganisationName:                 editDeputyDetailForm.OrganisationName,
 		OrganisationTeamOrDepartmentName: editDeputyDetailForm.OrganisationTeamOrDepartmentName,

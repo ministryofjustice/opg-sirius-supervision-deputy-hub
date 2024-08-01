@@ -45,7 +45,7 @@ func (h *DeleteDeputyHandler) render(v AppVars, w http.ResponseWriter, r *http.R
 		}
 
 		successVar := fmt.Sprintf("%s %d has been deleted.", vars.DeputyDetails.DisplayName, vars.DeputyDetails.DeputyNumber)
-		return Redirect(fmt.Sprintf("/%d/delete-deputy?success=%s", deputyId, successVar))
+		return Redirect(fmt.Sprintf("/%d/delete?success=%s", deputyId, successVar))
 
 	default:
 		return StatusError(http.StatusMethodNotAllowed)

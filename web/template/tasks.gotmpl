@@ -16,7 +16,7 @@
             <div class="moj-button-menu__wrapper">
                 <a
                     class="govuk-button moj-button-menu__item govuk-button--secondary"
-                    href="{{ prefix (printf "/%d/tasks/add-task" .DeputyDetails.ID) }}"
+                    href="{{ prefix (printf "/%d/tasks/add" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
                     data-module="govuk-button">
@@ -69,7 +69,7 @@
                    href="{{ prefix (printf "/%d/tasks/%d" $.DeputyDetails.ID .Id) }}"> Manage task
                 </a>
                 <a class="govuk-button govuk-button--secondary govuk-link"
-                   href="{{ prefix (printf "/%d/tasks/complete/%d" $.DeputyDetails.ID .Id) }}"> Mark as complete
+                   href="{{ prefix (printf "/%d/tasks/%d/complete" $.DeputyDetails.ID .Id) }}"> Mark as complete
                 </a>
             </td>
         </tr>
