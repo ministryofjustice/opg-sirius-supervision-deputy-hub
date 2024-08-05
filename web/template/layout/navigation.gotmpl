@@ -84,6 +84,17 @@
                             >Assurance visits</a
                         >
                     </li>
+                    <li class="moj-sub-navigation__item">
+                        <a
+                            class="moj-sub-navigation__link"
+                            {{ if eq .Path (printf "/%d/gcm-issues" .DeputyDetails.ID) }}
+                                aria-current="page"
+                            {{ end }}
+                            href="{{ prefix (printf "/%d/gcm-issues" .DeputyDetails.ID) }}"
+                            >GCM issues</a
+                        >
+                    </li>
+                    <h1> {{ . }} </h1>
                 </ul>
             </nav>
         </div>

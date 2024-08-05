@@ -1,0 +1,72 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" .Errors }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 gcm-issues">
+            {{ .PageName }}
+            <div class="moj-button-menu">
+              <div class="moj-button-menu__wrapper">
+                 <a class="govuk-button moj-button-menu__item govuk-button--secondary govuk-link"
+                     href="{{ prefix (printf "/%d/gcm-issues" $.DeputyDetails.ID) }}"> Add a GCM issue
+                  </a>
+              </div>
+            </div>
+        </h1>
+    </header>
+    <div class="govuk-tabs" data-module="govuk-tabs">
+        <h2 class="govuk-tabs__title">
+          Contents
+        </h2>
+        <ul class="govuk-tabs__list" role="tablist">
+          <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+            <a class="govuk-tabs__tab" href="#open" id="tab_open" role="tab" aria-controls="open" aria-selected="true" tabindex="0">
+              Open issues
+            </a>
+          </li>
+          <li class="govuk-tabs__list-item" role="presentation">
+            <a class="govuk-tabs__tab" href="#resolved" id="tab_resolved" role="tab" aria-controls="resolved" aria-selected="false" tabindex="-1">
+              Resolved
+            </a>
+          </li>
+        </ul>
+        <div class="govuk-tabs__panel" id="open" role="tabpanel" aria-labelledby="tab_open">
+          <h3 class="govuk-heading-m">Open issues</h3>
+            <table id="pa-clients" class="govuk-table sortable">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" class="govuk-table__header">Case number</th>
+                      <th scope="col" class="govuk-table__header">Client name</th>
+                      <th scope="col" class="govuk-table__header">GCM</th>
+                      <th scope="col" class="govuk-table__header">Received date</th>
+                      <th scope="col" class="govuk-table__header" width="25%">Issue</th>
+                      <th scope="col" class="govuk-table__header" width="20%">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                      <td scope="col" class="govuk-table__cell">
+                        {{ . }}
+                      </td>
+                      <td scope="col" class="govuk-table__cell">
+                        Yussuf Ali
+                      </td>
+                      <td scope="col" class="govuk-table__cell">
+                        Becky Lydon
+                      </td>
+                      <td scope="col" class="govuk-table__cell date">
+                        <p class="date">30/07/2024</p>
+                      </td>
+                      <td scope="col" class="govuk-table__cell">
+                        Opening and closing balances dont match
+                      </td>
+                      <td scope="col" class="govuk-table__cell">
+                      </td>
+                    </tr>
+                </tbody>
+            </table>
+            </h3>
+        </div>
+    </div>
+{{ end }}
