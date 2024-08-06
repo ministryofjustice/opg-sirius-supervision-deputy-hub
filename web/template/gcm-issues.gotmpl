@@ -1,19 +1,32 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.GcmIssuesVars*/ -}}
+
 {{ template "page" . }}
 {{ define "main" }}
+    {{ if .SuccessMessage }}
+            {{ template "success-banner" . }}
+        {{ end }}
     {{ template "content-header" . }}
-    {{ template "error-summary" .Errors }}
+    {{ template "navigation" . }}
     <header>
         <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 gcm-issues">
             {{ .PageName }}
-            <div class="moj-button-menu">
-              <div class="moj-button-menu__wrapper">
-                 <a class="govuk-button moj-button-menu__item govuk-button--secondary govuk-link"
-                     href="{{ prefix (printf "/%d/gcm-issues" $.DeputyDetails.ID) }}"> Add a GCM issue
-                  </a>
-              </div>
-            </div>
         </h1>
+        <div class="moj-button-menu">
+          <div class="moj-button-menu__wrapper">
+             <a
+                 id="add-a-gcm-issue"
+                 class="govuk-button moj-button-menu__item govuk-button--secondary"
+                 href="{{ prefix (printf "/%d/gcm-issues/add" $.DeputyDetails.ID) }}"
+                 role="button"
+                 draggable="false">
+                 Add a GCM issue
+              </a>
+          </div>
+        </div>
     </header>
+    <div id="f-button-disabled-warning" class="hide">
+        {{ template "warning-banner" .ErrorMessage }}
+    </div>
     <div class="govuk-tabs" data-module="govuk-tabs">
         <h2 class="govuk-tabs__title">
           Contents
@@ -39,8 +52,8 @@
                       <th scope="col" class="govuk-table__header">Client name</th>
                       <th scope="col" class="govuk-table__header">GCM</th>
                       <th scope="col" class="govuk-table__header">Received date</th>
-                      <th scope="col" class="govuk-table__header" width="25%">Issue</th>
-                      <th scope="col" class="govuk-table__header" width="20%">Actions</th>
+                      <th scope="col" class="govuk-table__header">Issue</th>
+                      <th scope="col" class="govuk-table__header">Actions</th>
                     </tr>
                 </thead>
 
