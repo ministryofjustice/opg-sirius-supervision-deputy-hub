@@ -11,7 +11,8 @@ import (
 
 type GetGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetDeputyClient(ctx sirius.Context, deputyId int, caseRecNumber string) (sirius.ClientWithOrderDeputy, error)
+	GetDeputyClient(ctx sirius.Context, caseRecNumber string) (sirius.ClientWithOrderDeputy, error)
+	AddGcmIssue(ctx sirius.Context, caseRecNumber, receivedDate, gcmIssueType, notes string, deputyId int) error
 }
 
 type AddGcmIssueVars struct {
@@ -50,16 +51,12 @@ func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			fmt.Println("in post")
 			var caseNumber = r.PostFormValue("case_number")
 			var receivedDate = r.PostFormValue("received_date")
 			var gcmIssueType = r.PostFormValue("issue-type")
 			var notes = r.PostFormValue("notes")
 
-			fmt.Println(caseNumber)
-			fmt.Println(receivedDate)
-			fmt.Println(gcmIssueType)
-			fmt.Println(notes)
+			vars.CaseRecNumber = caseNumber
 
 			vars.Errors = sirius.ValidationErrors{}
 			if caseNumber == "" {
@@ -68,17 +65,18 @@ func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			if gcmIssueType != "" && caseNumber != "" && notes != "" {
+			if gcmIssueType != "" && receivedDate != "" && notes != "" {
 				fmt.Println("final submit")
+
+				err := client.AddGcmIssue(ctx, caseNumber, receivedDate, gcmIssueType, notes, app.DeputyId())
+				if err != nil {
+					return err
+				}
+
 				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseNumber))
 			} else {
 				fmt.Println("first submit")
-				//check if its a real person
-				vars.CaseRecNumber = caseNumber
-
-				client, err := client.GetDeputyClient(ctx, app.DeputyId(), caseNumber)
-
-				fmt.Println("returned client", client)
+				client, err := client.GetDeputyClient(ctx, caseNumber)
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 					fmt.Println("vars errors")

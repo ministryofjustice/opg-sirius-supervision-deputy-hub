@@ -20,10 +20,10 @@ type ClientWithOrderDeputy struct {
 	} `json:"cases"`
 }
 
-func (c *Client) GetDeputyClient(ctx Context, deputyId int, caseRecNumber string) (ClientWithOrderDeputy, error) {
+func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string) (ClientWithOrderDeputy, error) {
 	var v ClientWithOrderDeputy
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/client/%s", deputyId, caseRecNumber), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/clients/caserec/%s", caseRecNumber), nil)
 
 	if err != nil {
 		return v, err

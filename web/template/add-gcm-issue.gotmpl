@@ -35,9 +35,18 @@
                    </div>
 
                    {{ if .CaseRecNumber }}
-                        <h2 class="govuk-heading-m add-gcm-client-name">
-                            Client: {{ .Client.Firstname }} {{ .Client.Surname }}
-                        </h2>
+                       <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                         <div class="govuk-notification-banner__header">
+                           <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                             Client found:
+                           </h2>
+                         </div>
+                         <div class="govuk-notification-banner__content">
+                           <h3 class="govuk-notification-banner__heading">
+                             {{ .Client.Firstname }} {{ .Client.Surname }}
+                           </h3>
+                         </div>
+                       </div>
                    {{ end }}
 
                    <div class="govuk-form-group">
