@@ -4,17 +4,21 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 )
 
 type GetGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyClient(ctx sirius.Context, deputyId int, caseRecNumber string) (sirius.ClientWithOrderDeputy, error)
 }
 
 type AddGcmIssueVars struct {
 	AppVars
 	GcmIssueTypes []model.RefData
+	CaseRecNumber string
+	Client        sirius.ClientWithOrderDeputy
 }
 
 func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
@@ -46,38 +50,74 @@ func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			//var assuranceType = r.PostFormValue("assurance-type")
-			//var requestedDate = r.PostFormValue("requested-date")
-			//
-			//vars.Errors = sirius.ValidationErrors{}
-			//
-			//if assuranceType == "" {
-			//	vars.Errors["assurance-type"] = map[string]string{"": "Select an assurance type"}
-			//}
-			//
-			//if requestedDate == "" {
-			//	vars.Errors["requested-date"] = map[string]string{"": "Enter a requested date"}
-			//}
-			//
-			//vars.Errors = util.RenameErrors(vars.Errors)
-			//
-			//if len(vars.Errors) > 0 {
-			//	return tmpl.ExecuteTemplate(w, "page", vars)
-			//}
-			//
-			//err := client.AddAssurance(ctx, assuranceType, requestedDate, app.UserDetails.ID, app.DeputyId())
-			//
-			//if verr, ok := err.(sirius.ValidationError); ok {
-			//	vars.Errors = util.RenameErrors(verr.Errors)
-			//	return tmpl.ExecuteTemplate(w, "page", vars)
-			//}
-			//if err != nil {
-			//	return err
-			//}
+			fmt.Println("in post")
+			var caseNumber = r.PostFormValue("case_number")
+			var receivedDate = r.PostFormValue("received_date")
+			var gcmIssueType = r.PostFormValue("issue-type")
+			var notes = r.PostFormValue("notes")
 
-			return Redirect(fmt.Sprintf("/%d/assurances?success=addAssurance", app.DeputyId()))
+			fmt.Println(caseNumber)
+			fmt.Println(receivedDate)
+			fmt.Println(gcmIssueType)
+			fmt.Println(notes)
+
+			vars.Errors = sirius.ValidationErrors{}
+			if caseNumber == "" {
+				vars.Errors["caseRecNumber"] = map[string]string{"": "Enter a case number"}
+				vars.Errors = util.RenameErrors(vars.Errors)
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			if gcmIssueType != "" && caseNumber != "" && notes != "" {
+				fmt.Println("final submit")
+				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseNumber))
+			} else {
+				fmt.Println("first submit")
+				//check if its a real person
+				vars.CaseRecNumber = caseNumber
+
+				client, err := client.GetDeputyClient(ctx, app.DeputyId(), caseNumber)
+
+				fmt.Println("returned client", client)
+
+				if verr, ok := err.(sirius.ValidationError); ok {
+					fmt.Println("vars errors")
+					vars.Errors = util.RenameErrors(verr.Errors)
+					//return tmpl.ExecuteTemplate(w, "page", vars)
+				}
+
+				if err != nil {
+					return err
+				}
+
+				linked := checkIfClientLinkedToDeputy(client, app.DeputyId())
+				if linked == true {
+					vars.Client = client
+					return tmpl.ExecuteTemplate(w, "page", vars)
+
+				} else {
+					vars.Errors["caseRecNumber"] = map[string]string{"": "Case client not linked to deputy"}
+					vars.Errors = util.RenameErrors(vars.Errors)
+					return tmpl.ExecuteTemplate(w, "page", vars)
+				}
+			}
+
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 	}
+}
+
+func checkIfClientLinkedToDeputy(client sirius.ClientWithOrderDeputy, deputyId int) bool {
+	for i := 0; i < len(client.Cases); {
+		deputiesForOrder := client.Cases[i].Deputies
+		for j := 0; j < len(deputiesForOrder); {
+			if deputiesForOrder[j].Deputy.Id == deputyId {
+				return true
+			}
+			j++
+		}
+		i++
+	}
+	return false
 }
