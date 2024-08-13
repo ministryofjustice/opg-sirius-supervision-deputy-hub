@@ -12,14 +12,18 @@ import (
 type AddGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
 	GetDeputyClient(ctx sirius.Context, caseRecNumber string) (sirius.ClientWithOrderDeputy, error)
-	AddGcmIssue(ctx sirius.Context, caseRecNumber, receivedDate, notes string, gcmIssueType model.RefData, deputyId int) error
+	AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType model.RefData, deputyId int) error
 }
 
 type AddGcmIssueVars struct {
 	AppVars
-	GcmIssueTypes []model.RefData
-	CaseRecNumber string
-	Client        sirius.ClientWithOrderDeputy
+	GcmIssueTypes  []model.RefData
+	CaseRecNumber  string
+	Client         sirius.ClientWithOrderDeputy
+	HasFoundClient string
+	GcmIssueType   model.RefData
+	GcmIssueLabel  string
+	Notes          string
 }
 
 func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
@@ -52,65 +56,70 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 
 		case http.MethodPost:
 			var caseNumber = r.PostFormValue("case_number")
-			var receivedDate = r.PostFormValue("received_date")
 			var gcmIssueType = r.PostFormValue("issue-type")
 			var notes = r.PostFormValue("notes")
+			var searchForClient = r.PostFormValue("search-for-client")
+			var submitForm = r.PostFormValue("submit-form")
 
 			vars.CaseRecNumber = caseNumber
+			vars.Notes = notes
 
-			vars.Errors = sirius.ValidationErrors{}
+			//	they are looking for client
 			if caseNumber == "" {
+				vars.Errors = sirius.ValidationErrors{}
 				vars.Errors["caseRecNumber"] = map[string]string{"": "Enter a case number"}
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			siriusClient, err := client.GetDeputyClient(ctx, caseNumber)
+
+			if verr, ok := err.(sirius.ValidationError); ok {
+				vars.Errors = util.RenameErrors(verr.Errors)
+				return tmpl.ExecuteTemplate(w, "page", vars)
+			}
+
+			if err != nil {
+				return err
+			}
+
+			linked := checkIfClientLinkedToDeputy(siriusClient, app.DeputyId())
+			if linked == true {
+				vars.Client = siriusClient
+				if searchForClient == "search-for-client" {
+					return tmpl.ExecuteTemplate(w, "page", vars)
+				}
+			} else {
+				vars.Errors["caseRecNumber"] = map[string]string{"": "Case number does not belong to this deputy"}
 				vars.Errors = util.RenameErrors(vars.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			if gcmIssueType != "" && receivedDate != "" && notes != "" {
-				//replace this with setting hidden input and then checking if thats null
-				fmt.Println("final submit")
+			if vars.Client.ClientId != 0 && submitForm == "submit-form" {
+				//second submit to add the issue
+				gcmIssue, _ := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
+				err := client.AddGcmIssue(ctx, caseNumber, notes, gcmIssue, app.DeputyId())
 
-				fmt.Println("string")
-				fmt.Println(gcmIssueType)
+				if verr, ok := err.(sirius.ValidationError); ok {
+					vars.Client = siriusClient
+					vars.CaseRecNumber = caseNumber
+					vars.GcmIssueType = gcmIssue
+					vars.Notes = notes
+					vars.Errors = util.RenameErrors(verr.Errors)
+					return tmpl.ExecuteTemplate(w, "page", vars)
+				}
 
-				gcmIssue := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
-				fmt.Println("returned ref data")
-				fmt.Println(gcmIssue)
-
-				err := client.AddGcmIssue(ctx, caseNumber, receivedDate, notes, gcmIssue, app.DeputyId())
 				if err != nil {
+					fmt.Println("normal error")
 					return err
 				}
 
 				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseNumber))
-			} else {
-				fmt.Println("first submit")
-				client, err := client.GetDeputyClient(ctx, caseNumber)
-
-				if verr, ok := err.(sirius.ValidationError); ok {
-					fmt.Println("vars errors")
-					vars.Errors = util.RenameErrors(verr.Errors)
-					//return tmpl.ExecuteTemplate(w, "page", vars)
-				}
-
-				if err != nil {
-					return err
-				}
-
-				linked := checkIfClientLinkedToDeputy(client, app.DeputyId())
-				if linked == true {
-					vars.Client = client
-					return tmpl.ExecuteTemplate(w, "page", vars)
-
-				} else {
-					vars.Errors["caseRecNumber"] = map[string]string{"": "Case client not linked to deputy"}
-					vars.Errors = util.RenameErrors(vars.Errors)
-					return tmpl.ExecuteTemplate(w, "page", vars)
-				}
 			}
 
 		default:
 			return StatusError(http.StatusMethodNotAllowed)
 		}
+		return StatusError(http.StatusMethodNotAllowed)
 	}
 }
 
@@ -128,12 +137,15 @@ func checkIfClientLinkedToDeputy(client sirius.ClientWithOrderDeputy, deputyId i
 	return false
 }
 
-func getRefDataForGcmIssueType(issueLabelGiven string, refData []model.RefData) model.RefData {
+func getRefDataForGcmIssueType(issueLabelGiven string, refData []model.RefData) (model.RefData, sirius.ValidationErrors) {
 	for i := 0; i < len(refData); {
 		if refData[i].Label == issueLabelGiven {
-			return refData[i]
+			return refData[i], nil
 		}
 		i++
 	}
-	return model.RefData{}
+	return model.RefData{},
+		sirius.ValidationErrors{
+			"caseRecNumber": map[string]string{"invalid": "Select a valid issue type"},
+		}
 }

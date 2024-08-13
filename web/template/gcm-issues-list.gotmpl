@@ -48,32 +48,50 @@
             <table id="pa-clients" class="govuk-table sortable">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
+                      <th class="govuk-table__cell govuk-table__select">
+                          <div class="govuk-checkboxes govuk-checkboxes--small">
+                             <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input sirius-select-task" id="selectAll" name="taskDetails" type="checkbox" value="hmrc">
+                                <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                  <span class="govuk-visually-hidden">Select</span>
+                                </label>
+                             </div>
+                          </div>
+                      </th>
                       <th scope="col" class="govuk-table__header">Case number</th>
                       <th scope="col" class="govuk-table__header">Client name</th>
-                      <th scope="col" class="govuk-table__header">GCM </th>
-                      <th scope="col" class="govuk-table__header">Received date</th>
+                      <th scope="col" class="govuk-table__header">General Case Manager</th>
+                      <th scope="col" span="2" class="govuk-table__header">Issue added</th>
                       <th scope="col" class="govuk-table__header">Issue</th>
-                      <th scope="col" class="govuk-table__header">Actions</th>
-                      <th scope="col" class="govuk-table__header"></th>
                     </tr>
                 </thead>
 
                 <tbody class="govuk-table__body">
                     {{ range .GcmIssues }}
                         <tr class="govuk-table__row">
-                          <td scope="col" class="govuk-table__cell">
-                            {{ .Client.CaseRecNumber }}
-                          </td>
-                          <td scope="col" class="govuk-table__cell">
-                            {{ .Client.Firstname }} {{ .Client.Surname }}
-                          </td>
-                          <td scope="col" class="govuk-table__cell">
-                            {{ .CreatedByUser.DisplayName }}
-                          </td>
-                          <td scope="col" class="govuk-table__cell date">
-                            <p class="date"> {{ .ReceivedDate }} </p>
-                          </td>
-                          <td scope="col" class="govuk-table__cell">
+                            <td class="govuk-table__cell govuk-table__select">
+                                <div class="govuk-checkboxes govuk-checkboxes--small">
+                                  <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input sirius-select-task" id="organisation" name="taskDetails" type="checkbox" value="hmrc">
+                                    <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                      <span class="govuk-visually-hidden">Select</span>
+                                    </label>
+                                  </div>
+                                </div>
+                            </td>
+                            <td scope="col" class="govuk-table__cell">
+                                <a class="govuk-links" href="">{{ .Client.CaseRecNumber }} </a>
+                            </td>
+                            <td scope="col" class="govuk-table__cell">
+                                {{ .Client.Firstname }} {{ .Client.Surname }}
+                            </td>
+                            <td scope="col" class="govuk-table__cell">
+                                {{ .CreatedByUser.DisplayName }}
+                            </td>
+                            <td scope="col" class="govuk-table__cell date">
+                                <p class="date"> {{ .CreatedDate }} </p>
+                            </td>
+                          <td scope="col" span="2" class="govuk-table__cell">
                             {{ .GcmIssueType.Label }}
                             {{ if ne .Notes "" }}
                                 <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">

@@ -150,6 +150,8 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"notes": {
 		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
+		"isEmpty":             pair{"notes", "Enter a note"},
+		"error":               pair{"notes", "Enter a note explaining the issue"},
 	},
 	"taskCompletedNotes": {
 		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
@@ -176,6 +178,10 @@ var validationMappings = map[string]map[string]pair{
 	"documentDate": {
 		"isEmpty":     pair{"documentDate", "Enter a date"},
 		"invalid-lte": pair{"documentDate", "The date must be today or in the past"},
+	},
+	"gcmIssueType": {
+		"invalid": pair{"gcmIssueType", "Select an issue type"},
+		"isEmpty": pair{"gcmIssueType", "Select an issue type"},
 	},
 }
 

@@ -30,7 +30,6 @@ func renderTemplateForGcmIssues(client GetGcmIssues, tmpl Template) Handler {
 		}
 
 		app.PageName = "General Case Manager issues"
-
 		gcmIssues, err := client.GetGCMIssues(ctx, app.DeputyId())
 
 		if err != nil {
