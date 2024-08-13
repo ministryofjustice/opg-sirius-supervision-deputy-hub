@@ -9,10 +9,10 @@ import (
 	"net/http"
 )
 
-type GetGcmIssue interface {
+type AddGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
 	GetDeputyClient(ctx sirius.Context, caseRecNumber string) (sirius.ClientWithOrderDeputy, error)
-	AddGcmIssue(ctx sirius.Context, caseRecNumber, receivedDate, gcmIssueType, notes string, deputyId int) error
+	AddGcmIssue(ctx sirius.Context, caseRecNumber, receivedDate, notes string, gcmIssueType model.RefData, deputyId int) error
 }
 
 type AddGcmIssueVars struct {
@@ -22,7 +22,7 @@ type AddGcmIssueVars struct {
 	Client        sirius.ClientWithOrderDeputy
 }
 
-func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
+func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 
 		app.PageName = "Add GCM Issue"
@@ -66,9 +66,17 @@ func renderTemplateForAddGcmIssue(client GetGcmIssue, tmpl Template) Handler {
 			}
 
 			if gcmIssueType != "" && receivedDate != "" && notes != "" {
+				//replace this with setting hidden input and then checking if thats null
 				fmt.Println("final submit")
 
-				err := client.AddGcmIssue(ctx, caseNumber, receivedDate, gcmIssueType, notes, app.DeputyId())
+				fmt.Println("string")
+				fmt.Println(gcmIssueType)
+
+				gcmIssue := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
+				fmt.Println("returned ref data")
+				fmt.Println(gcmIssue)
+
+				err := client.AddGcmIssue(ctx, caseNumber, receivedDate, notes, gcmIssue, app.DeputyId())
 				if err != nil {
 					return err
 				}
@@ -118,4 +126,14 @@ func checkIfClientLinkedToDeputy(client sirius.ClientWithOrderDeputy, deputyId i
 		i++
 	}
 	return false
+}
+
+func getRefDataForGcmIssueType(issueLabelGiven string, refData []model.RefData) model.RefData {
+	for i := 0; i < len(refData); {
+		if refData[i].Label == issueLabelGiven {
+			return refData[i]
+		}
+		i++
+	}
+	return model.RefData{}
 }

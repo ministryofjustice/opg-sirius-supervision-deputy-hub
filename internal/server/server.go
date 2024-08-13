@@ -38,7 +38,8 @@ type Client interface {
 	AddDocumentClient
 	ManageTasks
 	CompleteTask
-	GetGcmIssue
+	AddGcmIssue
+	GetGcmIssues
 }
 
 type Template interface {
@@ -160,7 +161,7 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 
 	pageRouter.Handle("/gcm-issues",
 		wrap(
-			renderTemplateForGcmIssues(client, templates["gcm-issues.gotmpl"])))
+			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
 
 	pageRouter.Handle("/gcm-issues/add",
 		wrap(

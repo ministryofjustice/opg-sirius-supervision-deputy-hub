@@ -50,33 +50,48 @@
                     <tr class="govuk-table__row">
                       <th scope="col" class="govuk-table__header">Case number</th>
                       <th scope="col" class="govuk-table__header">Client name</th>
-                      <th scope="col" class="govuk-table__header">GCM</th>
+                      <th scope="col" class="govuk-table__header">GCM </th>
                       <th scope="col" class="govuk-table__header">Received date</th>
                       <th scope="col" class="govuk-table__header">Issue</th>
                       <th scope="col" class="govuk-table__header">Actions</th>
+                      <th scope="col" class="govuk-table__header"></th>
                     </tr>
                 </thead>
 
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                      <td scope="col" class="govuk-table__cell">
-                        {{ . }}
-                      </td>
-                      <td scope="col" class="govuk-table__cell">
-                        Yussuf Ali
-                      </td>
-                      <td scope="col" class="govuk-table__cell">
-                        Becky Lydon
-                      </td>
-                      <td scope="col" class="govuk-table__cell date">
-                        <p class="date">30/07/2024</p>
-                      </td>
-                      <td scope="col" class="govuk-table__cell">
-                        Opening and closing balances dont match
-                      </td>
-                      <td scope="col" class="govuk-table__cell">
-                      </td>
-                    </tr>
+                    {{ range .GcmIssues }}
+                        <tr class="govuk-table__row">
+                          <td scope="col" class="govuk-table__cell">
+                            {{ .Client.CaseRecNumber }}
+                          </td>
+                          <td scope="col" class="govuk-table__cell">
+                            {{ .Client.Firstname }} {{ .Client.Surname }}
+                          </td>
+                          <td scope="col" class="govuk-table__cell">
+                            {{ .CreatedByUser.DisplayName }}
+                          </td>
+                          <td scope="col" class="govuk-table__cell date">
+                            <p class="date"> {{ .ReceivedDate }} </p>
+                          </td>
+                          <td scope="col" class="govuk-table__cell">
+                            {{ .GcmIssueType.Label }}
+                            {{ if ne .Notes "" }}
+                                <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
+                                  <summary class="govuk-details__summary">
+                                    <span class="govuk-details__summary-text">
+                                      Notes
+                                    </span>
+                                  </summary>
+                                  <div class="govuk-details__text">
+                                    {{ .Notes }}
+                                  </div>
+                                </details>
+                            {{ end }}
+                          </td>
+                          <td scope="col" class="govuk-table__cell">
+                          </td>
+                        </tr>
+                    {{ end }}
                 </tbody>
             </table>
             </h3>

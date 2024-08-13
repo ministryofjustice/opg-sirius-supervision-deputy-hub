@@ -35,7 +35,7 @@
                    </div>
 
                    {{ if .CaseRecNumber }}
-                       <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                       <div class="govuk-notification-banner govuk-notification-banner--success govuk-form-group" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
                          <div class="govuk-notification-banner__header">
                            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
                              Client found:
@@ -67,7 +67,7 @@
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id={{ .Label}}
                                                name="issue-type" type="radio"
-                                               value={{.Handle}} />
+                                               value="{{.Label}}" />
                                         <label class="govuk-label govuk-radios__label" for={{ .Label }}>
                                             {{ .Label }}
                                         </label>
