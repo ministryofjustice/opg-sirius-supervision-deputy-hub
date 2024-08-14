@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestDeputyClientReturned(t *testing.T) {
+func TestDeputyClientsReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -148,7 +148,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
+func TestGetDeputyClientsReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))

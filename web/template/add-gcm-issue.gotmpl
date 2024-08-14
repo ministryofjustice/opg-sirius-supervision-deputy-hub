@@ -1,0 +1,124 @@
+{{ template "page" . }}
+{{ define "main" }}
+    {{ template "content-header" . }}
+    {{ template "error-summary" .Errors }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 add-gcm-issue-header">
+            {{ .PageName }}
+        </h1>
+    </header>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-half">
+            <form id="add-gcm-issue-form" method="post" autocomplete="off">
+                <input type="hidden"
+                       name="xsrfToken"
+                       value="{{ .XSRFToken }}" />
+
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="case_number">
+                          Case number (required)
+                        </label>
+                      <input
+                        class="govuk-input{{ if index .Errors "caseRecNumber" }} govuk-input--error{{ end }}"
+                        id="client_case_number"
+                        name="case_number"
+                        type="text"
+                        value="{{ .CaseRecNumber }}" />
+                    <br>
+                      <button
+                        id="find-client"
+                        name="search-for-client"
+                        type="submit"
+                        value="search-for-client"
+                        class="govuk-button govuk-button--secondary govuk-!-margin-top-3 govuk-!-margin-bottom-0"
+                        data-module="govuk-button">
+                        Look up case number
+                      </button>
+                   </div>
+
+                   <div class="govuk-form-group">
+                       {{ if .CaseRecNumber }}
+                           <label class="govuk-label" for="client_name">
+                               Client name: <span id="client_name"> {{ .Client.Firstname }} {{ .Client.Surname }} </span>
+                           </label>
+                           <input
+                              id="has-found-client"
+                              name="has-found-client"
+                              type="hidden"
+                              style="display:none;"
+                              value="{{ .CaseRecNumber }}" />
+                       {{ end }}
+
+                   </div>
+
+                   <div class="govuk-form-group{{ if index .Errors "issue-type" }} govuk-form-group--error{{ end }}">
+                       <fieldset class="govuk-fieldset" aria-describedby="issue-type" id="f-issue-type">
+                            <legend class="govuk-fieldset__legend">
+                                Issue (required)
+                            </legend>
+                            {{ template "error-message" (index .Errors "issue-type") }}
+                            <div class="govuk-radios">
+                                {{ range .GcmIssueTypes }}
+                                    <div class="govuk-radios__item">
+                                        <input class="govuk-radios__input"
+                                           id={{ .Label}}
+                                           name="issue-type"
+                                           type="radio"
+                                           {{if eq .Label $.GcmIssueType.Label}} checked="true" {{end}}
+                                           value="{{.Label}}" />
+                                        <label class="govuk-label govuk-radios__label" for={{ .Label }}>
+                                            {{ .Label }}
+                                            {{ if eq .Label "Missing information" }} (explain in notes){{ end }}
+                                            {{ if eq .Label "Other" }} (explain in notes) {{ end }}
+                                        </label>
+                                    </div>
+                                {{ end }}
+                            </div>
+                       </fieldset>
+                   </div>
+
+                  <div
+                       class="govuk-character-count"
+                       data-module="govuk-character-count"
+                       data-maxlength="1000">
+                       <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
+                           <label class="govuk-label" for="f-2-note">
+                               Notes
+                           </label>
+                           {{ template "error-message" (index .Errors "2-note") }}
+                           <textarea
+                               class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
+                               id="gcm-issue-notes"
+                               name="notes"
+                               rows="10"
+                               aria-describedby="gcm-issue-notes"
+                           >{{ if ne "" .Notes}}{{ .Notes }}{{ end }}</textarea>
+                           <div
+                               id="gcm-issue-notes-info"
+                               class="govuk-hint govuk-character-count__message"
+                               aria-live="polite">
+                               You have 1000 characters remaining
+                           </div>
+                      </div>
+                  </div>
+
+                <div class="govuk-button-group govuk-!-margin-top-7">
+                    <button
+                        type="submit"
+                        class="govuk-button"
+                        name="submit-form"
+                        value="submit-form"
+                        data-module="govuk-button">
+                        Save GCM issue
+                    </button>
+                   <a
+                       class="govuk-link"
+                       href="{{ prefix (printf "/%d/gcm-issues" .DeputyDetails.ID) }}">
+                       Cancel
+                   </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{{ end }}
