@@ -6,18 +6,31 @@ import (
 	"net/http"
 )
 
+type OrderDeputy struct {
+	Id int `json:"id"`
+}
+type Deputies struct {
+	Deputy OrderDeputy `json:"deputy"`
+}
+
+type Case struct {
+	Deputies []Deputies `json:"deputies"`
+}
+
 type ClientWithOrderDeputy struct {
 	ClientId  int    `json:"id"`
 	Firstname string `json:"firstname"`
 	Surname   string `json:"surname"`
 	CourtRef  string `json:"caseRecNumber"`
-	Cases     []struct {
-		Deputies []struct {
-			Deputy struct {
-				Id int `json:"id"`
-			} `json:"deputy"`
-		} `json:"deputies"`
-	} `json:"cases"`
+	Cases     []Case `json:"cases"`
+	//
+	//Cases     []struct {
+	//	Deputies []struct {
+	//		Deputy struct {
+	//			Id int `json:"id"`
+	//		} `json:"deputy"`
+	//	} `json:"deputies"`
+	//} `json:"cases"`
 }
 
 func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int) (ClientWithOrderDeputy, error) {
