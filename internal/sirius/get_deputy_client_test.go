@@ -1,44 +1,135 @@
 package sirius
 
 import (
+	"bytes"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
 	"github.com/stretchr/testify/assert"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 )
 
-//func TestDeputyClientReturned(t *testing.T) {
-//	mockClient := &mocks.MockClient{}
-//	client, _ := NewClient(mockClient, "http://localhost:3000")
-//
-//	json := `{
-//               "id": 767,
-//               "firstname": "Test",
-//               "surname": "Client",
-//               "caseRecNumber": "999555111",
-//			}`
-//
-//	r := io.NopCloser(bytes.NewReader([]byte(json)))
-//
-//	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
-//		return &http.Response{
-//			StatusCode: 200,
-//			Body:       r,
-//		}, nil
-//	}
-//
-//	expectedResponse := ClientWithOrderDeputy{
-//		ClientId:  767,
-//		Firstname: "Test",
-//		Surname:   "Client",
-//		CourtRef:  "999555111",
-//	}
-//
-//	expectedClient, err := client.GetDeputyClient(getContext(nil), "999555111", 76)
-//
-//	assert.Equal(t, expectedResponse, expectedClient)
-//	assert.Equal(t, nil, err)
-//}
+func TestDeputyClientReturned(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `{
+		"id":66,
+		"caseRecNumber":"43787324",
+		"firstname":"Hamster",
+		"surname":"Person",
+		"cases":[
+			{
+				"id":94,
+				"deputies":[
+					{
+						"deputy":
+							{
+								"id":67
+							}
+					}
+				]
+			},
+			{
+				"id":95, 
+				"deputies":[
+					{
+						"deputy":
+							{
+								"id":67
+							}
+					}
+				]
+			}
+		]
+	}`
+
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := ClientWithOrderDeputy{
+		ClientId:  66,
+		Firstname: "Hamster",
+		Surname:   "Person",
+		CourtRef:  "43787324",
+		Cases: []Case{
+			{
+				Deputies: []Deputies{
+					{
+						Deputy: OrderDeputy{Id: 67},
+					},
+				},
+			},
+			{
+				Deputies: []Deputies{
+					{
+						Deputy: OrderDeputy{Id: 67},
+					},
+				},
+			},
+		},
+	}
+
+	expectedClient, err := client.GetDeputyClient(getContext(nil), "43787324", 67)
+
+	assert.Equal(t, expectedResponse, expectedClient)
+	assert.Equal(t, nil, err)
+}
+
+func TestDeputyClientReturnsErrorIfDeputyNotLinkedToClient(t *testing.T) {
+	mockClient := &mocks.MockClient{}
+	client, _ := NewClient(mockClient, "http://localhost:3000")
+
+	json := `{
+		"id":66,
+		"caseRecNumber":"43787324",
+		"firstname":"Hamster",
+		"surname":"Person",
+		"cases":[
+			{
+				"id":94,
+				"deputies":[
+					{
+						"deputy":
+							{
+								"id":67
+							}
+					}
+				]
+			}
+		]
+	}`
+
+	r := io.NopCloser(bytes.NewReader([]byte(json)))
+
+	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+		return &http.Response{
+			StatusCode: 200,
+			Body:       r,
+		}, nil
+	}
+
+	expectedResponse := ValidationError(
+		ValidationError{
+			Message: "",
+			Errors: ValidationErrors{
+				"deputy": map[string]string{"deputyClientLink": "Case number does not belong to this deputy"},
+			},
+		},
+	)
+
+	actualClient, actualError := client.GetDeputyClient(getContext(nil), "43787324", 999)
+	assert.Equal(t, expectedResponse, actualError)
+	assert.Equal(t, ClientWithOrderDeputy{}, actualClient)
+
+}
 
 func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
