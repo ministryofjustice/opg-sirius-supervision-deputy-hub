@@ -48,7 +48,6 @@ func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int
 	}
 
 	defer resp.Body.Close()
-	//io.Copy(os.Stdout, resp.Body)
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized
 	}
