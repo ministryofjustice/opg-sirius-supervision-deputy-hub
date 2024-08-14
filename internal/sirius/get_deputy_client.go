@@ -20,7 +20,7 @@ type ClientWithOrderDeputy struct {
 	} `json:"cases"`
 }
 
-func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string) (ClientWithOrderDeputy, error) {
+func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int) (ClientWithOrderDeputy, error) {
 	var v ClientWithOrderDeputy
 
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/clients/caserec/%s", caseRecNumber), nil)
@@ -40,13 +40,46 @@ func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string) (ClientWithO
 		return v, ErrUnauthorized
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return v, newStatusError(resp)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		var v struct {
+			ValidationErrors ValidationErrors `json:"validation_errors"`
+		}
+
+		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
+			return ClientWithOrderDeputy{}, ValidationError{Errors: v.ValidationErrors}
+		}
+
+		return ClientWithOrderDeputy{}, newStatusError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&v); err != nil {
 		return v, err
 	}
 
-	return v, err
+	linked := checkIfClientLinkedToDeputy(v, deputyId)
+
+	if !linked {
+		validationErrors := ValidationErrors{
+			"deputy": {
+				"deputyClientLink": "Case number does not belong to this deputy",
+			},
+		}
+
+		return ClientWithOrderDeputy{}, ValidationError{Errors: validationErrors}
+	}
+	return v, nil
+}
+
+func checkIfClientLinkedToDeputy(client ClientWithOrderDeputy, deputyId int) bool {
+	for i := 0; i < len(client.Cases); {
+		deputiesForOrder := client.Cases[i].Deputies
+		for j := 0; j < len(deputiesForOrder); {
+			if deputiesForOrder[j].Deputy.Id == deputyId {
+				return true
+			}
+			j++
+		}
+		i++
+	}
+	return false
 }

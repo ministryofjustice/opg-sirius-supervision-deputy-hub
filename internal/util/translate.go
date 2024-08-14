@@ -183,6 +183,9 @@ var validationMappings = map[string]map[string]pair{
 		"invalid": pair{"gcmIssueType", "Select an issue type"},
 		"isEmpty": pair{"gcmIssueType", "Select an issue type"},
 	},
+	"caseRecNumber": {
+		"checksumFailed": pair{"caseRecNumber", "Case number not recognised"},
+	},
 }
 
 func RenameErrors(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
