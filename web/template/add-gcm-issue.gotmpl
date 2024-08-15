@@ -37,18 +37,9 @@
                    </div>
 
                    <div class="govuk-form-group">
-                       {{ if .CaseRecNumber }}
-                           <label class="govuk-label" for="client_name">
-                               Client name: <span id="client_name"> {{ .Client.Firstname }} {{ .Client.Surname }} </span>
-                           </label>
-                           <input
-                              id="has-found-client"
-                              name="has-found-client"
-                              type="hidden"
-                              style="display:none;"
-                              value="{{ .CaseRecNumber }}" />
-                       {{ end }}
-
+                       <label class="govuk-label" for="client_name">
+                           Client name:  {{ if .CaseRecNumber }}<span id="client_name">{{ .Client.Firstname }} {{ .Client.Surname }}</span> {{ end }}
+                       </label>
                    </div>
 
                    <div class="govuk-form-group{{ if index .Errors "issue-type" }} govuk-form-group--error{{ end }}">
