@@ -55,28 +55,24 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			var caseNumber = r.PostFormValue("case_number")
+			var caseRecNumber = r.PostFormValue("case-number")
 			var gcmIssueType = r.PostFormValue("issue-type")
 			var notes = r.PostFormValue("notes")
 			var searchForClient = r.PostFormValue("search-for-client")
 			var submitForm = r.PostFormValue("submit-form")
 
-			vars.CaseRecNumber = caseNumber
+			vars.CaseRecNumber = caseRecNumber
 			vars.Notes = notes
 
-			if caseNumber == "" {
+			if caseRecNumber == "" {
 				vars.Errors = sirius.ValidationErrors{}
-				vars.Errors["caseRecNumber"] = map[string]string{"": "Enter a case number"}
+				vars.Errors["client-case-number"] = map[string]string{"": "Enter a case number"}
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			siriusClient, err := client.GetDeputyClient(ctx, caseNumber, app.DeputyId())
+			siriusClient, err := client.GetDeputyClient(ctx, caseRecNumber, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
-				fmt.Println("verr")
-				fmt.Println(verr)
-				fmt.Println(verr.Errors)
-				fmt.Println(verr.Message)
 				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
@@ -93,11 +89,11 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			if vars.Client.ClientId != 0 && submitForm == "submit-form" {
 				//second submit to add the issue
 				gcmIssue, _ := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
-				err := client.AddGcmIssue(ctx, caseNumber, notes, gcmIssue, app.DeputyId())
+				err := client.AddGcmIssue(ctx, caseRecNumber, notes, gcmIssue, app.DeputyId())
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 					vars.Client = siriusClient
-					vars.CaseRecNumber = caseNumber
+					vars.CaseRecNumber = caseRecNumber
 					vars.GcmIssueType = gcmIssue
 					vars.Notes = notes
 					vars.Errors = util.RenameErrors(verr.Errors)
@@ -108,7 +104,7 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 					return err
 				}
 
-				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseNumber))
+				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseRecNumber))
 			}
 
 		default:

@@ -3,9 +3,7 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 )
 
 func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int) (DeputyClient, error) {
@@ -22,8 +20,6 @@ func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int
 		return DeputyClient{}, err
 	}
 
-	io.Copy(os.Stdout, resp.Body)
-
 	defer resp.Body.Close()
 	if resp.StatusCode == http.StatusUnauthorized {
 		return DeputyClient{}, ErrUnauthorized
@@ -36,10 +32,6 @@ func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
-			fmt.Println("sirius")
-			fmt.Println(err)
-			fmt.Println(v.ValidationErrors)
-			fmt.Println(v)
 			return DeputyClient{}, ValidationError{Errors: v.ValidationErrors}
 		}
 
