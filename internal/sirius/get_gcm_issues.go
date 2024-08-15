@@ -32,7 +32,7 @@ type GcmIssue struct {
 func (c *Client) GetGCMIssues(ctx Context, deputyId int) ([]GcmIssue, error) {
 	var v []GcmIssue
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/case-manager-issues", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/gcm-issues", deputyId), nil)
 
 	if err != nil {
 		return v, err
