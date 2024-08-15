@@ -29,7 +29,7 @@ type AddGcmIssueVars struct {
 func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 
-		app.PageName = "Add GCM Issue"
+		app.PageName = "Add a GCM issue"
 		vars := AddGcmIssueVars{
 			AppVars: app,
 		}
