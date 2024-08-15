@@ -11,7 +11,7 @@ import (
 
 type AddGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
-	GetDeputyClient(ctx sirius.Context, caseRecNumber string, deputyId int) (sirius.ClientWithOrderDeputy, error)
+	GetDeputyClient(ctx sirius.Context, caseRecNumber string, deputyId int) (sirius.DeputyClient, error)
 	AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType model.RefData, deputyId int) error
 }
 
@@ -19,7 +19,7 @@ type AddGcmIssueVars struct {
 	AppVars
 	GcmIssueTypes  []model.RefData
 	CaseRecNumber  string
-	Client         sirius.ClientWithOrderDeputy
+	Client         sirius.DeputyClient
 	HasFoundClient string
 	GcmIssueType   model.RefData
 	GcmIssueLabel  string
