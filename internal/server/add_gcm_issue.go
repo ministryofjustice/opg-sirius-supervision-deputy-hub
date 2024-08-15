@@ -73,6 +73,10 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			siriusClient, err := client.GetDeputyClient(ctx, caseNumber, app.DeputyId())
 
 			if verr, ok := err.(sirius.ValidationError); ok {
+				fmt.Println("verr")
+				fmt.Println(verr)
+				fmt.Println(verr.Errors)
+				fmt.Println(verr.Message)
 				vars.Errors = util.RenameErrors(verr.Errors)
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
