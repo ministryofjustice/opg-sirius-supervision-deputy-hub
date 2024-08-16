@@ -11,8 +11,6 @@ import (
 )
 
 type mockAddGCMIssueClient struct {
-	count          int
-	lastCtx        sirius.Context
 	AddGCMIssueErr error
 }
 
