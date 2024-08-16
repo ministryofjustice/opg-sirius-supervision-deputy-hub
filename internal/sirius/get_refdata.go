@@ -11,7 +11,9 @@ import (
 
 func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, error) {
 	var v []model.RefData
+
 	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/reference-data%s", refDataType), nil)
+
 	if err != nil {
 		return v, err
 	}
@@ -43,7 +45,6 @@ func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, e
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
-
 	return v, err
 }
 
