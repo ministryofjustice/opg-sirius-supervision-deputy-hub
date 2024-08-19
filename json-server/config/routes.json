@@ -17,5 +17,6 @@
     "/tasktypes/deputy": "/tasktypes",
     "/persons/:personId/documents": "/documents",
     "/deputies/:id/documents/:documentId": "/document/:documentId",
-    "/deputies/:id/gcm-issues": "/gcm-issues"
+    "/deputies/:id/gcm-issues": "/gcm-issues",
+    "/deputies/:id/gcm-issues/add": "/gcm-issues/add"
 }

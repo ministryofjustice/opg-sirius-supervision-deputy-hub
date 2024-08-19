@@ -56,10 +56,12 @@ describe("Documents", () => {
         });
 
         it("allows me to add a GCM issue", () => {
-            cy.setCookie("success-route", "/add-gcm-issue/1");
+            cy.setCookie("success-route", "/search-for-client");
             cy.get("#add-a-gcm-issue").contains("Add a GCM issue").click();
-            cy.get('.govuk-heading-l').contains("Add a document");
-            cy.get('input[type=file]').selectFile('cypress/fixtures/example.json')
+            cy.get('.govuk-heading-l').contains("Add a GCM issue");
+            cy.get('#f-client-case-number').type('12345');
+            cy.get('#find-client').contains('Find client').click();
+
             cy.get('#f-documentType > .govuk-fieldset__legend').contains("Type of document")
             cy.get('#type-ASSURANCE_VISIT').click();
             cy.get('#f-documentDirection > .govuk-fieldset__legend').contains("Direction")

@@ -2164,6 +2164,36 @@ module.exports = function () {
                 "label": "Unknown"
             }
         ],
+        "gcmIssueType": [
+            {
+                "handle": "OPENING_AND_CLOSING_BALANCE_DO_NOT_MATCH",
+                "label": "Opening and closing balances do not match"
+            },
+            {
+                "handle": "DEPUTY_FEES_INCORRECT",
+                "label": "Deputy fees incorrect"
+            },
+            {
+                "handle": "MISSING_INFORMATION",
+                "label": "Missing information"
+            },
+            {
+                "handle": "ACCOUNTS_DO_NOT_BALANCE",
+                "label": "Accounts do not balance"
+            },
+            {
+                "handle": "MANDATORY_I_SECTIONS_NOT_COMPLETED",
+                "label": "Mandatory (i) sections not completed"
+            },
+            {
+                "handle": "DROP_IN_ASSETS",
+                "label": "Drop in assets"
+            },
+            {
+                "handle": "OPENING_AND_CLOSING_BALANCE_DO_NOT_MATCH",
+                "label": "Other"
+            },
+        ],
         "deputyBooleanType": [
             {
                 "handle": "YES",
@@ -2230,6 +2260,15 @@ module.exports = function () {
                 "id": 3,
                 "FirmName": "Great Firm Corp",
                 "FirmNumber": 1000002
+            }
+        ],
+        "search-for-client":
+        [
+            {
+                "id": 1,
+                "firstname": "Test",
+                "surname": "Client",
+                "caseRecNumber": "123456",
             }
         ],
         "add-document":
