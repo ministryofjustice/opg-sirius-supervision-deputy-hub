@@ -2994,6 +2994,16 @@ module.exports = function () {
                 },
             ],
         },
+        "gcm-issues": [
+            {
+                "id":1,
+                "client":{"id":66,"caseRecNumber":"48217682","firstname":"Hamster","surname":"Person"},
+                "createdDate":"13\/08\/2024",
+                "createdByUser":{"id":101,"name":"PROTeam1","phoneNumber":"12345678","displayName":"PROTeam1 User1","deleted":false,"email":"pro1@opgtest.com","firstname":"PROTeam1","surname":"User1","roles":["OPG User","Case Manager"],"locked":false,"suspended":false},
+                "notes":"Not happy we are missing info here",
+                "GCMIssueType":{"handle":"MISSING_INFORMATION","label":"Missing information"}
+            }
+        ],
         "tasktypes": {
             "task_types": {
                 "SAP": {
