@@ -43,55 +43,56 @@
             </a>
           </li>
         </ul>
-        <div class="govuk-tabs__panel" id="open" role="tabpanel" aria-labelledby="tab_open_issues">
+        <div class="govuk-tabs__panel" id="open-gcm-issues" role="tabpanel" aria-labelledby="tab_open_issues">
           <h3 class="govuk-heading-m">Open issues</h3>
             <table id="pa-clients" class="govuk-table sortable">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                      <th class="govuk-table__cell govuk-table__select">
-                          <div class="govuk-checkboxes govuk-checkboxes--small">
-                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input sirius-select-task" id="selectAll" name="taskDetails" type="checkbox" value="hmrc">
-                                <label class="govuk-label govuk-checkboxes__label" for="organisation">
-                                  <span class="govuk-visually-hidden">Select</span>
-                                </label>
-                             </div>
-                          </div>
+                      <th scope="col" id="checkbox-column" class="govuk-table__header">
+                        <div class="govuk-checkboxes govuk-checkboxes--small">
+                           <div class="govuk-checkboxes__item">
+                              <input class="govuk-checkboxes__input sirius-select-task" id="selectAll" name="taskDetails" type="checkbox" value="hmrc">
+                              <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                <span class="govuk-visually-hidden">Select</span>
+                              </label>
+                            </div>
+                        </div>
                       </th>
                       <th scope="col" class="govuk-table__header">Case number</th>
                       <th scope="col" class="govuk-table__header">Client name</th>
                       <th scope="col" class="govuk-table__header">General Case Manager</th>
-                      <th scope="col" span="2" class="govuk-table__header">Issue added</th>
+                      <th scope="col" class="govuk-table__header">Issue added</th>
                       <th scope="col" class="govuk-table__header">Issue</th>
                     </tr>
                 </thead>
-
                 <tbody class="govuk-table__body">
                     {{ range .GcmIssues }}
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell govuk-table__select">
-                                <div class="govuk-checkboxes govuk-checkboxes--small">
-                                  <div class="govuk-checkboxes__item">
-                                    <input class="govuk-checkboxes__input sirius-select-task" id="organisation" name="taskDetails" type="checkbox" value="hmrc">
-                                    <label class="govuk-label govuk-checkboxes__label" for="organisation">
-                                      <span class="govuk-visually-hidden">Select</span>
-                                    </label>
-                                  </div>
-                                </div>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                              <div class="govuk-checkboxes govuk-checkboxes--small govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input sirius-select-task" id="organisation" name="taskDetails" type="checkbox" value="hmrc">
+                                <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                  <span class="govuk-visually-hidden">Select</span>
+                                </label>
+                              </div>
                             </td>
-                            <td scope="col" class="govuk-table__cell">
-                                <a class="govuk-links" href="">{{ .Client.CaseRecNumber }} </a>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                                 <a
+                                    class="govuk-links"
+                                    href="{{ sirius (printf "/supervision/#/clients/%d" .Client.Id) }}">
+                                    {{ .Client.CaseRecNumber }}</a
+                                >
                             </td>
-                            <td scope="col" class="govuk-table__cell">
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
                                 {{ .Client.Firstname }} {{ .Client.Surname }}
                             </td>
-                            <td scope="col" class="govuk-table__cell">
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
                                 {{ .CreatedByUser.DisplayName }}
                             </td>
-                            <td scope="col" class="govuk-table__cell date">
-                                <p class="date"> {{ .CreatedDate }} </p>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                                {{ .CreatedDate }}
                             </td>
-                          <td scope="col" span="2" class="govuk-table__cell">
+                          <td scope="col" span="2" class="govuk-table__cell centre-align-cell">
                             {{ .GcmIssueType.Label }}
                             {{ if ne .Notes "" }}
                                 <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
@@ -106,7 +107,7 @@
                                 </details>
                             {{ end }}
                           </td>
-                          <td scope="col" class="govuk-table__cell">
+                          <td scope="col" class="govuk-table__cell centre-align-cell">
                           </td>
                         </tr>
                     {{ end }}
