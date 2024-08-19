@@ -88,6 +88,7 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			if vars.Client.ClientId != 0 && submitForm == "submit-form" {
 				//second submit to add the issue
 				gcmIssue, _ := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
+
 				err := client.AddGcmIssue(ctx, caseRecNumber, notes, gcmIssue, app.DeputyId())
 
 				if verr, ok := err.(sirius.ValidationError); ok {
@@ -113,9 +114,9 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 	}
 }
 
-func getRefDataForGcmIssueType(issueLabelGiven string, refData []model.RefData) (model.RefData, sirius.ValidationErrors) {
+func getRefDataForGcmIssueType(issueHandleGiven string, refData []model.RefData) (model.RefData, sirius.ValidationErrors) {
 	for i := 0; i < len(refData); {
-		if refData[i].Label == issueLabelGiven {
+		if refData[i].Handle == issueHandleGiven {
 			return refData[i], nil
 		}
 		i++

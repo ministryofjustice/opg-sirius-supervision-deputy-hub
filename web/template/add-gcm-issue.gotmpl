@@ -52,12 +52,12 @@
                                 {{ range .GcmIssueTypes }}
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input"
-                                           id={{ .Label}}
+                                           id={{ .Handle}}
                                            name="issue-type"
                                            type="radio"
-                                           {{if eq .Label $.GcmIssueType.Label}} checked="true" {{end}}
-                                           value="{{.Label}}" />
-                                        <label class="govuk-label govuk-radios__label" for={{ .Label }}>
+                                           {{if eq .Handle $.GcmIssueType.Handle}} checked="true" {{end}}
+                                           value="{{.Handle}}" />
+                                        <label class="govuk-label govuk-radios__label" for={{ .Handle }}>
                                             {{ .Label }}
                                             {{ if eq .Label "Missing information" }} (explain in notes){{ end }}
                                             {{ if eq .Label "Other" }} (explain in notes) {{ end }}
