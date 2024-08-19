@@ -22,7 +22,6 @@ type AddGcmIssueVars struct {
 	Client         sirius.DeputyClient
 	HasFoundClient string
 	GcmIssueType   model.RefData
-	GcmIssueLabel  string
 	Notes          string
 }
 
