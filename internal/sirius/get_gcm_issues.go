@@ -50,6 +50,8 @@ func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams)
 
 	defer resp.Body.Close()
 
+	//io.Copy(os.Stdout, resp.Body)
+
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized
 	}

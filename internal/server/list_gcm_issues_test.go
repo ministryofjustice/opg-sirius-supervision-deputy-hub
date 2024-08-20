@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
@@ -15,7 +16,7 @@ type mockGcmIssues struct {
 	mock.Mock
 }
 
-func (m *mockGcmIssues) GetGCMIssues(ctx sirius.Context, deputyId int) ([]sirius.GcmIssue, error) {
+func (m *mockGcmIssues) GetGCMIssues(ctx sirius.Context, deputyId int, params sirius.GcmIssuesParams) ([]sirius.GcmIssue, error) {
 	args := m.Called(ctx, deputyId)
 
 	return args.Get(0).([]sirius.GcmIssue), args.Error(1)
@@ -65,5 +66,16 @@ func TestNavigateToGcmIssuesTab(t *testing.T) {
 	assert.Equal(GcmIssuesVars{
 		AppVars:   app,
 		GcmIssues: gcmIssues,
+		Sort: urlbuilder.Sort{
+			OrderBy:    "createdDate",
+			Descending: false,
+		},
+		UrlBuilder: urlbuilder.UrlBuilder{
+			OriginalPath: "open-issues",
+			SelectedSort: urlbuilder.Sort{
+				OrderBy:    "createdDate",
+				Descending: false,
+			},
+		},
 	}, template.lastVars)
 }

@@ -21,8 +21,7 @@ type mockAddGCMIssueClient struct {
 	GcmIssueTypes         []model.RefData
 	CaseRecNumber         string
 	Client                sirius.DeputyClient
-	HasFoundClient        string
-	GcmIssueType          model.RefData
+	GcmIssueType          string
 	Notes                 string
 }
 
@@ -34,7 +33,7 @@ func (m *mockAddGCMIssueClient) GetDeputyClient(ctx sirius.Context, caseRecNumbe
 	return m.Client, m.GetDeputyClientError
 }
 
-func (m *mockAddGCMIssueClient) AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType model.RefData, deputyId int) error {
+func (m *mockAddGCMIssueClient) AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType string, deputyId int) error {
 	return m.AddGCMIssueErr
 }
 
@@ -96,7 +95,7 @@ func TestPostAddGCMIssueSearchForClient(t *testing.T) {
 
 	form := url.Values{
 		"case-number":       {"123456"},
-		"search-for-client": {"search-for-client"},
+		"search-for-client": {"true"},
 	}
 
 	w := httptest.NewRecorder()
@@ -131,9 +130,8 @@ func TestPostAddGCMIssueSearchForClient(t *testing.T) {
 			CourtRef:  "123456",
 			Firstname: "Test",
 		},
-		HasFoundClient: "",
-		GcmIssueType:   model.RefData{},
-		Notes:          "",
+		GcmIssueType: "",
+		Notes:        "",
 	}, template.lastVars)
 
 	assert.Nil(res)
@@ -162,7 +160,7 @@ func TestPostAddGCMIssueSubmitForm(t *testing.T) {
 
 	form := url.Values{
 		"case-number": {"123456"},
-		"submit-form": {"submit-form"},
+		"submit-form": {"true"},
 	}
 
 	w := httptest.NewRecorder()
@@ -252,7 +250,7 @@ func TestPostAddGCMIssueHandlesErrorsInOtherClientFiles(t *testing.T) {
 			},
 			Form: url.Values{
 				"case-number":       {"123456"},
-				"search-for-client": {"search-for-client"},
+				"search-for-client": {"true"},
 			},
 		},
 		{
@@ -261,7 +259,7 @@ func TestPostAddGCMIssueHandlesErrorsInOtherClientFiles(t *testing.T) {
 			},
 			Form: url.Values{
 				"case-number":       {"123456"},
-				"search-for-client": {"search-for-client"},
+				"search-for-client": {"true"},
 			},
 		},
 		{
@@ -271,7 +269,7 @@ func TestPostAddGCMIssueHandlesErrorsInOtherClientFiles(t *testing.T) {
 			},
 			Form: url.Values{
 				"case-number": {"123456"},
-				"submit-form": {"submit-form"},
+				"submit-form": {"true"},
 			},
 		},
 	}

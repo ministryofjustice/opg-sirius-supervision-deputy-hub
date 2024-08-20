@@ -3,7 +3,6 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -38,11 +37,7 @@ func TestAddGcmIssue(t *testing.T) {
 	err := client.AddGcmIssue(getContext(nil),
 		"123456",
 		"notes",
-		model.RefData{
-			Handle:     "MISSING_INFORMATION",
-			Label:      "Missing information",
-			Deprecated: false,
-		},
+		"MISSING_INFORMATION",
 		76,
 	)
 	assert.Nil(t, err)
@@ -60,11 +55,7 @@ func TestAddGcmIssueReturnsNewStatusError(t *testing.T) {
 	err := client.AddGcmIssue(getContext(nil),
 		"123456",
 		"notes",
-		model.RefData{
-			Handle:     "MISSING_INFORMATION",
-			Label:      "Missing information",
-			Deprecated: false,
-		},
+		"MISSING_INFORMATION",
 		76,
 	)
 
@@ -86,11 +77,7 @@ func TestAddGcmIssueReturnsUnauthorisedClientError(t *testing.T) {
 	err := client.AddGcmIssue(getContext(nil),
 		"123456",
 		"notes",
-		model.RefData{
-			Handle:     "MISSING_INFORMATION",
-			Label:      "Missing information",
-			Deprecated: false,
-		},
+		"MISSING_INFORMATION",
 		76,
 	)
 	assert.Equal(t, ErrUnauthorized, err)

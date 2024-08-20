@@ -14,12 +14,13 @@
                        name="xsrfToken"
                        value="{{ .XSRFToken }}" />
 
-                    <div class="govuk-form-group">
-                        <label class="govuk-label" for="case_number">
+                    <div class="govuk-form-group{{ if index .Errors "client-case-number" }} govuk-form-group--error{{ end }}">
+                        {{ template "error-message" (index .Errors "client-case-number") }}
+                        <label class="govuk-label" for="f-client-case-number">
                           Case number (required)
                         </label>
                       <input
-                        class="govuk-input{{ if index .Errors "caseRecNumber" }} govuk-input--error{{ end }}"
+                        class="govuk-input{{ if index .Errors "client-case-number" }} govuk-input--error{{ end }}"
                         id="f-client-case-number"
                         name="case-number"
                         type="text"
@@ -29,7 +30,7 @@
                         id="find-client"
                         name="search-for-client"
                         type="submit"
-                        value="search-for-client"
+                        value="true"
                         class="govuk-button govuk-button--secondary govuk-!-margin-top-3 govuk-!-margin-bottom-0"
                         data-module="govuk-button">
                         Find client
@@ -42,12 +43,12 @@
                        </label>
                    </div>
 
-                   <div class="govuk-form-group{{ if index .Errors "issue-type" }} govuk-form-group--error{{ end }}">
-                       <fieldset class="govuk-fieldset" aria-describedby="issue-type" id="f-issue-type">
+                   <div class="govuk-form-group{{ if index .Errors "gcmIssueType" }} govuk-form-group--error{{ end }}">
+                       <fieldset class="govuk-fieldset" aria-describedby="issue-type" id="f-gcmIssueType">
                             <legend class="govuk-fieldset__legend">
                                 Issue (required)
                             </legend>
-                            {{ template "error-message" (index .Errors "issue-type") }}
+                            {{ template "error-message" (index .Errors "gcmIssueType") }}
                             <div class="govuk-radios">
                                 {{ range .GcmIssueTypes }}
                                     <div class="govuk-radios__item">
@@ -55,7 +56,7 @@
                                            id={{ .Handle}}
                                            name="issue-type"
                                            type="radio"
-                                           {{if eq .Handle $.GcmIssueType.Handle}} checked="true" {{end}}
+                                           {{ if eq .Handle $.GcmIssueType }} checked="true" {{ end }}
                                            value="{{.Handle}}" />
                                         <label class="govuk-label govuk-radios__label" for={{ .Handle }}>
                                             {{ .Label }}
@@ -72,17 +73,17 @@
                        class="govuk-character-count"
                        data-module="govuk-character-count"
                        data-maxlength="1000">
-                       <div class="govuk-form-group{{ if index .Errors "2-note" }} govuk-form-group--error{{ end }}">
+                       <div class="govuk-form-group{{ if index .Errors "notes" }} govuk-form-group--error{{ end }}">
                            <label class="govuk-label" for="f-2-note">
                                Notes
                            </label>
-                           {{ template "error-message" (index .Errors "2-note") }}
+                           {{ template "error-message" (index .Errors "notes") }}
                            <textarea
-                               class="govuk-textarea govuk-js-character-count{{ if index .Errors "2-note" }} govuk-input--error{{ end }}"
-                               id="gcm-issue-notes"
+                               class="govuk-textarea govuk-js-character-count{{ if index .Errors "notes" }} govuk-input--error{{ end }}"
+                               id="f-notes"
                                name="notes"
                                rows="10"
-                               aria-describedby="gcm-issue-notes"
+                               aria-describedby="gcm-issue-notes-info"
                            >{{ if ne "" .Notes}}{{ .Notes }}{{ end }}</textarea>
                            <div
                                id="gcm-issue-notes-info"
@@ -98,7 +99,7 @@
                         type="submit"
                         class="govuk-button"
                         name="submit-form"
-                        value="submit-form"
+                        value="true"
                         data-module="govuk-button">
                         Save GCM issue
                     </button>

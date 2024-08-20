@@ -2266,6 +2266,13 @@ module.exports = function () {
          {
                 "researchOptOut":false,"id":66,"caseRecNumber":"43787324","uId":"7000-0000-2415","normalizedUid":700000002415,"email":"Random@email.uk","dob":"28\/09\/2023","dateOfDeath":"","salutation":"Pro","firstname":"Hamster","middlenames":"","surname":"Person","otherNames":null,"addressLine1":"Address line 1","addressLine2":"Address line 2","addressLine3":"Address line 3","town":"MadeUpTown","county":"SomeCounty","postcode":"PW5 9WS","country":"France","isAirmailRequired":true,"phoneNumber":"12687 654297","reference":[],"correspondenceByPost":true,"correspondenceByPhone":true,"correspondenceByEmail":true,"correspondenceByWelsh":true,"occupation":null,"createdDate":"29\/09\/2023","updatedDate":"2024-08-14T10:49:16+00:00","personType":"Client","specialCorrespondenceRequirements":{"audioTape":true,"largePrint":true,"hearingImpaired":true,"spellingOfNameRequiresCare":true},"interpreterRequired":"Yes","errorMessages":[],"previousNames":"","cannotSignForm":null,"applyingForFeeRemission":null,"receivingBenefits":null,"receivedDamageAward":null,"hasLowIncome":null,"signatureDate":null,"hasPreviousLpa":null,"notesForPreviousLpa":null,"companyName":null,"statusDate":"14\/08\/2024","medicalCondition":"Aphasia","clientAccommodation":{"handle":"FAMILY MEMBER\/FRIEND'S HOME","label":"Family Member\/Friend's Home (including spouse\/civil partner)"},"casesManagedAsHybrid":true,"supervisionCaseOwner":[],"maritalStatus":"Married"
          },
+        "add-gcm-issue":
+            [
+                {
+                    "id": 1,
+                    "add-document": []
+                }
+            ],
         "add-document":
         [
             {
@@ -3035,7 +3042,7 @@ module.exports = function () {
                 "createdDate":"13\/08\/2024",
                 "createdByUser":{"id":101,"name":"PROTeam1","phoneNumber":"12345678","displayName":"PROTeam1 User1","deleted":false,"email":"pro1@opgtest.com","firstname":"PROTeam1","surname":"User1","roles":["OPG User","Case Manager"],"locked":false,"suspended":false},
                 "notes":"Not happy we are missing info here",
-                "GCMIssueType":{"handle":"MISSING_INFORMATION","label":"Missing information"}
+                "gcmIssueType":{"handle":"MISSING_INFORMATION","label":"Missing information"}
             }
         ],
         "tasktypes": {

@@ -12,17 +12,16 @@ import (
 type AddGcmIssue interface {
 	GetGCMIssueTypes(ctx sirius.Context) ([]model.RefData, error)
 	GetDeputyClient(ctx sirius.Context, caseRecNumber string, deputyId int) (sirius.DeputyClient, error)
-	AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType model.RefData, deputyId int) error
+	AddGcmIssue(ctx sirius.Context, caseRecNumber, notes string, gcmIssueType string, deputyId int) error
 }
 
 type AddGcmIssueVars struct {
 	AppVars
-	GcmIssueTypes  []model.RefData
-	CaseRecNumber  string
-	Client         sirius.DeputyClient
-	HasFoundClient string
-	GcmIssueType   model.RefData
-	Notes          string
+	GcmIssueTypes []model.RefData
+	CaseRecNumber string
+	Client        sirius.DeputyClient
+	GcmIssueType  string
+	Notes         string
 }
 
 func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
@@ -80,21 +79,17 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			}
 
 			vars.Client = siriusClient
-			if searchForClient == "search-for-client" {
-				//first submit to get the client name from caserec
+			if searchForClient == "true" {
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}
 
-			if vars.Client.ClientId != 0 && submitForm == "submit-form" {
-				//second submit to add the issue
-				gcmIssue, _ := getRefDataForGcmIssueType(gcmIssueType, vars.GcmIssueTypes)
-
-				err := client.AddGcmIssue(ctx, caseRecNumber, notes, gcmIssue, app.DeputyId())
+			if vars.Client.ClientId != 0 && submitForm == "true" {
+				err := client.AddGcmIssue(ctx, caseRecNumber, notes, gcmIssueType, app.DeputyId())
 
 				if verr, ok := err.(sirius.ValidationError); ok {
 					vars.Client = siriusClient
 					vars.CaseRecNumber = caseRecNumber
-					vars.GcmIssueType = gcmIssue
+					vars.GcmIssueType = gcmIssueType
 					vars.Notes = notes
 					vars.Errors = util.RenameErrors(verr.Errors)
 					return tmpl.ExecuteTemplate(w, "page", vars)
@@ -112,17 +107,4 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 		}
 		return StatusError(http.StatusMethodNotAllowed)
 	}
-}
-
-func getRefDataForGcmIssueType(issueHandleGiven string, refData []model.RefData) (model.RefData, sirius.ValidationErrors) {
-	for i := 0; i < len(refData); {
-		if refData[i].Handle == issueHandleGiven {
-			return refData[i], nil
-		}
-		i++
-	}
-	return model.RefData{},
-		sirius.ValidationErrors{
-			"caseRecNumber": map[string]string{"invalid": "Select a valid issue type"},
-		}
 }

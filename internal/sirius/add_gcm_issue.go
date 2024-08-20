@@ -4,17 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 )
 
 type CreateGcmIssue struct {
-	ClientCaseRecNumber string        `json:"caseRecNumber"`
-	GcmIssueType        model.RefData `json:"gcmIssueType"`
-	Notes               string        `json:"notes"`
+	ClientCaseRecNumber string `json:"caseRecNumber"`
+	GcmIssueType        string `json:"gcmIssueType"`
+	Notes               string `json:"notes"`
 }
 
-func (c *Client) AddGcmIssue(ctx Context, clientCaseRecNumber, notes string, gcmIssueType model.RefData, deputyId int) error {
+func (c *Client) AddGcmIssue(ctx Context, clientCaseRecNumber, notes string, gcmIssueType string, deputyId int) error {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(CreateGcmIssue{

@@ -89,7 +89,7 @@ func TestGcmIssuesReturned(t *testing.T) {
 		},
 	}
 
-	expectedClient, err := client.GetGCMIssues(getContext(nil), 76)
+	expectedClient, err := client.GetGCMIssues(getContext(nil), 76, GcmIssuesParams{})
 
 	assert.Equal(t, expectedResponse, expectedClient)
 	assert.Equal(t, nil, err)
@@ -103,14 +103,14 @@ func TestGetGcmIssuesReturnsNewStatusError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	contact, err := client.GetGCMIssues(getContext(nil), 76)
+	contact, err := client.GetGCMIssues(getContext(nil), 76, GcmIssuesParams{})
 
 	expectedResponse := []GcmIssue(nil)
 
 	assert.Equal(t, expectedResponse, contact)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/gcm-issues",
+		URL:    svr.URL + "/api/v1/deputies/76/gcm-issues?&filter=&sort=",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -123,7 +123,7 @@ func TestGetGcmIssuesReturnsUnauthorisedClientError(t *testing.T) {
 
 	client, _ := NewClient(http.DefaultClient, svr.URL)
 
-	contact, err := client.GetGCMIssues(getContext(nil), 76)
+	contact, err := client.GetGCMIssues(getContext(nil), 76, GcmIssuesParams{})
 
 	expectedResponse := []GcmIssue(nil)
 
