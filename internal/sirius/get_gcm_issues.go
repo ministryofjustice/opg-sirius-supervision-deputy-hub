@@ -29,6 +29,11 @@ type GcmIssue struct {
 	GcmIssueType  model.RefData `json:"gcmIssueType"`
 }
 
+//type GcmIssuesParams struct {
+//	IssueStatus string
+//	Sort        string
+//}
+
 func (c *Client) GetGCMIssues(ctx Context, deputyId int) ([]GcmIssue, error) {
 	var v []GcmIssue
 

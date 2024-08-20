@@ -159,7 +159,11 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 		wrap(
 			renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
 
-	pageRouter.Handle("/gcm-issues",
+	pageRouter.Handle("/gcm-issues/open-issues",
+		wrap(
+			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
+
+	pageRouter.Handle("/gcm-issues/resolved-issues",
 		wrap(
 			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
 

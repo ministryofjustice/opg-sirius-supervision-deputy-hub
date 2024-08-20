@@ -90,10 +90,10 @@
                         {{ end }}">
                         <a
                             class="moj-sub-navigation__link"
-                            {{ if eq .Path (printf "/%d/gcm-issues" .DeputyDetails.ID) }}
+                            {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}
                                aria-current="page"
                            {{ end }}
-                           href="{{ prefix (printf "/%d/gcm-issues" .DeputyDetails.ID) }}"
+                           href="{{ prefix (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}"
                             >GCM issues</a
                         >
                    </li>
