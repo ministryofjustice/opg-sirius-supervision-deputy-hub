@@ -1,0 +1,61 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server.GcmIssuesVars*/ -}}
+
+{{ template "page" . }}
+{{ define "main" }}
+    {{ if .SuccessMessage }}
+            {{ template "success-banner" . }}
+        {{ end }}
+    {{ template "content-header" . }}
+    {{ template "navigation" . }}
+    <header>
+        <h1 class="govuk-heading-l  govuk-!-margin-bottom-1 gcm-issues">
+            {{ .PageName }}
+        </h1>
+        <div class="moj-button-menu">
+          <div class="moj-button-menu__wrapper">
+             <a
+                 id="add-a-gcm-issue"
+                 class="govuk-button moj-button-menu__item govuk-button--secondary"
+                 href="{{ prefix (printf "/%d/gcm-issues/add" $.DeputyDetails.ID) }}"
+                 role="button"
+                 draggable="false">
+                 Add a GCM issue
+              </a>
+          </div>
+        </div>
+    </header>
+    <div id="f-button-disabled-warning" class="hide">
+        {{ template "warning-banner" .ErrorMessage }}
+    </div>
+    <div class="govuk-tabs" data-module="govuk-tabs">
+        <h2 class="govuk-tabs__title">
+          Contents
+        </h2>
+        <ul class="govuk-tabs__list" role="tablist">
+          <li class="govuk-tabs__list-item  {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
+               <a
+                    class="opg-tab"
+                    {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}
+                        tab-index="-1"
+                    {{ else }} tab-index="0" {{ end }}
+                    role="tab"
+                    href="{{ prefix (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}"
+                    >Open issues</a
+              >
+          </li>
+          <li class="govuk-tabs__list-item {{ if eq .Path (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
+            <a
+                class="opg-tab"
+                {{ if eq .Path (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }}
+                    tab-index="-1"
+                {{ else }} tab-index="0" {{ end }}
+                role="tab"
+                href="{{ prefix (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }}"
+                >Resolved issues</a
+              >
+          </li>
+        </ul>
+        {{ template "gcm-issues" . }}
+
+    </div>
+{{ end }}
