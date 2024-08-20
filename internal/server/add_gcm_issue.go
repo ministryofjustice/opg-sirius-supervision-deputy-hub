@@ -104,7 +104,7 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 					return err
 				}
 
-				return Redirect(fmt.Sprintf("/%d/gcm-issues?success=addGcmIssue&%s", app.DeputyId(), caseRecNumber))
+				return Redirect(fmt.Sprintf("/%d/gcm-issues/open-issues?success=addGcmIssue&%s", app.DeputyId(), caseRecNumber))
 			}
 
 		default:

@@ -180,7 +180,7 @@ func TestPostAddGCMIssueSubmitForm(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(res, Redirect("/123/gcm-issues?success=addGcmIssue&123456"))
+	assert.Equal(res, Redirect("/123/gcm-issues/open-issues?success=addGcmIssue&123456"))
 }
 
 func TestPostAddGCMIssueErrorsIfNoCaseNumber(t *testing.T) {
