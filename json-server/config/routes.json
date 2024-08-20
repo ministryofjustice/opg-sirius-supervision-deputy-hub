@@ -16,5 +16,9 @@
     "/reference-data?filter=*": "/$1",
     "/tasktypes/deputy": "/tasktypes",
     "/persons/:personId/documents": "/documents",
-    "/deputies/:id/documents/:documentId": "/document/:documentId"
+    "/deputies/:id/documents/:documentId": "/document/:documentId",
+    "/deputies/:id/gcm-issues": "/gcm-issues",
+    "/deputies/:id/gcm-issues/add": "/gcm-issues/add",
+    "/deputies/:id/client/*": "/search-for-client"
+
 }
