@@ -14,11 +14,10 @@
                             </div>
                         </div>
                       </th>
-                      <th scope="col" class="govuk-table__header">Case number</th>
-                      <th scope="col" class="govuk-table__header">Client name</th>
+                      <th scope="col" class="govuk-table__header">Client</th>
                       <th scope="col" class="govuk-table__header">General Case Manager</th>
-                      <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "createdDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "createdDate" }}"><button type="button">Issue added</button></a></th>
-                      <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "issueType" }}"><a href="{{ .UrlBuilder.GetSortUrl "issueType" }}"><button type="button">Issue</button></a></th>
+                      <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "createdDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "createdDate" }}"><button type="button" id="issue-added-sort">Issue added</button></a></th>
+                      <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "issueType" }}"><a href="{{ .UrlBuilder.GetSortUrl "issueType" }}"><button type="button" id="issue-sort">Issue</button></a></th>
                     </tr>
                 </thead>
                 <tbody class="govuk-table__body">
@@ -34,13 +33,11 @@
                             </td>
                             <td scope="col" class="govuk-table__cell centre-align-cell">
                                  <a
-                                    class="govuk-links"
+                                    class="govuk-link" id="sirius-case-link"
                                     href="{{ sirius (printf "/supervision/#/clients/%d" .Client.Id) }}">
-                                    {{ .Client.CaseRecNumber }}</a
+                                    {{ .Client.Firstname }} {{ .Client.Surname }}</a
                                 >
-                            </td>
-                            <td scope="col" class="govuk-table__cell centre-align-cell">
-                                {{ .Client.Firstname }} {{ .Client.Surname }}
+                                <span class="secondary court_ref">{{ .Client.CaseRecNumber }}</span>
                             </td>
                             <td scope="col" class="govuk-table__cell centre-align-cell">
                                 {{ .CreatedByUser.DisplayName }}

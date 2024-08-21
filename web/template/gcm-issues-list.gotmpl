@@ -32,9 +32,9 @@
           Contents
         </h2>
         <ul class="govuk-tabs__list" role="tablist">
-          <li class="govuk-tabs__list-item  {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
+          <li class="govuk-tabs__list-item{{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
                <a
-                    class="opg-tab"
+                    class="opg-tab {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }} opg-tab-selected {{ end }}"
                     {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}
                         tab-index="-1"
                     {{ else }} tab-index="0" {{ end }}
@@ -43,19 +43,18 @@
                     >Open issues</a
               >
           </li>
-          <li class="govuk-tabs__list-item {{ if eq .Path (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
+          <li class="govuk-tabs__list-item {{ if eq .Path (printf "/%d/gcm-issues/closed-issues" .DeputyDetails.ID) }} govuk-tabs__list-item--selected {{ end }}" role="presentation">
             <a
-                class="opg-tab"
-                {{ if eq .Path (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }}
+                class="opg-tab {{ if eq .Path (printf "/%d/gcm-issues/closed-issues" .DeputyDetails.ID) }} opg-tab-selected {{ end }}"
+                {{ if eq .Path (printf "/%d/gcm-issues/closed-issues" .DeputyDetails.ID) }}
                     tab-index="-1"
                 {{ else }} tab-index="0" {{ end }}
                 role="tab"
-                href="{{ prefix (printf "/%d/gcm-issues/resolved-issues" .DeputyDetails.ID) }}"
-                >Resolved issues</a
+                href="{{ prefix (printf "/%d/gcm-issues/closed-issues" .DeputyDetails.ID) }}"
+                >Closed issues</a
               >
           </li>
         </ul>
         {{ template "gcm-issues" . }}
-
     </div>
 {{ end }}
