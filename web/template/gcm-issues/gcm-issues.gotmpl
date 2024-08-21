@@ -1,0 +1,71 @@
+{{ define "gcm-issues" }}
+    <div class="govuk-tabs__panel" id="open-gcm-issues" role="tabpanel" aria-labelledby="tab_open_issues">
+          <h3 class="govuk-heading-m">Open issues</h3>
+            <table id="pa-clients" class="govuk-table sortable">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                      <th scope="col" id="checkbox-column" class="govuk-table__header">
+                        <div class="govuk-checkboxes govuk-checkboxes--small">
+                           <div class="govuk-checkboxes__item">
+                              <input class="govuk-checkboxes__input sirius-select-task" id="selectAll" name="taskDetails" type="checkbox" value="hmrc">
+                              <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                <span class="govuk-visually-hidden">Select</span>
+                              </label>
+                            </div>
+                        </div>
+                      </th>
+                      <th scope="col" class="govuk-table__header">Client</th>
+                      <th scope="col" class="govuk-table__header">General Case Manager</th>
+                      <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "createdDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "createdDate" }}"><button type="button" id="issue-added-sort">Issue added</button></a></th>
+                      <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "issueType" }}"><a href="{{ .UrlBuilder.GetSortUrl "issueType" }}"><button type="button" id="issue-sort">Issue</button></a></th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {{ range .GcmIssues }}
+                        <tr class="govuk-table__row">
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                              <div class="govuk-checkboxes govuk-checkboxes--small govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input sirius-select-task" id="organisation" name="taskDetails" type="checkbox" value="hmrc">
+                                <label class="govuk-label govuk-checkboxes__label" for="organisation">
+                                  <span class="govuk-visually-hidden">Select</span>
+                                </label>
+                              </div>
+                            </td>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                                 <a
+                                    class="govuk-link" id="sirius-case-link"
+                                    href="{{ sirius (printf "/supervision/#/clients/%d" .Client.Id) }}">
+                                    {{ .Client.Firstname }} {{ .Client.Surname }}</a
+                                >
+                                <span class="secondary court_ref">{{ .Client.CaseRecNumber }}</span>
+                            </td>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                                {{ .CreatedByUser.DisplayName }}
+                            </td>
+                            <td scope="col" class="govuk-table__cell centre-align-cell">
+                                {{ .CreatedDate }}
+                            </td>
+                          <td scope="col" span="2" class="govuk-table__cell centre-align-cell">
+                            {{ .GcmIssueType.Label }}
+                            {{ if ne .Notes "" }}
+                                <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
+                                  <summary class="govuk-details__summary">
+                                    <span class="govuk-details__summary-text">
+                                      Notes
+                                    </span>
+                                  </summary>
+                                  <div class="govuk-details__text">
+                                    {{ .Notes }}
+                                  </div>
+                                </details>
+                            {{ end }}
+                          </td>
+                          <td scope="col" class="govuk-table__cell centre-align-cell">
+                          </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </h3>
+    </div>
+{{ end }}
