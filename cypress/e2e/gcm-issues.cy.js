@@ -10,12 +10,11 @@ describe("Documents", () => {
             cy.get('.govuk-heading-l').contains("General Case Manager issues");
             cy.get('.govuk-tabs__list-item--selected').contains('Open issues');
 
-            cy.get(".govuk-table__row").find("th").should("have.length", 6);
+            cy.get(".govuk-table__row").find("th").should("have.length", 5);
 
             const expected = [
-                "",
-                "Case number",
-                "Client name",
+            "",
+                "Client",
                 "General Case Manager",
                 "Issue added",
                 "Issue"
@@ -30,16 +29,27 @@ describe("Documents", () => {
 
         it("shows correct body", () => {
             cy.get('.govuk-table__body > .govuk-table__row > :nth-child(2)').contains('48217682')
-            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(3)').contains('Hamster Person');
-            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(4)').contains('PROTeam1 User1');
-            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(5)').contains('13/08/2024');
-            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(6)').contains('Missing information');
+            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(2)').contains('Hamster Person');
+            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(3)').contains('PROTeam1 User1');
+            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(4)').contains('13/08/2024');
+            cy.get('.govuk-table__body > .govuk-table__row > :nth-child(5)').contains('Missing information');
         });
 
-          it("only shows note drop down if the document has notes", () => {
-             cy.get(':nth-child(1) > [span="2"] > .govuk-details').contains("Notes").click();
-             cy.get(':nth-child(1) > [span="2"] > .govuk-details > .govuk-details__text').should('contain.text', 'Not happy');
-          });
+        it("only shows note drop down if the document has notes", () => {
+           cy.get(':nth-child(1) > [span="2"] > .govuk-details').contains("Notes").click();
+           cy.get(':nth-child(1) > [span="2"] > .govuk-details > .govuk-details__text').should('contain.text', 'Not happy');
+        });
+
+        it("allows sorting", () => {
+           cy.get('#issue-added-sort').click()
+           cy.url().should("include","order-by=createdDate&sort=desc");
+           cy.get('#issue-added-sort').click()
+           cy.url().should("include","order-by=createdDate&sort=asc");
+           cy.get('#issue-sort').click()
+           cy.url().should("include","order-by=issueType&sort=asc");
+           cy.get('#issue-sort').click()
+           cy.url().should("include","order-by=issueType&sort=desc");
+        });
     });
 
     describe("Add GCM Issue", () => {
