@@ -38,6 +38,8 @@ type Client interface {
 	AddDocumentClient
 	ManageTasks
 	CompleteTask
+	AddGcmIssue
+	GetGcmIssues
 }
 
 type Template interface {
@@ -156,6 +158,18 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 	pageRouter.Handle("/manage-assurance/{visitId}",
 		wrap(
 			renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
+
+	pageRouter.Handle("/gcm-issues/open-issues",
+		wrap(
+			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
+
+	pageRouter.Handle("/gcm-issues/closed-issues",
+		wrap(
+			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
+
+	pageRouter.Handle("/gcm-issues/add",
+		wrap(
+			renderTemplateForAddGcmIssue(client, templates["add-gcm-issue.gotmpl"])))
 
 	static := staticFileHandler(envVars.WebDir)
 	router.PathPrefix("/assets/").Handler(static)

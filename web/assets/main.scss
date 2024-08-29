@@ -47,3 +47,20 @@ $govuk-assets-path: "/supervision/deputies/assets/";
   border-top: 1px solid $govuk-border-colour;
   padding-top: 1em;
 }
+
+.opg-tab {
+    color: black;
+}
+
+.opg-tab-selected {
+    text-decoration: none;
+}
+
+.sirius-blue {
+    color: #1d70b8
+}
+
+#checkbox-column {
+    max-width: 15px;
+    width: 15px
+}
