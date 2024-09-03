@@ -260,9 +260,9 @@
     fastq "^1.6.0"
 
 "@types/node@*":
-  version "22.5.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.5.1.tgz#de01dce265f6b99ed32b295962045d10b5b99560"
-  integrity sha512-KkHsxej0j9IW1KKOOAA/XBA0z08UFSrRQHErzEfA3Vgq57eXIMYboIlHJuYIfd+lwCQjtKqUu3UnmKbtUc9yRw==
+  version "22.5.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.5.2.tgz#e42344429702e69e28c839a7e16a8262a8086793"
+  integrity sha512-acJsPTEqYqulZS/Yp/S3GgeE6GZ0qYODUR8aVr/DkhHQ8l9nd4j5x1/ZJy9/gHrRlFMqkO6i0I3E27Alu4jjPg==
   dependencies:
     undici-types "~6.19.2"
 
@@ -622,9 +622,9 @@ cypress-failed-log@^2.10.0:
     logdown "3.3.1"
 
 cypress@^13.6.4:
-  version "13.14.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.14.0.tgz#12ed82310f7c01eaf4ddbe01236ea3efd5a4c380"
-  integrity sha512-r0+nhd033x883YL6068futewUsl02Q7rWiinyAAIBDW/OOTn+UMILWgNuCiY3vtJjd53efOqq5R9dctQk/rKiw==
+  version "13.14.1"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.14.1.tgz#05875bbbf6333e858a92aed33ba67d7ddf8370d7"
+  integrity sha512-Wo+byPmjps66hACEH5udhXINEiN3qS3jWNGRzJOjrRJF3D0+YrcP2LVB1T7oYaVQM/S+eanqEvBWYc8cf7Vcbg==
   dependencies:
     "@cypress/request" "^3.0.1"
     "@cypress/xvfb" "^1.2.4"
@@ -1337,10 +1337,10 @@ onetime@^5.1.0:
   dependencies:
     mimic-fn "^2.1.0"
 
-"opg-sirius-header@ministryofjustice/opg-sirius-header#semver:v0.23.0":
+"opg-sirius-header@ministryofjustice/opg-sirius-header#semver:v0.24.0":
   version "1.0.0"
-  uid "7bf654680e7d2e36476c1b78c1604e9dbe0f2173"
-  resolved "https://codeload.github.com/ministryofjustice/opg-sirius-header/tar.gz/7bf654680e7d2e36476c1b78c1604e9dbe0f2173"
+  uid "8c0613962eaf4c8f47c0cef513de3383d0d38b20"
+  resolved "https://codeload.github.com/ministryofjustice/opg-sirius-header/tar.gz/8c0613962eaf4c8f47c0cef513de3383d0d38b20"
   dependencies:
     "@cypress/request" "3.0.0"
     scss "^0.2.4"
