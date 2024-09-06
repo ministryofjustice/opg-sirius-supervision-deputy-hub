@@ -23,7 +23,9 @@ func TestGcmIssuesReturned(t *testing.T) {
 			"createdDate":"13\/08\/2024",
 			"createdByUser":{"id":101,"name":"PROTeam1","phoneNumber":"12345678","displayName":"PROTeam1 User1","deleted":false,"email":"pro1@opgtest.com","firstname":"PROTeam1","surname":"User1","roles":["OPG User","Case Manager"],"locked":false,"suspended":false},
 			"notes":"Not happy we are missing info here",
-			"GCMIssueType":{"handle":"MISSING_INFORMATION","label":"Missing information"}
+			"GCMIssueType":{"handle":"MISSING_INFORMATION","label":"Missing information"},
+			"closedByUser":{"id":101,"name":"PROTeam1","phoneNumber":"12345678","displayName":"PROTeam1 User1","deleted":false,"email":"pro1@opgtest.com","firstname":"PROTeam1","surname":"User1","roles":["OPG User","Case Manager"],"locked":false,"suspended":false},
+			"closedOnDate":"15\/09\/2025"
 		},
 		{
 			"id":2,
@@ -54,7 +56,7 @@ func TestGcmIssuesReturned(t *testing.T) {
 				Surname:       "Person",
 			},
 			CreatedDate: "13/08/2024",
-			CreatedByUser: CreatedByUser{
+			CreatedByUser: UserInformation{
 				Id:          101,
 				Name:        "PROTeam1",
 				DisplayName: "PROTeam1 User1",
@@ -64,6 +66,12 @@ func TestGcmIssuesReturned(t *testing.T) {
 				Handle:     "MISSING_INFORMATION",
 				Label:      "Missing information",
 				Deprecated: false,
+			},
+			ClosedOnDate: "15/09/2025",
+			ClosedByUser: UserInformation{
+				Id:          101,
+				Name:        "PROTeam1",
+				DisplayName: "PROTeam1 User1",
 			},
 		},
 		{
@@ -75,7 +83,7 @@ func TestGcmIssuesReturned(t *testing.T) {
 				Surname:       "Squarepants",
 			},
 			CreatedDate: "01/09/2024",
-			CreatedByUser: CreatedByUser{
+			CreatedByUser: UserInformation{
 				Id:          102,
 				Name:        "OtherUser",
 				DisplayName: "OtherUser Person2",
