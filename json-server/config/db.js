@@ -2269,8 +2269,13 @@ module.exports = function () {
         "add-gcm-issue":
             [
                 {
-                    "id": 1,
-                    "add-document": []
+                    "id": 1
+                }
+            ],
+        "close-gcm-issue":
+            [
+                {
+                    "id": 1
                 }
             ],
         "add-document":

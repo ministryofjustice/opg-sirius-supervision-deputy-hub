@@ -76,4 +76,13 @@ describe("Documents", () => {
             cy.get('.moj-banner--success').should('contain.text', "GCM Issue added");
         });
     });
+
+    describe("Close GCM Issue", () => {
+        it("allows me to close a GCM Issue and see correct succes message", () => {
+            cy.setCookie("success-route", "/close-gcm-issue/1");
+            cy.get('#gcm-issue-1').click();
+            cy.get('#close-gcm-issue').click();
+            cy.get('.moj-banner--success').contains('You have closed 1 number(s) of GCM issues.')
+        });
+    });
 });
