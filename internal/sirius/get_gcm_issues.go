@@ -14,19 +14,21 @@ type GcmClient struct {
 	Surname       string `json:"surname"`
 }
 
-type CreatedByUser struct {
+type UserInformation struct {
 	Id          int    `json:"id"`
 	Name        string `json:"name"`
 	DisplayName string `json:"displayName"`
 }
 
 type GcmIssue struct {
-	Id            int           `json:"id"`
-	Client        GcmClient     `json:"client"`
-	CreatedDate   string        `json:"createdDate"`
-	CreatedByUser CreatedByUser `json:"createdByUser"`
-	Notes         string        `json:"notes"`
-	GcmIssueType  model.RefData `json:"gcmIssueType"`
+	Id            int             `json:"id"`
+	Client        GcmClient       `json:"client"`
+	CreatedDate   string          `json:"createdDate"`
+	CreatedByUser UserInformation `json:"createdByUser"`
+	Notes         string          `json:"notes"`
+	GcmIssueType  model.RefData   `json:"gcmIssueType"`
+	ClosedOnDate  string          `json:"closedOnDate"`
+	ClosedByUser  UserInformation `json:"closedByUser"`
 }
 
 type GcmIssuesParams struct {
@@ -47,7 +49,6 @@ func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams)
 	if err != nil {
 		return v, err
 	}
-
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
