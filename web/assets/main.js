@@ -5,6 +5,7 @@ import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
 import ManageJumpMenus from "./javascript/manage-jump-menus";
+import CloseGcmIssue from "./javascript/close-gcm-issue"
 
 initAll()
 MojBannerAutoHide(document.querySelector(".app-main-class"));
@@ -70,6 +71,11 @@ manageFilters.forEach(function (manageFilter) {
 const jumpMenus = document.querySelectorAll('[data-module="jump-menu"]');
 jumpMenus.forEach(function (jumpMenu) {
     new ManageJumpMenus(jumpMenu);
+});
+
+const closedGCMIssue = document.querySelectorAll('[data-module="close-gcm-issue"]');
+closedGCMIssue.forEach(function (closedGCMIssue) {
+    new CloseGcmIssue(closedGCMIssue);
 });
 
 function onHomePage() {
