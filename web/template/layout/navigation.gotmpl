@@ -63,10 +63,7 @@
                             >Tasks</a
                         >
                     </li>
-                    <li class="moj-sub-navigation__item
-                        {{ if not (feature_flagged "documents") }}
-                            hide
-                        {{ end }}">
+                    <li class="moj-sub-navigation__item">
                         <a class="moj-sub-navigation__link"
                                 {{ if eq .Path (printf "/%d/documents" .DeputyDetails.ID) }}
                                     aria-current="page"
