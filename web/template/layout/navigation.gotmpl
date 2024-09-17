@@ -81,10 +81,7 @@
                             >Assurance visits</a
                         >
                     </li>
-                    <li class="moj-sub-navigation__item
-                        {{ if not (feature_flagged "gcm-issues") }}
-                            hide
-                        {{ end }}">
+                    <li class="moj-sub-navigation__item">
                         {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
                             <a
                                 class="moj-sub-navigation__link"
