@@ -62,6 +62,8 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 			return err
 		}
 
+		vars.DocumentTypes = filterDocTypeByDeputyType(vars.DocumentTypes, vars.DeputyType())
+
 		if r.Method == http.MethodPost {
 			vars.Errors = sirius.ValidationErrors{}
 
@@ -107,4 +109,17 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
 
+}
+
+func filterDocTypeByDeputyType(DocumentTypes []model.RefData, DeputyType string) []model.RefData {
+	var deputySpecificDocTypes []model.RefData
+	for _, v := range DocumentTypes {
+		if v.Label != "Indemnity insurance" && DeputyType == "PA" {
+			deputySpecificDocTypes = append(deputySpecificDocTypes, v)
+		}
+		if v.Label != "Catch-up call" && DeputyType == "PRO" {
+			deputySpecificDocTypes = append(deputySpecificDocTypes, v)
+		}
+	}
+	return deputySpecificDocTypes
 }
