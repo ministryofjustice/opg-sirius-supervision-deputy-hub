@@ -14,7 +14,7 @@ import (
 type AddDocumentClient interface {
 	AddDocument(ctx sirius.Context, file multipart.File, filename string, documentType string, direction string, date string, notes string, deputyId int) error
 	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
-	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDocumentTypes(ctx sirius.Context, deputyType string) ([]model.RefData, error)
 }
 
 type AddDocumentVars struct {
@@ -50,7 +50,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 		})
 
 		group.Go(func() error {
-			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
+			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx), vars.DeputyType())
 			if err != nil {
 				return err
 			}

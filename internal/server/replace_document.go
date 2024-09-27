@@ -16,7 +16,7 @@ import (
 type ReplaceDocumentClient interface {
 	ReplaceDocument(ctx sirius.Context, file multipart.File, filename, documentType, direction, date, notes string, deputyId, documentId int) error
 	GetDocumentDirections(ctx sirius.Context) ([]model.RefData, error)
-	GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDocumentTypes(ctx sirius.Context, deputyType string) ([]model.RefData, error)
 	GetDocumentById(ctx sirius.Context, deputyId, documentId int) (model.Document, error)
 }
 
@@ -57,7 +57,7 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 		})
 
 		group.Go(func() error {
-			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx))
+			documentTypes, err := client.GetDocumentTypes(ctx.With(groupCtx), vars.DeputyType())
 			if err != nil {
 				return err
 			}
