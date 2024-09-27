@@ -199,7 +199,7 @@ func TestAddDocumentHandlesFileUploadError(t *testing.T) {
 			Path:          "/path",
 		},
 		DocumentDirectionRefData: []model.RefData{},
-		DocumentTypes:            []model.RefData(nil),
+		DocumentTypes:            []model.RefData{},
 		DocumentType:             "GENERAL",
 		Direction:                "OUTGOING",
 		Date:                     "01/01/2024",
