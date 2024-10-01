@@ -32,7 +32,7 @@ func (m *mockAddDocumentClient) AddDocument(ctx sirius.Context, file multipart.F
 	return m.AddDocumentErr
 }
 
-func (m *mockAddDocumentClient) GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error) {
+func (m *mockAddDocumentClient) GetDocumentTypes(ctx sirius.Context, deputyType string) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 

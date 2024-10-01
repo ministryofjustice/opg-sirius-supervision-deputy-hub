@@ -40,7 +40,7 @@ func (m *mockReplaceDocumentClient) GetDocumentDirections(ctx sirius.Context) ([
 	return []model.RefData{}, m.GetDocumentDirectionRefData
 }
 
-func (m *mockReplaceDocumentClient) GetDocumentTypes(ctx sirius.Context) ([]model.RefData, error) {
+func (m *mockReplaceDocumentClient) GetDocumentTypes(ctx sirius.Context, deputyType string) ([]model.RefData, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
