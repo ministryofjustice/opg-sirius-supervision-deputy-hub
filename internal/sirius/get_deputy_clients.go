@@ -41,6 +41,7 @@ type DeputyClient struct {
 	SupervisionLevel       string
 	OrderStatus            string
 	ActivePfaOrderMadeDate string
+	HasActiveHWOrder       bool
 }
 
 type Page struct {
@@ -119,6 +120,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			ClientAccommodation:    t.ClientAccommodation,
 			OrderStatus:            getOrderStatus(t.Orders),
 			ActivePfaOrderMadeDate: getActivePfaOrderMadeDate(t.Orders),
+			HasActiveHWOrder:       hasHwOrder(t.Orders),
 			SupervisionLevel:       getMostRecentSupervisionLevel(t.Orders),
 			OldestReport:           t.OldestReport,
 			LatestCompletedVisit: model.LatestCompletedVisit{
@@ -194,6 +196,15 @@ func getActivePfaOrderMadeDate(orders []Order) string {
 		}
 	}
 	return ""
+}
+
+func hasHwOrder(orders []Order) bool {
+	for _, o := range orders {
+		if o.CaseSubType == "hw" && o.OrderStatus.Label == "Active" {
+			return true
+		}
+	}
+	return false
 }
 
 func getMostRecentSupervisionLevel(orders []Order) string {

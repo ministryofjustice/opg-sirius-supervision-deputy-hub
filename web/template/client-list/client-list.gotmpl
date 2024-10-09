@@ -17,7 +17,7 @@
     {{ range .Clients.Clients }}
         <tr class="govuk-table__row">
             <td
-                class="govuk-table__cell client_name_ref nowrap"
+                class="govuk-table__cell client_name_ref"
                 label="clientId {{ .ClientId }}">
                 <a
                     class="govuk-link"
@@ -34,12 +34,17 @@
                     {{ end }}
                 </a>
                 <span class="secondary court_ref">
-                                        {{ if .CourtRef }}
-                                            {{ .CourtRef }}
-                                        {{ else }}
-                                            -
-                                        {{ end }}
-                                    </span>
+                    {{ if .HasActiveHWOrder }}
+                        - (Health and welfare)
+                        <br>
+                    {{ end }}
+
+                    {{ if .CourtRef }}
+                        {{ .CourtRef }}
+                    {{ else }}
+                        -
+                    {{ end }}
+                </span>
                 {{ if .HasActiveREMWarning }}
                     <span class="secondary rem-warning">
                                             REM warning
