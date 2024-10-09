@@ -357,6 +357,80 @@ func Test_GetActivePfaOrderMadeDate(t *testing.T) {
 	}
 }
 
+func Test_GetHasHwOrder(t *testing.T) {
+	tests := []struct {
+		Scenario          string
+		Order1CaseSubType string
+		Order1OrderStatus string
+		Order2CaseSubType string
+		Order2OrderStatus string
+		ExpectedOutput    bool
+	}{
+		{
+			Scenario:          "Returns false if no hw orders",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "pfa",
+			Order2OrderStatus: "Closed",
+			ExpectedOutput:    false,
+		},
+		{
+			Scenario:          "Returns false if no active hw orders",
+			Order1CaseSubType: "hw",
+			Order1OrderStatus: "Closed",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Closed",
+			ExpectedOutput:    false,
+		},
+		{
+			Scenario:          "Returns true if active hw order",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+		{
+			Scenario:          "Returns true if only active hw order",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Closed",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+		{
+			Scenario:          "Returns true if two active hw order",
+			Order1CaseSubType: "hw",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Scenario, func(t *testing.T) {
+			orderData := []Order{
+				Order{
+					OrderDate:   "01/02/2020",
+					CaseSubType: tc.Order1CaseSubType,
+					OrderStatus: model.RefData{
+						Label: tc.Order1OrderStatus,
+					},
+				},
+				Order{
+					OrderDate:   "02/02/2020",
+					CaseSubType: tc.Order2CaseSubType,
+					OrderStatus: model.RefData{
+						Label: tc.Order2OrderStatus,
+					},
+				},
+			}
+
+			assert.Equal(t, hasHwOrder(orderData), tc.ExpectedOutput)
+		})
+	}
+}
+
 func Test_GetActivePfaOrderMadeDateReturnsOnlyActivePfaOrders(t *testing.T) {
 	tests := []struct {
 		Input          string
