@@ -639,6 +639,165 @@ module.exports = function () {
                                 "label": "New deputy",
                                 "deprecated": null
                             }
+                        },
+                        {
+                                "id": 98,
+                                "uId": "7000-0000-9999",
+                                "normalizedUid": 700000009999,
+                                "errorMessages": [],
+                                "caseRecNumber": "16548855",
+                                "caseSubtype": "hw",
+                                "caseAttorneyJointlyAndSeverally": false,
+                                "caseAttorneyJointly": false,
+                                "caseAttorneyJointlyAndJointlyAndSeverally": false,
+                                "latestSupervisionLevel": {
+                                    "id": 16,
+                                    "appliesFrom": "02/02/2016",
+                                    "supervisionLevel": {
+                                        "handle": "GENERAL",
+                                        "label": "General",
+                                        "deprecated": null
+                                    },
+                                    "assetLevel": {
+                                        "handle": "HIGH",
+                                        "label": "\u00a321k or more",
+                                        "deprecated": null
+                                    },
+                                    "notes": "Here's some supervision level log notes...",
+                                    "createdDate": "20/09/2021"
+                                },
+                                "howDeputyAppointed": {
+                                    "handle": "JOINTANDSEVERALLY",
+                                    "label": "Joint and Severally",
+                                    "deprecated": null
+                                },
+                                "orderDate": "02/02/2016",
+                                "orderStatus": {
+                                    "handle": "ACTIVE",
+                                    "label": "Active",
+                                    "deprecated": false
+                                },
+                                "deputies": [
+                                    {
+                                        "statusOnCaseCalculated": {
+                                            "handle": "ACTIVE",
+                                            "label": "Active",
+                                            "deprecated": null,
+                                            "description": "Deputy linked to an active case"
+                                        },
+                                        "feePayer": false,
+                                        "canUnlink": false,
+                                        "canUnlinkIfError": true,
+                                        "deputy": {
+                                            "id": 1,
+                                            "uId": "7000-0000-2530",
+                                            "normalizedUid": 700000002530,
+                                            "errorMessages": [],
+                                            "caseRecNumber": null,
+                                            "researchOptOut": false,
+                                            "workPhoneNumber": {
+                                                "id": 95,
+                                                "phoneNumber": "0123456789",
+                                                "type": "Work",
+                                                "default": false
+                                            },
+                                            "homePhoneNumber": {
+                                                "id": 96,
+                                                "phoneNumber": "",
+                                                "type": "Home",
+                                                "default": false
+                                            },
+                                            "mobilePhoneNumber": null,
+                                            "email": "test@test.com",
+                                            "dob": "",
+                                            "dateOfDeath": "",
+                                            "salutation": "",
+                                            "firstname": null,
+                                            "middlenames": null,
+                                            "surname": null,
+                                            "otherNames": "",
+                                            "addressLine1": "Test address line 1",
+                                            "addressLine2": "Test address line 2",
+                                            "addressLine3": "Test address line 3",
+                                            "town": "Test city",
+                                            "county": "Test county",
+                                            "postcode": "E6 2PU",
+                                            "country": "",
+                                            "isAirmailRequired": false,
+                                            "phoneNumber": "0123456789",
+                                            "phoneNumbers": [
+                                                {
+                                                    "id": 95,
+                                                    "phoneNumber": "0123456789",
+                                                    "type": "Work",
+                                                    "default": false
+                                                },
+                                                {
+                                                    "id": 96,
+                                                    "phoneNumber": "",
+                                                    "type": "Home",
+                                                    "default": false
+                                                }
+                                            ],
+                                            "reference": [],
+                                            "deputyNumber": 66,
+                                            "executiveCaseManager": {
+                                                "id": 25,
+                                                "name": "Ecm",
+                                                "displayName": "Ecm"
+                                            },
+                                            "correspondenceByPost": false,
+                                            "correspondenceByPhone": false,
+                                            "correspondenceByEmail": false,
+                                            "correspondenceByWelsh": false,
+                                            "occupation": null,
+                                            "createdDate": "21/09/2021",
+                                            "updatedDate": "2021-09-21T05:37:59+00:00",
+                                            "personType": "Deputy",
+                                            "specialCorrespondenceRequirements": {
+                                                "audioTape": false,
+                                                "largePrint": false,
+                                                "hearingImpaired": false,
+                                                "spellingOfNameRequiresCare": false
+                                            },
+                                            "interpreterRequired": null,
+                                            "deputyReferenceNumber": null,
+                                            "deputyOrderCount": null,
+                                            "deputyCompliance": null,
+                                            "relationshipToClient": null,
+                                            "statusDate": null,
+                                            "previousNames": "",
+                                            "OrganisationTeamOrDepartmentName": "PA Team 1 - (Supervision)",
+                                            "deputyType": {
+                                                "handle": "PA",
+                                                "label": "Public Authority",
+                                                "deprecated": null
+                                            }
+                                        },
+                                        "deputyType": {
+                                            "handle": "PA",
+                                            "label": "Public Authority",
+                                            "deprecated": null
+                                        },
+                                        "statusOnCase": {
+                                            "handle": "ACTIVE",
+                                            "label": "Active",
+                                            "deprecated": null,
+                                            "description": "Deputy linked to an active case"
+                                        },
+                                        "statusOnCaseOverride": null,
+                                        "relationshipToClient": null,
+                                        "relationshipOther": null,
+                                        "mainCorrespondent": true,
+                                        "statusChangeDate": null,
+                                        "statusNotes": null
+                                    }
+                                ],
+                                "orderSubtype": {
+                                    "handle": "NEW DEPUTY",
+                                    "label": "New deputy",
+                                    "deprecated": null
+                                }
                         }
                     ],
                     "casesManagedAsHybrid": false,
