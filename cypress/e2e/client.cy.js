@@ -59,6 +59,13 @@ describe("Clients tab", () => {
             );
         });
 
+        it("Shows HW Order", () => {
+            cy.get(":nth-child(1) > .client_name_ref > .court_ref").should(
+                "contain",
+                "Health and welfare"
+            );
+        });
+
         it("Clients surname have been sorted in order of descending", () => {
             cy.get('[aria-sort="ascending"] > a > button').click();
             cy.url().should("contain", "order-by=surname&sort=desc");

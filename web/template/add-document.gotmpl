@@ -33,7 +33,6 @@
                         </legend>
                         {{ template "error-message" (index .Errors "documentType") }}
 
-
                         <div class="govuk-radios">
                             {{ $selectedType := .DocumentType }}
                             {{ range $i, $documentType := .DocumentTypes }}
