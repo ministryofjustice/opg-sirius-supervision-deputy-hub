@@ -7,27 +7,29 @@ import (
 )
 
 type ApiContact struct {
-	Id               int    `json:"id"`
-	Name             string `json:"name"`
-	JobTitle         string `json:"jobTitle"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	Notes            string `json:"notes"`
-	IsMainContact    bool   `json:"isMainContact"`
-	IsNamedDeputy    bool   `json:"isNamedDeputy"`
+	Id                            int    `json:"id"`
+	Name                          string `json:"name"`
+	JobTitle                      string `json:"jobTitle"`
+	Email                         string `json:"email"`
+	PhoneNumber                   string `json:"phoneNumber"`
+	OtherPhoneNumber              string `json:"otherPhoneNumber"`
+	Notes                         string `json:"notes"`
+	IsMainContact                 bool   `json:"isMainContact"`
+	IsNamedDeputy                 bool   `json:"isNamedDeputy"`
+	IsMonthlySpreadsheetRecipient bool   `json:"isMonthlySpreadsheetRecipient"`
 }
 
 type DeputyContact struct {
-	Id               int
-	Name             string
-	JobTitle         string
-	Email            string
-	PhoneNumber      string
-	OtherPhoneNumber string
-	Notes            string
-	IsMainContact    bool
-	IsNamedDeputy    bool
+	Id                            int
+	Name                          string
+	JobTitle                      string
+	Email                         string
+	PhoneNumber                   string
+	OtherPhoneNumber              string
+	Notes                         string
+	IsMainContact                 bool
+	IsNamedDeputy                 bool
+	IsMonthlySpreadsheetRecipient bool
 }
 
 type ContactList []DeputyContact
