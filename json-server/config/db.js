@@ -2196,7 +2196,8 @@ module.exports = function () {
                 "email": "test@email.com",
                 "notes": "This is a test",
                 "isNamedDeputy": true,
-                "isMainContact": true
+                "isMainContact": true,
+                "isMonthlySpreadsheetRecipient": true
             },
         ],
         "document": [

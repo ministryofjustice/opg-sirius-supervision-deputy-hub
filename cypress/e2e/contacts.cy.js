@@ -29,6 +29,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
+            cy.get("#f-isMonthlySpreadsheetRecipient > .govuk-fieldset__legend").contains("Monthly spreadsheet recipient");
             cy.get(".govuk-button").contains("Save contact");
             cy.get(".govuk-button-group > .govuk-link").contains("Cancel");
         });
@@ -115,6 +116,7 @@ describe("Contacts", () => {
             cy.get("#contact-form > :nth-child(7) .govuk-label").contains("Notes (optional)");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").contains("Named deputy");
             cy.get("#f-isMainContact > .govuk-fieldset__legend").contains("Main contact");
+            cy.get("#f-isMonthlySpreadsheetRecipient > .govuk-fieldset__legend").contains("Monthly spreadsheet recipient");
             cy.get(".govuk-button").contains("Save contact");
             cy.get(".govuk-button-group > .govuk-link").contains("Cancel");
         });
@@ -205,6 +207,7 @@ describe("Contacts", () => {
             cy.get(':nth-child(2) > :nth-child(1) > .name').contains("Test Contact");
             cy.get(':nth-child(2) > :nth-child(1) > :nth-child(2)').contains("Main contact");
             cy.get(':nth-child(2) > :nth-child(1) > :nth-child(3)').contains("Named deputy");
+            cy.get(':nth-child(2) > :nth-child(1)').contains("Monthly spreadsheet recipient");
             cy.get(':nth-child(2) > :nth-child(1) > .job-title').contains("Software Tester");
             cy.get(':nth-child(2) > :nth-child(2) > .email > a').contains("test@email.com");
             cy.get(':nth-child(2) > :nth-child(2) > .phone-number').contains("0123456789");
@@ -216,9 +219,10 @@ describe("Contacts", () => {
     });
 
     describe("Named deputy contact", () => {
-        it("should not display 'Named Deputy' radio buttons for Pro deputies", () => {
+        it("should not display 'Named Deputy' or 'Monthly Spreadsheet Recipient' radio buttons for Pro deputies", () => {
             cy.visit("/supervision/deputies/3/contacts/add-contact");
             cy.get("#f-isNamedDeputy > .govuk-fieldset__legend").should("not.be.visible");
+            cy.get("#f-isMonthlySpreadsheetRecipient > .govuk-fieldset__legend").should("not.be.visible");
         });
     })
 
