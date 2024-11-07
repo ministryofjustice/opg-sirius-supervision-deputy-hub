@@ -143,6 +143,27 @@
                         </div>
                     </fieldset>
                 </div>
+                <div class="govuk-form-group {{ if ne .DeputyType "PA" }}hide{{ end }}">
+                    <fieldset class="govuk-fieldset" id="f-isMonthlySpreadsheetRecipient">
+                        <legend class="govuk-fieldset__legend">
+                            Monthly spreadsheet recipient
+                        </legend>
+                        <div class="govuk-radios">
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-monthly-spreadsheet-recipient-yes" name="is-monthly-spreadsheet-recipient" type="radio" value="true" {{ if eq .IsMonthlySpreadsheetRecipient "true" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-monthly-spreadsheet-recipient-yes">
+                                Yes
+                                </label>
+                            </div>
+                            <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="is-monthly-spreadsheet-recipient-no" name="is-monthly-spreadsheet-recipient" type="radio" value="false" {{ if ne .IsMonthlySpreadsheetRecipient "true" }} checked="true"{{ end }}>
+                                <label class="govuk-label govuk-radios__label" for="is-monthly-spreadsheet-recipient-no">
+                                No
+                                </label>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
                 <div class="govuk-button-group govuk-!-margin-top-7">
                     <button
                         type="submit"
