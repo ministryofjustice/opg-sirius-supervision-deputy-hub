@@ -8,14 +8,15 @@ import (
 )
 
 type ContactForm struct {
-	ContactName      string `json:"contactName"`
-	JobTitle         string `json:"jobTitle"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	ContactNotes     string `json:"contactNotes"`
-	IsNamedDeputy    string `json:"isNamedDeputy"`
-	IsMainContact    string `json:"isMainContact"`
+	ContactName                   string `json:"contactName"`
+	JobTitle                      string `json:"jobTitle"`
+	Email                         string `json:"email"`
+	PhoneNumber                   string `json:"phoneNumber"`
+	OtherPhoneNumber              string `json:"otherPhoneNumber"`
+	ContactNotes                  string `json:"contactNotes"`
+	IsNamedDeputy                 string `json:"isNamedDeputy"`
+	IsMainContact                 string `json:"isMainContact"`
+	IsMonthlySpreadsheetRecipient string `json:"isMonthlySpreadsheetRecipient"`
 }
 
 func (c *Client) AddContact(ctx Context, deputyId int, addContactForm ContactForm) error {

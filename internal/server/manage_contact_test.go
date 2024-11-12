@@ -95,11 +95,12 @@ func TestGetManageContact(t *testing.T) {
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
 	assert.Equal(ManageContactVars{
-		AppVars:       app,
-		IsNamedDeputy: "false",
-		IsMainContact: "false",
-		IsNewContact:  false,
-		ContactId:     1,
+		AppVars:                       app,
+		IsNamedDeputy:                 "false",
+		IsMainContact:                 "false",
+		IsMonthlySpreadsheetRecipient: "false",
+		IsNewContact:                  false,
+		ContactId:                     1,
 	}, template.lastVars)
 }
 
