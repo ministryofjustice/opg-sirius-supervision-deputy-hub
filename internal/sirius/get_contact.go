@@ -7,14 +7,15 @@ import (
 )
 
 type Contact struct {
-	ContactName      string `json:"name"`
-	JobTitle         string `json:"jobTitle"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	ContactNotes     string `json:"notes"`
-	IsNamedDeputy    bool   `json:"isNamedDeputy"`
-	IsMainContact    bool   `json:"isMainContact"`
+	ContactName                   string `json:"name"`
+	JobTitle                      string `json:"jobTitle"`
+	Email                         string `json:"email"`
+	PhoneNumber                   string `json:"phoneNumber"`
+	OtherPhoneNumber              string `json:"otherPhoneNumber"`
+	ContactNotes                  string `json:"notes"`
+	IsNamedDeputy                 bool   `json:"isNamedDeputy"`
+	IsMainContact                 bool   `json:"isMainContact"`
+	IsMonthlySpreadsheetRecipient bool   `json:"isMonthlySpreadsheetRecipient"`
 }
 
 func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Contact, error) {

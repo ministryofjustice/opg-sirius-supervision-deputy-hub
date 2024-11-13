@@ -49,6 +49,7 @@
                         {{ if .IsMainContact }}<span class="moj-badge">Main contact</span>{{ end }}
                         {{ if .IsNamedDeputy }}<span class="moj-badge">Named deputy</span>{{ end }}
                         {{ if .JobTitle }}<span class="job-title">{{ .JobTitle }}</span>{{ end }}
+                        {{ if eq .IsMonthlySpreadsheetRecipient true }}<span class="monthly-spreadsheet-recipient">Monthly spreadsheet recipient</span>{{ end }}
                     </td>
                     <td class="govuk-table__cell">
                         <span class="email"><a class="govuk-link" href="mailto:{{ .Email }}">{{ .Email }}</a></span>
