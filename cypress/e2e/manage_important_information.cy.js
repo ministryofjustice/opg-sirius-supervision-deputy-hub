@@ -9,8 +9,10 @@ describe("Manage important Information", () => {
             cy.setCookie("user", "finance-user");
             cy.visit("/supervision/deputies/3");
 
-            cy.get(":nth-child(2) > .govuk-button")
-                .should("contain", "Manage important information")
+            cy.get('a[href*="/manage-important-information"]')
+                .should('exist')
+                .and('be.visible')
+                .and('contain.text', 'Manage important information')
                 .click();
             cy.url().should(
                 "contain",
