@@ -11,8 +11,10 @@ describe("Deputy details tab", () => {
     });
 
     it("has a manage important information button", () => {
-        cy.get(":nth-child(2) > .govuk-button")
-            .should("contain", "Manage important information")
+        cy.get('a[href*="/manage-important-information"]')
+            .should('exist')
+            .and('be.visible')
+            .and('contain.text', 'Manage important information')
             .click();
         cy.url().should("include", "manage-important-information");
     });

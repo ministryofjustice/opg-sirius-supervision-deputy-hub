@@ -10,41 +10,39 @@
             {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
-            <div class="moj-button-menu__wrapper">
-                <a
-                    href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
-                    data-module="govuk-button">
-                    Delete deputy
-                </a>
-                <a
-                    href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if eq .UserDetails.IsFinanceManager false}} hide{{end}}"
-                    data-module="govuk-button">
-                    Download schedule
-                </a>
-                <a
-                    href="{{ sirius (printf "/api/v1/deputies/%d/annual-reports?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary "
-                    data-module="govuk-button">
-                    Download report data
-                </a>
-                <a
-                    href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary "
-                    data-module="govuk-button"
-                    id="change-ecm">
-                    Change ECM
-                </a>
-            </div>
+            <a
+                href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
+                data-module="govuk-button">
+                Delete deputy
+            </a>
+            <a
+                href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button moj-button-menu__item govuk-button--secondary {{if eq .UserDetails.IsFinanceManager false}} hide{{end}}"
+                data-module="govuk-button">
+                Download schedule
+            </a>
+            <a
+                href="{{ sirius (printf "/api/v1/deputies/%d/annual-reports?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button moj-button-menu__item govuk-button--secondary "
+                data-module="govuk-button">
+                Download report data
+            </a>
+            <a
+                href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button moj-button-menu__item govuk-button--secondary "
+                data-module="govuk-button"
+                id="change-ecm">
+                Change ECM
+            </a>
         </div>
     </header>
     <div id="overview">
