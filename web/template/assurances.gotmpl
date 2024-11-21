@@ -12,21 +12,19 @@
             {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
-            <div class="moj-button-menu__wrapper">
-                <a
-                    {{ if .AddVisitDisabled }}
-                        id="f-button-disabled"
-                    {{ else }}
-                        id="hook-add-a-visit"
-                    {{ end }}
-                    href="{{ prefix (printf "/%d/add-assurance" .DeputyDetails.ID) }}"
-                    role="button"
-                    draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary"
-                    data-module="govuk-button">
-                    Add a visit
-                </a>
-            </div>
+            <a
+                {{ if .AddVisitDisabled }}
+                    id="f-button-disabled"
+                {{ else }}
+                    id="hook-add-a-visit"
+                {{ end }}
+                href="{{ prefix (printf "/%d/add-assurance" .DeputyDetails.ID) }}"
+                role="button"
+                draggable="false"
+                class="govuk-button moj-button-menu__item govuk-button--secondary"
+                data-module="govuk-button">
+                Add a visit
+            </a>
         </div>
     </header>
 
@@ -45,7 +43,7 @@
             </div>
         </div>
         {{ if eq $i 0 }}
-            <div class="moj-button-menu__wrapper">
+            <div>
                 <a
                     href="{{ prefix (printf "/%d/manage-assurance/%d" $assurance.DeputyId $assurance.Id) }}"
                     role="button"
