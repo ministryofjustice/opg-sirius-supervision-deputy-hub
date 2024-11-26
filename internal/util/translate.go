@@ -63,6 +63,7 @@ var validationMappings = map[string]map[string]pair{
 	// address
 	"addressLine1": {
 		"stringLengthTooLong": pair{"addressLine1", "The building or street must be 255 characters or fewer"},
+		"isEmpty":             pair{"addressLine1", "The building or street is required and can't be empty"},
 	},
 	"addressLine2": {
 		"stringLengthTooLong": pair{"addressLine2", "Address line 2 must be 255 characters or fewer"},
@@ -72,12 +73,14 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"town": {
 		"stringLengthTooLong": pair{"town", "The town or city must be 255 characters or fewer"},
+		"isEmpty":             pair{"town", "The town or city is required and can't be empty"},
 	},
 	"county": {
 		"stringLengthTooLong": pair{"county", "The county must be 255 characters or fewer"},
 	},
 	"postcode": {
 		"stringLengthTooLong": pair{"postcode", "The postcode must be 255 characters or fewer"},
+		"isEmpty":             pair{"postcode", "The postcode is required and can't be empty"},
 	},
 	"phoneNumber": {
 		"stringLengthTooLong": pair{"phoneNumber", "The telephone number must be 255 characters or fewer"},
