@@ -103,7 +103,7 @@
 
                             <div class="govuk-form-group{{ if index .Errors "addressLine1" }} govuk-form-group--error{{ end }}">
                                 <label class="govuk-label" for="addressLine1">
-                                    Building and street
+                                    Building and street (required)
                                     <span class="govuk-visually-hidden"
                                         >line 1 of 3</span
                                     >
@@ -115,7 +115,8 @@
                                     name="address-line-1"
                                     type="text"
                                     autocomplete="address-line1"
-                                    value="{{ .DeputyDetails.AddressLine1 }}" />
+                                    value="{{ .DeputyDetails.AddressLine1 }}"
+                                    required/>
                             </div>
 
                             <div class="govuk-form-group{{ if index .Errors "addressLine2" }} govuk-form-group--error{{ end }}">
@@ -154,7 +155,7 @@
                                 <label
                                     class="govuk-label govuk-!-width-two-thirds"
                                     for="f-town">
-                                    Town or city
+                                    Town or city (required)
                                 </label>
                                 {{ template "error-message" (index .Errors "town") }}
                                 <input
@@ -162,7 +163,8 @@
                                     id="f-town"
                                     name="town"
                                     type="text"
-                                    value="{{ .DeputyDetails.Town }}" />
+                                    value="{{ .DeputyDetails.Town }}"
+                                    required/>
                             </div>
 
                             <div class="govuk-form-group{{ if index .Errors "county" }} govuk-form-group--error{{ end }}">
@@ -182,7 +184,7 @@
 
                             <div class="govuk-form-group{{ if index .Errors "postcode" }} govuk-form-group--error{{ end }}">
                                 <label class="govuk-label" for="postcode">
-                                    Postcode
+                                    Postcode (required)
                                 </label>
                                 {{ template "error-message" (index .Errors "postcode") }}
                                 <input
@@ -190,7 +192,8 @@
                                     id="f-postcode"
                                     name="postcode"
                                     type="text"
-                                    value="{{ .DeputyDetails.Postcode }}" />
+                                    value="{{ .DeputyDetails.Postcode }}"
+                                    required/>
                             </div>
                         </fieldset>
                         <div class="govuk-form-group{{ if index .Errors "workPhoneNumber" }} govuk-form-group--error{{ end }}">
