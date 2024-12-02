@@ -55,7 +55,7 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 		case http.MethodPost:
 			var caseRecNumber = r.PostFormValue("case-number")
 			var gcmIssueType = r.PostFormValue("issue-type")
-			var notes = r.PostFormValue("notes")
+			var notes = r.PostFormValue("gcm-note")
 			var searchForClient = r.PostFormValue("search-for-client")
 			var submitForm = r.PostFormValue("submit-form")
 
