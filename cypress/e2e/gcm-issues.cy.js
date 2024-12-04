@@ -68,7 +68,7 @@ describe("Documents", () => {
             cy.get('#find-client').click();
             cy.get('#client_name').contains('Hamster Person');
             cy.get('#DEPUTY_FEES_INCORRECT').click();
-            cy.get('#f-notes').type('Some thoughts about this issue');
+            cy.get('#f-gcm-note').type('Some thoughts about this issue');
             cy.get('.govuk-button-group > .govuk-button').contains("Save GCM issue").click();
             cy.url().should("not.include","/gcm-issues/add");
             cy.url().should("include","/gcm-issues/open-issues?success=addGcmIssue");
