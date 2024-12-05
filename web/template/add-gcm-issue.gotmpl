@@ -63,7 +63,7 @@
                                             {{ if eq .Label "Missing information" }} (explain in notes){{ end }}
                                             {{ if eq .Label "Other" }} (explain in notes) {{ end }}
                                         </label>
-                                    </div>
+                                    </div >
                                 {{ end }}
                             </div>
                        </fieldset>
@@ -74,19 +74,19 @@
                        data-module="govuk-character-count"
                        data-maxlength="1000">
                        <div class="govuk-form-group{{ if index .Errors "notes" }} govuk-form-group--error{{ end }}">
-                           <label class="govuk-label" for="f-2-note">
+                           <label class="govuk-label" for="f-gcm-note">
                                Notes
                            </label>
                            {{ template "error-message" (index .Errors "notes") }}
                            <textarea
                                class="govuk-textarea govuk-js-character-count{{ if index .Errors "notes" }} govuk-input--error{{ end }}"
-                               id="f-notes"
-                               name="notes"
+                               id="f-gcm-note"
+                               name="gcm-note"
                                rows="10"
-                               aria-describedby="gcm-issue-notes-info"
+                               aria-describedby="f-gcm-note-info note-hint"
                            >{{ if ne "" .Notes}}{{ .Notes }}{{ end }}</textarea>
                            <div
-                               id="gcm-issue-notes-info"
+                               id="f-gcm-note-info"
                                class="govuk-hint govuk-character-count__message"
                                aria-live="polite">
                                You have 1000 characters remaining
