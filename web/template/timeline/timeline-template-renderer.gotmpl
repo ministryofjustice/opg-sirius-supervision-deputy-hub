@@ -65,4 +65,7 @@
     {{ if eq .EventType "DeputyDocumentReplaced" }}
         {{ template "document-replaced" . }}
     {{ end }}
+    {{ if eq .EventType "MonthlySpreadsheetIssued" }}
+        {{ template "monthly-spreadsheet-issued" . }}
+    {{ end }}
 {{ end }}

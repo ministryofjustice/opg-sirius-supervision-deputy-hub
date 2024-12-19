@@ -10,27 +10,28 @@ type DeputyEvent struct {
 }
 
 type Event struct {
-	OrderType            string    `json:"orderType"`
-	SiriusId             string    `json:"orderUid"`
-	OrderNumber          string    `json:"orderCourtRef"`
-	DeputyID             string    `json:"personId"`
-	DeputyName           string    `json:"personName"`
-	OrganisationName     string    `json:"organisationName"`
-	ExecutiveCaseManager string    `json:"executiveCaseManager"`
-	Changes              []Changes `json:"changes"`
-	Client               []Client  `json:"additionalPersons"`
-	Contact              Contact   `json:"deputyContact"`
-	TaskType             string    `json:"taskType"`
-	Assignee             string    `json:"assignee"`
-	DueDate              string    `json:"dueDate"`
-	Description          string    `json:"description"`
-	OldAssigneeName      string    `json:"oldAssigneeName"`
-	TaskCompletedNotes   string    `json:"taskCompletedNotes"`
-	Direction            string    `json:"direction"`
-	Type                 string    `json:"type"`
-	Filename             string    `json:"filename"`
-	ReceivedDate         string    `json:"receivedDate"`
-	Notes                string    `json:"notes"`
+	Assignee              string    `json:"assignee"`
+	Changes               []Changes `json:"changes"`
+	Client                []Client  `json:"additionalPersons"`
+	Contact               Contact   `json:"deputyContact"`
+	DueDate               string    `json:"dueDate"`
+	DeputyID              string    `json:"personId"`
+	DeputyName            string    `json:"personName"`
+	Description           string    `json:"description"`
+	Direction             string    `json:"direction"`
+	ExecutiveCaseManager  string    `json:"executiveCaseManager"`
+	Filename              string    `json:"filename"`
+	Notes                 string    `json:"notes"`
+	OrderType             string    `json:"orderType"`
+	OrganisationName      string    `json:"organisationName"`
+	OrderNumber           string    `json:"orderCourtRef"`
+	OldAssigneeName       string    `json:"oldAssigneeName"`
+	ReceivedDate          string    `json:"receivedDate"`
+	RecipientEmailAddress string    `json:"recipientEmailAddress"`
+	SiriusId              string    `json:"orderUid"`
+	TaskType              string    `json:"taskType"`
+	TaskCompletedNotes    string    `json:"taskCompletedNotes"`
+	Type                  string    `json:"type"`
 }
 
 type Changes struct {
