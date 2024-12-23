@@ -6,7 +6,7 @@ toolchain go1.23.4
 
 require (
 	github.com/gorilla/mux v1.8.1
-	github.com/ministryofjustice/opg-go-common v1.45.0
+	github.com/ministryofjustice/opg-go-common v1.60.0
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/sync v0.10.0
 )
