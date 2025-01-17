@@ -13,6 +13,7 @@ services:
       SIRIUS_URL: http://json-server:3000
       PREFIX: /supervision/deputies
       FEATURES:
+      FinanceAdminLink: "1"
 
   json-server:
     build:
