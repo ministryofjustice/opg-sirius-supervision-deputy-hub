@@ -8,15 +8,16 @@ import (
 )
 
 type EnvironmentVars struct {
-	Port            string
-	WebDir          string
-	SiriusURL       string
-	SiriusPublicURL string
-	FirmHubURL      string
-	Prefix          string
-	DefaultPaTeam   int
-	DefaultProTeam  int
-	Features        []string
+	Port             string
+	WebDir           string
+	SiriusURL        string
+	SiriusPublicURL  string
+	FirmHubURL       string
+	Prefix           string
+	DefaultPaTeam    int
+	DefaultProTeam   int
+	Features         []string
+	FinanceAdminLink string
 }
 
 func NewEnvironmentVars() (EnvironmentVars, error) {
@@ -31,15 +32,16 @@ func NewEnvironmentVars() (EnvironmentVars, error) {
 	}
 
 	return EnvironmentVars{
-		Port:            getEnv("PORT", "1234"),
-		WebDir:          getEnv("WEB_DIR", "web"),
-		SiriusURL:       getEnv("SIRIUS_URL", "http://localhost:8080"),
-		SiriusPublicURL: getEnv("SIRIUS_PUBLIC_URL", "http://localhost:8080"),
-		FirmHubURL:      getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm",
-		Prefix:          getEnv("PREFIX", ""),
-		DefaultPaTeam:   defaultPaTeamId,
-		DefaultProTeam:  defaultProTeamId,
-		Features:        strings.Split(getEnv("FEATURES", ""), ","),
+		Port:             getEnv("PORT", "1234"),
+		WebDir:           getEnv("WEB_DIR", "web"),
+		SiriusURL:        getEnv("SIRIUS_URL", "http://localhost:8080"),
+		SiriusPublicURL:  getEnv("SIRIUS_PUBLIC_URL", "http://localhost:8080"),
+		FirmHubURL:       getEnv("FIRM_HUB_HOST", "") + "/supervision/deputies/firm",
+		Prefix:           getEnv("PREFIX", ""),
+		DefaultPaTeam:    defaultPaTeamId,
+		DefaultProTeam:   defaultProTeamId,
+		Features:         strings.Split(getEnv("FEATURES", ""), ","),
+		FinanceAdminLink: getEnv("FINANCE_ADMIN_LINK", "1"),
 	}, nil
 }
 
