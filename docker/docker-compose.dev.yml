@@ -17,6 +17,7 @@ services:
       FIRM_HUB_HOST: http://localhost:8887
       PREFIX: /supervision/deputies
       FEATURES:
+      FinanceAdminLink: "1"
 
   yarn:
     command: watch
