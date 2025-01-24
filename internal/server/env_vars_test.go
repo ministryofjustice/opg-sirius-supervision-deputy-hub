@@ -19,6 +19,6 @@ func TestNewEnvironmentVars(t *testing.T) {
 		DefaultPaTeam:    28,
 		DefaultProTeam:   31,
 		Features:         []string{""},
-		FinanceAdminLink: "1",
+		FinanceAdminLink: "0",
 	}, vars)
 }

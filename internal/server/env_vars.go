@@ -41,7 +41,7 @@ func NewEnvironmentVars() (EnvironmentVars, error) {
 		DefaultPaTeam:    defaultPaTeamId,
 		DefaultProTeam:   defaultProTeamId,
 		Features:         strings.Split(getEnv("FEATURES", ""), ","),
-		FinanceAdminLink: getEnv("FINANCE_ADMIN_LINK", "1"),
+		FinanceAdminLink: getEnv("FINANCE_ADMIN_LINK", "0"),
 	}, nil
 }
 
