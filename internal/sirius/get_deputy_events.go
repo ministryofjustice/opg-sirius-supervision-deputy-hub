@@ -15,7 +15,14 @@ type DeputyEvents []model.DeputyEvent
 func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
 	var de DeputyEvents
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)
+	endpoint := fmt.Sprintf(
+		"/api/v1/timeline/%d/deputy?%s&limit=%d&page=%d",
+		10,
+		1,
+	)
+	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
+
+	//req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d/deputy", deputyId), nil)
 
 	if err != nil {
 		return de, err
