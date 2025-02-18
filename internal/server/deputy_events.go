@@ -6,7 +6,7 @@ import (
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyEvents(sirius.Context, int) (sirius.DeputyEvents, error)
+	GetDeputyEvents(sirius.Context, int) (sirius.TimelineList, error)
 }
 
 type deputyHubEventVars struct {
@@ -29,7 +29,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		app.PageName = "Timeline"
 
 		vars := deputyHubEventVars{
-			DeputyEvents: deputyEvents,
+			DeputyEvents: deputyEvents.DeputyEvents,
 			AppVars:      app,
 		}
 

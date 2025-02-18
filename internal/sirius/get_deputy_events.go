@@ -11,18 +11,27 @@ import (
 )
 
 type DeputyEvents []model.DeputyEvent
+type TimelineList struct {
+	Limit    int           `json:"limit"`
+	Metadata []interface{} `json:"metadata"`
+	Pages    struct {
+		Current int `json:"current"`
+		Total   int `json:"total"`
+	} `json:"pages"`
+	Total        int                 `json:"total"`
+	DeputyEvents []model.DeputyEvent `json:"timelineEvents"`
+}
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
-	var de DeputyEvents
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (TimelineList, error) {
+	var de TimelineList
 
 	endpoint := fmt.Sprintf(
-		"/api/v1/timeline/%d/deputy?%s&limit=%d&page=%d",
+		"/api/v1/timeline/%d/deputy?limit=%d&page=%d",
+		deputyId,
 		10,
 		1,
 	)
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
-
-	//req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d/deputy", deputyId), nil)
 
 	if err != nil {
 		return de, err
@@ -48,16 +57,16 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 		taskTypes TaskTypeMap
 		terr      error
 	)
-	if includesTaskEvent(de) {
+	if includesTaskEvent(de.DeputyEvents) {
 		taskTypes, terr = c.getTaskTypesMap(ctx)
 		if terr != nil {
-			return nil, terr
+			return TimelineList{}, terr
 		}
 	}
 
-	DeputyEvents := editDeputyEvents(de, taskTypes)
+	de.DeputyEvents = editDeputyEvents(de.DeputyEvents, taskTypes)
 
-	return DeputyEvents, err
+	return de, err
 
 }
 
