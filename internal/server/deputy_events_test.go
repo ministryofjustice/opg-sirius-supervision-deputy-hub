@@ -14,10 +14,10 @@ type mockDeputyHubTimelineInformation struct {
 	count              int
 	lastCtx            sirius.Context
 	GetDeputyEventsErr error
-	deputyEvents       sirius.DeputyEvents
+	deputyEvents       sirius.TimelineList
 }
 
-func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int) (sirius.DeputyEvents, error) {
+func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int, pageNumber int, timelineEventsPerPage int) (sirius.TimelineList, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
