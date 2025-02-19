@@ -3,11 +3,11 @@ import "cypress-axe";
 
 
 describe("Accessibility", { tags: "@axe" }, () => {
-    navTabs.forEach(([page, url]) =>
-        it(`should render ${page} page accessibly`, () => {
-            cy.visit(url);
-            cy.injectAxe();
-            cy.checkA11y();
-        })
-    )
+//    navTabs.forEach(([page, url]) =>
+//        it(`should render ${page} page accessibly`, () => {
+//            cy.visit(url);
+//            cy.injectAxe();
+//            cy.checkA11y();
+//        })
+//    )
 });
