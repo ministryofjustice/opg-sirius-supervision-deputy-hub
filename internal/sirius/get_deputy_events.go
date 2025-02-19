@@ -22,7 +22,7 @@ type TimelineList struct {
 	DeputyEvents []model.DeputyEvent `json:"timelineEvents"`
 }
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int, perPageOptions []int, pageNumber int, timelineEventsPerPage int) (TimelineList, error) {
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, timelineEventsPerPage int) (TimelineList, error) {
 	var de TimelineList
 
 	endpoint := fmt.Sprintf(
@@ -31,7 +31,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int, perPageOptions []int
 		timelineEventsPerPage,
 		pageNumber,
 	)
-	
+
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 
 	if err != nil {

@@ -8,7 +8,7 @@ import (
 )
 
 type DeputyHubEventInformation interface {
-	GetDeputyEvents(sirius.Context, int, []int, int, int) (sirius.TimelineList, error)
+	GetDeputyEvents(sirius.Context, int, int, int) (sirius.TimelineList, error)
 }
 
 type deputyHubEventVars struct {
@@ -35,7 +35,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		perPageOptions := []int{25, 50, 100}
 		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
 
-		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId(), perPageOptions, page, limit)
+		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, limit)
 		if err != nil {
 			return err
 		}
