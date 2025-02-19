@@ -27,7 +27,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		ctx := getContext(r)
 
 		app.PageName = "Timeline"
-
 		params := r.URL.Query()
 		page := paginate.GetRequestedPage(params.Get("page"))
 		limit := paginate.GetRequestedPage(params.Get("limit"))
