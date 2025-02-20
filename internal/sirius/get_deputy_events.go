@@ -32,6 +32,8 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, time
 		pageNumber,
 	)
 
+	fmt.Println("endpoint", endpoint)
+
 	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 
 	if err != nil {

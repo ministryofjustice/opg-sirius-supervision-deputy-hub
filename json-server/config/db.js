@@ -1319,6 +1319,12 @@ module.exports = function () {
             ]
         },
         "timeline": [
+        {
+            "limit":1,
+            "metadata":[],
+            "pages":{"current":1,"total":62},
+            "total":62,
+            "timelineEvents":[
             {
                 "id": 1,
                 "hash": "AW",
@@ -1792,8 +1798,10 @@ module.exports = function () {
                         "name": "Mr Deputy Contact"
                     }
                 }
-            }
+            },
         ],
+        }
+    ],
         "notes": [
             {
                 "personId": 1,
