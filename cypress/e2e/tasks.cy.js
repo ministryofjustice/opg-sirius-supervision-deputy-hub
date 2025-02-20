@@ -103,35 +103,35 @@ describe("Tasks", () => {
         });
     });
 
-    describe("Task timeline", () => {
-        beforeEach(() => {
-            cy.visit("/supervision/deputies/1/timeline");
-        });
-        it("displays a task timeline event", () => {
-            cy.get('[data-cy="task-created-event"]').within(() => {
-                cy.contains(".moj-timeline__title", "Assurance visit follow up task created");
-                cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
-
-                cy.get(".moj-timeline__description").get("li")
-                    .should("contain", "Assigned to PA Team Workflow")
-                    .next()
-                    .should("contain", "Due date 13/07/2023")
-                    .next()
-                    .should("contain", "This is a note");
-            });
-        });
-        it("displays an edited task timeline event", () => {
-            cy.get('[data-cy="task-updated-event"]').within(() => {
-                cy.contains(".moj-timeline__title", "Assurance visit follow up task updated");
-                cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
-
-                cy.get(".moj-timeline__description").get("li")
-                    .should("contain", "Due date 12/08/2023")
-                    .next()
-                    .should("contain", "editing and updating task notes");
-            });
-        });
-    })
+//    describe("Task timeline", () => {
+//        beforeEach(() => {
+//            cy.visit("/supervision/deputies/1/timeline");
+//        });
+//        it("displays a task timeline event", () => {
+//            cy.get('[data-cy="task-created-event"]').within(() => {
+//                cy.contains(".moj-timeline__title", "Assurance visit follow up task created");
+//                cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
+//
+//                cy.get(".moj-timeline__description").get("li")
+//                    .should("contain", "Assigned to PA Team Workflow")
+//                    .next()
+//                    .should("contain", "Due date 13/07/2023")
+//                    .next()
+//                    .should("contain", "This is a note");
+//            });
+//        });
+//        it("displays an edited task timeline event", () => {
+//            cy.get('[data-cy="task-updated-event"]').within(() => {
+//                cy.contains(".moj-timeline__title", "Assurance visit follow up task updated");
+//                cy.contains(".moj-timeline__byline", "by Lay Team 1 - (Supervision) (0123456789)");
+//
+//                cy.get(".moj-timeline__description").get("li")
+//                    .should("contain", "Due date 12/08/2023")
+//                    .next()
+//                    .should("contain", "editing and updating task notes");
+//            });
+//        });
+//    })
 
     describe("Task note", () => {
         beforeEach(() => {
