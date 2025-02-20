@@ -1318,8 +1318,7 @@ module.exports = function () {
                 }
             ]
         },
-        "timeline": [
-        {
+        "timeline": {
             "limit":1,
             "metadata":[],
             "pages":{"current":1,"total":62},
@@ -1800,8 +1799,7 @@ module.exports = function () {
                 }
             },
         ],
-        }
-    ],
+    },
         "notes": [
             {
                 "personId": 1,

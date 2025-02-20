@@ -124,24 +124,24 @@ describe("Change Firm", () => {
         });
     });
 
-//    describe("Change Firm timeline event", () => {
-//        beforeEach(() => {
-//            cy.visit("/supervision/deputies/3/timeline");
-//        });
-//
-//        it("has a timeline event for when the firm is changed", () => {
-//            cy.get("[data-cy=deputy-allocated-firm-event]").first().within(() => {
-//                cy.contains(".moj-timeline__title", "Deputy firm updated");
-//                cy.contains(".moj-timeline__byline", "case manager (12345678)");
-//                cy.get(".moj-timeline__description > .govuk-list").children()
-//                    .first().should("contain", "New firm:")
-//                    .next().should("contain", "Old firm:");
-//            });
-//        });
-//
-//        it("does not show the firm on timeline event if its the first firm set", () => {
-//            cy.contains("[data-cy=deputy-allocated-firm-event] > .moj-timeline__description > .govuk-list > li", "My First Firm")
-//                .parent().should("have.length", 1);
-//        });
-//    });
+    describe("Change Firm timeline event", () => {
+        beforeEach(() => {
+            cy.visit("/supervision/deputies/3/timeline");
+        });
+
+        it("has a timeline event for when the firm is changed", () => {
+            cy.get("[data-cy=deputy-allocated-firm-event]").first().within(() => {
+                cy.contains(".moj-timeline__title", "Deputy firm updated");
+                cy.contains(".moj-timeline__byline", "case manager (12345678)");
+                cy.get(".moj-timeline__description > .govuk-list").children()
+                    .first().should("contain", "New firm:")
+                    .next().should("contain", "Old firm:");
+            });
+        });
+
+        it("does not show the firm on timeline event if its the first firm set", () => {
+            cy.contains("[data-cy=deputy-allocated-firm-event] > .moj-timeline__description > .govuk-list > li", "My First Firm")
+                .parent().should("have.length", 1);
+        });
+    });
 });

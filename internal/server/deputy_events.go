@@ -31,18 +31,9 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		params := r.URL.Query()
 		page := paginate.GetRequestedPage(params.Get("page"))
 		limit := paginate.GetRequestedPage(params.Get("limit"))
-		fmt.Println("limit")
-		fmt.Println(limit)
 		if limit == 1 {
 			limit = 25
 		}
-		fmt.Println("limit")
-		fmt.Println(limit)
-
-		fmt.Println("vars")
-		fmt.Println(vars)
-		fmt.Println(vars.WebDir)
-		fmt.Println(vars.Prefix)
 
 		perPageOptions := []int{25, 50, 100}
 		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
@@ -51,10 +42,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		if err != nil {
 			return err
 		}
-
-		fmt.Println("url")
-		fmt.Println(r.URL.Path)
-		fmt.Println(r.URL.String())
 
 		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, vars.Prefix)
 
@@ -74,12 +61,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			EventsPerPage: limit,
 			AppVars:       app,
 		}
-
-		fmt.Println("current page", pag.CurrentPage)
-		fmt.Println("total pages", pag.TotalPages)
-		fmt.Println("total elements", pag.TotalElements)
-		fmt.Println("elements page", pag.ElementsPerPage)
-		fmt.Println("url builder", pag.UrlBuilder.GetPaginationUrl(pag.CurrentPage, pag.ElementsPerPage))
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
