@@ -33,7 +33,7 @@ func TestNavigateToTimeline(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
-	handler := renderTemplateForDeputyHubEvents(client, template)
+	handler := renderTemplateForDeputyHubEvents(client, template, EnvironmentVars{})
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -53,7 +53,7 @@ func TestDeputyEventsReturnsErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", strings.NewReader(""))
 
-	returnedError := renderTemplateForDeputyHubEvents(client, template)(AppVars{}, w, r)
+	returnedError := renderTemplateForDeputyHubEvents(client, template, EnvironmentVars{})(AppVars{}, w, r)
 
 	assert.Equal(client.GetDeputyEventsErr, returnedError)
 }

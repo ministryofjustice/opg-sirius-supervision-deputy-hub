@@ -19,7 +19,7 @@ type deputyHubEventVars struct {
 	EventsPerPage int
 }
 
-func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template) Handler {
+func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template, vars EnvironmentVars) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)
@@ -39,6 +39,11 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		fmt.Println("limit")
 		fmt.Println(limit)
 
+		fmt.Println("vars")
+		fmt.Println(vars)
+		fmt.Println(vars.WebDir)
+		fmt.Println(vars.Prefix)
+
 		perPageOptions := []int{25, 50, 100}
 		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
 
@@ -47,7 +52,11 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 			return err
 		}
 
-		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, app.DeputyId())
+		fmt.Println("url")
+		fmt.Println(r.URL.Path)
+		fmt.Println(r.URL.String())
+
+		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, vars.Prefix)
 
 		pag := paginate.Pagination{
 			CurrentPage:     page,
@@ -76,9 +85,11 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 	}
 }
 
-func CreateUrlBuilder(urlPath string, TimelineEventsPerPage int, deputyId int) urlbuilder.UrlBuilder {
+func CreateUrlBuilder(urlPath string, timelineEventsPerPage int, prefix string) urlbuilder.UrlBuilder {
+	path := prefix + urlPath
+	fmt.Println("path", path)
 	return urlbuilder.UrlBuilder{
-		OriginalPath:    urlPath,
-		SelectedPerPage: TimelineEventsPerPage,
+		OriginalPath:    path,
+		SelectedPerPage: timelineEventsPerPage,
 	}
 }
