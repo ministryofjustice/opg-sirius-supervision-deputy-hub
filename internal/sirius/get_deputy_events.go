@@ -5,17 +5,32 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
-	"sort"
 	"strings"
-	"time"
 )
 
 type DeputyEvents []model.DeputyEvent
+type TimelineList struct {
+	Limit    int           `json:"limit"`
+	Metadata []interface{} `json:"metadata"`
+	Pages    struct {
+		Current int `json:"current"`
+		Total   int `json:"total"`
+	} `json:"pages"`
+	Total        int                 `json:"total"`
+	DeputyEvents []model.DeputyEvent `json:"timelineEvents"`
+}
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
-	var de DeputyEvents
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, timelineEventsPerPage int) (TimelineList, error) {
+	var de TimelineList
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)
+	endpoint := fmt.Sprintf(
+		"/api/v1/timeline/%d/deputy?limit=%d&page=%d",
+		deputyId,
+		timelineEventsPerPage,
+		pageNumber,
+	)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 
 	if err != nil {
 		return de, err
@@ -41,16 +56,15 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 		taskTypes TaskTypeMap
 		terr      error
 	)
-	if includesTaskEvent(de) {
+	if includesTaskEvent(de.DeputyEvents) {
 		taskTypes, terr = c.getTaskTypesMap(ctx)
 		if terr != nil {
-			return nil, terr
+			return TimelineList{}, terr
 		}
 	}
 
-	DeputyEvents := editDeputyEvents(de, taskTypes)
-
-	return DeputyEvents, err
+	de.DeputyEvents = editDeputyEvents(de.DeputyEvents, taskTypes)
+	return de, err
 
 }
 
@@ -68,7 +82,7 @@ func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
 
 		list = append(list, event)
 	}
-	sortByTimelineAsc(list)
+	//sortByTimelineAsc(list)
 	return list
 }
 
@@ -85,14 +99,14 @@ func reformatEventType(s string) string {
 	return eventTypeArray[len(eventTypeArray)-1]
 }
 
-func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
-	sort.Slice(events, func(i, j int) bool {
-		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
-		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
-		return jTime.Before(iTime)
-	})
-	return events
-}
+//func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
+//	sort.Slice(events, func(i, j int) bool {
+//		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
+//		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
+//		return jTime.Before(iTime)
+//	})
+//	return events
+//}
 
 func includesTaskEvent(events DeputyEvents) bool {
 	for _, e := range events {
