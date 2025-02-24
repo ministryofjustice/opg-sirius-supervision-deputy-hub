@@ -10,12 +10,82 @@ import (
 	"time"
 )
 
+//type T struct {
+//	Limit    int           `json:"limit"`
+//	Metadata []interface{} `json:"metadata"`
+//	Pages    struct {
+//		Current int `json:"current"`
+//		Total   int `json:"total"`
+//	} `json:"pages"`
+//	Total          int `json:"total"`
+//	TimelineEvents []struct {
+//		Id        int    `json:"id"`
+//		Hash      string `json:"hash"`
+//		Timestamp string `json:"timestamp"`
+//		EventType string `json:"eventType"`
+//		User      struct {
+//			Id          int    `json:"id"`
+//			PhoneNumber string `json:"phoneNumber"`
+//			DisplayName string `json:"displayName"`
+//			Email       string `json:"email"`
+//		} `json:"user"`
+//		Event struct {
+//			IsCaseEvent          bool    `json:"isCaseEvent,omitempty"`
+//			IsPersonEvent        bool    `json:"isPersonEvent,omitempty"`
+//			TaskId               int     `json:"taskId,omitempty"`
+//			TaskType             string  `json:"taskType,omitempty"`
+//			DueDate              string  `json:"dueDate,omitempty"`
+//			Description          string  `json:"description,omitempty"`
+//			Name                 string  `json:"name,omitempty"`
+//			AssigneeId           string  `json:"assigneeId,omitempty"`
+//			Assignee             string  `json:"assignee,omitempty"`
+//			IsCaseOwnerTask      bool    `json:"isCaseOwnerTask,omitempty"`
+//			PersonType           string  `json:"personType"`
+//			PersonId             string  `json:"personId"`
+//			PersonUid            string  `json:"personUid"`
+//			PersonName           string  `json:"personName"`
+//			PersonCourtRef       *string `json:"personCourtRef"`
+//			OrderType            string  `json:"orderType,omitempty"`
+//			OrderUid             string  `json:"orderUid,omitempty"`
+//			OrderId              string  `json:"orderId,omitempty"`
+//			OrderCourtRef        string  `json:"orderCourtRef,omitempty"`
+//			CourtReferenceNumber string  `json:"courtReferenceNumber,omitempty"`
+//			CourtReference       string  `json:"courtReference,omitempty"`
+//			Changes              []struct {
+//				FieldName string      `json:"fieldName"`
+//				OldValue  interface{} `json:"oldValue"`
+//				NewValue  string      `json:"newValue"`
+//				Type      string      `json:"type"`
+//			} `json:"changes,omitempty"`
+//			DeputyName           string `json:"deputyName,omitempty"`
+//			ExecutiveCaseManager string `json:"executiveCaseManager,omitempty"`
+//		} `json:"event"`
+//	} `json:"timelineEvents"`
+//}
+
 type DeputyEvents []model.DeputyEvent
+type TimelineList struct {
+	Limit    int           `json:"limit"`
+	Metadata []interface{} `json:"metadata"`
+	Pages    struct {
+		Current int `json:"current"`
+		Total   int `json:"total"`
+	} `json:"pages"`
+	Total        int                 `json:"total"`
+	DeputyEvents []model.DeputyEvent `json:"timelineEvents"`
+}
 
-func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error) {
-	var de DeputyEvents
+func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, timelineEventsPerPage int) (TimelineList, error) {
+	var de TimelineList
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/timeline/%d", deputyId), nil)
+	endpoint := fmt.Sprintf(
+		"/api/v1/timeline/%d/deputy?limit=%d&page=%d",
+		deputyId,
+		timelineEventsPerPage,
+		pageNumber,
+	)
+
+	req, err := c.newRequest(ctx, http.MethodGet, endpoint, nil)
 
 	if err != nil {
 		return de, err
@@ -25,7 +95,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 	if err != nil {
 		return de, err
 	}
-
+	
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusUnauthorized {
@@ -41,16 +111,15 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int) (DeputyEvents, error
 		taskTypes TaskTypeMap
 		terr      error
 	)
-	if includesTaskEvent(de) {
+	if includesTaskEvent(de.DeputyEvents) {
 		taskTypes, terr = c.getTaskTypesMap(ctx)
 		if terr != nil {
-			return nil, terr
+			return TimelineList{}, terr
 		}
 	}
 
-	DeputyEvents := editDeputyEvents(de, taskTypes)
-
-	return DeputyEvents, err
+	de.DeputyEvents = editDeputyEvents(de.DeputyEvents, taskTypes)
+	return de, err
 
 }
 
