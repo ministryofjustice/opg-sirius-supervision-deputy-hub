@@ -102,27 +102,27 @@ describe("Change ECM links to deputy details", () => {
     });
 });
 
-//describe("Timeline links to Change ECM page", () => {
-//    beforeEach(() => {
-//        cy.setCookie("Other", "other");
-//        cy.setCookie("XSRF-TOKEN", "abcde");
-//        cy.visit("/supervision/deputies/1/timeline");
-//    });
-//
-//    it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
-//        cy.get("[data-cy=pa-created-event]").within(() => {
-//            cy.contains(".moj-timeline__title", "Executive Case Manager set to Public Authority deputy team");
-//            cy.contains(".moj-timeline__byline", "Lay Team 1 - (Supervision)");
-//        });
-//    });
-//
-//    it("has a timeline event for when an ecm is allocated", () => {
-//        cy.get("[data-cy=deputy-allocated-ecm-event]").within(() => {
-//            cy.contains(".moj-timeline__title", "Executive Case Manager changed to PATeam1 User1");
-//            cy.contains(".moj-timeline__byline", "case manager (12345678)");
-//        });
-//    });
-//});
+describe("Timeline links to Change ECM page", () => {
+    beforeEach(() => {
+        cy.setCookie("Other", "other");
+        cy.setCookie("XSRF-TOKEN", "abcde");
+        cy.visit("/supervision/deputies/1/timeline");
+    });
+
+    it("has a timeline event for when an ecm is automatically allocated on deputy creation", () => {
+        cy.get("[data-cy=pa-created-event]").within(() => {
+            cy.contains(".moj-timeline__title", "Executive Case Manager set to Public Authority deputy team");
+            cy.contains(".moj-timeline__byline", "Lay Team 1 - (Supervision)");
+        });
+    });
+
+    it("has a timeline event for when an ecm is allocated", () => {
+        cy.get("[data-cy=deputy-allocated-ecm-event]").within(() => {
+            cy.contains(".moj-timeline__title", "Executive Case Manager changed to PATeam1 User1");
+            cy.contains(".moj-timeline__byline", "case manager (12345678)");
+        });
+    });
+});
 
 describe("Navigation", () => {
     it("should navigate to and from the change ECM page", () => {

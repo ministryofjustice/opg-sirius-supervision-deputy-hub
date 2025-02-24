@@ -16,15 +16,33 @@ type mockDeputyHubTimelineInformation struct {
 	count              int
 	lastCtx            sirius.Context
 	GetDeputyEventsErr error
-	deputyEvents       sirius.TimelineList
-	pagination         paginate.Pagination
 }
 
 func (m *mockDeputyHubTimelineInformation) GetDeputyEvents(ctx sirius.Context, deputyId int, pageNumber int, timelineEventsPerPage int) (sirius.TimelineList, error) {
 	m.count += 1
 	m.lastCtx = ctx
 
-	return m.deputyEvents, m.GetDeputyEventsErr
+	var getDeputyEventsVars = sirius.TimelineList{
+		Limit: 25,
+		Pages: struct {
+			Current int `json:"current"`
+			Total   int `json:"total"`
+		}{
+			Current: 1,
+			Total:   1,
+		},
+		Total: 2,
+		DeputyEvents: sirius.DeputyEvents{
+			{
+				ID: 1,
+			},
+			{
+				ID: 2,
+			},
+		},
+	}
+
+	return getDeputyEventsVars, m.GetDeputyEventsErr
 }
 
 func TestNavigateToTimeline(t *testing.T) {
@@ -43,15 +61,31 @@ func TestNavigateToTimeline(t *testing.T) {
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(paginate.Pagination{
-		CurrentPage:     0,
-		TotalPages:      0,
-		TotalElements:   0,
-		ElementsPerPage: 0,
-		ElementName:     "",
-		PerPageOptions:  nil,
-		UrlBuilder:      nil,
-	}, client.pagination)
+	assert.Equal(deputyHubEventVars{
+		AppVars: AppVars{
+			PageName: "Timeline",
+		},
+		DeputyEvents: sirius.DeputyEvents{
+			{
+				ID: 1,
+			},
+			{
+				ID: 2,
+			},
+		},
+		Pagination: paginate.Pagination{
+			CurrentPage:     1,
+			TotalPages:      1,
+			TotalElements:   2,
+			ElementsPerPage: 25,
+			ElementName:     "timeline event(s)",
+			PerPageOptions:  []int{25, 50, 100},
+			UrlBuilder: urlbuilder.UrlBuilder{
+				OriginalPath:    "/path",
+				SelectedPerPage: 25,
+			},
+		},
+	}, template.lastVars)
 }
 
 func TestDeputyEventsReturnsErrors(t *testing.T) {

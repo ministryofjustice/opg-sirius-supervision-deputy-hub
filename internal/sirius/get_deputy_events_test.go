@@ -35,7 +35,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 	{
 		"limit":1,
 		"metadata":[],
-		"pages":{"current":1,"total":62},
+		"pages":{"current":1,"total":3},
 		"total":62,
 		"timelineEvents":[
 		  {
@@ -187,7 +187,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			Total   int `json:"total"`
 		}{
 			Current: 1,
-			Total:   62,
+			Total:   3,
 		},
 		Total: 62,
 		DeputyEvents: []model.DeputyEvent{

@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
@@ -15,8 +14,7 @@ type DeputyHubEventInformation interface {
 type deputyHubEventVars struct {
 	DeputyEvents sirius.DeputyEvents
 	AppVars
-	Pagination    paginate.Pagination
-	EventsPerPage int
+	Pagination paginate.Pagination
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template, vars EnvironmentVars) Handler {
@@ -38,17 +36,17 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		perPageOptions := []int{25, 50, 100}
 		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
 
-		deputyEvents, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, limit)
+		deputyTimelineList, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, limit)
 		if err != nil {
 			return err
 		}
 
 		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, vars.Prefix)
 
-		pag := paginate.Pagination{
+		pagination := paginate.Pagination{
 			CurrentPage:     page,
-			TotalPages:      deputyEvents.Pages.Total,
-			TotalElements:   deputyEvents.Total,
+			TotalPages:      deputyTimelineList.Pages.Total,
+			TotalElements:   deputyTimelineList.Total,
 			ElementsPerPage: timelineEventsPerPage,
 			ElementName:     "timeline event(s)",
 			PerPageOptions:  perPageOptions,
@@ -56,10 +54,9 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 		}
 
 		vars := deputyHubEventVars{
-			DeputyEvents:  deputyEvents.DeputyEvents,
-			Pagination:    pag,
-			EventsPerPage: limit,
-			AppVars:       app,
+			DeputyEvents: deputyTimelineList.DeputyEvents,
+			Pagination:   pagination,
+			AppVars:      app,
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
@@ -68,7 +65,6 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 
 func CreateUrlBuilder(urlPath string, timelineEventsPerPage int, prefix string) urlbuilder.UrlBuilder {
 	path := prefix + urlPath
-	fmt.Println("path", path)
 	return urlbuilder.UrlBuilder{
 		OriginalPath:    path,
 		SelectedPerPage: timelineEventsPerPage,
