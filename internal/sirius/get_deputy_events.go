@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
-	"sort"
 	"strings"
-	"time"
 )
 
 type DeputyEvents []model.DeputyEvent
@@ -84,7 +82,7 @@ func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
 
 		list = append(list, event)
 	}
-	sortByTimelineAsc(list)
+	//sortByTimelineAsc(list)
 	return list
 }
 
@@ -101,14 +99,14 @@ func reformatEventType(s string) string {
 	return eventTypeArray[len(eventTypeArray)-1]
 }
 
-func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
-	sort.Slice(events, func(i, j int) bool {
-		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
-		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
-		return jTime.Before(iTime)
-	})
-	return events
-}
+//func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
+//	sort.Slice(events, func(i, j int) bool {
+//		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
+//		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
+//		return jTime.Before(iTime)
+//	})
+//	return events
+//}
 
 func includesTaskEvent(events DeputyEvents) bool {
 	for _, e := range events {
