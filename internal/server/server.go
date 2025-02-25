@@ -81,7 +81,7 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 
 	pageRouter.Handle("/timeline",
 		wrap(
-			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"])))
+			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"], envVars)))
 
 	pageRouter.Handle("/notes",
 		wrap(
