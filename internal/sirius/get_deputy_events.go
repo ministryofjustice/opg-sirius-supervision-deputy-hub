@@ -82,7 +82,6 @@ func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
 
 		list = append(list, event)
 	}
-	//sortByTimelineAsc(list)
 	return list
 }
 
@@ -98,15 +97,6 @@ func reformatEventType(s string) string {
 	eventTypeArray := strings.Split(s, "\\")
 	return eventTypeArray[len(eventTypeArray)-1]
 }
-
-//func sortByTimelineAsc(events DeputyEvents) DeputyEvents {
-//	sort.Slice(events, func(i, j int) bool {
-//		iTime, _ := time.Parse(SiriusDateTime, events[i].Timestamp)
-//		jTime, _ := time.Parse(SiriusDateTime, events[j].Timestamp)
-//		return jTime.Before(iTime)
-//	})
-//	return events
-//}
 
 func includesTaskEvent(events DeputyEvents) bool {
 	for _, e := range events {
