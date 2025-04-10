@@ -24,7 +24,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, time
 	var de TimelineList
 
 	endpoint := fmt.Sprintf(
-		"/api/v1/timeline/%d/deputy?limit=%d&page=%d",
+		SupervisionAPIPath + "/v1/timeline/%d/deputy?limit=%d&page=%d",
 		deputyId,
 		timelineEventsPerPage,
 		pageNumber,

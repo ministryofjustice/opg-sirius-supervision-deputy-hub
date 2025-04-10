@@ -56,7 +56,7 @@ func TestAddContactReturnsNewStatusError(t *testing.T) {
 
 	err := client.AddContact(getContext(nil), deputyId, ContactForm{})
 
-	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
+	url := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts", deputyId)
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,

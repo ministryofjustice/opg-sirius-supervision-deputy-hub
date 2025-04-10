@@ -170,7 +170,7 @@ func TestGetDeputyClientsReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1&sort=&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE,supervision-level:GENERAL,supervision-level:MINIMAL",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/pa/1/clients?&limit=25&page=1&sort=&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE,supervision-level:GENERAL,supervision-level:MINIMAL",
 		Method: http.MethodGet,
 	}, err)
 }

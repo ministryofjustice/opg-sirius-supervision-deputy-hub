@@ -9,7 +9,7 @@ import (
 func (c *Client) GetVisitors(ctx Context) ([]model.Visitor, error) {
 	var v []model.Visitor
 
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/visitors", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/visitors", nil)
 
 	if err != nil {
 		return v, err
