@@ -8,7 +8,7 @@ export default class ManageFilters {
 
         this.setupEventListeners();
         this.setupFilters();
-    };
+    }
 
     setupEventListeners() {
         this.toggleFilterButton.forEach((element) => {
@@ -21,9 +21,7 @@ export default class ManageFilters {
 
         this.filterComponents.forEach((element) => {
             this.toggleFilterVisibility = this.toggleFilterVisibility.bind(this);
-            element
-                .querySelectorAll(".filter-toggle-button")[0]
-                .addEventListener("click", this.toggleFilterVisibility);
+            element.querySelectorAll(".filter-toggle-button")[0].addEventListener("click", this.toggleFilterVisibility);
         });
     }
 
@@ -37,27 +35,18 @@ export default class ManageFilters {
     }
 
     setFilterStatusToLocalStorage(filterName, isOpen) {
-        window.sessionStorage.setItem(
-            filterName,
-            JSON.stringify({ value: isOpen })
-        );
+        window.sessionStorage.setItem(filterName, JSON.stringify({ value: isOpen }));
     }
 
     getFilterStatusFromLocalStorage(filterName) {
-        let sessionStorageValue = JSON.parse(
-            window.sessionStorage.getItem(filterName)
-        );
+        let sessionStorageValue = JSON.parse(window.sessionStorage.getItem(filterName));
         if (!sessionStorageValue) {
             sessionStorageValue = { value: false };
-            this.setFilterStatusToLocalStorage(
-                filterName,
-                sessionStorageValue.value
-            );
+            this.setFilterStatusToLocalStorage(filterName, sessionStorageValue.value);
         }
 
         return sessionStorageValue.value;
     }
-
 
     toggleFilterVisibility(e) {
         const filterElement = e.target.parentElement.parentElement.parentElement;
@@ -89,20 +78,18 @@ export default class ManageFilters {
         let url = this.clearFilters.getAttribute("href");
         this.filters.forEach(function (filter) {
             if (!filter.value) {
-                return
+                return;
             }
             if (filter.checked || filter.type !== "checkbox") {
-                url += "&" + filter.name + "=" + filter.value
+                url += "&" + filter.name + "=" + filter.value;
             }
         });
         window.location.href = url;
     }
 
     toggleFilter(event) {
-        const parent = event.target.closest('.moj-filter__options');
-        const innerContainer= parent.querySelector(
-            ".js-options-container"
-        );
+        const parent = event.target.closest(".moj-filter__options");
+        const innerContainer = parent.querySelector(".js-options-container");
         innerContainer.classList.toggle("hide");
     }
 }
