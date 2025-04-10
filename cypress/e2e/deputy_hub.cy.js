@@ -7,19 +7,17 @@ describe("Deputy Hub", () => {
 
     describe("Header", () => {
         it("should load header template within banner", () => {
-            cy.get('.govuk-header__link--homepage').should('contain.text', 'OPG');
-            cy.get('.govuk-header__service-name').should('contain.text', 'Sirius')
+            cy.get(".govuk-header__link--homepage").should("contain.text", "OPG");
+            cy.get(".govuk-header__service-name").should("contain.text", "Sirius");
         });
     });
 
     describe("Footer", () => {
         it("the footer should contain a link to the open government licence", () => {
-            cy.get(
-                ".govuk-footer__licence-description > .govuk-footer__link"
-            ).should(
+            cy.get(".govuk-footer__licence-description > .govuk-footer__link").should(
                 "have.attr",
                 "href",
-                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+                "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
             );
         });
 
@@ -27,7 +25,7 @@ describe("Deputy Hub", () => {
             cy.get(".govuk-footer__copyright-logo").should(
                 "have.attr",
                 "href",
-                "https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+                "https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/",
             );
         });
     });
@@ -41,15 +39,10 @@ describe("Deputy Hub", () => {
     });
 
     it("the page should contain the executive case manager label", () => {
-        cy.get(".govuk-caption-m")
-            .eq(1)
-            .should("contain", "Executive Case Manager:");
+        cy.get(".govuk-caption-m").eq(1).should("contain", "Executive Case Manager:");
     });
 
     it("the page should contain the warning error", () => {
-        cy.get(".govuk-list > li > a").should(
-            "contain",
-            "Assign an executive case manager"
-        );
+        cy.get(".govuk-list > li > a").should("contain", "Assign an executive case manager");
     });
 });

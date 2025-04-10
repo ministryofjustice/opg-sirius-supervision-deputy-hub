@@ -2,13 +2,13 @@
 
 ### Major dependencies
 
--   [Go](https://golang.org/) (>= 1.21)
--   [docker-compose](https://docs.docker.com/compose/install/) (>= 1.27.4)
+- [Go](https://golang.org/) (>= 1.21)
+- [docker-compose](https://docs.docker.com/compose/install/) (>= 1.27.4)
 
 #### Installing dependencies locally:
 
--   `yarn install`
--   `go mod download`
+- `yarn install`
+- `go mod download`
 
 ---
 
@@ -40,9 +40,9 @@ Note that if you are integrating with local Sirius instead of the mock server, y
 
 Alternatively to set it up not using Docker use below. This hosts it on `localhost:1234`
 
--   `yarn install && yarn build `
--   `go build main.go `
--   `./main `
+- `yarn install && yarn build `
+- `go build main.go `
+- `./main `
 
 ---
 
@@ -51,7 +51,9 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 ```
 make build cypress
 ```
+
 ## Run Cypress tests in UI
+
 - `make up`
 - `yarn && yarn cypress`
 
@@ -82,7 +84,8 @@ comma-separated environment variable `FEATURES` for the environments you want it
 function with your feature name in the template. You can then do what you want with it, e.g. apply the `hide` CSS class.
 
 ---
+
 ## CI Tests
 
 To run the entire build locally on your machine as it would be ran in CI run
-```make```
+`make`

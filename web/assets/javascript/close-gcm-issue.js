@@ -5,9 +5,7 @@ export default class CloseGcmIssue {
         };
 
         this.checkBoxElements = element.querySelectorAll(".js-mt-checkbox");
-        this.allcheckBoxElements = element.querySelectorAll(
-            ".js-mt-checkbox-select-all"
-        );
+        this.allcheckBoxElements = element.querySelectorAll(".js-mt-checkbox-select-all");
         this.gcmClosedIssueButton = element.querySelectorAll(".js-mt-edit-btn");
         this.xsrfToken = element.querySelector(".js-xsrfToken");
 
@@ -27,27 +25,16 @@ export default class CloseGcmIssue {
     }
 
     _updateDomElements() {
-        this.gcmClosedIssueButton[0].classList.toggle(
-            "hide",
-            this.data.selectedTasks === 0
-        );
+        this.gcmClosedIssueButton[0].classList.toggle("hide", this.data.selectedTasks === 0);
     }
 
     _updateSelectedRowStyles(element) {
-        element.parentElement.parentElement.parentElement.classList.toggle(
-            "govuk-table__select",
-            element.checked
-        );
-        element.parentElement.parentElement.parentElement.parentElement.classList.toggle(
-            "selected",
-            element.checked
-        );
+        element.parentElement.parentElement.parentElement.classList.toggle("govuk-table__select", element.checked);
+        element.parentElement.parentElement.parentElement.parentElement.classList.toggle("selected", element.checked);
     }
 
     _updateSelectedState(event) {
-        event.target.checked
-            ? this.data.selectedTasks++
-            : this.data.selectedTasks--;
+        event.target.checked ? this.data.selectedTasks++ : this.data.selectedTasks--;
         this._updateSelectedRowStyles(event.target);
         this._updateDomElements();
     }

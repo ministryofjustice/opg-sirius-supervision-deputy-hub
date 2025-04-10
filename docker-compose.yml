@@ -1,91 +1,91 @@
 version: "3.6"
 
 services:
-  deputy-hub:
-    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
-    build:
-      dockerfile: docker/sirius-deputy-hub/Dockerfile
-    ports: [ "8888:8888" ]
-    depends_on:
-      - json-server
-    environment:
-      PORT: 8888
-      SIRIUS_URL: http://json-server:3000
-      PREFIX: /supervision/deputies
-      FEATURES:
-      FinanceAdminLink: "1"
+    deputy-hub:
+        image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
+        build:
+            dockerfile: docker/sirius-deputy-hub/Dockerfile
+        ports: ["8888:8888"]
+        depends_on:
+            - json-server
+        environment:
+            PORT: 8888
+            SIRIUS_URL: http://json-server:3000
+            PREFIX: /supervision/deputies
+            FEATURES:
+            FinanceAdminLink: "1"
 
-  json-server:
-    build:
-      dockerfile: docker/json-server/Dockerfile
-    ports:
-      - '3000:3000'
-    healthcheck:
-      test: [ "CMD", "curl", "-I", "-f", "http://localhost:3000" ]
-      interval: 2s
-      timeout: 2s
-      retries: 3
+    json-server:
+        build:
+            dockerfile: docker/json-server/Dockerfile
+        ports:
+            - "3000:3000"
+        healthcheck:
+            test: ["CMD", "curl", "-I", "-f", "http://localhost:3000"]
+            interval: 2s
+            timeout: 2s
+            retries: 3
 
-  go-lint:
-    image: golangci/golangci-lint:v1.64.8
-    working_dir: /go/src/app
-    volumes:
-      - ./:/go/src/app
-      - ./.cache/golangci-lint/v1.53.3:/root/.cache
-    command: golangci-lint run -v --timeout 5m
+    go-lint:
+        image: golangci/golangci-lint:v1.64.8
+        working_dir: /go/src/app
+        volumes:
+            - ./:/go/src/app
+            - ./.cache/golangci-lint/v1.53.3:/root/.cache
+        command: golangci-lint run -v --timeout 5m
 
-  gosec:
-    image: securego/gosec:latest
-    working_dir: /app
-    volumes:
-      - .:/app
-    command: -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
+    gosec:
+        image: securego/gosec:latest
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
 
-  yarn:
-    image: node:20.2.0-alpine3.16
-    working_dir: /home/node/app
-    entrypoint: yarn
-    volumes:
-      - ./:/home/node/app
+    yarn:
+        image: node:20.2.0-alpine3.16
+        working_dir: /home/node/app
+        entrypoint: yarn
+        volumes:
+            - ./:/home/node/app
 
-  test-runner:
-    build:
-      context: docker/test-runner/
-    command: gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
-    working_dir: /go/src/app
-    volumes:
-      - ./:/go/src/app
-      - ./.gocache:/go/pkg/mod
+    test-runner:
+        build:
+            context: docker/test-runner/
+        command: gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
+        working_dir: /go/src/app
+        volumes:
+            - ./:/go/src/app
+            - ./.gocache:/go/pkg/mod
 
-  trivy:
-    image: aquasec/trivy:latest
-    environment:
-      - TRIVY_DB_REPOSITORY=${TRIVY_DB_REPOSITORY}
-      - TRIVY_JAVA_DB_REPOSITORY=${TRIVY_JAVA_DB_REPOSITORY}
-      - TRIVY_USERNAME=${DOCKER_USERNAME}
-      - TRIVY_PASSWORD=${DOCKER_PASSWORD}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./.trivy-cache:/root/.cache
-      - ./test-results:/test-results
+    trivy:
+        image: aquasec/trivy:latest
+        environment:
+            - TRIVY_DB_REPOSITORY=${TRIVY_DB_REPOSITORY}
+            - TRIVY_JAVA_DB_REPOSITORY=${TRIVY_JAVA_DB_REPOSITORY}
+            - TRIVY_USERNAME=${DOCKER_USERNAME}
+            - TRIVY_PASSWORD=${DOCKER_PASSWORD}
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - ./.trivy-cache:/root/.cache
+            - ./test-results:/test-results
 
-  puppeteer:
-    build: docker/puppeteer
-    depends_on:
-      - deputy-hub
-      - json-server
-    environment:
-      - LHCI_BUILD_CONTEXT__CURRENT_HASH=$GITHUB_SHA
-      - LHCI_BUILD_CONTEXT__GITHUB_REPO_SLUG=ministryofjustice/opg-sirius-supervision-deputy-hub
-      - LHCI_GITHUB_APP_TOKEN
+    puppeteer:
+        build: docker/puppeteer
+        depends_on:
+            - deputy-hub
+            - json-server
+        environment:
+            - LHCI_BUILD_CONTEXT__CURRENT_HASH=$GITHUB_SHA
+            - LHCI_BUILD_CONTEXT__GITHUB_REPO_SLUG=ministryofjustice/opg-sirius-supervision-deputy-hub
+            - LHCI_GITHUB_APP_TOKEN
 
-  cypress:
-    build:
-      dockerfile: docker/cypress/Dockerfile
-    command: [ "--headless", "-b", "chrome" ]
-    volumes:
-      - ./cypress/screenshots:/root/cypress/screenshots:rw,delegated
-      - ./cypress/logs:/root/cypress/logs:rw,delegated
-    depends_on:
-      - deputy-hub
-      - json-server
+    cypress:
+        build:
+            dockerfile: docker/cypress/Dockerfile
+        command: ["--headless", "-b", "chrome"]
+        volumes:
+            - ./cypress/screenshots:/root/cypress/screenshots:rw,delegated
+            - ./cypress/logs:/root/cypress/logs:rw,delegated
+        depends_on:
+            - deputy-hub
+            - json-server
