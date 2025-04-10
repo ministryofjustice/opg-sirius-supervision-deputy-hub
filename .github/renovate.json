@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended"],
+    "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
     "branchPrefix": "renovate-",
     "commitMessageAction": "Renovate Update",
     "labels": ["Dependencies", "Renovate"],
@@ -20,7 +20,6 @@
     ],
     "major": {
         "labels": ["Dependencies", "Renovate"],
-        "prPriority": 0
     },
     "vulnerabilityAlerts": {
         "groupName": "Vulnerability Patches",
@@ -30,6 +29,5 @@
         "commitMessagePrefix": "[SECURITY]",
         "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
         "prCreation": "immediate",
-        "prPriority": 2
     }
 }
