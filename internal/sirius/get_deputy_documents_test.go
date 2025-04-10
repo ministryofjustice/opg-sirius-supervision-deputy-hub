@@ -143,7 +143,7 @@ func TestGetDeputyDocumentsReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, deputyDocuments)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/persons/76/documents?&sort=receiveddatetime:desc",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/persons/76/documents?&sort=receiveddatetime:desc",
 		Method: http.MethodGet,
 	}, err)
 }

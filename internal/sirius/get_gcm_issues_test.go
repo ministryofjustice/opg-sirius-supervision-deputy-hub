@@ -118,7 +118,7 @@ func TestGetGcmIssuesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, contact)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/gcm-issues?&filter=&sort=",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/76/gcm-issues?&filter=&sort=",
 		Method: http.MethodGet,
 	}, err)
 }
