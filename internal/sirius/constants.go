@@ -1,5 +1,5 @@
 package sirius
 
 const (
-	SupervisionAPIPath = "/supervision-api"
+	SupervisionAPIPath = "/wrong-api"
 )

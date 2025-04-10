@@ -9,7 +9,7 @@ import (
 func (c *Client) DeleteContact(ctx Context, deputyId int, contactId int) error {
 	var body bytes.Buffer
 
-	url := fmt.Sprintf("/api/v1/deputies/%d/contacts/%d", deputyId, contactId)
+	url := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts/%d", deputyId, contactId)
 
 	req, err := c.newRequest(ctx, http.MethodDelete, url, &body)
 

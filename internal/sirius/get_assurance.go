@@ -10,7 +10,7 @@ import (
 func (c *Client) GetAssuranceById(ctx Context, deputyId int, visitId int) (model.Assurance, error) {
 	var v model.Assurance
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/assurances/%d", deputyId, visitId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/assurances/%d", deputyId, visitId), nil)
 
 	if err != nil {
 		return v, err
