@@ -15,10 +15,7 @@ describe("Change ECM", () => {
 
         it("leaves current ecm blank if none is set", () => {
             cy.get(".govuk-body").should("contain", "Current ECM:");
-            cy.get(".govuk-label").should(
-                "contain",
-                "Enter an Executive Case Manager name"
-            );
+            cy.get(".govuk-label").should("contain", "Enter an Executive Case Manager name");
         });
 
         it("has a drop down populated with members of the PA Deputy Team", () => {
@@ -48,12 +45,12 @@ describe("Change ECM", () => {
             cy.get("#f-select-ecm").type("S");
             cy.get("form").submit();
             cy.get(".govuk-error-summary").should("contain", "There is a problem");
-            cy.get(".govuk-list > li > a").should(
+            cy.get(".govuk-list > li > a").should("contain", "Select an executive case manager");
+            cy.get("#change-ecm-form > .govuk-form-group--error").should("exist");
+            cy.get("#change-ecm-form > .govuk-form-group > #name-error").should(
                 "contain",
-                "Select an executive case manager"
+                "Select an executive case manager",
             );
-            cy.get('#change-ecm-form > .govuk-form-group--error').should("exist");
-            cy.get('#change-ecm-form > .govuk-form-group > #name-error').should("contain", "Select an executive case manager");
         });
     });
 
@@ -82,9 +79,7 @@ describe("Change ECM links to deputy details", () => {
         });
 
         it("displays a warning if ECM is not set which links to the Change ECM page", () => {
-            cy.get(".govuk-list > li > a")
-                .should("contain", "Assign an executive case manager")
-                .click();
+            cy.get(".govuk-list > li > a").should("contain", "Assign an executive case manager").click();
             cy.url().should("include", "/change-ecm");
             cy.get("h1").should("contain", "Change Executive Case Manager");
         });
@@ -93,10 +88,7 @@ describe("Change ECM links to deputy details", () => {
     describe("when the ecm is set", () => {
         it("does not display warning", () => {
             cy.visit("/supervision/deputies/2");
-            cy.get(".govuk-\\!-margin-bottom-2").should(
-                "contain",
-                "LayTeam1 User2"
-            );
+            cy.get(".govuk-\\!-margin-bottom-2").should("contain", "LayTeam1 User2");
             cy.get(".govuk-list > li > a").should("not.exist");
         });
     });
@@ -137,5 +129,5 @@ describe("Navigation", () => {
 
         cy.get("#f-back-button").click();
         cy.get(".govuk-heading-l").contains("Deputy details");
-    })
+    });
 });

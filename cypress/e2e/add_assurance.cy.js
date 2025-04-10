@@ -30,13 +30,9 @@ describe("Add Assurance Visit", () => {
         it("shows error message when submitting invalid data", () => {
             cy.setCookie("fail-route", "addAssurance");
             cy.get("#add-assurance-form").submit();
-            cy.get(".govuk-error-summary__body").should(
-                "contain",
-                "Select an assurance type"
-            ).should(
-                "contain",
-                "Enter a requested date"
-            );
+            cy.get(".govuk-error-summary__body")
+                .should("contain", "Select an assurance type")
+                .should("contain", "Enter a requested date");
             cy.get("#f-requested-date.govuk-input--error").should("exist");
             cy.get("#add-assurance-form > :nth-child(2).govuk-form-group--error").should("exist");
             cy.get("#add-assurance-form > :nth-child(3).govuk-form-group--error").should("exist");
