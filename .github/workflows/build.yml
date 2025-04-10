@@ -31,12 +31,12 @@ jobs:
           files: test-results/*.xml
 
   lint:
-    name: GO lint
+    name: Go & Yarn Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.2.2
       - name: Run linting
-        run: make go-lint
+        run: make lint
 
   gosec:
     name: Go Sec
