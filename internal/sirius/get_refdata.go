@@ -12,7 +12,7 @@ import (
 func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, error) {
 	var v []model.RefData
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/reference-data%s", refDataType), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/reference-data%s", refDataType), nil)
 
 	if err != nil {
 		return v, err

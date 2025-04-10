@@ -42,7 +42,7 @@ func TestCompleteTaskReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/51/mark-as-completed",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/51/mark-as-completed",
 		Method: http.MethodPut,
 	}, err)
 }
@@ -59,7 +59,7 @@ func TestCompleteTaskReturnsErrorIfNoTaskId(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/0/mark-as-completed",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/0/mark-as-completed",
 		Method: http.MethodPut,
 	}, err)
 }
@@ -77,7 +77,7 @@ func TestCompleteTaskReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/155/mark-as-completed",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/155/mark-as-completed",
 		Method: http.MethodPut,
 	}, err)
 }

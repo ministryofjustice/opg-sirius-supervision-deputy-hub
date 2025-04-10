@@ -73,7 +73,7 @@ func TestGetDeputyBooleanTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), deputyBooleanTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/deputyBooleanType",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/deputyBooleanType",
 		Method: http.MethodGet,
 	}, err)
 }

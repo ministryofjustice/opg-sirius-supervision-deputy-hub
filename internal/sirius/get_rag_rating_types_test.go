@@ -73,7 +73,7 @@ func TestGetRagRatingTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RAGRating(nil), ragRatingTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/ragRating",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/ragRating",
 		Method: http.MethodGet,
 	}, err)
 }

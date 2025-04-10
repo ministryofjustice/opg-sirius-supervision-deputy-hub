@@ -26,7 +26,7 @@ func (c *Client) AddContact(ctx Context, deputyId int, addContactForm ContactFor
 		return err
 	}
 
-	url := fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId)
+	url := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts", deputyId)
 
 	req, err := c.newRequest(ctx, http.MethodPost, url, &body)
 

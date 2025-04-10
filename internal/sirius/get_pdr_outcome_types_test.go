@@ -65,7 +65,7 @@ func TestGetPdrOutcomeTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), pdrOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/pdrOutcome",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/pdrOutcome",
 		Method: http.MethodGet,
 	}, err)
 }

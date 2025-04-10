@@ -45,7 +45,7 @@ func TestUpdateTaskReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/51",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/51",
 		Method: http.MethodPut,
 	}, err)
 }
@@ -62,7 +62,7 @@ func TestUpdateTaskReturnsErrorIfNoTaskId(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/0",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/0",
 		Method: http.MethodPut,
 	}, err)
 }
@@ -80,7 +80,7 @@ func TestUpdateTaskReturnsUnauthorisedClientError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/155",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/155",
 		Method: http.MethodPut,
 	}, err)
 }

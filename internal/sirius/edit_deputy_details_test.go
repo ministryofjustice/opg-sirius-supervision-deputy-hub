@@ -83,7 +83,7 @@ func TestEditDeputyDetailsReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/32",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/32",
 		Method: http.MethodPut,
 	}, err)
 }
