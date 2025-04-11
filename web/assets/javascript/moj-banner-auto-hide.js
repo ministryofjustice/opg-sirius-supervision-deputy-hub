@@ -1,7 +1,5 @@
 const MojBannerAutoHide = (element) => {
-    const elements = element.querySelectorAll(
-        '[data-module="moj-banner-auto-hide"]'
-    );
+    const elements = element.querySelectorAll('[data-module="moj-banner-auto-hide"]');
 
     elements.forEach((bannerElement) => {
         setTimeout(function () {

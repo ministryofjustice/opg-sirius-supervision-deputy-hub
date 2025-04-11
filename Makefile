@@ -14,6 +14,10 @@ yarn-lint:
 	docker compose run --rm yarn
 	docker compose run --rm yarn lint
 
+yarn-prettier:
+	docker compose run --rm yarn
+	docker compose run --rm yarn prettier . --write
+
 go-lint:
 	docker compose run --rm go-lint
 

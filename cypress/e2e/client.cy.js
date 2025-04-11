@@ -38,32 +38,17 @@ describe("Clients tab", () => {
         });
 
         it("lists clients with active/closed/duplicate orders", () => {
-            cy.get(".govuk-table__body > .govuk-table__row").should(
-                "have.length",
-                3
-            );
+            cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 3);
         });
 
         it("Clients surname have been sorted in order of ascending by default", () => {
-            cy.get(":nth-child(1) > .client_name_ref > .govuk-link").should(
-                "contain",
-                "Burgundy"
-            );
-            cy.get(":nth-child(2) > .client_name_ref > .govuk-link").should(
-                "contain",
-                "Dauphin"
-            );
-            cy.get(":nth-child(3) > .client_name_ref > .govuk-link").should(
-                "contain",
-                "Here"
-            );
+            cy.get(":nth-child(1) > .client_name_ref > .govuk-link").should("contain", "Burgundy");
+            cy.get(":nth-child(2) > .client_name_ref > .govuk-link").should("contain", "Dauphin");
+            cy.get(":nth-child(3) > .client_name_ref > .govuk-link").should("contain", "Here");
         });
 
         it("Shows HW Order", () => {
-            cy.get(":nth-child(1) > .client_name_ref > .court_ref").should(
-                "contain",
-                "Health and welfare"
-            );
+            cy.get(":nth-child(1) > .client_name_ref > .court_ref").should("contain", "Health and welfare");
         });
 
         it("Clients surname have been sorted in order of descending", () => {
