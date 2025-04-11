@@ -73,7 +73,7 @@ func TestGetVisitOutcomeTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), visitOutcomeTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/visitOutcome",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/visitOutcome",
 		Method: http.MethodGet,
 	}, err)
 }

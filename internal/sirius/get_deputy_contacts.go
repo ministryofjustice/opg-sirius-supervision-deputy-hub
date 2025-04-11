@@ -38,7 +38,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 	var contactList ContactList
 	var apiContacts []ApiContact
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts", deputyId), nil)
 
 	if err != nil {
 		return contactList, err

@@ -81,7 +81,7 @@ func TestGetAnnualBillingInvoiceTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), invoiceTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/annualBillingInvoice",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/annualBillingInvoice",
 		Method: http.MethodGet,
 	}, err)
 }

@@ -77,7 +77,7 @@ func TestUpdateDeputyContactDetailsReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    fmt.Sprintf("%v/api/v1/deputies/%d/contact-details", svr.URL, ID),
+		URL:    fmt.Sprintf("%v/v1/deputies/%d/contact-details", svr.URL + SupervisionAPIPath, ID),
 		Method: http.MethodPut,
 	}, err)
 }
