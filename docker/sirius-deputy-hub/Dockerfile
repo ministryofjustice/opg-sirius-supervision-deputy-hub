@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 golang:1.24-alpine AS base
+FROM golang:1.24-alpine AS base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
