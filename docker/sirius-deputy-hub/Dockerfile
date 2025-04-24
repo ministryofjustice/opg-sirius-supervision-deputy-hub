@@ -43,7 +43,12 @@ COPY go.sum .
 
 RUN go mod download
 
-COPY . .
+COPY internal .
+COPY web/template .
+COPY go.mod .
+COPY go.sum .
+COPY main.go .
+COPY main_test.go .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
