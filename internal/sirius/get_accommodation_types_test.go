@@ -67,7 +67,7 @@ func TestGetAccommodationTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), accommodationTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data?filter=clientAccommodation",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data?filter=clientAccommodation",
 		Method: http.MethodGet,
 	}, err)
 }

@@ -75,7 +75,7 @@ func TestGetTaskReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, model.Task{}, task)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasks/119",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasks/119",
 		Method: http.MethodGet,
 	}, err)
 }

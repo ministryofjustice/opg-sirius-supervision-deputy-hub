@@ -41,7 +41,7 @@ func TestAddAssuranceReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/assurances",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/76/assurances",
 		Method: http.MethodPost,
 	}, err)
 }

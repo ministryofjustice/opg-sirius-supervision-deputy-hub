@@ -9,7 +9,7 @@ import (
 
 func (c *Client) GetTask(ctx Context, taskId int) (model.Task, error) {
 	var t model.Task
-	requestURL := fmt.Sprintf("/api/v1/tasks/%d", taskId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath + "/v1/tasks/%d", taskId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)
 	if err != nil {
 		return t, err
