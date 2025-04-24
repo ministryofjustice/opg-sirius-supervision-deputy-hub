@@ -36,7 +36,7 @@ func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]mo
 }
 
 func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/tasktypes/deputy", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/tasktypes/deputy", nil)
 
 	if err != nil {
 		return nil, err

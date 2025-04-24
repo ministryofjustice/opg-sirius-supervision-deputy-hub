@@ -14,7 +14,7 @@ type AssurancesList struct {
 func (c *Client) GetAssurances(ctx Context, deputyId int) ([]model.Assurance, error) {
 	var k AssurancesList
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/assurances", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/assurances", deputyId), nil)
 
 	if err != nil {
 		return k.Assurances, err

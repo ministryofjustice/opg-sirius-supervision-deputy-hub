@@ -270,7 +270,7 @@ func TestGetDeputyEventsReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, deputyEvents)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/timeline/76/deputy?limit=25&page=1",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/timeline/76/deputy?limit=25&page=1",
 		Method: http.MethodGet,
 	}, err)
 }
