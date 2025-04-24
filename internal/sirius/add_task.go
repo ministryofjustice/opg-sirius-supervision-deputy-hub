@@ -29,7 +29,7 @@ func (c *Client) AddTask(ctx Context, deputyId int, taskType string, typeName st
 		return err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPost, "/api/v1/tasks", &body)
+	req, err := c.newRequest(ctx, http.MethodPost, SupervisionAPIPath + "/v1/tasks", &body)
 
 	if err != nil {
 		return err

@@ -131,7 +131,7 @@ func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    fmt.Sprintf("%v/api/v1/deputies/%d/important-information", svr.URL, ID),
+		URL:    fmt.Sprintf("%v/v1/deputies/%d/important-information", svr.URL + SupervisionAPIPath, ID),
 		Method: http.MethodPut,
 	}, err)
 }

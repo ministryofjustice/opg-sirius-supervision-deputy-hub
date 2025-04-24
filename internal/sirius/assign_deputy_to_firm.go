@@ -20,7 +20,7 @@ func (c *Client) AssignDeputyToFirm(ctx Context, deputyId int, firmId int) error
 		return err
 	}
 
-	requestURL := fmt.Sprintf("/api/v1/deputies/%d/firm", deputyId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/firm", deputyId)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 

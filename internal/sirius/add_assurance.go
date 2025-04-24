@@ -25,7 +25,7 @@ func (c *Client) AddAssurance(ctx Context, assuranceType string, requestedDate s
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/assurances", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/assurances", deputyId), &body)
 
 	if err != nil {
 		return err

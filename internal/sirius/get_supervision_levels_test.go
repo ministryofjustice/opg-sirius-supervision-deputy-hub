@@ -62,7 +62,7 @@ func TestGetSupervisionLevelsReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), supervisionLevel)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data?filter=supervisionLevel",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data?filter=supervisionLevel",
 		Method: http.MethodGet,
 	}, err)
 }

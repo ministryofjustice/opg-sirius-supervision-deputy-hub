@@ -59,7 +59,7 @@ func (c *Client) AddDocument(ctx Context, file multipart.File, filename, documen
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/documents", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/documents", deputyId), &body)
 
 	if err != nil {
 		return err
