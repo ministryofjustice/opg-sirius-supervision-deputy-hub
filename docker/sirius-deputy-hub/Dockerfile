@@ -1,9 +1,8 @@
-FROM --platform=linux/amd64 golang:1.24-alpine AS base
+FROM golang:1.24-alpine AS base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
 ENV GOOS=linux
-ENV GOARCH=amd64
 
 RUN apk update \
     && apk add --no-cache \
@@ -41,10 +40,12 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
+COPY internal internal
+COPY web/template web/template
+COPY main.go .
+COPY main_test.go .
 
 RUN go mod download
-
-COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
