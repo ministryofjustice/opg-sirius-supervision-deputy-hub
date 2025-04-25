@@ -40,15 +40,12 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
-
-RUN go mod download
-
-COPY internal .
-COPY web/template .
-COPY go.mod .
-COPY go.sum .
+COPY internal internal
+COPY web/template web/template
 COPY main.go .
 COPY main_test.go .
+
+RUN go mod download
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
