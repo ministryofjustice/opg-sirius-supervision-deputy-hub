@@ -105,7 +105,7 @@ func TestGetDeputyReportSystemTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), deputyReportSystemTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/deputyReportSystem",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/deputyReportSystem",
 		Method: http.MethodGet,
 	}, err)
 }

@@ -1,5 +1,5 @@
 {
-    "/api/v1/*": "/$1",
+    "/supervision-api/v1/*": "/$1",
     "/deputies/pa/:personId/clients*": "/clients",
     "/deputies/pro/:personId/clients*": "/clients",
     "/timeline/:personId/deputy*": "/timeline",

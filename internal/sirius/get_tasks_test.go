@@ -120,7 +120,7 @@ func TestGetTasksReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, TaskList{Tasks: []model.Task(nil), TotalTasks: 0, Pages: PageInformation{Current: 0, Total: 0}}, tasks)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/tasks?filter=status:Not+started&sort=dueDate:asc",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/76/tasks?filter=status:Not+started&sort=dueDate:asc",
 		Method: http.MethodGet,
 	}, err)
 }
