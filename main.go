@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ministryofjustice/opg-go-common/paginate"
 	"html/template"
 	"log"
 	"net/http"
@@ -14,6 +13,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-go-common/telemetry"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/server"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
@@ -32,8 +32,9 @@ func main() {
 	}
 
 	envVars, err := server.NewEnvironmentVars()
+
 	if err != nil {
-		logger.Info(err.Error())
+		logger.Error(err.Error(), "error", err)
 	}
 
 	layouts, _ := template.
@@ -77,7 +78,7 @@ func main() {
 
 	client, err := sirius.NewClient(http.DefaultClient, envVars.SiriusURL)
 	if err != nil {
-		logger.Info(err.Error())
+		logger.Error(err.Error(), "error", err)
 	}
 
 	server := &http.Server{
@@ -87,7 +88,7 @@ func main() {
 
 	go func() {
 		if err := server.ListenAndServe(); err != nil {
-			logger.Info(err.Error())
+			logger.Error(err.Error(), "error", err)
 		}
 	}()
 
@@ -103,6 +104,6 @@ func main() {
 	defer cancel()
 
 	if err := server.Shutdown(tc); err != nil {
-		logger.Info(err.Error())
+		logger.Error(err.Error(), "error", err)
 	}
 }
