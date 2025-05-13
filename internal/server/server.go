@@ -92,6 +92,7 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 
 	// Fallback
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
 		_ = templates["error.gotmpl"].ExecuteTemplate(w, "page", ErrorVars{
 			Code:            http.StatusNotFound,
 			Error:           "Page not found",
