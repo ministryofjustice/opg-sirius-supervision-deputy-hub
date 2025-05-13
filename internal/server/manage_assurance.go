@@ -51,7 +51,6 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
 
-		strconv.Atoi(r.PathValue("id"))
 		visitId, _ := strconv.Atoi(r.PathValue("visitId"))
 
 		app.PageName = "Manage assurance visit"
