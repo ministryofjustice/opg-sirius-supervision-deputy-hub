@@ -2,14 +2,14 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
+	"golang.org/x/sync/errgroup"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
@@ -50,8 +50,9 @@ func parseAssuranceForm(assuranceForm sirius.UpdateAssuranceDetails) model.Assur
 func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Template, pdrTmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		visitId, _ := strconv.Atoi(routeVars["visitId"])
+
+		strconv.Atoi(r.PathValue("id"))
+		visitId, _ := strconv.Atoi(r.PathValue("visitId"))
 
 		app.PageName = "Manage assurance visit"
 
