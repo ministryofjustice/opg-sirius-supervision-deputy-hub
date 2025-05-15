@@ -59,6 +59,7 @@ func TestPostDeleteContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
+	r.SetPathValue("id", "123")
 
 	var returnedError error
 

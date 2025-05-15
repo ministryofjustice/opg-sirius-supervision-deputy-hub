@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"golang.org/x/sync/errgroup"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"golang.org/x/sync/errgroup"
 )
 
 type AppVars struct {
@@ -35,7 +35,7 @@ type AppVarsClient interface {
 func NewAppVars(client AppVarsClient, r *http.Request, envVars EnvironmentVars) (*AppVars, error) {
 	ctx := getContext(r)
 	group, groupCtx := errgroup.WithContext(ctx.Context)
-	deputyId, _ := strconv.Atoi(mux.Vars(r)["id"])
+	deputyId, _ := strconv.Atoi(r.PathValue("id"))
 
 	vars := AppVars{
 		Path:            r.URL.Path,
