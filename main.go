@@ -82,8 +82,9 @@ func main() {
 	}
 
 	server := &http.Server{
-		Addr:    ":" + envVars.Port,
-		Handler: server.New(logger, client, tmpls, envVars),
+		Addr:              ":" + envVars.Port,
+		Handler:           server.New(logger, client, tmpls, envVars),
+		ReadHeaderTimeout: 2 * time.Second,
 	}
 
 	go func() {
