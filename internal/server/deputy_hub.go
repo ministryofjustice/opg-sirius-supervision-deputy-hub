@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"html"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -58,13 +59,13 @@ func getSuccessFromUrl(url *url.URL, deputyDetails sirius.DeputyDetails) string 
 	case "deputyDetails":
 		return "Deputy details updated"
 	case "ecm":
-		return "<abbr title='Executive Case Manager'>ECM</abbr> changed to " + deputyDetails.ExecutiveCaseManager.EcmName
+		return "<abbr title='Executive Case Manager'>ECM</abbr> changed to " + html.EscapeString(deputyDetails.ExecutiveCaseManager.EcmName)
 	case "importantInformation":
 		return "Important information updated"
 	case "newFirm":
 		return "Firm added"
 	case "firm":
-		return "Firm changed to " + deputyDetails.Firm.FirmName
+		return "Firm changed to " + html.EscapeString(deputyDetails.Firm.FirmName)
 	case "teamDetails":
 		return "Team details updated"
 	default:
