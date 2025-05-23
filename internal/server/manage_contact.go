@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 )
 
 type ManageContact interface {
@@ -33,9 +33,8 @@ type ManageContactVars struct {
 func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
-		contactId, _ := strconv.Atoi(routeVars["contactId"])
+		deputyId, _ := strconv.Atoi(r.PathValue("id"))
+		contactId, _ := strconv.Atoi(r.PathValue("contactId"))
 
 		appVars.PageName = "Add new contact"
 		if contactId != 0 {
