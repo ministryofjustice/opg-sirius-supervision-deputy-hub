@@ -33,7 +33,10 @@ func EncodeFileToBase64(file multipart.File) (string, error) {
 		return "", err
 	}
 
-	file.Close()
+	err := file.Close()
+	if err != nil {
+		return "", err
+	}
 
 	return base64.StdEncoding.EncodeToString(buf.Bytes()), nil
 }
