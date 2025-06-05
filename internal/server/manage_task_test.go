@@ -164,7 +164,7 @@ func TestRenameErrors(t *testing.T) {
 			deputyType: "Professional",
 			want: sirius.ValidationErrors{
 				"assigneeId": {
-					"notBetween": "Enter a name of someone who works on the Professional team",
+					"notGreaterInclusive": "Enter a name of someone who works on the Professional team",
 				},
 				"dueDate": {
 					"dateFalseFormat": "This must be a real date",
@@ -172,7 +172,7 @@ func TestRenameErrors(t *testing.T) {
 			},
 			input: sirius.ValidationErrors{
 				"assigneeId": {
-					"notBetween": "Original message",
+					"notGreaterInclusive": "Original message",
 				},
 				"dueDate": {
 					"dateFalseFormat": "This must be a real date",
@@ -184,12 +184,12 @@ func TestRenameErrors(t *testing.T) {
 			deputyType: "Public Authority",
 			want: sirius.ValidationErrors{
 				"assigneeId": {
-					"notBetween": "Enter a name of someone who works on the Public Authority team",
+					"notLessInclusive": "Enter a name of someone who works on the Public Authority team",
 				},
 			},
 			input: sirius.ValidationErrors{
 				"assigneeId": {
-					"notBetween": "Original message",
+					"notLessInclusive": "Original message",
 				},
 			},
 		},
