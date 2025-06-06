@@ -2,15 +2,15 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"golang.org/x/sync/errgroup"
 	"mime/multipart"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
+	"golang.org/x/sync/errgroup"
 )
 
 type ReplaceDocumentClient interface {
@@ -37,8 +37,7 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 		app.PageName = "Replace a document"
 
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		documentId, _ := strconv.Atoi(routeVars["documentId"])
+		documentId, _ := strconv.Atoi(r.PathValue("documentId"))
 
 		vars := ReplaceDocumentVars{
 			AppVars: app,

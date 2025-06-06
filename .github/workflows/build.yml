@@ -113,12 +113,12 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: '0'
-      - name: Extract branch name
+      - name: Extract & Sanitise branch name
         run: |
           if [ "${{ github.head_ref }}" == "" ]; then
             echo BRANCH_NAME=main >> $GITHUB_ENV
           else
-            echo BRANCH_NAME=${{ github.head_ref }} >> $GITHUB_ENV
+            echo BRANCH_NAME=$(echo ${{ github.head_ref }} | sed -r 's/[/_.]+/-/g') >> $GITHUB_ENV
           fi
         id: extract_branch
       - uses: unfor19/install-aws-cli-action@e8b481e524a99f37fbd39fdc1dcb3341ab091367 # v1.0.7

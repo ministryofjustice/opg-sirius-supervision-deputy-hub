@@ -1,11 +1,12 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/gorilla/mux"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -75,6 +76,9 @@ func TestGetManageContact(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("GET", "/path", nil)
 
+	r.SetPathValue("id", "133")
+	r.SetPathValue("contactId", "1")
+
 	vars := map[string]string{
 		"id":        "133",
 		"contactId": "1",
@@ -111,6 +115,8 @@ func TestPostAddContact(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
+	r.SetPathValue("id", "123")
+
 	var returnedError error
 
 	testHandler := mux.NewRouter()
@@ -128,6 +134,8 @@ func TestPostManageContact(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
+	r.SetPathValue("id", "123")
+	r.SetPathValue("contactId", "1")
 
 	var returnedError error
 
@@ -158,6 +166,7 @@ func TestAddContactEmptyValidationErrors(t *testing.T) {
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
+	r.SetPathValue("id", "133")
 
 	returnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 
@@ -189,6 +198,7 @@ func TestPostAddContactReturnsNonValidationErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	r, _ := http.NewRequest("POST", "/123/contacts", strings.NewReader(""))
+	r.SetPathValue("id", "123")
 
 	manageContactReturnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 	assert.Equal(client.AddContactErr, manageContactReturnedError)
@@ -211,6 +221,8 @@ func TestPostManageContactReturnsNonValidationErrors(t *testing.T) {
 
 	r, _ := http.NewRequest("POST", "/123/contacts/1", strings.NewReader(""))
 	r = mux.SetURLVars(r, vars)
+	r.SetPathValue("id", "123")
+	r.SetPathValue("contactId", "1")
 
 	manageContactReturnedError := renderTemplateForManageContact(client, template)(AppVars{}, w, r)
 	assert.Equal(client.UpdateContactErr, manageContactReturnedError)
@@ -233,6 +245,8 @@ func TestGetManageContactReturnsNonValidationErrors(t *testing.T) {
 
 	r, _ := http.NewRequest("GET", "/123/contacts/1", strings.NewReader(""))
 	r = mux.SetURLVars(r, vars)
+	r.SetPathValue("id", "123")
+	r.SetPathValue("contactId", "1")
 
 	app := AppVars{PageName: "Manage contact"}
 
