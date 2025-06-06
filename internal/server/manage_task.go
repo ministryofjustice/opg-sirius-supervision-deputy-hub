@@ -141,7 +141,7 @@ func RenameErrors(errors sirius.ValidationErrors, deputyType string) sirius.Vali
 
 	for i, s := range errors {
 		for k, t := range s {
-			if i == "assigneeId" && k == "notBetween" {
+			if i == "assigneeId" && (k == "notGreaterInclusive" || k == "notLessInclusive") {
 				amendedErrors[i] = map[string]string{k: fmt.Sprintf("Enter a name of someone who works on the %s team", deputyType)}
 			} else {
 				amendedErrors[i] = map[string]string{k: t}
