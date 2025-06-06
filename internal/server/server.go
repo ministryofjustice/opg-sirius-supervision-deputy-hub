@@ -1,15 +1,15 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-go-common/securityheaders"
-	"github.com/ministryofjustice/opg-go-common/telemetry"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html/template"
 	"io"
 	"log/slog"
 	"net/http"
 	"net/url"
+
+	"github.com/ministryofjustice/opg-go-common/securityheaders"
+	"github.com/ministryofjustice/opg-go-common/telemetry"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type Client interface {
@@ -47,149 +47,61 @@ type Template interface {
 }
 
 func New(logger *slog.Logger, client Client, templates map[string]*template.Template, envVars EnvironmentVars) http.Handler {
+	mux := http.NewServeMux()
+
 	wrap := wrapHandler(logger, client, templates["error.gotmpl"], envVars)
 
-	router := mux.NewRouter().StrictSlash(true)
-	router.Handle("/health-check", healthCheck())
-
-	pageRouter := router.PathPrefix("/{id}").Subrouter()
-	pageRouter.Use(telemetry.Middleware(logger))
-
-	pageRouter.Handle("",
-		wrap(
-			renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
-
-	pageRouter.Handle("/contacts",
-		wrap(
-			renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
-
-	pageRouter.Handle("/contacts/add-contact",
-		wrap(
-			renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
-
-	pageRouter.Handle("/contacts/{contactId}",
-		wrap(
-			renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
-
-	pageRouter.Handle("/contacts/{contactId}/delete",
-		wrap(
-			renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
-
-	pageRouter.Handle("/clients",
-		wrap(
-			renderTemplateForClientTab(client, templates["clients.gotmpl"])))
-
-	pageRouter.Handle("/timeline",
-		wrap(
-			renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"], envVars)))
-
-	pageRouter.Handle("/notes",
-		wrap(
-			renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
-
-	pageRouter.Handle("/notes/add-note",
-		wrap(
-			renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
-
-	pageRouter.Handle("/tasks",
-		wrap(
-			renderTemplateForTasks(client, templates["tasks.gotmpl"])))
-
-	pageRouter.Handle("/tasks/add-task",
-		wrap(
-			renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
-
-	pageRouter.Handle("/tasks/{taskId}",
-		wrap(
-			renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
-
-	pageRouter.Handle("/tasks/complete/{taskId}",
-		wrap(
-			renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
-
-	pageRouter.Handle("/documents",
-		wrap(
-			renderTemplateForDocuments(client, templates["documents.gotmpl"])))
-
-	pageRouter.Handle("/documents/add",
-		wrap(
-			renderTemplateForAddDocument(client, templates["add-document.gotmpl"])))
-
-	pageRouter.Handle("/documents/{documentId}/replace",
-		wrap(
-			renderTemplateForReplaceDocument(client, templates["replace-document.gotmpl"])))
-
-	pageRouter.Handle("/manage-team-details",
-		wrap(
-			renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
-
-	pageRouter.Handle("/change-ecm",
-		wrap(
-			renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
-
-	pageRouter.Handle("/change-firm",
-		wrap(
-			renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
-
-	pageRouter.Handle("/delete-deputy",
-		wrap(
-			renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
-
-	pageRouter.Handle("/add-firm",
-		wrap(
-			renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
-
-	pageRouter.Handle("/manage-deputy-contact-details",
-		wrap(
-			renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
-
-	pageRouter.Handle("/manage-important-information",
-		wrap(
-			renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
-
-	pageRouter.Handle("/assurances",
-		wrap(
-			renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
-
-	pageRouter.Handle("/add-assurance",
-		wrap(
-			renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
-
-	pageRouter.Handle("/manage-assurance/{visitId}",
-		wrap(
-			renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
-
-	pageRouter.Handle("/gcm-issues/open-issues",
-		wrap(
-			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
-
-	pageRouter.Handle("/gcm-issues/closed-issues",
-		wrap(
-			renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
-
-	pageRouter.Handle("/gcm-issues/add",
-		wrap(
-			renderTemplateForAddGcmIssue(client, templates["add-gcm-issue.gotmpl"])))
-
+	// Static file routes
 	static := staticFileHandler(envVars.WebDir)
-	router.PathPrefix("/assets/").Handler(static)
-	router.PathPrefix("/javascript/").Handler(static)
-	router.PathPrefix("/stylesheets/").Handler(static)
+	mux.Handle("/static/assets/", static)
+	mux.Handle("/static/javascript/", static)
+	mux.Handle("/static/stylesheets/", static)
 
-	router.NotFoundHandler = wrap(notFoundHandler(templates["error.gotmpl"], envVars))
+	mux.Handle("/{id}", wrap(renderTemplateForDeputyHub(client, templates["deputy-details.gotmpl"])))
+	mux.Handle("/{id}/clients", wrap(renderTemplateForClientTab(client, templates["clients.gotmpl"])))
+	mux.Handle("/{id}/contacts", wrap(renderTemplateForContactTab(client, templates["contacts.gotmpl"])))
+	mux.Handle("/{id}/contacts/add-contact", wrap(renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	mux.Handle("/{id}/contacts/{contactId}", wrap(renderTemplateForManageContact(client, templates["manage-contact.gotmpl"])))
+	mux.Handle("/{id}/contacts/{contactId}/delete", wrap(renderTemplateForDeleteContact(client, templates["delete-contact.gotmpl"])))
+	mux.Handle("/{id}/timeline", wrap(renderTemplateForDeputyHubEvents(client, templates["timeline.gotmpl"], envVars)))
+	mux.Handle("/{id}/notes", wrap(renderTemplateForDeputyHubNotes(client, templates["notes.gotmpl"])))
+	mux.Handle("/{id}/notes/add-note", wrap(renderTemplateForDeputyHubNotes(client, templates["add-notes.gotmpl"])))
+	mux.Handle("/{id}/tasks", wrap(renderTemplateForTasks(client, templates["tasks.gotmpl"])))
+	mux.Handle("/{id}/tasks/add-task", wrap(renderTemplateForAddTask(client, templates["add-task.gotmpl"])))
+	mux.Handle("/{id}/tasks/{taskId}", wrap(renderTemplateForManageTasks(client, templates["manage-task.gotmpl"])))
+	mux.Handle("/{id}/tasks/complete/{taskId}", wrap(renderTemplateForCompleteTask(client, templates["complete-task.gotmpl"])))
+	mux.Handle("/{id}/documents", wrap(renderTemplateForDocuments(client, templates["documents.gotmpl"])))
+	mux.Handle("/{id}/documents/add", wrap(renderTemplateForAddDocument(client, templates["add-document.gotmpl"])))
+	mux.Handle("/{id}/documents/{documentId}/replace", wrap(renderTemplateForReplaceDocument(client, templates["replace-document.gotmpl"])))
+	mux.Handle("/{id}/manage-team-details", wrap(renderTemplateForEditDeputyHub(client, templates["manage-team-details.gotmpl"])))
+	mux.Handle("/{id}/change-ecm", wrap(renderTemplateForChangeECM(client, templates["change-ecm.gotmpl"])))
+	mux.Handle("/{id}/change-firm", wrap(renderTemplateForChangeFirm(client, templates["change-firm.gotmpl"])))
+	mux.Handle("/{id}/delete-deputy", wrap(renderTemplateForDeleteDeputy(client, templates["delete-deputy.gotmpl"])))
+	mux.Handle("/{id}/add-firm", wrap(renderTemplateForAddFirm(client, templates["add-firm.gotmpl"])))
+	mux.Handle("/{id}/manage-deputy-contact-details", wrap(renderTemplateForManageDeputyContactDetails(client, templates["manage-deputy-contact-details.gotmpl"])))
+	mux.Handle("/{id}/manage-important-information", wrap(renderTemplateForImportantInformation(client, templates["manage-important-information.gotmpl"])))
+	mux.Handle("/{id}/assurances", wrap(renderTemplateForAssurances(client, templates["assurances.gotmpl"])))
+	mux.Handle("/{id}/add-assurance", wrap(renderTemplateForAddAssurance(client, templates["add-assurance.gotmpl"])))
+	mux.Handle("/{id}/manage-assurance/{visitId}", wrap(renderTemplateForManageAssurance(client, templates["manage-visit.gotmpl"], templates["manage-pdr.gotmpl"])))
+	mux.Handle("/{id}/gcm-issues/open-issues", wrap(renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
+	mux.Handle("/{id}/gcm-issues/closed-issues", wrap(renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
+	mux.Handle("/{id}/gcm-issues/add", wrap(renderTemplateForAddGcmIssue(client, templates["add-gcm-issue.gotmpl"])))
 
-	return http.StripPrefix(envVars.Prefix, securityheaders.Use(router))
-}
+	// Health check
+	mux.Handle("/health-check", healthCheck())
 
-func notFoundHandler(tmplError Template, envVars EnvironmentVars) Handler {
-	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		_ = tmplError.ExecuteTemplate(w, "page", ErrorVars{
+	// Fallback
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		_ = templates["error.gotmpl"].ExecuteTemplate(w, "page", ErrorVars{
 			Code:            http.StatusNotFound,
 			Error:           "Page not found",
 			EnvironmentVars: envVars,
 		})
-		return nil
-	}
+	})
+
+	// Wrap all with security headers and telemetry
+	return http.StripPrefix(envVars.Prefix, securityheaders.Use(telemetry.Middleware(logger)(mux)))
 }
 
 func getContext(r *http.Request) sirius.Context {
@@ -211,7 +123,7 @@ func getContext(r *http.Request) sirius.Context {
 }
 
 func staticFileHandler(webDir string) http.Handler {
-	h := http.FileServer(http.Dir(webDir + "/static"))
+	h := http.FileServer(http.Dir(webDir))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "must-revalidate")
 		h.ServeHTTP(w, r)

@@ -2,10 +2,10 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeleteContact interface {
@@ -22,9 +22,8 @@ type DeleteContactVars struct {
 func renderTemplateForDeleteContact(client DeleteContact, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
-		contactId, _ := strconv.Atoi(routeVars["contactId"])
+		deputyId, _ := strconv.Atoi(r.PathValue("id"))
+		contactId, _ := strconv.Atoi(r.PathValue("contactId"))
 
 		appVars.PageName = "Delete contact"
 		vars := DeleteContactVars{
