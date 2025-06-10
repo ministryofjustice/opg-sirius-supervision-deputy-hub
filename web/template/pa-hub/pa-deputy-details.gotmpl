@@ -15,7 +15,8 @@
                 role="button"
                 draggable="false"
                 class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
-                data-module="govuk-button">
+                data-module="govuk-button"
+                id="delete-deputy">
                 Delete deputy
             </a>
             <a
@@ -23,15 +24,17 @@
                 role="button"
                 draggable="false"
                 class="govuk-button moj-button-menu__item govuk-button--secondary"
-                data-module="govuk-button">
+                data-module="govuk-button"
+                id="download-client-debt">
                 Download client debt
             </a>
             <a
                 href="{{ sirius (printf "/api/v1/deputies/%d/annual-reports?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
-                class="govuk-button moj-button-menu__item govuk-button--secondary "
-                data-module="govuk-button">
+                class="govuk-button moj-button-menu__item govuk-button--secondary {{if eq .DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label "Yes"}} hide{{end}}"
+                data-module="govuk-button"
+                id="download-report-data">
                 Download report data
             </a>
             <a
@@ -183,7 +186,8 @@
                 href="{{ prefix (printf "/%d/manage-important-information" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
-                class="govuk-button govuk-button--secondary">
+                class="govuk-button govuk-button--secondary"
+                id="manage-important-information">
                 Manage important information
             </a>
         </div>
