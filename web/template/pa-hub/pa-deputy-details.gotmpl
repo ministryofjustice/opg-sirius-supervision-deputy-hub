@@ -15,8 +15,7 @@
                 role="button"
                 draggable="false"
                 class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
-                data-module="govuk-button"
-                id="delete-deputy">
+                data-module="govuk-button">
                 Delete deputy
             </a>
             <a
@@ -24,8 +23,7 @@
                 role="button"
                 draggable="false"
                 class="govuk-button moj-button-menu__item govuk-button--secondary"
-                data-module="govuk-button"
-                id="download-client-debt">
+                data-module="govuk-button">
                 Download client debt
             </a>
             <a
@@ -186,8 +184,7 @@
                 href="{{ prefix (printf "/%d/manage-important-information" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
-                class="govuk-button govuk-button--secondary"
-                id="manage-important-information">
+                class="govuk-button govuk-button--secondary">
                 Manage important information
             </a>
         </div>
