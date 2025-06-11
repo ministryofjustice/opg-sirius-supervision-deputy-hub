@@ -149,13 +149,13 @@ describe("Deputy details tab", () => {
     });
 
     describe("Download report data button", () => {
-        it("shows button if not Monthly Spreadsheet Recipient", () => {
+        it("shows button if not monthly spreadsheet recipient", () => {
             cy.visit("/supervision/deputies/1");
             cy.get("#download-report-data").should("contain", "Download report data");
             cy.get("#download-report-data").should("be.visible");
         });
 
-        it("hides button if is Monthly Spreadsheet Recipient", () => {
+        it("hides button if is monthly spreadsheet recipient", () => {
             cy.visit("/supervision/deputies/5");
             cy.get("#download-report-data").should("not.be.visible");
         });
