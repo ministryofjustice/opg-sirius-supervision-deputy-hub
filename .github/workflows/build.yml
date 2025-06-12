@@ -108,7 +108,7 @@ jobs:
     needs: ['test', 'lint', 'gosec', 'build']
     outputs:
       branch: ${{ steps.set-outputs.outputs.branch }}
-      tag: ${{ steps.bump_version.outputs.tag }}
+      tag: ${{ steps.bump_version.outputs.created_tag }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -125,16 +125,10 @@ jobs:
 
       - name: Bump version
         id: bump_version
-        uses: anothrNick/github-tag-action@e528bc2b9628971ce0e6f823f3052d1dcd9d512c # 1.73.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: minor
-          PRERELEASE: true
-          PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
-          RELEASE_BRANCHES: main
-          WITH_V: true
-          DRY_RUN: ${{ github.actor == 'renovate[bot]' }}
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@c9c5dfb290b8f614df0884928c521165ba83d630 # v3.1.4
+        with:
+          default_bump: minor
+          releases_enabled: false
 
       - name: Set up Docker
         run: |
@@ -185,14 +179,14 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           DEPUTY_HUB_ECR_REPOSITORY: sirius/sirius-deputy-hub
         run: |
-          docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.created_tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
-            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}-$(date +"%Y%m%d%H%M%S")
+            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.created_tag }}
+            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.created_tag }}-$(date +"%Y%m%d%H%M%S")
             # We want all of the tags pushed
             docker push --all-tags $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY
           else
-            docker push $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+            docker push $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.created_tag }}
           fi
 
   end_of_pr_workflow:
@@ -235,7 +229,7 @@ jobs:
 
       - name: Push Tag to Parameter Store
         run: |
-          aws ssm put-parameter --name "opg-sirius-supervision-deputy-hub-latest-green-build" --type "String" --value "${{ needs.push.outputs.tag}}" --overwrite --region=eu-west-1
+          aws ssm put-parameter --name "opg-sirius-supervision-deputy-hub-latest-green-build" --type "String" --value "${{ needs.push.outputs.created_tag}}" --overwrite --region=eu-west-1
 
       - name: Trigger Dev Deploy
         shell: bash
