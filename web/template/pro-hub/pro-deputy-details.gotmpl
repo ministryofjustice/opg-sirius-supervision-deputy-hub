@@ -10,7 +10,6 @@
             {{ .PageName }}
         </h1>
         <div class="moj-button-menu">
-            <div class="moj-button-menu__wrapper">
                 <a
                     href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
                     role="button"
@@ -23,9 +22,9 @@
                     href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if eq .UserDetails.IsFinanceManager false}} hide{{end}}"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
                     data-module="govuk-button">
-                    Download schedule
+                    Download client debt
                 </a>
                 <a
                     href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}"
@@ -45,7 +44,6 @@
                     id="change-ecm">
                     Change ECM
                 </a>
-            </div>
         </div>
     </header>
     <div id="overview">

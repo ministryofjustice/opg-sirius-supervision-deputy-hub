@@ -9,7 +9,7 @@ import (
 func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int) (DeputyClient, error) {
 	var k DeputyClient
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/client/%s", deputyId, caseRecNumber), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/client/%s", deputyId, caseRecNumber), nil)
 
 	if err != nil {
 		return DeputyClient{}, err

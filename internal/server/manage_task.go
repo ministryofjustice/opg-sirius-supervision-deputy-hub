@@ -2,12 +2,12 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
+	"net/http"
+	"strconv"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"net/http"
-	"strconv"
 )
 
 type ManageTasks interface {
@@ -29,8 +29,7 @@ type manageTaskVars struct {
 func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		taskId, _ := strconv.Atoi(routeVars["taskId"])
+		taskId, _ := strconv.Atoi(r.PathValue("taskId"))
 
 		taskTypes, err := client.GetTaskTypesForDeputyType(ctx, app.DeputyType())
 		if err != nil {
@@ -142,7 +141,7 @@ func RenameErrors(errors sirius.ValidationErrors, deputyType string) sirius.Vali
 
 	for i, s := range errors {
 		for k, t := range s {
-			if i == "assigneeId" && k == "notBetween" {
+			if i == "assigneeId" && (k == "notGreaterInclusive" || k == "notLessInclusive") {
 				amendedErrors[i] = map[string]string{k: fmt.Sprintf("Enter a name of someone who works on the %s team", deputyType)}
 			} else {
 				amendedErrors[i] = map[string]string{k: t}

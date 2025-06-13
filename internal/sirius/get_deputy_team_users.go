@@ -53,9 +53,9 @@ func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDeta
 
 func getRequestURL(deputyDetails DeputyDetails, defaultPATeam int) string {
 	if deputyDetails.DeputyType.Handle == "PRO" {
-		return fmt.Sprintf("/api/v1/teams?type=%s", deputyDetails.DeputyType.Handle)
+		return fmt.Sprintf(SupervisionAPIPath + "/v1/teams?type=%s", deputyDetails.DeputyType.Handle)
 	} else {
-		return "/api/v1/teams/" + strconv.Itoa(defaultPATeam)
+		return SupervisionAPIPath + "/v1/teams/" + strconv.Itoa(defaultPATeam)
 	}
 }
 

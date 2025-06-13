@@ -16,7 +16,7 @@ type DocumentList struct {
 
 func (c *Client) GetDeputyDocuments(ctx Context, deputyId int, sort string) (DocumentList, error) {
 	var documentList DocumentList
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/persons/%d/documents?&sort=%s", deputyId, sort), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/persons/%d/documents?&sort=%s", deputyId, sort), nil)
 
 	if err != nil {
 		return documentList, err

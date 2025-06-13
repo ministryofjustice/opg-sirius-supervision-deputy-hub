@@ -47,7 +47,7 @@ func TestUpdateContactReturnsNewStatusError(t *testing.T) {
 	err := client.UpdateContact(getContext(nil), 76, 1, ContactForm{})
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/contacts/1",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/76/contacts/1",
 		Method: http.MethodPut,
 	}, err)
 }

@@ -1,7 +1,8 @@
 {
-    "/api/v1/*": "/$1",
+    "/supervision-api/v1/*": "/$1",
     "/deputies/pa/:personId/clients*": "/clients",
     "/deputies/pro/:personId/clients*": "/clients",
+    "/timeline/:personId/deputy*": "/timeline",
     "/timeline/:personId": "/timeline",
     "/deputies/:personId/notes": "/notes?personId=:personId",
     "/users/current": "/users",
@@ -20,5 +21,4 @@
     "/deputies/:id/gcm-issues": "/gcm-issues",
     "/deputies/:id/gcm-issues/add": "/gcm-issues/add",
     "/deputies/:id/client/*": "/search-for-client"
-
 }

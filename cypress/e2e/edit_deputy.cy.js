@@ -17,8 +17,9 @@ describe("Edit deputy tab", () => {
         cy.get("#f-team").focus().clear();
         cy.get("#f-team").type("New Team Name");
         cy.get("form").submit();
-        cy.get(
-            "body > div > main > div.moj-banner.moj-banner--success > div"
-        ).should("contain", "Team details updated");
+        cy.get("body > div > main > div.moj-banner.moj-banner--success > div").should(
+            "contain",
+            "Team details updated",
+        );
     });
 });

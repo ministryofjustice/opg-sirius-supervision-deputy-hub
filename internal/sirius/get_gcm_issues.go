@@ -39,7 +39,7 @@ type GcmIssuesParams struct {
 func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams) ([]GcmIssue, error) {
 	var v []GcmIssue
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/gcm-issues?&filter=%s&sort=%s", deputyId, params.IssueStatus, params.Sort), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/gcm-issues?&filter=%s&sort=%s", deputyId, params.IssueStatus, params.Sort), nil)
 
 	if err != nil {
 		return v, err

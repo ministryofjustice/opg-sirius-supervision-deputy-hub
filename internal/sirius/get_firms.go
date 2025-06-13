@@ -12,7 +12,7 @@ type FirmForList struct {
 }
 
 func (c *Client) GetFirms(ctx Context) ([]FirmForList, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, "/api/v1/firms", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/firms", nil)
 	if err != nil {
 		return nil, err
 	}

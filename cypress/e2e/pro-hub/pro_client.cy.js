@@ -31,10 +31,7 @@ describe("Clients tab", () => {
     });
 
     it("lists clients with active/closed/duplicate orders", () => {
-        cy.get(".govuk-table__body > .govuk-table__row").should(
-            "have.length",
-            3
-        );
+        cy.get(".govuk-table__body > .govuk-table__row").should("have.length", 3);
     });
 
     it("Clients surname have been sorted in order of descending", () => {
@@ -45,25 +42,22 @@ describe("Clients tab", () => {
     });
 
     it("Clients report due have been sorted in order of descending", () => {
-        cy.get('a:contains("Report")').first().click()
+        cy.get('a:contains("Report")').first().click();
         cy.url().should("contain", "order-by=reportDue&sort=asc");
-        cy.get('a:contains("Report")').first().click()
+        cy.get('a:contains("Report")').first().click();
         cy.url().should("contain", "order-by=reportDue&sort=desc");
     });
 
     it("Clients risk have been sorted in order of descending", () => {
-        cy.get('a:contains("Risk")').first().click()
+        cy.get('a:contains("Risk")').first().click();
         cy.url().should("contain", "order-by=crec&sort=asc");
-        cy.get('a:contains("Risk")').first().click()
+        cy.get('a:contains("Risk")').first().click();
         cy.url().should("contain", "order-by=crec&sort=desc");
     });
 
     it("Clients have a latest visit recorded", () => {
         cy.get(":nth-child(1) > .visit_type").should("contain", "01/01/2000");
-        cy.get(":nth-child(1) > .visit_type").should(
-            "contain",
-            "Standard visit"
-        );
+        cy.get(":nth-child(1) > .visit_type").should("contain", "Standard visit");
         cy.get(":nth-child(1) > .visit_type").should("contain", "Low risk");
         cy.get(":nth-child(2) > .visit_type").should("contain", "03/03/2020");
         cy.get(":nth-child(2) > .visit_type").should("contain", "Urgent visit");

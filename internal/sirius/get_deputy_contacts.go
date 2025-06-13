@@ -7,27 +7,29 @@ import (
 )
 
 type ApiContact struct {
-	Id               int    `json:"id"`
-	Name             string `json:"name"`
-	JobTitle         string `json:"jobTitle"`
-	Email            string `json:"email"`
-	PhoneNumber      string `json:"phoneNumber"`
-	OtherPhoneNumber string `json:"otherPhoneNumber"`
-	Notes            string `json:"notes"`
-	IsMainContact    bool   `json:"isMainContact"`
-	IsNamedDeputy    bool   `json:"isNamedDeputy"`
+	Id                            int    `json:"id"`
+	Name                          string `json:"name"`
+	JobTitle                      string `json:"jobTitle"`
+	Email                         string `json:"email"`
+	PhoneNumber                   string `json:"phoneNumber"`
+	OtherPhoneNumber              string `json:"otherPhoneNumber"`
+	Notes                         string `json:"notes"`
+	IsMainContact                 bool   `json:"isMainContact"`
+	IsNamedDeputy                 bool   `json:"isNamedDeputy"`
+	IsMonthlySpreadsheetRecipient bool   `json:"isMonthlySpreadsheetRecipient"`
 }
 
 type DeputyContact struct {
-	Id               int
-	Name             string
-	JobTitle         string
-	Email            string
-	PhoneNumber      string
-	OtherPhoneNumber string
-	Notes            string
-	IsMainContact    bool
-	IsNamedDeputy    bool
+	Id                            int
+	Name                          string
+	JobTitle                      string
+	Email                         string
+	PhoneNumber                   string
+	OtherPhoneNumber              string
+	Notes                         string
+	IsMainContact                 bool
+	IsNamedDeputy                 bool
+	IsMonthlySpreadsheetRecipient bool
 }
 
 type ContactList []DeputyContact
@@ -36,7 +38,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 	var contactList ContactList
 	var apiContacts []ApiContact
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/contacts", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts", deputyId), nil)
 
 	if err != nil {
 		return contactList, err

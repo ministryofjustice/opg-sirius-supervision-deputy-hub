@@ -1,11 +1,12 @@
-FROM --platform=linux/amd64 golang:1.23-alpine as base
+FROM golang:1.24-alpine AS base
 WORKDIR /app
 
-ENV CGO_ENABLED=0 GOOS=linux
+ENV CGO_ENABLED=0
+ENV GOOS=linux
 
 RUN update-ca-certificates
 
-FROM node:20.2.0-alpine3.16 as asset-env
+FROM node:20.2.0-alpine3.16 AS asset-env
 
 WORKDIR /app
 
@@ -29,16 +30,18 @@ EXPOSE 2345
 
 ENTRYPOINT ["air"]
 
-FROM base as build-env
+FROM base AS build-env
 
 WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
+COPY internal internal
+COPY web/template web/template
+COPY main.go .
+COPY main_test.go .
 
 RUN go mod download
-
-COPY . .
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 

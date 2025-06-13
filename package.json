@@ -1,40 +1,40 @@
 {
-  "name": "opg-sirius-supervision-deputy-hub",
-  "version": "1.0.0",
-  "license": "MIT",
-  "scripts": {
-    "build": "yarn build:js && yarn build:css && yarn build:images",
-    "build:js": "esbuild --bundle web/assets/main.js --minify --outfile=web/static/javascript/all.js --sourcemap --resolve-extensions=.mjs,.js",
-    "build:css": "sass --load-path . --style compressed web/assets/main.scss web/static/stylesheets/all.css",
-    "build:images": "mkdir -p web/static/assets/images && cp node_modules/govuk-frontend/dist/govuk/assets/images/* node_modules/@ministryofjustice/frontend/moj/assets/images/* web/assets/images/* web/static/assets/images",
-    "clean": "rm -rf web/static",
-    "test-sirius": "cd internal/sirius && go test",
-    "test-server": "cd internal/server && go test",
-    "cypress": "cypress open",
-    "cypress-headless": "cypress run -b chrome",
-    "cypress-build-down": "docker compose down",
-    "lint": "prettier --check .",
-    "prettier": "prettier --write .",
-    "fmt": "prettier --write .",
-    "watch": "yarn build:js --watch=forever"
-  },
-  "dependencies": {
-    "@cypress/grep": "^4.0.1",
-    "@ministryofjustice/frontend": "^2.1.0",
-    "accessible-autocomplete": "^3.0.0",
-    "govuk-frontend": "^5.0.0",
-    "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.24.0"
-  },
-  "devDependencies": {
-    "axe-core": "^4.9.0",
-    "cypress": "^13.6.4",
-    "cypress-axe": "^1.5.0",
-    "cypress-failed-log": "^2.10.0",
-    "esbuild": "^0.24.0",
-    "prettier": "^3.0.0",
-    "sass": "^1.70.0"
-  },
-  "resolutions": {
-    "colors": "1.4.0"
-  }
+    "name": "opg-sirius-supervision-deputy-hub",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "build": "yarn build:js && yarn build:css && yarn build:images",
+        "build:js": "esbuild --bundle web/assets/main.js --minify --outfile=web/static/javascript/all.js --sourcemap --resolve-extensions=.mjs,.js",
+        "build:css": "sass --load-path . --style compressed web/assets/main.scss web/static/stylesheets/all.css",
+        "build:images": "mkdir -p web/static/assets/images && cp node_modules/govuk-frontend/dist/govuk/assets/images/* node_modules/@ministryofjustice/frontend/moj/assets/images/* web/assets/images/* web/static/assets/images",
+        "clean": "rm -rf web/static",
+        "test-sirius": "cd internal/sirius && go test",
+        "test-server": "cd internal/server && go test",
+        "cypress": "cypress open",
+        "cypress-headless": "cypress run -b chrome",
+        "cypress-build-down": "docker compose down",
+        "lint": "prettier --check .",
+        "prettier": "prettier --write .",
+        "fmt": "prettier --write .",
+        "watch": "yarn build:js --watch=forever"
+    },
+    "dependencies": {
+        "@cypress/grep": "^4.0.1",
+        "@ministryofjustice/frontend": "^5.0.0",
+        "accessible-autocomplete": "^3.0.0",
+        "govuk-frontend": "^5.0.0",
+        "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.46.0"
+    },
+    "devDependencies": {
+        "axe-core": "^4.9.0",
+        "cypress": "^14.0.0",
+        "cypress-axe": "^1.5.0",
+        "cypress-failed-log": "^2.10.0",
+        "esbuild": "^0.25.0",
+        "prettier": "^3.0.0",
+        "sass": "^1.70.0"
+    },
+    "resolutions": {
+        "colors": "1.4.0"
+    }
 }
