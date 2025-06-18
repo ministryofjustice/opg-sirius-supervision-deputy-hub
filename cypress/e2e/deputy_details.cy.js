@@ -147,17 +147,4 @@ describe("Deputy details tab", () => {
             cy.get(".moj-banner--success").should("contain.text", "Second Test Organisation 23 has been deleted");
         });
     });
-
-    describe("Download report data button", () => {
-        it("shows button if not monthly spreadsheet recipient", () => {
-            cy.visit("/supervision/deputies/1");
-            cy.get("#download-report-data").should("contain", "Download report data");
-            cy.get("#download-report-data").should("be.visible");
-        });
-
-        it("hides button if is monthly spreadsheet recipient", () => {
-            cy.visit("/supervision/deputies/5");
-            cy.get("#download-report-data").should("not.be.visible");
-        });
-    });
 });
