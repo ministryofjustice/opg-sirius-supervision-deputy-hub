@@ -30,9 +30,8 @@
                 href="{{ sirius (printf "/api/v1/deputies/%d/annual-reports?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
-                class="govuk-button moj-button-menu__item govuk-button--secondary {{if eq .DeputyDetails.DeputyImportantInformation.MonthlySpreadsheet.Label "Yes"}} hide{{end}}"
-                data-module="govuk-button"
-                id="download-report-data">
+                class="govuk-button moj-button-menu__item govuk-button--secondary "
+                data-module="govuk-button">
                 Download report data
             </a>
             <a
