@@ -48,7 +48,7 @@ jobs:
         run: make gosec
       - name: Upload GoSec results to GitHub Security tab
         if: ${{ always() }}
-        uses: github/codeql-action/upload-sarif@fca7ace96b7d713c7035871441bd52efbe39e27e # v3.28.19
+        uses: github/codeql-action/upload-sarif@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858 # v3.29.0
         with:
           sarif_file: 'test-results/gosec.sarif'
           category: gosec
@@ -125,7 +125,7 @@ jobs:
 
       - name: Bump version
         id: bump_version
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@c9c5dfb290b8f614df0884928c521165ba83d630 # v3.1.4
+        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@464975f6f9e628ffcece3db87ecb819d8d391ab6 # v3.1.6
         with:
           default_bump: minor
           releases_enabled: false
@@ -168,7 +168,7 @@ jobs:
         run: make scan
 
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@fca7ace96b7d713c7035871441bd52efbe39e27e # v3.28.19
+        uses: github/codeql-action/upload-sarif@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858 # v3.29.0
         if: always()
         with:
           sarif_file: 'test-results/trivy.sarif'
