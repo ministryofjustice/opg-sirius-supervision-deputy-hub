@@ -22,7 +22,6 @@ func renderTemplateForCheckDocument(client CheckDocumentDownload) Handler {
 
 		err := client.CheckDocumentDownload(ctx, documentId)
 		if err != nil {
-			// Handle the error - could return 400 status or whatever you need
 			return err
 		}
 
