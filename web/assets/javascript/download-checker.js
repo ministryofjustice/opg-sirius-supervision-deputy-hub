@@ -1,8 +1,6 @@
 export default class DownloadChecker {
     constructor(element) {
         this.links = element.querySelectorAll(".document-download-link");
-        
-        console.log('element.querySelectorAll(".document-download-link");', this.links);
         this.setupEventListeners();
     }
 
