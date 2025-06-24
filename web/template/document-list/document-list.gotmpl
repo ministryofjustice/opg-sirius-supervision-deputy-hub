@@ -17,8 +17,9 @@
             <td
                 id="document-name"
                 class="govuk-table__cell nowrap">
-                <a id="document-download-link"
-                    class="govuk-link"
+                <a class="govuk-link document-download-link"
+                    data-deputy-id={{ $.DeputyDetails.ID }}
+                    data-document-id="{{ .Id }}"
                     href="{{ sirius (printf "/api/v1/documents/%d/download" .Id) }}">
                     {{ if .FriendlyDescription }}
                         {{ .FriendlyDescription }}
@@ -26,6 +27,9 @@
                       -
                     {{ end }}
                 </a>
+                {{ if .Infected }}
+                    <span class="infected-label">Infected</span>
+                {{ end }}
                 {{ if ne .Note.Description "" }}
                     <details id="notes-summary" class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
                           <summary class="govuk-details__summary">
