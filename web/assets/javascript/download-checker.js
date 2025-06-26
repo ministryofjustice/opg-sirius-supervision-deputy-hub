@@ -15,6 +15,7 @@ export default class DownloadChecker {
 
                 // Hide error banner in case it's visible
                 const banner = document.getElementById("error-banner");
+                const infectedLabel = document.getElementById("infected-label-"+docId);
                 if (banner) {
                     banner.hidden = true;
                 }
@@ -35,8 +36,9 @@ export default class DownloadChecker {
                 } catch (err) {
                     if (banner) {
                         banner.hidden = false;
+                        infectedLabel.hidden = false;
                         document.getElementById("error-banner-message").textContent =
-                            "Unable to download the document. It may be infected or unavailable.";
+                            "This file is blocked. A suspected virus has been detected. Please request a different file from the sender and notify the Implementation team";
                     }
                 }
             });

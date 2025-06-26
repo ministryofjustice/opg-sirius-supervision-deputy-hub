@@ -27,9 +27,11 @@
                       -
                     {{ end }}
                 </a>
-                {{ if .Infected }}
-                    <span class="infected-label">Infected</span>
-                {{ end }}
+                <span class="infected-label"
+                    id="infected-label-{{ .Id }}"
+                    {{ if not .Infected }}hidden{{ end }}>
+                    Infected
+                </span>
                 {{ if ne .Note.Description "" }}
                     <details id="notes-summary" class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-details">
                           <summary class="govuk-details__summary">
