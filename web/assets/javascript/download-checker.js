@@ -5,7 +5,7 @@ export default class DownloadChecker {
     }
 
     setupEventListeners() {
-        this.links.forEach(link => {
+        this.links.forEach((link) => {
             link.addEventListener("click", async function (e) {
                 e.preventDefault();
                 const deputyId = this.getAttribute("data-deputy-id");
@@ -23,7 +23,7 @@ export default class DownloadChecker {
                     // HEAD request checks file availability and whether its infected
                     const headResponse = await fetch(checkUrl, {
                         method: "HEAD",
-                        credentials: "include"
+                        credentials: "include",
                     });
 
                     if (!headResponse.ok) {
@@ -32,7 +32,6 @@ export default class DownloadChecker {
 
                     // Trigger download by navigating to the original download URL
                     window.location.href = downloadUrl;
-
                 } catch (err) {
                     if (banner) {
                         banner.hidden = false;
