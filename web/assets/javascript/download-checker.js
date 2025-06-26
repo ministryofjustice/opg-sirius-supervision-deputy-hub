@@ -15,7 +15,7 @@ export default class DownloadChecker {
 
                 // Hide error banner in case it's visible
                 const banner = document.getElementById("error-banner");
-                const infectedLabel = document.getElementById("infected-label-"+docId);
+                const infectedLabel = document.getElementById("infected-label-" + docId);
                 if (banner) {
                     banner.hidden = true;
                 }
