@@ -29,7 +29,7 @@ func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, important
 		return err
 	}
 
-	requestURL := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/important-information", deputyId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/important-information", deputyId)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
@@ -44,7 +44,7 @@ func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, important
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized

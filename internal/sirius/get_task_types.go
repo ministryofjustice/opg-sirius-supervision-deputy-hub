@@ -36,7 +36,7 @@ func (c *Client) GetTaskTypesForDeputyType(ctx Context, deputyType string) ([]mo
 }
 
 func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/tasktypes/deputy", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath+"/v1/tasktypes/deputy", nil)
 
 	if err != nil {
 		return nil, err
@@ -47,7 +47,7 @@ func (c *Client) getTaskTypesMap(ctx Context) (TaskTypeMap, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return nil, ErrUnauthorized

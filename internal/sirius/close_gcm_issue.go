@@ -20,7 +20,7 @@ func (c *Client) CloseGCMIssues(ctx Context, gcmIssueIds []string) error {
 		return err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPut, SupervisionAPIPath + "/v1/gcm-issues/close", &body)
+	req, err := c.newRequest(ctx, http.MethodPut, SupervisionAPIPath+"/v1/gcm-issues/close", &body)
 
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func (c *Client) CloseGCMIssues(ctx Context, gcmIssueIds []string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized

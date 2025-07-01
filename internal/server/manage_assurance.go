@@ -68,7 +68,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 			vars.Assurance = visit
 			if visit.Type.Handle == "PDR" {
 				tmpl = pdrTmpl
-				vars.AppVars.PageName = "Manage PDR"
+				vars.PageName = "Manage PDR"
 			}
 			return nil
 		})

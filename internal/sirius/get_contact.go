@@ -21,7 +21,7 @@ type Contact struct {
 func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Contact, error) {
 	var contact Contact
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts/%d", deputyId, contactId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/contacts/%d", deputyId, contactId), nil)
 
 	if err != nil {
 		return contact, err
@@ -32,7 +32,7 @@ func (c *Client) GetContactById(ctx Context, deputyId int, contactId int) (Conta
 	if err != nil {
 		return contact, err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return contact, ErrUnauthorized

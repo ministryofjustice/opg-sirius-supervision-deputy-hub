@@ -74,7 +74,7 @@ type ClientListParams struct {
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
 
-	url := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
+	url := fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
 
 	filter := params.CreateFilter()
 
@@ -94,7 +94,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		return clientList, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return clientList, ErrUnauthorized
@@ -146,7 +146,7 @@ func (p ClientListParams) CreateFilter() string {
 		filter += "order-status:" + s + ","
 	}
 	for _, k := range p.AccommodationTypes {
-		filter += "accommodation:" + strings.Replace(k, " ", "%20", -1) + ","
+		filter += "accommodation:" + strings.ReplaceAll(k, " ", "%20") + ","
 	}
 	for _, s := range p.SupervisionLevels {
 		filter += "supervision-level:" + s + ","
