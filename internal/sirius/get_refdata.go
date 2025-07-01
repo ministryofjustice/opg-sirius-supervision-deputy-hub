@@ -12,7 +12,7 @@ import (
 func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, error) {
 	var v []model.RefData
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/reference-data%s", refDataType), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/reference-data%s", refDataType), nil)
 
 	if err != nil {
 		return v, err
@@ -23,7 +23,7 @@ func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, e
 		return v, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized
@@ -34,7 +34,7 @@ func (c *Client) getRefData(ctx Context, refDataType string) ([]model.RefData, e
 	}
 
 	if strings.Contains(refDataType, "?filter=") {
-		refData, err := unmarshalFilteredRefData(resp.Body, strings.Replace(refDataType, "?filter=", "", -1))
+		refData, err := unmarshalFilteredRefData(resp.Body, strings.ReplaceAll(refDataType, "?filter=", ""))
 
 		if err != nil {
 			return v, err

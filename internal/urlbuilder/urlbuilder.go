@@ -66,7 +66,7 @@ func (ub UrlBuilder) GetRemoveFilterUrl(name string, value interface{}) (string,
 		retainedValues = []string{}
 		for _, v := range filter.SelectedValues {
 			if name != filter.Name || stringValue != v {
-				formatWhiteSpace := strings.Replace(v, " ", "%20", -1)
+				formatWhiteSpace := strings.ReplaceAll(v, " ", "%20")
 				retainedValues = append(retainedValues, formatWhiteSpace)
 			}
 		}

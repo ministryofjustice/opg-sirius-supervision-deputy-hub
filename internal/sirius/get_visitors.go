@@ -9,7 +9,7 @@ import (
 func (c *Client) GetVisitors(ctx Context) ([]model.Visitor, error) {
 	var v []model.Visitor
 
-	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/visitors", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath+"/v1/visitors", nil)
 
 	if err != nil {
 		return v, err
@@ -20,7 +20,7 @@ func (c *Client) GetVisitors(ctx Context) ([]model.Visitor, error) {
 		return v, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized

@@ -26,7 +26,7 @@ func (c *Client) DeleteDeputy(ctx Context, deputyId int) error {
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}

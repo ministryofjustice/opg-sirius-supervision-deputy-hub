@@ -25,7 +25,7 @@ func (c *Client) AddGcmIssue(ctx Context, clientCaseRecNumber, notes string, gcm
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/gcm-issues", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/gcm-issues", deputyId), &body)
 
 	if err != nil {
 		return err
@@ -37,7 +37,7 @@ func (c *Client) AddGcmIssue(ctx Context, clientCaseRecNumber, notes string, gcm
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
