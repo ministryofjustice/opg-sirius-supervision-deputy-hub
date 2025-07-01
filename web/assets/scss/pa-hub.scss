@@ -309,6 +309,10 @@
   text-decoration: none;
 }
 
+.govuk-details__wrapped-column {
+  max-width: 50%;
+}
+
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
 a[href^="mailto:"] {
   color: $govuk-link-visited-colour;
