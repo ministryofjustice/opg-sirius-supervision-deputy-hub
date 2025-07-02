@@ -309,8 +309,12 @@
   text-decoration: none;
 }
 
-.govuk-details__wrapped-column {
-  max-width: 50%;
+.govuk-details__fixed-table {
+  table-layout: fixed;
+}
+
+.govuk-details__fixed-width {
+  width: 33%;
 }
 
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten

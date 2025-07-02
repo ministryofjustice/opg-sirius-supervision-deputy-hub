@@ -10,7 +10,7 @@
             <button type="submit" id="close-gcm-issue" class="govuk-button govuk-button--blue hide js-mt-edit-btn">
                 Close Issue(s)
             </button>
-            <table id="pa-clients" class="govuk-table sortable">
+            <table id="pa-clients" class="govuk-table sortable govuk-details__fixed-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     {{ if eq .GCMIssueStatus "open"}}
@@ -29,10 +29,10 @@
                     <th scope="col" class="govuk-table__header">General Case Manager</th>
                     {{ if eq .GCMIssueStatus "open"}}
                         <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "createdDate" }}"><a href="{{ .UrlBuilder.GetSortUrl "createdDate" }}"><button type="button" id="issue-added-sort">Issue added</button></a></th>
-                        <th scope="col" class="govuk-table__header sirius-blue" aria-sort="{{ .Sort.GetAriaSort "issueType" }}"><a href="{{ .UrlBuilder.GetSortUrl "issueType" }}"><button type="button" id="issue-sort">Issue</button></a></th>
+                        <th scope="col" class="govuk-table__header sirius-blue govuk-details__fixed-width" aria-sort="{{ .Sort.GetAriaSort "issueType" }}"><a href="{{ .UrlBuilder.GetSortUrl "issueType" }}"><button type="button" id="issue-sort">Issue</button></a></th>
                     {{ else }}
                         <th scope="col" class="govuk-table__header">Issue added</th>
-                        <th scope="col" class="govuk-table__header">Issue</th>
+                        <th scope="col" class="govuk-table__header govuk-details__fixed-width">Issue</th>
                         <th scope="col" class="govuk-table__header">Closed on</th>
                         <th scope="col" class="govuk-table__header">Closed by</th>
                     {{ end }}
@@ -74,7 +74,7 @@
                                       Notes
                                     </span>
                                     </summary>
-                                    <div class="govuk-details__text govuk-details__wrapped-column">
+                                    <div class="govuk-details__text">
                                         {{ .Notes }}
                                     </div>
                                 </details>
