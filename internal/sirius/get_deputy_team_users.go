@@ -36,7 +36,7 @@ func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDeta
 	if err != nil {
 		return []model.TeamMember{}, err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return []model.TeamMember{}, ErrUnauthorized
@@ -53,7 +53,7 @@ func (c *Client) GetDeputyTeamMembers(ctx Context, defaultPATeam int, deputyDeta
 
 func getRequestURL(deputyDetails DeputyDetails, defaultPATeam int) string {
 	if deputyDetails.DeputyType.Handle == "PRO" {
-		return fmt.Sprintf(SupervisionAPIPath + "/v1/teams?type=%s", deputyDetails.DeputyType.Handle)
+		return fmt.Sprintf(SupervisionAPIPath+"/v1/teams?type=%s", deputyDetails.DeputyType.Handle)
 	} else {
 		return SupervisionAPIPath + "/v1/teams/" + strconv.Itoa(defaultPATeam)
 	}

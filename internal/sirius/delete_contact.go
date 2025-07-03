@@ -9,7 +9,7 @@ import (
 func (c *Client) DeleteContact(ctx Context, deputyId int, contactId int) error {
 	var body bytes.Buffer
 
-	url := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts/%d", deputyId, contactId)
+	url := fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/contacts/%d", deputyId, contactId)
 
 	req, err := c.newRequest(ctx, http.MethodDelete, url, &body)
 
@@ -25,7 +25,7 @@ func (c *Client) DeleteContact(ctx Context, deputyId int, contactId int) error {
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}

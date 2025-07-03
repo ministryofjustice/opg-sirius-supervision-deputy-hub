@@ -84,7 +84,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				}
 			}
 
-			annualBillingInvoice := vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
+			annualBillingInvoice := vars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
 			if r.PostFormValue("annual-billing") != "" {
 				annualBillingInvoice = r.PostFormValue("annual-billing")
 			} else if annualBillingInvoice == "" {
@@ -92,7 +92,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
-				DeputyType:                vars.AppVars.DeputyType(),
+				DeputyType:                vars.DeputyType(),
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
 				AnnualBillingInvoice:      annualBillingInvoice,
