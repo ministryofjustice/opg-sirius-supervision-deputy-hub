@@ -18,11 +18,11 @@
   integrity sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==
 
 "@babel/parser@^7.27.2":
-  version "7.27.7"
-  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.27.7.tgz#1687f5294b45039c159730e3b9c1f1b242e425e9"
-  integrity sha512-qnzXzDXdr/po3bOTbTIQZ7+TxNKxpkN5IifVLXS+r7qwynkZfPyjZfE7hCXbo7IoO9TNcSyibgONsf2HauUd3Q==
+  version "7.28.0"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.28.0.tgz#979829fbab51a29e13901e5a80713dbcb840825e"
+  integrity sha512-jVZGvOxOuNSsuQuLRTh13nU0AogFlw32w/MT+LV6D3sP5WdbW61E77RnkbaO2dUvmPAYrBDJXGn5gGS6tH4j8g==
   dependencies:
-    "@babel/types" "^7.27.7"
+    "@babel/types" "^7.28.0"
 
 "@babel/plugin-syntax-jsx@^7.27.1":
   version "7.27.1"
@@ -31,10 +31,10 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.27.1"
 
-"@babel/types@^7.27.7":
-  version "7.27.7"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.27.7.tgz#40eabd562049b2ee1a205fa589e629f945dce20f"
-  integrity sha512-8OLQgDScAOHXnAz2cV+RfzzNMipuLVBz2biuAJFMV9bfkNf393je3VM8CLkjQodW5+iWsSJdSgSWT6rsZoXHPw==
+"@babel/types@^7.28.0":
+  version "7.28.0"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.28.0.tgz#2fd0159a6dc7353933920c43136335a9b264d950"
+  integrity sha512-jYnje+JyZG5YThjHiF28oT4SIZLnYOcSBb6+SDaFIyzDVSkXQmQQYclJ2R+YxcdmK0AX6x1E5OQNtuh3jHDrUg==
   dependencies:
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.27.1"
@@ -345,9 +345,9 @@
     "@parcel/watcher-win32-x64" "2.5.1"
 
 "@types/node@*":
-  version "24.0.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.7.tgz#ee580f7850c7eabaeef61ef96b8d8c04fdf94f53"
-  integrity sha512-YIEUUr4yf8q8oQoXPpSlnvKNVKDQlPMWrmOcgzoduo7kvA2UF0/BwJ/eMKFTiTtkNL17I0M6Xe2tvwFU7be6iw==
+  version "24.0.10"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.0.10.tgz#f65a169779bf0d70203183a1890be7bee8ca2ddb"
+  integrity sha512-ENHwaH+JIRTDIEEbDK6QSQntAYGtbvdDXnMXnZaZ6k13Du1dPMmprkEHIL7ok2Wl2aZevetwTAb5S+7yIF+enA==
   dependencies:
     undici-types "~7.8.0"
 
@@ -579,9 +579,9 @@ chokidar@^4.0.0:
     readdirp "^4.0.1"
 
 ci-info@^4.1.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-4.2.0.tgz#cbd21386152ebfe1d56f280a3b5feccbd96764c7"
-  integrity sha512-cYY9mypksY8NRqgDB1XD1RiJL338v/551niynFTGkZOO2LHuB2OmOYxDIe/ttN9AHwrqdum1360G3ald0W9kCg==
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-4.3.0.tgz#c39b1013f8fdbd28cd78e62318357d02da160cd7"
+  integrity sha512-l+2bNRMiQgcfILUi33labAZYIWlH1kWDp+ecNo5iisRKrbm0xcRyCww71/YU0Fkw0mAFpz9bJayXPjey6vkmaQ==
 
 clean-stack@^2.0.0:
   version "2.2.0"
@@ -691,9 +691,9 @@ cypress-failed-log@^2.10.0:
     logdown "3.3.1"
 
 cypress@^14.0.0:
-  version "14.5.0"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-14.5.0.tgz#5b02b06993a9dcea9b9146fc02840a92f6a40584"
-  integrity sha512-1HOnKvWep0LkWuFwPeWkZ0TDl7ivi2/Mz+WNU4dfkeLJaFndS3Ow6TXT7YjuTqLFI2peJKzPKljVUFdymI2K5g==
+  version "14.5.1"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-14.5.1.tgz#0af3f2ce7beb82f8d88a8a3cb7d8e40326114ce2"
+  integrity sha512-vYBeZKW3UAtxwv5mFuSlOBCYhyO0H86TeDKRJ7TgARyHiREIaiDjeHtqjzrXRFrdz9KnNavqlm+z+hklC7v8XQ==
   dependencies:
     "@cypress/request" "^3.0.8"
     "@cypress/xvfb" "^1.2.4"
@@ -983,9 +983,9 @@ fill-range@^7.1.1:
     to-regex-range "^5.0.1"
 
 find-test-names@^1.28.18:
-  version "1.29.16"
-  resolved "https://registry.yarnpkg.com/find-test-names/-/find-test-names-1.29.16.tgz#c74923ec20d408d566a9fc8e2123990808de29bb"
-  integrity sha512-68FCAnaS9Hxgu7PFQ5epUeWVqOSBOI7U8NDkpvreBmJOTrSVhFrQfLuRsPOFTPpolcYrZUJxtri6xvBROdtPew==
+  version "1.29.17"
+  resolved "https://registry.yarnpkg.com/find-test-names/-/find-test-names-1.29.17.tgz#b56eeb72beda1f85f0c9bea2f97a96fac274ef4b"
+  integrity sha512-JyZJ1EqH6+3/eXtViY7A79BTggAmcKu0rmXu89oJPobwbk8MmFhVz06sF1L2r6TLT7477iVtCmftBQ0pl2K/kg==
   dependencies:
     "@babel/parser" "^7.27.2"
     "@babel/plugin-syntax-jsx" "^7.27.1"
