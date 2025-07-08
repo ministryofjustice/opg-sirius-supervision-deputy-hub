@@ -13,6 +13,7 @@ $govuk-assets-path: "/supervision/deputies/static/assets/";
 @import "./scss/pro-hub";
 @import "./scss/_moj-pagination";
 @import "./scss/sorting";
+@import "./scss/moj-manage-list";
 
 .moj-header__container {
   max-width: 98%;
@@ -63,4 +64,12 @@ $govuk-assets-path: "/supervision/deputies/static/assets/";
 #checkbox-column {
   max-width: 15px;
   width: 15px;
+}
+
+.govuk-button--blue {
+  background: govuk-colour("blue");
+
+  &:hover {
+    background: govuk-colour("dark-blue");
+  }
 }

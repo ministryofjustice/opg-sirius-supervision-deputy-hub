@@ -16,10 +16,12 @@ type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
 	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
+	AssignAssuranceVisitToClients(sirius.Context, sirius.AssignAssuranceVisitToClientsParams, int) (string, error)
 }
 
 type ListClientsVars struct {
-	Clients sirius.ClientList
+	Clients        sirius.ClientList
+	SuccessMessage string
 	ListPage
 	FilterByOrderStatus
 	FilterByAccommodation
@@ -63,11 +65,29 @@ func (lcv ListClientsVars) GetAppliedFilters() []string {
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
+		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
+		var vars ListClientsVars
+
+		if r.Method == http.MethodPost {
+			err := r.ParseForm()
+			if err != nil {
+				return err
+			}
+			deputyId, _ := strconv.Atoi(r.PathValue("id"))
+
+			vars.SuccessMessage, err = client.AssignAssuranceVisitToClients(ctx, sirius.AssignAssuranceVisitToClientsParams{
+				DueDate:   r.FormValue("dueDate"),
+				ClientIds: r.Form["selected-clients"],
+			}, deputyId)
+			if err != nil {
+				return err
+			}
+		}
+
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 		urlParams := r.URL.Query()
 		page := paginate.GetRequestedPage(urlParams.Get("page"))
@@ -106,8 +126,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			AccommodationTypes: selectedAccommodationTypes,
 			SupervisionLevels:  selectedSupervisionLevels,
 		}
-
-		var vars ListClientsVars
 
 		group.Go(func() error {
 			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
