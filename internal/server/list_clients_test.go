@@ -19,6 +19,14 @@ type mockDeputyHubClientInformation struct {
 	deputyClientData   sirius.ClientList
 	accommodationTypes []model.RefData
 	supervisionLevels  []model.RefData
+	SuccessMessage     string
+}
+
+func (m *mockDeputyHubClientInformation) AssignAssuranceVisitToClients(ctx sirius.Context, params sirius.AssignAssuranceVisitToClientsParams, deputyId int) (string, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.SuccessMessage, m.err
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, params sirius.ClientListParams) (sirius.ClientList, error) {

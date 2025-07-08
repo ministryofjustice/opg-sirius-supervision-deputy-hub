@@ -6,6 +6,7 @@ import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
 import ManageJumpMenus from "./javascript/manage-jump-menus";
 import CloseGcmIssue from "./javascript/close-gcm-issue";
+import ManageClient from "./javascript/manage-client";
 
 initAll();
 MojBannerAutoHide(document.querySelector(".app-main-class"));
@@ -73,6 +74,11 @@ jumpMenus.forEach(function (jumpMenu) {
 const closedGCMIssue = document.querySelectorAll('[data-module="close-gcm-issue"]');
 closedGCMIssue.forEach(function (closedGCMIssue) {
     new CloseGcmIssue(closedGCMIssue);
+});
+
+const manageClient = document.querySelectorAll('[data-module="manage-client"]');
+manageClient.forEach(function (manageClient) {
+    new ManageClient(manageClient);
 });
 
 function onHomePage() {
