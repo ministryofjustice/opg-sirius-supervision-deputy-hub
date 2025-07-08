@@ -1,0 +1,37 @@
+{{- /*gotype: github.com/ministryofjustice/opg-sirius-workflow/internal/server.ListPage*/ -}}
+{{ define "client-visits-panel" }}
+
+<section id="edit-panel">
+    <button type="button" id="manage-task" class="govuk-button govuk-button--blue hide js-mt-edit-btn">
+        Assign an assurance visit
+    </button>
+
+{{/*        {{ if .App.SuccessMessage }}*/}}
+{{/*            {{ template "success-banner" .App.SuccessMessage }}*/}}
+{{/*        {{ end }}*/}}
+
+    <div class="govuk-width-container hide js-mt-edit-panel">
+        <section class="moj-manage-list__edit-panel">
+            <header>
+                <div class="govuk-width-container">
+                    <h3 class="govuk-heading-s govuk-!-margin-0">Assign an assurance visit</h3>
+                </div>
+            </header>
+            <div class="govuk-width-container">
+                <h4 class="govuk-heading-s"><span class="count-checked-checkboxes js-mt-count">0</span> clients selected for assurance visit</h4>
+
+                <div class="govuk-form-group">
+                    <label class="govuk-label" for="dueDate">
+                        Set a due date
+                    </label>
+                    <input class="govuk-input govuk-input--width-10" id="dueDate" name="dueDate" type="date" value="">
+                </div>
+
+                <br>
+                <button id="edit-save" class="govuk-button govuk-!-margin-right-1" type="submit">Save and continue</button>
+                <a href="#" id="edit-cancel" class="govuk-button govuk-button--cancel govuk-!-margin-right-1 js-mt-cancel">Cancel</a>
+            </div>
+        </section>
+    </div>
+</section>
+{{ end }}
