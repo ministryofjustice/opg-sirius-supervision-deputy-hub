@@ -6,6 +6,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
@@ -72,22 +73,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		ctx := getContext(r)
 		var vars ListClientsVars
 
-		if r.Method == http.MethodPost {
-			err := r.ParseForm()
-			if err != nil {
-				return err
-			}
-			deputyId, _ := strconv.Atoi(r.PathValue("id"))
-
-			vars.SuccessMessage, err = client.AssignAssuranceVisitToClients(ctx, sirius.AssignAssuranceVisitToClientsParams{
-				DueDate:   r.FormValue("dueDate"),
-				ClientIds: r.Form["selected-clients"],
-			}, deputyId)
-
-			if err != nil {
-				return err
-			}
-		}
+		vars.AppVars = app
 
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 		urlParams := r.URL.Query()
@@ -180,7 +166,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.AppVars = app
 		vars.Sort = sort
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
@@ -196,6 +181,36 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			ElementName:     "clients",
 			PerPageOptions:  perPageOptions,
 			UrlBuilder:      vars.UrlBuilder,
+		}
+
+		if r.Method == http.MethodPost {
+			var err error
+			deputyId, _ := strconv.Atoi(r.PathValue("id"))
+			dueDate := r.FormValue("dueDate")
+
+			if dueDate == "" {
+				selectDueDateError := sirius.ValidationErrors{
+					"due-date": {"": "Enter a due date "},
+				}
+
+				vars.Errors = util.RenameErrors(selectDueDateError)
+			} else {
+				vars.AppVars = app
+
+				vars.SuccessMessage, err = client.AssignAssuranceVisitToClients(ctx, sirius.AssignAssuranceVisitToClientsParams{
+					DueDate:   r.FormValue("dueDate"),
+					ClientIds: r.Form["selected-clients"],
+				}, deputyId)
+
+				if verr, ok := err.(sirius.ValidationError); ok {
+					vars.Errors = util.RenameErrors(verr.Errors)
+
+					return tmpl.ExecuteTemplate(w, "page", vars)
+				}
+				if err != nil {
+					return err
+				}
+			}
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
