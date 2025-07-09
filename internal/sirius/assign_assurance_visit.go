@@ -8,7 +8,7 @@ import (
 )
 
 type AssignAssuranceVisitToClientsParams struct {
-	DueDate   string
+	DueDate   string   `json:"dueDate"`
 	ClientIds []string `json:"clientIds"`
 }
 
