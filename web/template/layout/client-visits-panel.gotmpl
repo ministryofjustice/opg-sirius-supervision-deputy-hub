@@ -4,11 +4,13 @@
     <button type="button" id="manage-task" class="govuk-button govuk-button--blue hide js-mt-edit-btn">
         Assign an assurance visit
     </button>
-
     {{ if .SuccessMessage }}
         {{ template "success-banner" . }}
     {{ end }}
 
+    {{ if .Errors }}
+        {{ template "error-summary" .Errors }}
+    {{ end }}
     <div class="govuk-width-container hide js-mt-edit-panel">
         <section class="moj-manage-list__edit-panel">
             <header>
@@ -16,7 +18,7 @@
                     <h3 class="govuk-heading-s govuk-!-margin-0">Assign an assurance visit</h3>
                 </div>
             </header>
-            <input type="hidden" name="xsrfToken" value="{{ .AppVars.XSRFToken }}"  class="js-xsrfToken"/>
+            <input type="hidden" name="xsrfToken" value="{{ .AppVars.XSRFToken }}" class="js-xsrfToken"/>
             <div class="govuk-width-container">
                 <h4 class="govuk-heading-s"><span class="count-checked-checkboxes js-mt-count">0</span> clients selected for assurance visit</h4>
 
