@@ -8,7 +8,7 @@ import (
 )
 
 type AssignAssuranceVisitToClientsParams struct {
-	DueDate   string
+	DueDate   string   `json:"dueDate"`
 	ClientIds []string `json:"clientIds"`
 }
 
@@ -18,13 +18,12 @@ type ReassignResponse struct {
 
 func (c *Client) AssignAssuranceVisitToClients(ctx Context, params AssignAssuranceVisitToClientsParams, deputyId int) (string, error) {
 	var body bytes.Buffer
-	var err error
 
-	err = json.NewEncoder(&body).Encode(params)
-
+	err := json.NewEncoder(&body).Encode(params)
 	if err != nil {
 		return "", err
 	}
+
 	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/bulk-assurance-visit-tasks", deputyId), &body)
 
 	if err != nil {
@@ -43,13 +42,13 @@ func (c *Client) AssignAssuranceVisitToClients(ctx Context, params AssignAssuran
 		return "", ErrUnauthorized
 	}
 
-	if resp.StatusCode != http.StatusCreated {
+	if resp.StatusCode >= 300 {
 		var v struct {
 			ValidationErrors ValidationErrors `json:"validation_errors"`
 		}
 
 		if err := json.NewDecoder(resp.Body).Decode(&v); err == nil && len(v.ValidationErrors) > 0 {
-			return "", &ValidationError{
+			return "", ValidationError{
 				Errors: v.ValidationErrors,
 			}
 		}
