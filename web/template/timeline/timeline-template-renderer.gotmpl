@@ -68,4 +68,7 @@
     {{ if eq .EventType "MonthlySpreadsheetIssued" }}
         {{ template "monthly-spreadsheet-issued" . }}
     {{ end }}
+    {{ if eq .EventType "BulkAssuranceVisitTasks" }}
+        {{ template "bulk-assurance-visit-tasks" . }}
+    {{ end }}
 {{ end }}

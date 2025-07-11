@@ -9,13 +9,14 @@ import (
 )
 
 type AppVars struct {
-	Path          string
-	XSRFToken     string
-	UserDetails   sirius.UserDetails
-	DeputyDetails sirius.DeputyDetails
-	PageName      string
-	Error         string
-	Errors        sirius.ValidationErrors
+	Path           string
+	XSRFToken      string
+	UserDetails    sirius.UserDetails
+	DeputyDetails  sirius.DeputyDetails
+	SuccessMessage string
+	PageName       string
+	Error          string
+	Errors         sirius.ValidationErrors
 	EnvironmentVars
 }
 

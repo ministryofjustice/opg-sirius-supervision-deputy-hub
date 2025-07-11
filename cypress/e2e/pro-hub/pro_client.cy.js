@@ -10,9 +10,10 @@ describe("Clients tab", () => {
     });
 
     it("displays 7 column headings", () => {
-        cy.get(".govuk-table__row").find("th").should("have.length", 8);
+        cy.get(".govuk-table__row").find("th").should("have.length", 9);
 
         const expected = [
+            "",
             "Client",
             "Accommodation type",
             "Order made date",

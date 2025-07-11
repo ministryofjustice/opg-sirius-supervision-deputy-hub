@@ -187,6 +187,9 @@ var validationMappings = map[string]map[string]pair{
 	"caseRecNumber": {
 		"checksumFailed": pair{"caseRecNumber", "Case number not recognised"},
 	},
+	"assuranceVisitTaskDueDate": {
+		"error": pair{"assuranceVisitTaskDueDate", "The due date must be today or in the future"},
+	},
 }
 
 func RenameErrors(siriusError sirius.ValidationErrors) sirius.ValidationErrors {
