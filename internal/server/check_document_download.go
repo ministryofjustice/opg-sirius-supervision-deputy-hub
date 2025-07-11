@@ -11,7 +11,7 @@ type CheckDocumentDownload interface {
 	CheckDocumentDownload(ctx sirius.Context, documentId int) error
 }
 
-func renderTemplateForCheckDocument(client CheckDocumentDownload) Handler {
+func checkDocument(client CheckDocumentDownload) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		if r.Method != http.MethodHead && r.Method != http.MethodGet {
 			return StatusError(http.StatusMethodNotAllowed)

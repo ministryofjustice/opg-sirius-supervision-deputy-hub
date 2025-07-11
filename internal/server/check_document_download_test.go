@@ -33,7 +33,7 @@ func TestCheckDocumentDownloadWhenSuccessful(t *testing.T) {
 	r.SetPathValue("id", "456")
 	r.SetPathValue("documentId", "123")
 
-	handler := renderTemplateForCheckDocument(client)
+	handler := checkDocument(client)
 	err := handler(AppVars{}, w, r)
 
 	assert.Nil(err)
@@ -52,7 +52,7 @@ func TestCheckDocumentDownloadWhenMethodNotAllowed(t *testing.T) {
 	r.SetPathValue("id", "456")
 	r.SetPathValue("documentId", "123")
 
-	handler := renderTemplateForCheckDocument(client)
+	handler := checkDocument(client)
 	err := handler(AppVars{}, w, r)
 
 	assert.Equal(StatusError(http.StatusMethodNotAllowed), err)
@@ -70,7 +70,7 @@ func TestCheckDocumentDownloadReturnsError(t *testing.T) {
 	r.SetPathValue("id", "456")
 	r.SetPathValue("documentId", "123")
 
-	handler := renderTemplateForCheckDocument(client)
+	handler := checkDocument(client)
 	err := handler(AppVars{}, w, r)
 
 	assert.Equal(expectedError, err)
