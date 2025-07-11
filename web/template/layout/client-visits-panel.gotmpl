@@ -9,11 +9,11 @@
     {{ end }}
 
     {{ if .Errors }}
-        {{ template "error-summary" .Errors }}
+        {{ template "error-banner" . }}
     {{ end }}
     <div class="govuk-width-container hide js-mt-edit-panel">
         <section class="moj-manage-list__edit-panel">
-            <header>
+            <header id="edit-assign-title">
                 <div class="govuk-width-container">
                     <h3 class="govuk-heading-s govuk-!-margin-0">Assign an assurance visit</h3>
                 </div>

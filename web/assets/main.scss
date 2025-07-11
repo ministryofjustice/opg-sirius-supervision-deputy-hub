@@ -73,3 +73,11 @@ $govuk-assets-path: "/supervision/deputies/static/assets/";
     background: govuk-colour("dark-blue");
   }
 }
+
+#edit-assign-title {
+    display: block;
+}
+
+#error-banner-message {
+    color: #d4351c;;
+}
