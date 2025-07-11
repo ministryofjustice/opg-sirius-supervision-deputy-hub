@@ -7,16 +7,12 @@ import (
 	"net/http"
 )
 
-type AssignAssuranceVisitToClientsParams struct {
+type BulkAssignAssuranceVisitTasksToClientsParams struct {
 	DueDate   string   `json:"dueDate"`
 	ClientIds []string `json:"clientIds"`
 }
 
-type ReassignResponse struct {
-	ReassignName string `json:"reassignName"`
-}
-
-func (c *Client) AssignAssuranceVisitToClients(ctx Context, params AssignAssuranceVisitToClientsParams, deputyId int) (string, error) {
+func (c *Client) BulkAssignAssuranceVisitTasksToClients(ctx Context, params BulkAssignAssuranceVisitTasksToClientsParams, deputyId int) (string, error) {
 	var body bytes.Buffer
 
 	err := json.NewEncoder(&body).Encode(params)
@@ -37,10 +33,6 @@ func (c *Client) AssignAssuranceVisitToClients(ctx Context, params AssignAssuran
 	}
 
 	defer unchecked(resp.Body.Close)
-
-	if resp.StatusCode == http.StatusUnauthorized {
-		return "", ErrUnauthorized
-	}
 
 	if resp.StatusCode >= 300 {
 		var v struct {

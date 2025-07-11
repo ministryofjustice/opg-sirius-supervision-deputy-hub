@@ -17,7 +17,7 @@ type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
 	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
-	AssignAssuranceVisitToClients(sirius.Context, sirius.AssignAssuranceVisitToClientsParams, int) (string, error)
+	BulkAssignAssuranceVisitTasksToClients(sirius.Context, sirius.BulkAssignAssuranceVisitTasksToClientsParams, int) (string, error)
 }
 
 type ListClientsVars struct {
@@ -189,18 +189,17 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			dueDate := r.FormValue("dueDate")
 			if dueDate == "" {
 				selectDueDateError := sirius.ValidationErrors{
-					"due-date": {"": "Enter a due date "},
+					"due-date": {"": "Enter a due date"},
 				}
 
 				vars.Errors = util.RenameErrors(selectDueDateError)
 			} else {
 				vars.AppVars = app
 
-				vars.SuccessMessage, err = client.AssignAssuranceVisitToClients(ctx, sirius.AssignAssuranceVisitToClientsParams{
+				vars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
 					DueDate:   r.FormValue("dueDate"),
 					ClientIds: r.Form["selected-clients"],
 				}, deputyId)
-
 				if verr, ok := err.(sirius.ValidationError); ok {
 					vars.Errors = util.RenameErrors(verr.Errors)
 					return tmpl.ExecuteTemplate(w, "page", vars)

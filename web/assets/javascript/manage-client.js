@@ -14,6 +14,12 @@ export default class ManageClient {
         this.baseUrl = document.querySelector("[name=api-base-uri]").getAttribute("content");
 
         this._setupEventListeners();
+        const dueDateInput = document.getElementById("dueDate");
+        if (dueDateInput) {
+            const today = new Date().toISOString().split("T")[0];
+            dueDateInput.value = today;
+            dueDateInput.min = today;
+        }
     }
 
     _setupEventListeners() {

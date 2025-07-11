@@ -63,5 +63,34 @@ describe("Clients tab", () => {
             cy.get(":nth-child(2) > .rem-warning").should("contain", "REM warning");
             cy.get(":nth-child(3) > .rem-warning").should("not.exist");
         });
+
+        it("check clients shows assurance visit button and correct error if no due date", () => {
+            cy.setCookie("success-route", "/deputies/1");
+
+            cy.get(
+                ":nth-child(1) > .govuk-table__select > .govuk-checkboxes > .govuk-checkboxes__item > #select-client-71",
+            ).check();
+            cy.get(
+                ":nth-child(2) > .govuk-table__select > .govuk-checkboxes > .govuk-checkboxes__item > #select-client-74",
+            ).check();
+            cy.get("#manage-task").click();
+            cy.get(".count-checked-checkboxes").contains("2");
+            cy.get("#edit-save").click();
+            cy.get(".moj-banner--success").should("contain", "You have assigned 2 clients for an assurance visit");
+        });
+
+        it("check clients shows assurance visit button and correct error if no due date", () => {
+            cy.get(
+                ":nth-child(1) > .govuk-table__select > .govuk-checkboxes > .govuk-checkboxes__item > #select-client-71",
+            ).check();
+            cy.get(
+                ":nth-child(2) > .govuk-table__select > .govuk-checkboxes > .govuk-checkboxes__item > #select-client-74",
+            ).check();
+            cy.get("#manage-task").click();
+            cy.get(".count-checked-checkboxes").contains("2");
+            cy.get("#dueDate").clear();
+            cy.get("#edit-save").click();
+            cy.get(".govuk-error-summary").contains("Enter a due date");
+        });
     });
 });
