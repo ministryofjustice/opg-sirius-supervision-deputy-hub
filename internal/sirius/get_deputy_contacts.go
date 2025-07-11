@@ -38,7 +38,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 	var contactList ContactList
 	var apiContacts []ApiContact
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/contacts", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/contacts", deputyId), nil)
 
 	if err != nil {
 		return contactList, err
@@ -49,7 +49,7 @@ func (c *Client) GetDeputyContacts(ctx Context, deputyId int) (ContactList, erro
 		return contactList, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return contactList, ErrUnauthorized

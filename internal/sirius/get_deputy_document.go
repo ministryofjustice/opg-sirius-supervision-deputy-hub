@@ -10,7 +10,7 @@ import (
 func (c *Client) GetDocumentById(ctx Context, deputyId, documentId int) (model.Document, error) {
 	var document model.Document
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/documents/%d", deputyId, documentId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/documents/%d", deputyId, documentId), nil)
 
 	if err != nil {
 		return document, err
@@ -22,7 +22,7 @@ func (c *Client) GetDocumentById(ctx Context, deputyId, documentId int) (model.D
 		return document, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return document, ErrUnauthorized

@@ -37,7 +37,7 @@ scan: setup-directories
 	docker compose run --rm trivy image --format sarif --output /test-results/trivy.sarif --exit-code 1 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
 
 cypress: setup-directories build-all
-	docker compose up -d --wait deputy-hub
+	docker compose up -d --wait deputy-hub json-server
 	docker compose run --rm cypress run --env grepUntagged=true
 
 axe: setup-directories build-all

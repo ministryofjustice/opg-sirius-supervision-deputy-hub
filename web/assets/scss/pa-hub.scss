@@ -321,6 +321,14 @@
   text-decoration: none;
 }
 
+.govuk-details__fixed-table {
+  table-layout: fixed;
+}
+
+.govuk-details__fixed-width {
+  width: 33%;
+}
+
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
 a[href^="mailto:"] {
   color: $govuk-link-visited-colour;

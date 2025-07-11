@@ -21,7 +21,7 @@ type TaskList struct {
 func (c *Client) GetTasks(ctx Context, deputyId int) (TaskList, error) {
 	var t TaskList
 
-	requestURL := fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/tasks?filter=status:Not+started&sort=dueDate:asc", deputyId)
 	req, err := c.newRequest(ctx, http.MethodGet, requestURL, nil)
 	if err != nil {
 		return t, err
@@ -32,7 +32,7 @@ func (c *Client) GetTasks(ctx Context, deputyId int) (TaskList, error) {
 		return t, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return t, ErrUnauthorized

@@ -27,7 +27,9 @@ type DocumentNote struct {
 }
 
 func EncodeFileToBase64(file multipart.File) (string, error) {
-	defer file.Close()
+	defer func() {
+		_ = file.Close()
+	}()
 
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, file); err != nil {
