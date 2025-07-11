@@ -3,9 +3,13 @@ package sirius
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/ministryofjustice/opg-go-common/telemetry"
 )
 
 func (c *Client) CheckDocumentDownload(ctx Context, documentId int) error {
+	logger := telemetry.NewLogger("opg-sirius-supervision-deputy-hub ")
+
 	req, err := c.newRequest(ctx, http.MethodHead, fmt.Sprintf(SupervisionAPIPath+"/v1/documents/%d/download", documentId), nil)
 
 	if err != nil {
@@ -16,7 +20,12 @@ func (c *Client) CheckDocumentDownload(ctx Context, documentId int) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+
+	defer func() {
+		if cerr := resp.Body.Close(); cerr != nil {
+			logger.Error(cerr.Error(), "error", cerr)
+		}
+	}()
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
