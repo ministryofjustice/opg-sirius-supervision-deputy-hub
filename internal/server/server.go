@@ -40,6 +40,7 @@ type Client interface {
 	CompleteTask
 	AddGcmIssue
 	GetGcmIssues
+	CheckDocumentDownload
 }
 
 type Template interface {
@@ -86,6 +87,7 @@ func New(logger *slog.Logger, client Client, templates map[string]*template.Temp
 	mux.Handle("/{id}/gcm-issues/open-issues", wrap(renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
 	mux.Handle("/{id}/gcm-issues/closed-issues", wrap(renderTemplateForGcmIssues(client, templates["gcm-issues-list.gotmpl"])))
 	mux.Handle("/{id}/gcm-issues/add", wrap(renderTemplateForAddGcmIssue(client, templates["add-gcm-issue.gotmpl"])))
+	mux.Handle("/{id}/documents/{documentId}/check", wrap(checkDocument(client)))
 
 	// Health check
 	mux.Handle("/health-check", healthCheck())

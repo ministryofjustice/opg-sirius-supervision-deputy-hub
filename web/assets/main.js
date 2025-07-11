@@ -4,6 +4,7 @@ import MojBannerAutoHide from "./javascript/moj-banner-auto-hide";
 import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
+import DownloadChecker from "./javascript/download-checker";
 import ManageJumpMenus from "./javascript/manage-jump-menus";
 import CloseGcmIssue from "./javascript/close-gcm-issue";
 
@@ -73,6 +74,11 @@ jumpMenus.forEach(function (jumpMenu) {
 const closedGCMIssue = document.querySelectorAll('[data-module="close-gcm-issue"]');
 closedGCMIssue.forEach(function (closedGCMIssue) {
     new CloseGcmIssue(closedGCMIssue);
+});
+
+const documentList = document.querySelectorAll('[data-module="document-list"]');
+documentList.forEach(function (documentListElement) {
+    new DownloadChecker(documentListElement);
 });
 
 function onHomePage() {
