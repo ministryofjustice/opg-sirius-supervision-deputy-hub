@@ -4,7 +4,6 @@ import MojBannerAutoHide from "./javascript/moj-banner-auto-hide";
 import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
-import DownloadChecker from "./javascript/download-checker";
 import ManageJumpMenus from "./javascript/manage-jump-menus";
 import CloseGcmIssue from "./javascript/close-gcm-issue";
 import ManageClient from "./javascript/manage-client";
