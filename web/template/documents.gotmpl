@@ -5,11 +5,6 @@
     {{ if .SuccessMessage }}
         {{ template "success-banner" . }}
     {{ end }}
-    <div id="error-banner" class="moj-banner moj-banner--error govuk-!-margin-bottom-6" hidden>
-        <div class="moj-banner__message" id="error-banner-message">
-            There was a problem downloading the document.
-        </div>
-    </div>
     {{ template "content-header" . }}
     {{ template "navigation" . }}
 
@@ -29,7 +24,7 @@
                 </a>
         </div>
     </header>
-    <section data-module="document-list">
+    <section>
         <div class="govuk-grid-row govuk-!-margin-top-6">
             <div id="table-column" class="govuk-grid-column-three-quarters">
                 <div class="govuk-grid-row">

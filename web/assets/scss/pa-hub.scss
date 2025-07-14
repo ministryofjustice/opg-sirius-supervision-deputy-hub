@@ -122,18 +122,6 @@
         &.sentence-case::first-letter {
           text-transform: capitalize;
         }
-
-        &.infected-label {
-          color: govuk-colour(red) !important;
-          border: 2px solid govuk-colour(red) !important;
-          padding: 3px 11px;
-          display: inline;
-          margin-left: 10px;
-
-          &[hidden] {
-            display: none;
-          }
-        }
       }
     }
     td.overdue span {
