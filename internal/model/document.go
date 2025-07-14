@@ -18,6 +18,7 @@ type Document struct {
 	ReceivedDateTime    string       `json:"receivedDateTime"`
 	Note                DocumentNote `json:"note"`
 	ReformattedTime     string
+	Infected            bool `json:"infected"`
 }
 
 type DocumentNote struct {
