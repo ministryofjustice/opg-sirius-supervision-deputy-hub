@@ -11,9 +11,7 @@ export default class DownloadChecker {
                 e.preventDefault();
                 const deputyId = this.getAttribute("data-deputy-id");
                 const docId = this.getAttribute("data-document-id");
-                const baseUrl = document
-                        .querySelector("[name=api-base-uri]")
-                        .getAttribute("content");
+                const baseUrl = document.querySelector("[name=api-base-uri]").getAttribute("content");
                 const checkUrl = `${baseUrl}/supervision/deputies/${deputyId}/documents/${docId}/check`;
                 const downloadUrl = this.getAttribute("href"); // Get the original download URL
 
@@ -45,7 +43,7 @@ export default class DownloadChecker {
                     // Trigger download by navigating to the original download URL
                     window.location.href = downloadUrl;
                 } catch (err) {
-                    console.log('err', err);
+                    console.log("err", err);
 
                     if (banner) {
                         banner.hidden = false;
