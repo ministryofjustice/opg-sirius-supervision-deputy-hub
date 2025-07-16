@@ -35,6 +35,11 @@
                 <div class="govuk-grid-row">
                     <div class="govuk-grid-column-full">
                         <form method="post">
+                            <input
+                                type="hidden"
+                                name="xsrfToken"
+                                value="{{ .XSRFToken }}" 
+                                class="js-xsrfToken" />
                             {{ template "document-list" . }}
                         </form>
                     </div>
