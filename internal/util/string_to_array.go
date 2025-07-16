@@ -4,8 +4,8 @@ import (
 	"strings"
 )
 
-func StringToArray(newValue string) []string {
-	items := strings.Split(newValue, ",")
+func StringToArray(input string) []string {
+	items := strings.Split(input, ",")
 	var result []string
 
 	for _, item := range items {

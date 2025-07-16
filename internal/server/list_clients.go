@@ -196,13 +196,12 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			} else {
 				vars.AppVars = app
 
-				vars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
+				vars.AppVars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
 					DueDate:   r.FormValue("dueDate"),
 					ClientIds: r.Form["selected-clients"],
 				}, deputyId)
 				if verr, ok := err.(sirius.ValidationError); ok {
 					vars.Errors = util.RenameErrors(verr.Errors)
-					return tmpl.ExecuteTemplate(w, "page", vars)
 				}
 				if err != nil {
 					return err

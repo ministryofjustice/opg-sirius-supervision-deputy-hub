@@ -161,521 +161,70 @@ func TestPostBulkAssuranceVisitTasksReturnsErrorWithDueDate(t *testing.T) {
 	}
 
 	assert.Equal(ListClientsVars{
-		Clients: sirius.ClientList{
-			Clients: []sirius.DeputyClient(nil),
-			Pages: sirius.Page{
-				PageCurrent: 0,
-				PageTotal:   0,
-			},
-			TotalClients: 0,
-			Metadata: sirius.Metadata{
-				TotalActiveClients: 0,
-			},
-		},
-		SuccessMessage: "",
 		ListPage: ListPage{
 			AppVars: AppVars{
-				Path:      "",
-				XSRFToken: "",
-				UserDetails: sirius.UserDetails{
-					ID:       0,
-					Roles:    []string(nil),
-					Username: "",
-				},
-				DeputyDetails: sirius.DeputyDetails{
-					ID:              0,
-					DeputyFirstName: "",
-					DeputySurname:   "",
-					DeputyCasrecId:  0,
-					DisplayName:     "",
-					CanDelete:       false,
-					DeputyNumber:    0,
-					DeputySubType: sirius.DeputySubType{
-						SubType: "",
-					},
-					DeputyStatus: "",
-					DeputyImportantInformation: sirius.DeputyImportantInformation{
-						Id: 0,
-						AnnualBillingInvoice: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						APAD: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						BankCharges: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						Complaints: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						IndependentVisitorCharges: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						MonthlySpreadsheet: sirius.HandleLabel{
-							Handle: "",
-							Label:  "",
-						},
-						PanelDeputy: false,
-					},
-				},
-				SuccessMessage: "",
-				PageName:       "Clients",
-				Error:          "",
-				Errors:         expectedValidationErrors,
-				EnvironmentVars: EnvironmentVars{
-					Port:            "",
-					WebDir:          "",
-					SiriusURL:       "",
-					SiriusPublicURL: "",
-					FirmHubURL:      "",
-					Prefix:          "",
-					DefaultPaTeam:   0,
-					DefaultProTeam:  0,
-					Features:        []string(nil),
-				},
+				PageName: "Clients",
+				Errors:   expectedValidationErrors,
 			},
-			AppliedFilters: []string(nil),
 			Sort: urlbuilder.Sort{
-				OrderBy:    "surname",
-				Descending: false,
+				OrderBy: "surname",
 			},
-			Error: "",
 			Pagination: paginate.Pagination{
-				CurrentPage:     0,
-				TotalPages:      0,
-				TotalElements:   0,
 				ElementsPerPage: 25,
 				ElementName:     "clients",
 				PerPageOptions:  []int{25, 50, 100},
 				UrlBuilder: urlbuilder.UrlBuilder{
 					OriginalPath:    "clients",
 					SelectedPerPage: 25,
-					SelectedFilters: []urlbuilder.Filter{{
-						Name:                  "order-status",
-						SelectedValues:        []string(nil),
-						ClearBetweenTeamViews: false},
-						{
-							Name:                  "accommodation",
-							SelectedValues:        []string(nil),
-							ClearBetweenTeamViews: false},
-						{
-							Name:                  "supervision-level",
-							SelectedValues:        []string(nil),
-							ClearBetweenTeamViews: false},
+					SelectedFilters: []urlbuilder.Filter{
+						{Name: "order-status"},
+						{Name: "accommodation"},
+						{Name: "supervision-level"},
 					},
 					SelectedSort: urlbuilder.Sort{
-						OrderBy:    "surname",
-						Descending: false},
+						OrderBy: "surname",
+					},
 				},
 			},
 			PerPage: 25,
 			UrlBuilder: urlbuilder.UrlBuilder{
 				OriginalPath:    "clients",
 				SelectedPerPage: 25,
-				SelectedFilters: []urlbuilder.Filter{{
-					Name:                  "order-status",
-					SelectedValues:        []string(nil),
-					ClearBetweenTeamViews: false,
-				},
-					{
-						Name:                  "accommodation",
-						SelectedValues:        []string(nil),
-						ClearBetweenTeamViews: false,
-					},
-					{
-						Name:                  "supervision-level",
-						SelectedValues:        []string(nil),
-						ClearBetweenTeamViews: false},
+				SelectedFilters: []urlbuilder.Filter{
+					{Name: "order-status"},
+					{Name: "accommodation"},
+					{Name: "supervision-level"},
 				},
 				SelectedSort: urlbuilder.Sort{
-					OrderBy:    "surname",
-					Descending: false,
+					OrderBy: "surname",
 				},
 			},
 		},
 		FilterByOrderStatus: FilterByOrderStatus{
-			ListPage: ListPage{
-				AppVars: AppVars{
-					Path:      "",
-					XSRFToken: "",
-					UserDetails: sirius.UserDetails{
-						ID:       0,
-						Roles:    []string(nil),
-						Username: "",
-					},
-					DeputyDetails: sirius.DeputyDetails{
-						ID:              0,
-						DeputyFirstName: "",
-						DeputySurname:   "",
-						DeputyCasrecId:  0,
-						DisplayName:     "",
-						CanDelete:       false,
-						DeputyNumber:    0,
-						DeputySubType: sirius.DeputySubType{
-							SubType: "",
-						},
-						DeputyStatus: "",
-						DeputyImportantInformation: sirius.DeputyImportantInformation{
-							Id: 0,
-							AnnualBillingInvoice: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							APAD: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							BankCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							Complaints: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							IndependentVisitorCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							MonthlySpreadsheet: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							PanelDeputy: false,
-							ReportSystem: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							OtherImportantInformation: "",
-						},
-						OrganisationName:                 "",
-						OrganisationTeamOrDepartmentName: "",
-						Email:                            "",
-						PhoneNumber:                      "",
-						AddressLine1:                     "",
-						AddressLine2:                     "",
-						AddressLine3:                     "",
-						Town:                             "",
-						County:                           "",
-						Postcode:                         "",
-						ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-							EcmId:     0,
-							EcmName:   "",
-							IsDefault: false,
-						},
-						DeputyType: sirius.DeputyType{
-							Handle: "",
-							Label:  "",
-						},
-						Firm: sirius.Firm{
-							FirmName:   "",
-							FirmId:     0,
-							FirmNumber: 0,
-						},
-					},
-					SuccessMessage: "",
-					PageName:       "",
-					Error:          "",
-					Errors:         sirius.ValidationErrors(nil),
-					EnvironmentVars: EnvironmentVars{
-						Port:            "",
-						WebDir:          "",
-						SiriusURL:       "",
-						SiriusPublicURL: "",
-						FirmHubURL:      "",
-						Prefix:          "",
-						DefaultPaTeam:   0,
-						DefaultProTeam:  0,
-						Features:        []string(nil)}},
-				AppliedFilters: []string(nil),
-				Sort: urlbuilder.Sort{
-					OrderBy:    "",
-					Descending: false,
-				},
-				Error: "",
-				Pagination: paginate.Pagination{
-					CurrentPage:     0,
-					TotalPages:      0,
-					TotalElements:   0,
-					ElementsPerPage: 0,
-					ElementName:     "",
-					PerPageOptions:  []int(nil),
-					UrlBuilder:      paginate.UrlBuilder(nil)},
-				PerPage: 0,
-				UrlBuilder: urlbuilder.UrlBuilder{
-					OriginalPath:    "",
-					SelectedPerPage: 0,
-					SelectedFilters: []urlbuilder.Filter(nil),
-					SelectedSort: urlbuilder.Sort{
-						OrderBy:    "",
-						Descending: false},
-				}},
 			OrderStatusOptions: []model.RefData{
 				{
+					Handle: "ACTIVE",
+					Label:  "Active",
+				},
+				{
+					Handle: "CLOSED",
+					Label:  "Closed",
+				},
+			},
+			OrderStatuses: []model.OrderStatus{
+				{
 					Handle:     "ACTIVE",
-					Label:      "Active",
-					Deprecated: false,
+					Incomplete: "Active",
+					Category:   "Active",
+					Complete:   "Active",
 				},
 				{
 					Handle:     "CLOSED",
-					Label:      "Closed",
-					Deprecated: false,
+					Incomplete: "Closed",
+					Category:   "Closed",
+					Complete:   "Closed",
 				},
 			},
-			SelectedOrderStatuses: []string(nil),
-			OrderStatuses: []model.OrderStatus{
-				{
-					Handle:      "ACTIVE",
-					Incomplete:  "Active",
-					Category:    "Active",
-					Complete:    "Active",
-					StatusCount: 0,
-				},
-				{
-					Handle:      "CLOSED",
-					Incomplete:  "Closed",
-					Category:    "Closed",
-					Complete:    "Closed",
-					StatusCount: 0,
-				},
-			},
-		},
-		FilterByAccommodation: FilterByAccommodation{
-			ListPage: ListPage{
-				AppVars: AppVars{
-					Path:      "",
-					XSRFToken: "",
-					UserDetails: sirius.UserDetails{
-						ID:       0,
-						Roles:    []string(nil),
-						Username: "",
-					},
-					DeputyDetails: sirius.DeputyDetails{
-						ID:              0,
-						DeputyFirstName: "",
-						DeputySurname:   "",
-						DeputyCasrecId:  0,
-						DisplayName:     "",
-						CanDelete:       false,
-						DeputyNumber:    0,
-						DeputySubType: sirius.DeputySubType{
-							SubType: "",
-						},
-						DeputyStatus: "",
-						DeputyImportantInformation: sirius.DeputyImportantInformation{
-							Id: 0,
-							AnnualBillingInvoice: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							APAD: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							BankCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							Complaints: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							IndependentVisitorCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							MonthlySpreadsheet: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							PanelDeputy: false,
-							ReportSystem: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							OtherImportantInformation: "",
-						},
-						OrganisationName:                 "",
-						OrganisationTeamOrDepartmentName: "",
-						Email:                            "",
-						PhoneNumber:                      "",
-						AddressLine1:                     "",
-						AddressLine2:                     "",
-						AddressLine3:                     "",
-						Town:                             "",
-						County:                           "",
-						Postcode:                         "",
-						ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-							EcmId:     0,
-							EcmName:   "",
-							IsDefault: false,
-						},
-						DeputyType: sirius.DeputyType{
-							Handle: "",
-							Label:  "",
-						},
-						Firm: sirius.Firm{
-							FirmName:   "",
-							FirmId:     0,
-							FirmNumber: 0,
-						}},
-					SuccessMessage: "",
-					PageName:       "",
-					Error:          "",
-					Errors:         sirius.ValidationErrors(nil),
-					EnvironmentVars: EnvironmentVars{
-						Port:            "",
-						WebDir:          "",
-						SiriusURL:       "",
-						SiriusPublicURL: "",
-						FirmHubURL:      "",
-						Prefix:          "",
-						DefaultPaTeam:   0,
-						DefaultProTeam:  0,
-						Features:        []string(nil)}},
-				AppliedFilters: []string(nil),
-				Sort: urlbuilder.Sort{
-					OrderBy:    "",
-					Descending: false,
-				},
-				Error: "",
-				Pagination: paginate.Pagination{
-					CurrentPage:     0,
-					TotalPages:      0,
-					TotalElements:   0,
-					ElementsPerPage: 0,
-					ElementName:     "",
-					PerPageOptions:  []int(nil),
-					UrlBuilder:      paginate.UrlBuilder(nil)},
-				PerPage: 0,
-				UrlBuilder: urlbuilder.UrlBuilder{
-					OriginalPath:    "",
-					SelectedPerPage: 0,
-					SelectedFilters: []urlbuilder.Filter(nil),
-					SelectedSort:    urlbuilder.Sort{OrderBy: "", Descending: false}}},
-			AccommodationTypes:         []model.RefData(nil),
-			SelectedAccommodationTypes: []string(nil),
-		},
-		FilterBySupervisionLevel: FilterBySupervisionLevel{
-			ListPage: ListPage{
-				AppVars: AppVars{
-					Path:      "",
-					XSRFToken: "",
-					UserDetails: sirius.UserDetails{
-						ID:       0,
-						Roles:    []string(nil),
-						Username: ""},
-					DeputyDetails: sirius.DeputyDetails{
-						ID:              0,
-						DeputyFirstName: "",
-						DeputySurname:   "",
-						DeputyCasrecId:  0,
-						DisplayName:     "",
-						CanDelete:       false,
-						DeputyNumber:    0,
-						DeputySubType: sirius.DeputySubType{
-							SubType: "",
-						},
-						DeputyStatus: "",
-						DeputyImportantInformation: sirius.DeputyImportantInformation{
-							Id: 0,
-							AnnualBillingInvoice: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							APAD: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							BankCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							Complaints: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							IndependentVisitorCharges: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							MonthlySpreadsheet: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							PanelDeputy: false,
-							ReportSystem: sirius.HandleLabel{
-								Handle: "",
-								Label:  "",
-							},
-							OtherImportantInformation: "",
-						},
-						OrganisationName:                 "",
-						OrganisationTeamOrDepartmentName: "",
-						Email:                            "",
-						PhoneNumber:                      "",
-						AddressLine1:                     "",
-						AddressLine2:                     "",
-						AddressLine3:                     "",
-						Town:                             "",
-						County:                           "",
-						Postcode:                         "",
-						ExecutiveCaseManager: sirius.ExecutiveCaseManager{
-							EcmId:     0,
-							EcmName:   "",
-							IsDefault: false,
-						},
-						DeputyType: sirius.DeputyType{
-							Handle: "",
-							Label:  "",
-						},
-						Firm: sirius.Firm{
-							FirmName:   "",
-							FirmId:     0,
-							FirmNumber: 0}},
-					SuccessMessage: "",
-					PageName:       "",
-					Error:          "",
-					Errors:         sirius.ValidationErrors(nil),
-					EnvironmentVars: EnvironmentVars{
-						Port:            "",
-						WebDir:          "",
-						SiriusURL:       "",
-						SiriusPublicURL: "",
-						FirmHubURL:      "",
-						Prefix:          "",
-						DefaultPaTeam:   0,
-						DefaultProTeam:  0,
-						Features:        []string(nil)}},
-				AppliedFilters: []string(nil),
-				Sort: urlbuilder.Sort{
-					OrderBy:    "",
-					Descending: false,
-				},
-				Error: "",
-				Pagination: paginate.Pagination{
-					CurrentPage:     0,
-					TotalPages:      0,
-					TotalElements:   0,
-					ElementsPerPage: 0,
-					ElementName:     "",
-					PerPageOptions:  []int(nil),
-					UrlBuilder:      paginate.UrlBuilder(nil)},
-				PerPage: 0,
-				UrlBuilder: urlbuilder.UrlBuilder{
-					OriginalPath:    "",
-					SelectedPerPage: 0,
-					SelectedFilters: []urlbuilder.Filter(nil),
-					SelectedSort: urlbuilder.Sort{
-						OrderBy:    "",
-						Descending: false}}},
-			SupervisionLevels:         []model.RefData(nil),
-			SelectedSupervisionLevels: []string(nil),
 		},
 	}, template.lastVars)
 

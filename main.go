@@ -64,8 +64,8 @@ func main() {
 			"translate":       util.Translate,
 			"feature_flagged": util.IsFeatureFlagged(envVars.Features),
 			"is_last":         util.IsLast,
-			"stringToArray": func(newValue string) []string {
-				return util.StringToArray(newValue)
+			"stringToArray": func(input string) []string {
+				return util.StringToArray(input)
 			},
 		}).
 		ParseGlob(envVars.WebDir + "/template/*/*.gotmpl")
