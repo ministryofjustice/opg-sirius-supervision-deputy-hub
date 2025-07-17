@@ -4,7 +4,7 @@
     <button type="button" id="manage-task" class="govuk-button govuk-button--blue hide js-mt-edit-btn">
         Assign an assurance visit
     </button>
-    {{ if .AppVars.SuccessMessage }}
+    {{ if .SuccessMessage }}
         {{ template "success-banner" .AppVars }}
     {{ end }}
 

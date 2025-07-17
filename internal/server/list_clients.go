@@ -21,8 +21,7 @@ type DeputyHubClientInformation interface {
 }
 
 type ListClientsVars struct {
-	Clients        sirius.ClientList
-	SuccessMessage string
+	Clients sirius.ClientList
 	ListPage
 	FilterByOrderStatus
 	FilterByAccommodation
@@ -196,7 +195,7 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			} else {
 				vars.AppVars = app
 
-				vars.AppVars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
+				vars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
 					DueDate:   r.FormValue("dueDate"),
 					ClientIds: r.Form["selected-clients"],
 				}, deputyId)
