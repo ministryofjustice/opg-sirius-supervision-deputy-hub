@@ -6,6 +6,7 @@ import (
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
 	"net/http"
 	"net/url"
@@ -16,6 +17,7 @@ type DeputyHubClientInformation interface {
 	GetDeputyClients(sirius.Context, sirius.ClientListParams) (sirius.ClientList, error)
 	GetAccommodationTypes(sirius.Context) ([]model.RefData, error)
 	GetSupervisionLevels(sirius.Context) ([]model.RefData, error)
+	BulkAssignAssuranceVisitTasksToClients(sirius.Context, sirius.BulkAssignAssuranceVisitTasksToClientsParams, int) (string, error)
 }
 
 type ListClientsVars struct {
@@ -63,11 +65,16 @@ func (lcv ListClientsVars) GetAppliedFilters() []string {
 
 func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
-		if r.Method != http.MethodGet {
+		if r.Method != http.MethodGet && r.Method != http.MethodPost {
 			return StatusError(http.StatusMethodNotAllowed)
 		}
 
 		ctx := getContext(r)
+		var vars ListClientsVars
+
+		app.PageName = "Clients"
+		vars.AppVars = app
+
 		group, groupCtx := errgroup.WithContext(ctx.Context)
 		urlParams := r.URL.Query()
 		page := paginate.GetRequestedPage(urlParams.Get("page"))
@@ -93,7 +100,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 		}
 
 		sort := urlbuilder.CreateSortFromURL(urlParams, []string{"surname", "orderMadeDate", "visitDate", "reportDue", "crec"})
-
 		selectedOrderStatuses, selectedAccommodationTypes, selectedSupervisionLevels := getFiltersFromParams(urlParams)
 
 		params := sirius.ClientListParams{
@@ -106,8 +112,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			AccommodationTypes: selectedAccommodationTypes,
 			SupervisionLevels:  selectedSupervisionLevels,
 		}
-
-		var vars ListClientsVars
 
 		group.Go(func() error {
 			clients, err := client.GetDeputyClients(ctx.With(groupCtx), params)
@@ -140,7 +144,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			return err
 		}
 
-		app.PageName = "Clients"
 		vars.PerPage = perPage
 
 		selectedOrderStatuses = vars.ValidateSelectedOrderStatuses(selectedOrderStatuses, orderStatuses)
@@ -162,7 +165,6 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			},
 		}
 
-		vars.AppVars = app
 		vars.Sort = sort
 		vars.UrlBuilder = vars.CreateUrlBuilder()
 
@@ -178,6 +180,32 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 			ElementName:     "clients",
 			PerPageOptions:  perPageOptions,
 			UrlBuilder:      vars.UrlBuilder,
+		}
+
+		if r.Method == http.MethodPost {
+			var err error
+			deputyId, _ := strconv.Atoi(r.PathValue("id"))
+			dueDate := r.FormValue("dueDate")
+			if dueDate == "" {
+				selectDueDateError := sirius.ValidationErrors{
+					"due-date": {"": "Enter a due date"},
+				}
+
+				vars.Errors = util.RenameErrors(selectDueDateError)
+			} else {
+				vars.AppVars = app
+
+				vars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
+					DueDate:   r.FormValue("dueDate"),
+					ClientIds: r.Form["selected-clients"],
+				}, deputyId)
+				if verr, ok := err.(sirius.ValidationError); ok {
+					vars.Errors = util.RenameErrors(verr.Errors)
+				}
+				if err != nil {
+					return err
+				}
+			}
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

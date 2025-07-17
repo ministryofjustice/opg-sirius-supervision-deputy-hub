@@ -1,0 +1,22 @@
+{{ define "error-banner" }}
+        <div
+            class="govuk-error-summary"
+            aria-labelledby="error-summary-title"
+            role="alert"
+            tabindex="-1"
+            data-module="govuk-error-summary">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+                There is a problem
+            </h2>
+            <div class="govuk-error-summary__body">
+                <ul class="govuk-list govuk-error-summary__list">
+                    {{ range $k, $v := .Errors }}
+                        {{ range $v }}
+                            <li id="error-banner-message">{{ . }}</li>
+                        {{ end }}
+                    {{ end }}
+                </ul>
+                <a class="govuk-link" href="{{ prefix .Path }}">Close</a>
+            </div>
+        </div>
+{{ end }}
