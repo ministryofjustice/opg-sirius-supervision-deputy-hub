@@ -41,7 +41,7 @@ func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, doc
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/documents/%d", deputyId, documentId), &body)
+	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/documents/%d", deputyId, documentId), &body)
 
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func (c *Client) ReplaceDocument(ctx Context, file multipart.File, filename, doc
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
 	}

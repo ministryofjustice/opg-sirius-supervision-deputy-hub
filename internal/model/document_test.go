@@ -17,7 +17,7 @@ func TestEncodeFileToBase64(t *testing.T) {
 	file, _ := formWriter.CreateFormFile("document-upload", "data.txt")
 	_, _ = io.Copy(file, strings.NewReader("test-string"))
 
-	formWriter.Close()
+	_ = formWriter.Close()
 
 	buffReader := bytes.NewReader(buff.Bytes())
 	formReader := multipart.NewReader(buffReader, formWriter.Boundary())

@@ -24,7 +24,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, time
 	var de TimelineList
 
 	endpoint := fmt.Sprintf(
-		SupervisionAPIPath + "/v1/timeline/%d/deputy?limit=%d&page=%d",
+		SupervisionAPIPath+"/v1/timeline/%d/deputy?limit=%d&page=%d",
 		deputyId,
 		timelineEventsPerPage,
 		pageNumber,
@@ -41,7 +41,7 @@ func (c *Client) GetDeputyEvents(ctx Context, deputyId int, pageNumber int, time
 		return de, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return de, ErrUnauthorized

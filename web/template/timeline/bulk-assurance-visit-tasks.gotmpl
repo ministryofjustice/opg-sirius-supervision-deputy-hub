@@ -1,0 +1,26 @@
+{{ define "bulk-assurance-visit-tasks" }}
+    <div class="moj-timeline__item" data-cy="assurance-added-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">{{.Event.ClientCount}} Clients have been selected for an assurance visit</h2>
+            <p class="moj-timeline__byline">
+                {{ printf "by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <time>{{ .Timestamp }}</time>
+        </p>
+        <div class="moj-timeline__description">
+            <ul class="govuk-list govuk-list--bullet">
+                {{ range .Event.Changes }}
+                    {{ if eq .FieldName "clientWithAnAssuranceVisitTaskSet" }}
+                        {{ range stringToArray .NewValue }}
+                        <li>
+                            {{ . }}
+                        </li>
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+{{ end }}

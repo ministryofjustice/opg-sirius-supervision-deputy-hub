@@ -14,6 +14,7 @@ type Event struct {
 	Changes               []Changes `json:"changes"`
 	Client                []Client  `json:"additionalPersons"`
 	Contact               Contact   `json:"deputyContact"`
+	ClientCount           string    `json:"clientCount"`
 	DueDate               string    `json:"dueDate"`
 	DeputyID              string    `json:"personId"`
 	DeputyName            string    `json:"personName"`

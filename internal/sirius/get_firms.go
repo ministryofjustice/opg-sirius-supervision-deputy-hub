@@ -12,7 +12,7 @@ type FirmForList struct {
 }
 
 func (c *Client) GetFirms(ctx Context) ([]FirmForList, error) {
-	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath + "/v1/firms", nil)
+	req, err := c.newRequest(ctx, http.MethodGet, SupervisionAPIPath+"/v1/firms", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -22,7 +22,7 @@ func (c *Client) GetFirms(ctx Context) ([]FirmForList, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return nil, ErrUnauthorized

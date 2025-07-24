@@ -253,6 +253,6 @@ func CreateDocumentFormBody(body *bytes.Buffer, writer *multipart.Writer, docume
 		return nil, err
 	}
 
-	writer.Close()
+	_ = writer.Close()
 	return body, nil
 }

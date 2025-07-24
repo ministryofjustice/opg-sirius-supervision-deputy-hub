@@ -78,7 +78,7 @@ type DeputyDetails struct {
 func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam int, deputyId int) (DeputyDetails, error) {
 	var v DeputyDetails
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d", deputyId), nil)
 	if err != nil {
 		return v, err
 	}
@@ -88,7 +88,7 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam
 		return v, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized

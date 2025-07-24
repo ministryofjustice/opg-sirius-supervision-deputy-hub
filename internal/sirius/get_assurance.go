@@ -10,7 +10,7 @@ import (
 func (c *Client) GetAssuranceById(ctx Context, deputyId int, visitId int) (model.Assurance, error) {
 	var v model.Assurance
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/assurances/%d", deputyId, visitId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/assurances/%d", deputyId, visitId), nil)
 
 	if err != nil {
 		return v, err
@@ -21,7 +21,7 @@ func (c *Client) GetAssuranceById(ctx Context, deputyId int, visitId int) (model
 	if err != nil {
 		return v, err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized

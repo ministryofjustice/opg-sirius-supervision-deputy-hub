@@ -9,7 +9,7 @@ import (
 func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int) (DeputyClient, error) {
 	var k DeputyClient
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath + "/v1/deputies/%d/client/%s", deputyId, caseRecNumber), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/client/%s", deputyId, caseRecNumber), nil)
 
 	if err != nil {
 		return DeputyClient{}, err
@@ -20,7 +20,7 @@ func (c *Client) GetDeputyClient(ctx Context, caseRecNumber string, deputyId int
 		return DeputyClient{}, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 	if resp.StatusCode == http.StatusUnauthorized {
 		return DeputyClient{}, ErrUnauthorized
 	}
