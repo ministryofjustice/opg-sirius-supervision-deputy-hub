@@ -4,11 +4,7 @@ WORKDIR /app
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 
-RUN apk update \
-    && apk add --no-cache \
-    ca-certificates \
-    git \
-    && update-ca-certificates
+RUN update-ca-certificates
 
 FROM node:20.2.0-alpine3.16 AS asset-env
 
@@ -53,11 +49,7 @@ FROM alpine:latest
 
 WORKDIR /go/bin
 
-RUN apk --update --no-cache add \
-    ca-certificates && \
-    apk upgrade busybox --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main && \
-    apk upgrade libcrypto3 libssl3 && \
-    rm -rf /var/cache/apk/*
+RUN apk upgrade --no-cache busybox libcrypto3 libssl3
 RUN apk --no-cache add tzdata
 ENV TZ="Europe/London"
 
