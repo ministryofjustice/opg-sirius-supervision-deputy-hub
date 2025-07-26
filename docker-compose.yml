@@ -24,7 +24,7 @@ services:
             retries: 3
 
     go-lint:
-        image: golangci/golangci-lint:v2.2.2
+        image: golangci/golangci-lint:v2.3.0
         working_dir: /go/src/app
         volumes:
             - ./:/go/src/app
