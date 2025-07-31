@@ -54,8 +54,7 @@ make build cypress
 
 ## Run Cypress tests in UI
 
-- `make up`
-- `yarn && yarn cypress`
+- `make up && yarn cypress`
 
 ---
 
