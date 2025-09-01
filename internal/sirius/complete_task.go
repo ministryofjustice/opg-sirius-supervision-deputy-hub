@@ -21,7 +21,7 @@ func (c *Client) CompleteTask(ctx Context, taskId int, notes string) error {
 		return err
 	}
 
-	requestURL := fmt.Sprintf("/api/v1/tasks/%d/mark-as-completed", taskId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath+"/v1/tasks/%d/mark-as-completed", taskId)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
@@ -34,7 +34,7 @@ func (c *Client) CompleteTask(ctx Context, taskId int, notes string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized

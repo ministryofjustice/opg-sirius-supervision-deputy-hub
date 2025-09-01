@@ -1,13 +1,14 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/stretchr/testify/mock"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/stretchr/testify/mock"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -17,16 +18,16 @@ type mockManageAssuranceClient struct {
 	mock.Mock
 }
 
-func (m *mockManageAssuranceClient) GetVisitOutcomeTypes(ctx sirius.Context) ([]model.VisitOutcomeType, error) {
+func (m *mockManageAssuranceClient) GetVisitOutcomeTypes(ctx sirius.Context) ([]model.RefData, error) {
 	args := m.Called(ctx)
 
-	return args.Get(0).([]model.VisitOutcomeType), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
-func (m *mockManageAssuranceClient) GetPdrOutcomeTypes(ctx sirius.Context) ([]model.PdrOutcomeType, error) {
+func (m *mockManageAssuranceClient) GetPdrOutcomeTypes(ctx sirius.Context) ([]model.RefData, error) {
 	args := m.Called(ctx)
 
-	return args.Get(0).([]model.PdrOutcomeType), args.Error(1)
+	return args.Get(0).([]model.RefData), args.Error(1)
 }
 
 func (m *mockManageAssuranceClient) GetRagRatingTypes(ctx sirius.Context) ([]model.RAGRating, error) {
@@ -66,8 +67,8 @@ func TestGetManageAssurance(t *testing.T) {
 
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
 	ragRatingTypes := []model.RAGRating{{Handle: "x", Label: "y"}}
-	visitOutcomeTypes := []model.VisitOutcomeType{{Handle: "x", Label: "w"}}
-	pdrOutcomeTypes := []model.PdrOutcomeType{{Handle: "x", Label: "z"}}
+	visitOutcomeTypes := []model.RefData{{Handle: "x", Label: "w"}}
+	pdrOutcomeTypes := []model.RefData{{Handle: "x", Label: "z"}}
 	assurance := model.Assurance{Id: 1, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceClient{}
@@ -111,14 +112,15 @@ func TestPostManageAssurance(t *testing.T) {
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return([]model.Visitor{}, nil)
 	client.On("GetRagRatingTypes", mock.Anything).Return([]model.RAGRating{}, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.VisitOutcomeType{}, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.PdrOutcomeType{}, nil)
+	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.RefData{}, nil)
+	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.RefData{}, nil)
 	client.On("UpdateAssurance", mock.Anything, sirius.UpdateAssuranceDetails{}, 123, 1).Return(nil)
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurances/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
+	r.SetPathValue("visitId", "1")
 
 	var redirect error
 
@@ -140,9 +142,9 @@ func TestGetManagePDR(t *testing.T) {
 
 	visitors := []model.Visitor{{ID: 1, Name: "Mr Visitor"}}
 	ragRatingTypes := []model.RAGRating{{Handle: "x", Label: "y"}}
-	visitOutcomeTypes := []model.VisitOutcomeType{{Handle: "x", Label: "w"}}
-	pdrOutcomeTypes := []model.PdrOutcomeType{{Handle: "x", Label: "z"}}
-	assurance := model.Assurance{Id: 1, Type: model.AssuranceType{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
+	visitOutcomeTypes := []model.RefData{{Handle: "x", Label: "w"}}
+	pdrOutcomeTypes := []model.RefData{{Handle: "x", Label: "z"}}
+	assurance := model.Assurance{Id: 1, Type: model.RefData{Handle: "PDR", Label: "PDR"}, RequestedDate: "2022-01-02", RequestedBy: model.User{ID: 2}}
 
 	client := &mockManageAssuranceClient{}
 	client.On("GetAssuranceById", mock.Anything, manageAssuranceAppVars.DeputyId(), 0).Return(assurance, nil)
@@ -181,18 +183,20 @@ func TestGetManagePDR(t *testing.T) {
 func TestPostManagePDR(t *testing.T) {
 	assert := assert.New(t)
 	client := &mockManageAssuranceClient{}
-	client.On("GetAssuranceById", mock.Anything, 123, 1).Return(model.Assurance{Type: model.AssuranceType{Handle: "PDR", Label: "PDR"}}, nil)
+	client.On("GetAssuranceById", mock.Anything, 123, 1).Return(model.Assurance{Type: model.RefData{Handle: "PDR", Label: "PDR"}}, nil)
 	client.On("GetUserDetails", mock.Anything).Return(sirius.UserDetails{Roles: []string{"Finance Manager"}}, nil)
 	client.On("GetVisitors", mock.Anything).Return([]model.Visitor{}, nil)
 	client.On("GetRagRatingTypes", mock.Anything).Return([]model.RAGRating{}, nil)
-	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.VisitOutcomeType{}, nil)
-	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.PdrOutcomeType{}, nil)
+	client.On("GetVisitOutcomeTypes", mock.Anything).Return([]model.RefData{}, nil)
+	client.On("GetPdrOutcomeTypes", mock.Anything).Return([]model.RefData{}, nil)
 	client.On("UpdateAssurance", mock.Anything, sirius.UpdateAssuranceDetails{}, 123, 1).Return(nil)
 	visitTemplate := &mockTemplates{}
 	pdrTemplate := &mockTemplates{}
 
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123/assurances/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
+	r.SetPathValue("id", "123")
+	r.SetPathValue("visitId", "1")
 
 	var redirect error
 
@@ -227,8 +231,8 @@ func TestParseVisitForm(t *testing.T) {
 		CommissionedDate:   "2020-01-01",
 		ReportDueDate:      "2020-01-02",
 		ReportReceivedDate: "2020-01-03",
-		VisitOutcome:       model.VisitOutcomeType{Label: "Cancelled"},
-		PdrOutcome:         model.PdrOutcomeType{Label: "Cancelled"},
+		VisitOutcome:       model.RefData{Label: "Cancelled"},
+		PdrOutcome:         model.RefData{Label: "Cancelled"},
 		ReportReviewDate:   "2020-01-04",
 		ReportMarkedAs:     model.RAGRating{Label: "Successful"},
 		Note:               "Test notes",

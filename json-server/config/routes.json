@@ -1,7 +1,8 @@
 {
-    "/api/v1/*": "/$1",
+    "/supervision-api/v1/*": "/$1",
     "/deputies/pa/:personId/clients*": "/clients",
     "/deputies/pro/:personId/clients*": "/clients",
+    "/timeline/:personId/deputy*": "/timeline",
     "/timeline/:personId": "/timeline",
     "/deputies/:personId/notes": "/notes?personId=:personId",
     "/users/current": "/users",
@@ -12,13 +13,12 @@
     "/deputies/:id/contacts/:contactId": "/contacts/:contactId",
     "/deputies/:id/tasks*": "/tasks/:id",
     "/firm": "/addFirm",
-    "/reference-data/annualBillingInvoice": "/annualBillingInvoice",
-    "/reference-data/deputyBooleanType": "/deputyBooleanType",
-    "/reference-data/deputyReportSystem": "/deputyReportSystem",
-    "/reference-data/visitOutcome": "/visitOutcome",
-    "/reference-data/pdrOutcome": "/pdrOutcome",
-    "/reference-data/ragRating": "/ragRating",
-    "/reference-data?filter=clientAccommodation": "/clientAccommodation",
-    "/reference-data?filter=supervisionLevel": "/supervisionLevel",
-    "/tasktypes/deputy": "/tasktypes"
+    "/reference-data/*": "/$1",
+    "/reference-data?filter=*": "/$1",
+    "/tasktypes/deputy": "/tasktypes",
+    "/persons/:personId/documents": "/documents",
+    "/deputies/:id/documents/:documentId": "/document/:documentId",
+    "/deputies/:id/gcm-issues": "/gcm-issues",
+    "/deputies/:id/gcm-issues/add": "/gcm-issues/add",
+    "/deputies/:id/client/*": "/search-for-client"
 }

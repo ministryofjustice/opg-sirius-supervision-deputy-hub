@@ -103,7 +103,7 @@ func TestGetTaskTypes_statusError(t *testing.T) {
 	assert.Equal(t, []model.TaskType(nil), taskTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/tasktypes/deputy",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/tasktypes/deputy",
 		Method: http.MethodGet,
 	}, err)
 }

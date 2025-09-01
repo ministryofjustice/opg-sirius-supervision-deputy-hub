@@ -27,7 +27,7 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int, 
 		return err
 	}
 
-	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf("/api/v1/deputies/%d/notes", deputyId), &body)
+	req, err := c.newRequest(ctx, http.MethodPost, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/notes", deputyId), &body)
 
 	if err != nil {
 		return err
@@ -38,7 +38,8 @@ func (c *Client) AddNote(ctx Context, title, note string, deputyId, userId int, 
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized

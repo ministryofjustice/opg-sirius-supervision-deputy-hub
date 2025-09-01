@@ -1,0 +1,35 @@
+{{ define "document-replaced" }}
+    <div class="moj-timeline__item" data-cy="document-replaced-event">
+        <div class="moj-timeline__header">
+            <h2 class="moj-timeline__title">
+                {{ range .Event.Changes }}
+                    {{ if eq .FieldName "friendlyDescription" }}
+                        Document {{ .OldValue }} replaced with {{ .NewValue }}
+                    {{ end }}
+                {{ end }}
+            </h2>
+            <p class="moj-timeline__byline">
+                {{ printf " by %v (%v)" .User.Name .User.PhoneNumber }}
+            </p>
+        </div>
+        <p class="moj-timeline__date">
+            <date>{{ .Timestamp }}</date>
+        </p>
+       <div class="moj-timeline__description">
+           <ul class="govuk-list govuk-list--bullet">
+                 {{ range .Event.Changes }}
+                     {{ if eq .FieldName "friendlyDescription" }}
+                        <li> Document {{ .OldValue }} was replaced with {{ .NewValue }} </li>
+                     {{ end }}
+                 {{ end }}
+               <li>Direction: {{ .Event.Direction }}</li>
+               <li>Date: {{ .Event.ReceivedDate }}</li>
+           </ul>
+       </div>
+       <div class="moj-timeline__description">
+         <p>
+            {{ .Event.Notes }}
+         </p>
+       </div>
+    </div>
+{{ end }}

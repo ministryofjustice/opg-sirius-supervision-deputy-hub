@@ -26,7 +26,7 @@ type DeputyNote struct {
 func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection, error) {
 	var v DeputyNoteCollection
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf("/api/v1/deputies/%d/notes", deputyId), nil)
+	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/notes", deputyId), nil)
 
 	if err != nil {
 		return v, err
@@ -37,7 +37,7 @@ func (c *Client) GetDeputyNotes(ctx Context, deputyId int) (DeputyNoteCollection
 		return v, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return v, ErrUnauthorized

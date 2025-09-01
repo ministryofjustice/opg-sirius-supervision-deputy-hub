@@ -1,8 +1,8 @@
 $govuk-new-link-styles: true;
 $govuk-include-default-font-face: false;
 $govuk-moj-table-background-color: #e7f2fb;
-$moj-assets-path: "/supervision/deputies/assets/";
-$govuk-assets-path: "/supervision/deputies/assets/";
+$moj-assets-path: "/supervision/deputies/static/assets/";
+$govuk-assets-path: "/supervision/deputies/static/assets/";
 
 @import "node_modules/govuk-frontend/dist/govuk/all";
 @import "node_modules/@ministryofjustice/frontend/moj/all";
@@ -13,6 +13,7 @@ $govuk-assets-path: "/supervision/deputies/assets/";
 @import "./scss/pro-hub";
 @import "./scss/_moj-pagination";
 @import "./scss/sorting";
+@import "./scss/moj-manage-list";
 
 .moj-header__container {
   max-width: 98%;
@@ -46,4 +47,41 @@ $govuk-assets-path: "/supervision/deputies/assets/";
   max-width: 75ch;
   border-top: 1px solid $govuk-border-colour;
   padding-top: 1em;
+}
+
+.opg-tab {
+  color: black;
+}
+
+.opg-tab-selected {
+  text-decoration: none;
+}
+
+.sirius-blue {
+  color: #1d70b8;
+}
+
+#checkbox-column {
+  max-width: 15px;
+  width: 15px;
+}
+
+.govuk-button--blue {
+  background: govuk-colour("blue");
+
+  &:hover {
+    background: govuk-colour("dark-blue");
+  }
+}
+
+#edit-assign-title {
+  display: block;
+}
+
+#error-banner-message {
+  color: #d4351c;
+}
+
+#footer-background {
+  background: #f4f8fb;
 }

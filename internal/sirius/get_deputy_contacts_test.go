@@ -67,7 +67,7 @@ func TestGetDeputyContactReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, contacts)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/1/contacts",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/1/contacts",
 		Method: http.MethodGet,
 	}, err)
 }

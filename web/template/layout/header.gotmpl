@@ -1,3 +1,7 @@
 {{ define "header" }}
-    <sirius-header {{ if eq .Error "" }} user-roles="{{ .UserDetails.GetRoles }}" {{ end }}></sirius-header>
+    <sirius-header
+        {{ if eq .Error "" }}
+        user-roles="{{ .UserDetails.GetRoles }}"
+        {{ end }}>
+    </sirius-header>
 {{ end }}

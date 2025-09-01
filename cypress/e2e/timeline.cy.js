@@ -10,7 +10,7 @@ describe("Timeline", () => {
 
         cy.url().should("include", "/supervision/deputies/1/timeline");
         cy.get(".govuk-heading-l").contains("Timeline");
-    })
+    });
 
     it("contains appropriate test data for a timeline event", () => {
         cy.visit("/supervision/deputies/1/timeline");
@@ -21,7 +21,8 @@ describe("Timeline", () => {
 
             cy.get("time").should("contain", "09/09/2021");
 
-            cy.get(".moj-timeline__description").get("li")
+            cy.get(".moj-timeline__description")
+                .get("li")
                 .should("contain", "Order number: 03305972")
                 .next()
                 .should("contain", "Sirius ID: 7000-0000-1995")
@@ -39,43 +40,43 @@ describe("Timeline", () => {
             {
                 name: "contact-added-event",
                 title: "Mr Deputy Contact added as a contact",
-                description: "Name: Mr Deputy Contact"
+                description: "Name: Mr Deputy Contact",
             },
             {
                 name: "contact-edited-event",
                 title: "Mr Deputy Contact's details updated",
-                description: "Name: Mr Deputy Contact"
+                description: "Name: Mr Deputy Contact",
             },
             {
                 name: "contact-set-as-main-event",
-                title: "Main contact set to Mr Deputy Contact"
+                title: "Main contact set to Mr Deputy Contact",
             },
             {
                 name: "contact-removed-as-main-event",
-                title: "Mr Deputy Contact removed as a Main contact"
+                title: "Mr Deputy Contact removed as a Main contact",
             },
             {
                 name: "contact-set-as-named-event",
-                title: "Named deputy set to Mr Deputy Contact"
+                title: "Named deputy set to Mr Deputy Contact",
             },
             {
                 name: "contact-removed-as-named-event",
-                title: "Mr Deputy Contact removed as the Named deputy"
+                title: "Mr Deputy Contact removed as the Named deputy",
             },
             {
                 name: "task-reassigned-event",
                 title: "PDR report due task reassigned",
-                description: "Assigned to Pro Team 2 - (Supervision)"
-            }
-        ]
+                description: "Assigned to Pro Team 2 - (Supervision)",
+            },
+        ];
 
         events.forEach((event) => {
             cy.get('[data-cy="' + event.name + '"]').within(() => {
-                cy.get(".moj-timeline__title").should("contain.text", event.title)
+                cy.get(".moj-timeline__title").should("contain.text", event.title);
                 if ("description" in event) {
-                    cy.get(".moj-timeline__description").contains(event.description)
+                    cy.get(".moj-timeline__description").contains(event.description);
                 }
-            })
-        })
+            });
+        });
     });
 });

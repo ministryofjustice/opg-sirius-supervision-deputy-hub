@@ -64,6 +64,14 @@
                         >
                     </li>
                     <li class="moj-sub-navigation__item">
+                        <a class="moj-sub-navigation__link"
+                                {{ if eq .Path (printf "/%d/documents" .DeputyDetails.ID) }}
+                                    aria-current="page"
+                                {{ end }}
+                            href="{{ prefix (printf "/%d/documents" .DeputyDetails.ID) }}"
+                        >Documents</a>
+                    </li>
+                    <li class="moj-sub-navigation__item">
                         <a
                             class="moj-sub-navigation__link"
                             {{ if eq .Path (printf "/%d/assurances" .DeputyDetails.ID) }}
@@ -73,6 +81,18 @@
                             >Assurance visits</a
                         >
                     </li>
+                    <li class="moj-sub-navigation__item">
+                        {{ if eq .DeputyDetails.DeputyType.Handle "PA" }}
+                            <a
+                                class="moj-sub-navigation__link"
+                                {{ if eq .Path (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}
+                                   aria-current="page"
+                               {{ end }}
+                               href="{{ prefix (printf "/%d/gcm-issues/open-issues" .DeputyDetails.ID) }}"
+                                >GCM issues</a
+                            >
+                        {{ end }}
+                   </li>
                 </ul>
             </nav>
         </div>

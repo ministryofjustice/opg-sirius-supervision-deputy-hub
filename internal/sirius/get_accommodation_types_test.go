@@ -41,6 +41,11 @@ func TestGetAccommodationTypes(t *testing.T) {
 			Handle: "NO ACCOMMODATION TYPE",
 			Label:  "No Accommodation Type",
 		},
+		{
+			Handle:     "COUNCIL RENTED",
+			Label:      "Council Rented",
+			Deprecated: true,
+		},
 	}
 
 	accommodationTypes, err := client.GetAccommodationTypes(getContext(nil))
@@ -62,7 +67,7 @@ func TestGetAccommodationTypesReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, []model.RefData(nil), accommodationTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data?filter=clientAccommodation",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data?filter=clientAccommodation",
 		Method: http.MethodGet,
 	}, err)
 }

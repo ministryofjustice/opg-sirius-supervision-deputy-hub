@@ -1,8 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -10,6 +8,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -77,6 +77,7 @@ func TestPostChangeECM(t *testing.T) {
 	form := url.Values{}
 	form.Add("select-ecm", "26")
 	r.PostForm = form
+	r.SetPathValue("id", "76")
 
 	var returnedError error
 

@@ -63,6 +63,7 @@ var validationMappings = map[string]map[string]pair{
 	// address
 	"addressLine1": {
 		"stringLengthTooLong": pair{"addressLine1", "The building or street must be 255 characters or fewer"},
+		"isEmpty":             pair{"addressLine1", "The building or street is required and can't be empty"},
 	},
 	"addressLine2": {
 		"stringLengthTooLong": pair{"addressLine2", "Address line 2 must be 255 characters or fewer"},
@@ -72,12 +73,14 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"town": {
 		"stringLengthTooLong": pair{"town", "The town or city must be 255 characters or fewer"},
+		"isEmpty":             pair{"town", "The town or city is required and can't be empty"},
 	},
 	"county": {
 		"stringLengthTooLong": pair{"county", "The county must be 255 characters or fewer"},
 	},
 	"postcode": {
 		"stringLengthTooLong": pair{"postcode", "The postcode must be 255 characters or fewer"},
+		"isEmpty":             pair{"postcode", "The postcode is required and can't be empty"},
 	},
 	"phoneNumber": {
 		"stringLengthTooLong": pair{"phoneNumber", "The telephone number must be 255 characters or fewer"},
@@ -150,6 +153,7 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"notes": {
 		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
+		"isEmpty":             pair{"notes", "Enter a note explaining the issue"},
 	},
 	"taskCompletedNotes": {
 		"stringLengthTooLong": pair{"notes", "The note must be 1000 characters or fewer"},
@@ -166,6 +170,25 @@ var validationMappings = map[string]map[string]pair{
 	},
 	"reportReviewDate": {
 		"invalid-lte": pair{"reportReviewDate", "Report review date - This must be on or before " + currentDate},
+	},
+	"documentType": {
+		"isEmpty": pair{"documentType", "Select the type of document"},
+	},
+	"documentDirection": {
+		"isEmpty": pair{"documentDirection", "Select the document direction"},
+	},
+	"documentDate": {
+		"isEmpty":     pair{"documentDate", "Enter a date"},
+		"invalid-lte": pair{"documentDate", "The date must be today or in the past"},
+	},
+	"gcmIssueType": {
+		"isEmpty": pair{"gcmIssueType", "Select an issue type"},
+	},
+	"caseRecNumber": {
+		"checksumFailed": pair{"caseRecNumber", "Case number not recognised"},
+	},
+	"assuranceVisitTaskDueDate": {
+		"error": pair{"assuranceVisitTaskDueDate", "The due date must be today or in the future"},
 	},
 }
 

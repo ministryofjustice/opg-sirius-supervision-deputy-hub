@@ -1,7 +1,11 @@
 package server
 
 import (
+	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -19,6 +23,14 @@ type mockDeputyHubClientInformation struct {
 	deputyClientData   sirius.ClientList
 	accommodationTypes []model.RefData
 	supervisionLevels  []model.RefData
+	SuccessMessage     string
+}
+
+func (m *mockDeputyHubClientInformation) BulkAssignAssuranceVisitTasksToClients(ctx sirius.Context, params sirius.BulkAssignAssuranceVisitTasksToClientsParams, deputyId int) (string, error) {
+	m.count += 1
+	m.lastCtx = ctx
+
+	return m.SuccessMessage, m.err
 }
 
 func (m *mockDeputyHubClientInformation) GetDeputyClients(ctx sirius.Context, params sirius.ClientListParams) (sirius.ClientList, error) {
@@ -129,4 +141,122 @@ func TestGetFiltersFromParamsWithAllFilters(t *testing.T) {
 	assert.Equal(t, resultOrderStatus, expectedResponseForOrderStatus)
 	assert.Equal(t, expectedResponseForAccommodation, resultAccommodation)
 	assert.Equal(t, expectedResponseForSupervisionLevel, resultSupervisionLevel)
+}
+
+func TestPostBulkAssuranceVisitTasksReturnsErrorWithDueDate(t *testing.T) {
+	assert := assert.New(t)
+	client := &mockDeputyHubClientInformation{}
+
+	form := url.Values{}
+	form.Add("due-date", "")
+
+	template := &mockTemplates{}
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/1/bulk-assurance-visit-tasks", strings.NewReader(form.Encode()))
+
+	returnedError := renderTemplateForClientTab(client, template)(AppVars{}, w, r)
+
+	expectedValidationErrors := sirius.ValidationErrors{
+		"due-date": {"": "Enter a due date"},
+	}
+
+	assert.Equal(ListClientsVars{
+		ListPage: ListPage{
+			AppVars: AppVars{
+				PageName: "Clients",
+				Errors:   expectedValidationErrors,
+			},
+			Sort: urlbuilder.Sort{
+				OrderBy: "surname",
+			},
+			Pagination: paginate.Pagination{
+				ElementsPerPage: 25,
+				ElementName:     "clients",
+				PerPageOptions:  []int{25, 50, 100},
+				UrlBuilder: urlbuilder.UrlBuilder{
+					OriginalPath:    "clients",
+					SelectedPerPage: 25,
+					SelectedFilters: []urlbuilder.Filter{
+						{Name: "order-status"},
+						{Name: "accommodation"},
+						{Name: "supervision-level"},
+					},
+					SelectedSort: urlbuilder.Sort{
+						OrderBy: "surname",
+					},
+				},
+			},
+			PerPage: 25,
+			UrlBuilder: urlbuilder.UrlBuilder{
+				OriginalPath:    "clients",
+				SelectedPerPage: 25,
+				SelectedFilters: []urlbuilder.Filter{
+					{Name: "order-status"},
+					{Name: "accommodation"},
+					{Name: "supervision-level"},
+				},
+				SelectedSort: urlbuilder.Sort{
+					OrderBy: "surname",
+				},
+			},
+		},
+		FilterByOrderStatus: FilterByOrderStatus{
+			OrderStatusOptions: []model.RefData{
+				{
+					Handle: "ACTIVE",
+					Label:  "Active",
+				},
+				{
+					Handle: "CLOSED",
+					Label:  "Closed",
+				},
+			},
+			OrderStatuses: []model.OrderStatus{
+				{
+					Handle:     "ACTIVE",
+					Incomplete: "Active",
+					Category:   "Active",
+					Complete:   "Active",
+				},
+				{
+					Handle:     "CLOSED",
+					Incomplete: "Closed",
+					Category:   "Closed",
+					Complete:   "Closed",
+				},
+			},
+		},
+	}, template.lastVars)
+
+	assert.Nil(returnedError)
+}
+
+func TestPostBulkAssuranceVisitTask(t *testing.T) {
+	assert := assert.New(t)
+	template := &mockTemplates{}
+
+	client := &mockDeputyHubClientInformation{}
+
+	w := httptest.NewRecorder()
+	r, _ := http.NewRequest("POST", "/76/bulk-assurance-visit-tasks", strings.NewReader("{dueDate:2626-02-02, clientIds: [1,2]}"))
+
+	form := url.Values{}
+	form.Add("due-date", "2626-02-02")
+	form.Add("selected-clients", "1")
+	form.Add("selected-clients", "2")
+	r.PostForm = form
+	r.SetPathValue("id", "76")
+
+	var returnedError error
+
+	testHandler := mux.NewRouter()
+	testHandler.HandleFunc("/{id}/bulk-assurance-visit-tasks", func(w http.ResponseWriter, r *http.Request) {
+		returnedError = renderTemplateForClientTab(client, template)(AppVars{}, w, r)
+	})
+
+	testHandler.ServeHTTP(w, r)
+	fmt.Print(returnedError)
+	resp := w.Result()
+	assert.Equal(http.StatusOK, resp.StatusCode)
+	assert.Nil(returnedError)
 }

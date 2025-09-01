@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -38,18 +39,18 @@ func TestGetDeputyBooleanTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []DeputyBooleanTypes{
+	expectedResponse := []model.RefData{
 		{
-			"YES",
-			"Yes",
+			Handle: "YES",
+			Label:  "Yes",
 		},
 		{
-			"NO",
-			"No",
+			Handle: "NO",
+			Label:  "No",
 		},
 		{
-			"UNKNOWN",
-			"Unknown",
+			Handle: "UNKNOWN",
+			Label:  "Unknown",
 		},
 	}
 
@@ -69,10 +70,10 @@ func TestGetDeputyBooleanTypesReturnsNewStatusError(t *testing.T) {
 
 	deputyBooleanTypes, err := client.GetDeputyBooleanTypes(getContext(nil))
 
-	assert.Equal(t, []DeputyBooleanTypes(nil), deputyBooleanTypes)
+	assert.Equal(t, []model.RefData(nil), deputyBooleanTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/deputyBooleanType",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/deputyBooleanType",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -88,5 +89,5 @@ func TestGetDeputyBooleanTypesReturnsUnauthorisedClientError(t *testing.T) {
 	deputyBooleanTypes, err := client.GetDeputyBooleanTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []DeputyBooleanTypes(nil), deputyBooleanTypes)
+	assert.Equal(t, []model.RefData(nil), deputyBooleanTypes)
 }

@@ -39,7 +39,7 @@ func TestDeleteContactReturnsNewStatusError(t *testing.T) {
 	err := client.DeleteContact(getContext(nil), 76, 1)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/76/contacts/1",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/76/contacts/1",
 		Method: http.MethodDelete,
 	}, err)
 }

@@ -3,6 +3,7 @@ package sirius
 import (
 	"bytes"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/mocks"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
@@ -42,22 +43,22 @@ func TestGetAnnualBillingInvoiceTypes(t *testing.T) {
 		}, nil
 	}
 
-	expectedResponse := []DeputyAnnualBillingInvoiceTypes{
+	expectedResponse := []model.RefData{
 		{
-			"INVOICE",
-			"Invoice",
+			Handle: "INVOICE",
+			Label:  "Invoice",
 		},
 		{
-			"SCHEDULE",
-			"Schedule",
+			Handle: "SCHEDULE",
+			Label:  "Schedule",
 		},
 		{
-			"SCHEDULE AND INVOICE",
-			"Schedule and Invoice",
+			Handle: "SCHEDULE AND INVOICE",
+			Label:  "Schedule and Invoice",
 		},
 		{
-			"UNKNOWN",
-			"Unknown",
+			Handle: "UNKNOWN",
+			Label:  "Unknown",
 		},
 	}
 
@@ -77,10 +78,10 @@ func TestGetAnnualBillingInvoiceTypesReturnsNewStatusError(t *testing.T) {
 
 	invoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(getContext(nil))
 
-	assert.Equal(t, []DeputyAnnualBillingInvoiceTypes(nil), invoiceTypes)
+	assert.Equal(t, []model.RefData(nil), invoiceTypes)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/reference-data/annualBillingInvoice",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/reference-data/annualBillingInvoice",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -96,5 +97,5 @@ func TestGetAnnualBillingInvoiceTypesReturnsUnauthorisedClientError(t *testing.T
 	invoiceTypes, err := client.GetDeputyAnnualInvoiceBillingTypes(getContext(nil))
 
 	assert.Equal(t, ErrUnauthorized, err)
-	assert.Equal(t, []DeputyAnnualBillingInvoiceTypes(nil), invoiceTypes)
+	assert.Equal(t, []model.RefData(nil), invoiceTypes)
 }

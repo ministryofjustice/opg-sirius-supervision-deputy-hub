@@ -122,6 +122,18 @@
         &.sentence-case::first-letter {
           text-transform: capitalize;
         }
+
+        &.infected-label {
+          color: govuk-colour(red) !important;
+          border: 2px solid govuk-colour(red) !important;
+          padding: 3px 11px;
+          display: inline;
+          margin-left: 10px;
+
+          &[hidden] {
+            display: none;
+          }
+        }
       }
     }
     td.overdue span {
@@ -205,11 +217,11 @@
   }
 
   #overview {
-      display: flex;
-      justify-content: flex-start;
-      margin-bottom: 2em;
-      padding-bottom: 2em;
-      border-bottom: 1px solid rgb(177, 180, 182);
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 2em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid rgb(177, 180, 182);
   }
 }
 
@@ -307,6 +319,14 @@
 
 .govuk-footer__copyright-logo {
   text-decoration: none;
+}
+
+.govuk-details__fixed-table {
+  table-layout: fixed;
+}
+
+.govuk-details__fixed-width {
+  width: 33%;
 }
 
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten

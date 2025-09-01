@@ -59,4 +59,16 @@
     {{ if eq .EventType "TaskReassigned" }}
         {{ template "task-reassigned" . }}
     {{ end }}
+    {{ if eq .EventType "DeputyDocumentCreated" }}
+        {{ template "document-created" . }}
+    {{ end }}
+    {{ if eq .EventType "DeputyDocumentReplaced" }}
+        {{ template "document-replaced" . }}
+    {{ end }}
+    {{ if eq .EventType "MonthlySpreadsheetIssued" }}
+        {{ template "monthly-spreadsheet-issued" . }}
+    {{ end }}
+    {{ if eq .EventType "BulkAssuranceVisitTasks" }}
+        {{ template "bulk-assurance-visit-tasks" . }}
+    {{ end }}
 {{ end }}

@@ -11,13 +11,8 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("cancel button returns user to the assurance visit page", () => {
-            cy.get(".govuk-button-group > .govuk-link")
-                .should("contain", "Cancel")
-                .click();
-            cy.url().should(
-                "not.contain",
-                "/supervision/deputies/3/manage-assurance/35"
-            );
+            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click();
+            cy.url().should("not.contain", "/supervision/deputies/3/manage-assurance/35");
             cy.get(".govuk-main-wrapper > header").contains("Assurance visits");
             cy.get(".govuk-button").contains("Add a visit");
         });
@@ -41,7 +36,7 @@ describe("Manage an Assurance Visit", () => {
         it("form keeps data if validation error", () => {
             cy.setCookie("fail-route", "updateAssurance");
             cy.get("#f-commissioned-date").type("2021-02-01");
-            cy.get('#visitor-allocated').select("John Johnson");
+            cy.get("#visitor-allocated").select("John Johnson");
             cy.get("#f-report-due-date").type("2021-02-02");
             cy.get("#f-report-received-date").type("2021-02-03");
             cy.get('#visit-outcome-SUCCESSFUL').click();
@@ -50,20 +45,16 @@ describe("Manage an Assurance Visit", () => {
             cy.get('#f-note').type("This is a test note");
 
             cy.get("#manage-assurance-form").submit();
-            cy.get('.govuk-error-summary').should('be.visible');
-            cy.get(".govuk-error-summary__title").should(
-                "contain",
-                "There is a problem"
-            );
-            cy.get(".govuk-error-summary__body").should(
-                "contain",
-                "Report due date must be in the future"
-            );
+            cy.get(".govuk-error-summary").should("be.visible");
+            cy.get(".govuk-error-summary__title").should("contain", "There is a problem");
+            cy.get(".govuk-error-summary__body").should("contain", "Report due date must be in the future");
 
-            cy.get('#f-report-due-date.govuk-input--error').should("exist");
-            cy.get('#manage-assurance-form :nth-child(4).govuk-form-group--error').should("exist");
-            cy.get('#manage-assurance-form :nth-child(4) > #name-error')
-                .should("contain", "Report due date must be in the future");
+            cy.get("#f-report-due-date.govuk-input--error").should("exist");
+            cy.get("#manage-assurance-form :nth-child(4).govuk-form-group--error").should("exist");
+            cy.get("#manage-assurance-form :nth-child(4) > #name-error").should(
+                "contain",
+                "Report due date must be in the future",
+            );
 
             cy.get("#f-commissioned-date").should("have.value", "2021-02-01");
             cy.get('#visitor-allocated').should("have.value", "John Johnson");
@@ -90,13 +81,8 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("cancel button returns user to the assurance visit page", () => {
-            cy.get(".govuk-button-group > .govuk-link")
-                .should("contain", "Cancel")
-                .click();
-            cy.url().should(
-                "not.contain",
-                "/supervision/deputies/2/manage-assurance/36"
-            );
+            cy.get(".govuk-button-group > .govuk-link").should("contain", "Cancel").click();
+            cy.url().should("not.contain", "/supervision/deputies/2/manage-assurance/36");
             cy.get(".govuk-main-wrapper > header").contains("Assurance visits");
             cy.get(".govuk-button").contains("Add a visit");
         });

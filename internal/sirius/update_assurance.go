@@ -28,7 +28,7 @@ func (c *Client) UpdateAssurance(ctx Context, form UpdateAssuranceDetails, deput
 	if err != nil {
 		return err
 	}
-	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf("/api/v1/deputies/%d/assurances/%d", deputyId, visitId), &body)
+	req, err := c.newRequest(ctx, http.MethodPut, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/assurances/%d", deputyId, visitId), &body)
 
 	if err != nil {
 		return err
@@ -40,7 +40,7 @@ func (c *Client) UpdateAssurance(ctx Context, form UpdateAssuranceDetails, deput
 		return err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized

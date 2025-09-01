@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-func TestDeputyClientReturned(t *testing.T) {
+func TestDeputyClientsReturned(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
@@ -148,7 +148,7 @@ func TestDeputyClientReturned(t *testing.T) {
 	assert.Equal(t, nil, err)
 }
 
-func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
+func TestGetDeputyClientsReturnsNewStatusError(t *testing.T) {
 	svr := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}))
@@ -170,7 +170,7 @@ func TestGetDeputyClientReturnsNewStatusError(t *testing.T) {
 	assert.Equal(t, expectedResponse, clientList)
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    svr.URL + "/api/v1/deputies/pa/1/clients?&limit=25&page=1&sort=&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE,supervision-level:GENERAL,supervision-level:MINIMAL",
+		URL:    svr.URL + SupervisionAPIPath + "/v1/deputies/pa/1/clients?&limit=25&page=1&sort=&filter=order-status:ACTIVE,accommodation:COUNCIL%20RENTED,accommodation:NO%20ACCOMMODATION%20TYPE,supervision-level:GENERAL,supervision-level:MINIMAL",
 		Method: http.MethodGet,
 	}, err)
 }
@@ -353,6 +353,80 @@ func Test_GetActivePfaOrderMadeDate(t *testing.T) {
 			}
 
 			assert.Equal(t, getActivePfaOrderMadeDate(orderData), tc.ExpectedOutput)
+		})
+	}
+}
+
+func Test_GetHasHwOrder(t *testing.T) {
+	tests := []struct {
+		Scenario          string
+		Order1CaseSubType string
+		Order1OrderStatus string
+		Order2CaseSubType string
+		Order2OrderStatus string
+		ExpectedOutput    bool
+	}{
+		{
+			Scenario:          "Returns false if no hw orders",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "pfa",
+			Order2OrderStatus: "Closed",
+			ExpectedOutput:    false,
+		},
+		{
+			Scenario:          "Returns false if no active hw orders",
+			Order1CaseSubType: "hw",
+			Order1OrderStatus: "Closed",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Closed",
+			ExpectedOutput:    false,
+		},
+		{
+			Scenario:          "Returns true if active hw order",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+		{
+			Scenario:          "Returns true if only active hw order",
+			Order1CaseSubType: "pfa",
+			Order1OrderStatus: "Closed",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+		{
+			Scenario:          "Returns true if two active hw order",
+			Order1CaseSubType: "hw",
+			Order1OrderStatus: "Active",
+			Order2CaseSubType: "hw",
+			Order2OrderStatus: "Active",
+			ExpectedOutput:    true,
+		},
+	}
+	for k, tc := range tests {
+		t.Run("scenario "+strconv.Itoa(k+1)+" given:"+tc.Scenario, func(t *testing.T) {
+			orderData := []Order{
+				Order{
+					OrderDate:   "01/02/2020",
+					CaseSubType: tc.Order1CaseSubType,
+					OrderStatus: model.RefData{
+						Label: tc.Order1OrderStatus,
+					},
+				},
+				Order{
+					OrderDate:   "02/02/2020",
+					CaseSubType: tc.Order2CaseSubType,
+					OrderStatus: model.RefData{
+						Label: tc.Order2OrderStatus,
+					},
+				},
+			}
+
+			assert.Equal(t, hasHwOrder(orderData), tc.ExpectedOutput)
 		})
 	}
 }

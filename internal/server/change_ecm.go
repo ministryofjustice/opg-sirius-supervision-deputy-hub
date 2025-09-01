@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
@@ -25,8 +25,7 @@ type changeECMHubVars struct {
 func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Handler {
 	return func(app AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
+		deputyId, _ := strconv.Atoi(r.PathValue("id"))
 
 		ecmTeamDetails, err := client.GetDeputyTeamMembers(ctx, app.DefaultPaTeam, app.DeputyDetails)
 		if err != nil {

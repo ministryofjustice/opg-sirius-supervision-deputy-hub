@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
@@ -12,15 +13,15 @@ import (
 
 type ManageProDeputyImportantInformation interface {
 	UpdateImportantInformation(sirius.Context, int, sirius.ImportantInformationDetails) error
-	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]sirius.DeputyAnnualBillingInvoiceTypes, error)
-	GetDeputyBooleanTypes(ctx sirius.Context) ([]sirius.DeputyBooleanTypes, error)
-	GetDeputyReportSystemTypes(ctx sirius.Context) ([]sirius.DeputyReportSystemTypes, error)
+	GetDeputyAnnualInvoiceBillingTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyBooleanTypes(ctx sirius.Context) ([]model.RefData, error)
+	GetDeputyReportSystemTypes(ctx sirius.Context) ([]model.RefData, error)
 }
 
 type manageDeputyImportantInformationVars struct {
-	AnnualBillingInvoiceTypes []sirius.DeputyAnnualBillingInvoiceTypes
-	DeputyBooleanTypes        []sirius.DeputyBooleanTypes
-	DeputyReportSystemTypes   []sirius.DeputyReportSystemTypes
+	AnnualBillingInvoiceTypes []model.RefData
+	DeputyBooleanTypes        []model.RefData
+	DeputyReportSystemTypes   []model.RefData
 	AppVars
 }
 
@@ -83,7 +84,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 				}
 			}
 
-			annualBillingInvoice := vars.AppVars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
+			annualBillingInvoice := vars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
 			if r.PostFormValue("annual-billing") != "" {
 				annualBillingInvoice = r.PostFormValue("annual-billing")
 			} else if annualBillingInvoice == "" {
@@ -91,7 +92,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			}
 
 			importantInfoForm := sirius.ImportantInformationDetails{
-				DeputyType:                vars.AppVars.DeputyType(),
+				DeputyType:                vars.DeputyType(),
 				Complaints:                r.PostFormValue("complaints"),
 				PanelDeputy:               panelDeputyBool,
 				AnnualBillingInvoice:      annualBillingInvoice,

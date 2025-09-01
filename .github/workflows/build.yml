@@ -18,42 +18,57 @@ jobs:
     name: Test Deputy Hub
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Run Tests
         run: make unit-test
 
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@3a74b2957438d0b6e2e61d67b05318aa25c9e6c6 # v2.20.0
         if: ${{ always() }}
         with:
           check_name: "Unit Test Results"
           files: test-results/*.xml
 
   lint:
-    name: GO lint
+    name: Go & Yarn Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Run linting
-        run: make go-lint
+        run: make lint
+
+  gosec:
+    name: Go Sec
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Go Sec
+        continue-on-error: true
+        run: make gosec
+      - name: Upload GoSec results to GitHub Security tab
+        if: ${{ always() }}
+        uses: github/codeql-action/upload-sarif@df559355d593797519d70b90fc8edd5db049e7a2 # v3.29.9
+        with:
+          sarif_file: 'test-results/gosec.sarif'
+          category: gosec
 
   acceptance-test:
     name: Acceptance Testing
     runs-on: ubuntu-latest
-    needs: test
+    needs: ['test', 'lint', 'gosec']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Run Axe
         run: make axe
       - name: Store screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       - name: Store logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: cypress-logs
@@ -62,72 +77,68 @@ jobs:
   cypress:
     name: Cypress
     runs-on: ubuntu-latest
-    needs: test
+    needs: ['test', 'lint', 'gosec']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Run cypress
         run: make cypress
       - name: Store screenshots
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
       - name: Store logs
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: failure()
         with:
           name: cypress-logs
           path: cypress/logs
 
+  create-tag:
+    name: Create Tags
+    uses: ./.github/workflows/create-tags.yml
+
   build:
-    name: "Build & Push Containers"
+    name: Build Deputy Hub
+    uses: ministryofjustice/opg-github-workflows/.github/workflows/build-multi-architecture-image.yml@27a0f72b83c6b026fa4131230289bfbed9049cc7 # v3.15.0
+    with:
+      image_name: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub
+      build_options: --file docker/sirius-deputy-hub/Dockerfile
+
+  push:
+    name: "Push Images"
     runs-on: ubuntu-latest
-    needs: ['test', 'lint', 'acceptance-test', 'cypress']
-    outputs:
-      branch: ${{ steps.set-outputs.outputs.branch }}
-      tag: ${{ steps.bump_version.outputs.tag }}
+    needs: ['test', 'lint', 'gosec', 'create-tag', 'build']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: '0'
-      - name: Extract branch name
+      - name: Extract & Sanitise branch name
         run: |
           if [ "${{ github.head_ref }}" == "" ]; then
             echo BRANCH_NAME=main >> $GITHUB_ENV
           else
-            echo BRANCH_NAME=${{ github.head_ref }} >> $GITHUB_ENV
+            echo BRANCH_NAME=$(echo ${{ github.head_ref }} | sed -r 's/[/_.]+/-/g') >> $GITHUB_ENV
           fi
         id: extract_branch
-      - uses: unfor19/install-aws-cli-action@v1
+      - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # 1.0.8
 
-      - name: Build Container
-        run: make build
-
-      - name: Bump version
-        id: bump_version
-        uses: anothrNick/github-tag-action@1.69.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INITIAL_VERSION: 1.0.0
-          DEFAULT_BUMP: minor
-          PRERELEASE: true
-          PRERELEASE_SUFFIX: ${{ env.BRANCH_NAME }}
-          RELEASE_BRANCHES: main
-          WITH_V: true
-          DRY_RUN: ${{ github.actor == 'renovate[bot]' }}
-
-      - name: Run Trivy vulnerability scanner
-        run: make scan
-
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
+      - name: Set up Docker
+        run: |
+          echo '{"experimental": true, "features": { "containerd-snapshotter": true }}' | sudo tee -a /etc/docker/daemon.json
+          sudo systemctl restart docker
+          docker run --privileged --rm tonistiigi/binfmt --install all
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0 # v5.0.0
         with:
-          sarif_file: 'test-results/trivy.sarif'
+          path: /tmp/images
+          name: multi-arch-image
+      - name: Load Images
+        run: |
+          docker load -i /tmp/images/multi-arch-image.tar
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -138,33 +149,66 @@ jobs:
 
       - name: ECR Login
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: 311462405659
 
-      - name: Push Container
+      - name: Run Trivy vulnerability scanner
+        env:
+          TRIVY_DB_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db:2
+          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db:1
+          DOCKER_USERNAME: ${{ steps.login-ecr.outputs.docker_username_311462405659_dkr_ecr_eu_west_1_amazonaws_com }}
+          DOCKER_PASSWORD: ${{ steps.login-ecr.outputs.docker_password_311462405659_dkr_ecr_eu_west_1_amazonaws_com }}
+        run: make scan
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@df559355d593797519d70b90fc8edd5db049e7a2 # v3.29.9
+        if: always()
+        with:
+          sarif_file: 'test-results/trivy.sarif'
+          category: trivy-docker-deputy-hub
+
+      - name: Push
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           DEPUTY_HUB_ECR_REPOSITORY: sirius/sirius-deputy-hub
         run: |
-          docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+          docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ needs.create-tag.outputs.tag }}
           if [ $BRANCH_NAME == "main" ]; then
-            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ steps.bump_version.outputs.tag }}
+            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ needs.create-tag.outputs.tag }}
+            docker tag 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:main-${{ needs.create-tag.outputs.tag }}-${{ needs.create-tag.outputs.timestamp }}
             # We want all of the tags pushed
             docker push --all-tags $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY
           else
-            docker push $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ steps.bump_version.outputs.tag }}
+            docker push $ECR_REGISTRY/$DEPUTY_HUB_ECR_REPOSITORY:${{ needs.create-tag.outputs.tag }}
+          fi
+
+  end_of_pr_workflow:
+    name: End of PR Workflow
+    runs-on: ubuntu-latest
+    if: always()
+    needs: ['test', 'lint', 'gosec', 'acceptance-test', 'cypress', 'create-tag', 'build', 'push']
+    steps:
+      - name: End of PR Workflow
+        run: |
+          if ${{ contains(needs.*.result,'failure') }}
+          then
+            echo "Not all checks succedeed, check the previous jobs."
+            exit 1
+          else
+            echo "All checks succedeed!"
+            exit 0
           fi
 
   push-tags:
     runs-on: ubuntu-latest
-    needs: build
+    needs: ['create-tag', 'end_of_pr_workflow']
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_ACTIONS }}
@@ -175,11 +219,11 @@ jobs:
 
       - name: Install AWS CLI
         id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@v1
+        uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # 1.0.8
 
       - name: Push Tag to Parameter Store
         run: |
-          aws ssm put-parameter --name "opg-sirius-supervision-deputy-hub-latest-green-build" --type "String" --value "${{ needs.build.outputs.tag}}" --overwrite --region=eu-west-1
+          aws ssm put-parameter --name "opg-sirius-supervision-deputy-hub-latest-green-build" --type "String" --value "${{ needs.create-tag.outputs.tag }}" --overwrite --region=eu-west-1
 
       - name: Trigger Dev Deploy
         shell: bash

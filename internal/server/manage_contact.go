@@ -2,11 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 )
 
 type ManageContact interface {
@@ -16,25 +16,25 @@ type ManageContact interface {
 }
 
 type ManageContactVars struct {
-	ContactId        int
-	ContactName      string
-	JobTitle         string
-	Email            string
-	PhoneNumber      string
-	OtherPhoneNumber string
-	ContactNotes     string
-	IsNamedDeputy    string
-	IsMainContact    string
-	IsNewContact     bool
+	ContactId                     int
+	ContactName                   string
+	JobTitle                      string
+	Email                         string
+	PhoneNumber                   string
+	OtherPhoneNumber              string
+	ContactNotes                  string
+	IsNamedDeputy                 string
+	IsMainContact                 string
+	IsNewContact                  bool
+	IsMonthlySpreadsheetRecipient string
 	AppVars
 }
 
 func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler {
 	return func(appVars AppVars, w http.ResponseWriter, r *http.Request) error {
 		ctx := getContext(r)
-		routeVars := mux.Vars(r)
-		deputyId, _ := strconv.Atoi(routeVars["id"])
-		contactId, _ := strconv.Atoi(routeVars["contactId"])
+		deputyId, _ := strconv.Atoi(r.PathValue("id"))
+		contactId, _ := strconv.Atoi(r.PathValue("contactId"))
 
 		appVars.PageName = "Add new contact"
 		if contactId != 0 {
@@ -64,6 +64,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				vars.ContactNotes = contact.ContactNotes
 				vars.IsNamedDeputy = strconv.FormatBool(contact.IsNamedDeputy)
 				vars.IsMainContact = strconv.FormatBool(contact.IsMainContact)
+				vars.IsMonthlySpreadsheetRecipient = strconv.FormatBool(contact.IsMonthlySpreadsheetRecipient)
 			}
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
@@ -72,14 +73,15 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 			var err error
 
 			manageContactForm := sirius.ContactForm{
-				ContactName:      r.PostFormValue("contact-name"),
-				JobTitle:         r.PostFormValue("job-title"),
-				Email:            r.PostFormValue("email"),
-				PhoneNumber:      r.PostFormValue("phone-number"),
-				OtherPhoneNumber: r.PostFormValue("other-phone-number"),
-				ContactNotes:     r.PostFormValue("contact-notes"),
-				IsNamedDeputy:    r.PostFormValue("is-named-deputy"),
-				IsMainContact:    r.PostFormValue("is-main-contact"),
+				ContactName:                   r.PostFormValue("contact-name"),
+				JobTitle:                      r.PostFormValue("job-title"),
+				Email:                         r.PostFormValue("email"),
+				PhoneNumber:                   r.PostFormValue("phone-number"),
+				OtherPhoneNumber:              r.PostFormValue("other-phone-number"),
+				ContactNotes:                  r.PostFormValue("contact-notes"),
+				IsNamedDeputy:                 r.PostFormValue("is-named-deputy"),
+				IsMainContact:                 r.PostFormValue("is-main-contact"),
+				IsMonthlySpreadsheetRecipient: r.PostFormValue("is-monthly-spreadsheet-recipient"),
 			}
 
 			if contactId == 0 {
@@ -101,6 +103,7 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				vars.IsNamedDeputy = manageContactForm.IsNamedDeputy
 				vars.IsMainContact = manageContactForm.IsMainContact
 				vars.IsNewContact = contactId == 0
+				vars.IsMonthlySpreadsheetRecipient = manageContactForm.IsMonthlySpreadsheetRecipient
 
 				return tmpl.ExecuteTemplate(w, "page", vars)
 			}

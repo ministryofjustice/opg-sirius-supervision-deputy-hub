@@ -1,15 +1,18 @@
-import { initAll } from 'govuk-frontend'
+import { initAll } from "govuk-frontend";
 import "govuk-frontend/dist/govuk/all.mjs";
 import MojBannerAutoHide from "./javascript/moj-banner-auto-hide";
 import accessibleAutocomplete from "accessible-autocomplete";
 import "opg-sirius-header/sirius-header.js";
 import ManageFilters from "./javascript/manage-filters";
+import DownloadChecker from "./javascript/download-checker";
 import ManageJumpMenus from "./javascript/manage-jump-menus";
+import CloseGcmIssue from "./javascript/close-gcm-issue";
+import ManageClient from "./javascript/manage-client";
 
-initAll()
+initAll();
 MojBannerAutoHide(document.querySelector(".app-main-class"));
 
-document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+document.body.className = document.body.className ? document.body.className + " js-enabled" : "js-enabled";
 
 if (document.querySelector("#f-select-ecm")) {
     accessibleAutocomplete.enhanceSelectElement({
@@ -38,28 +41,25 @@ if (document.querySelector("#assignedto-other")) {
 }
 
 function toggleAutocompleteInput() {
-    document
-        .getElementById("autocomplete-input")
-        .classList.toggle("hide");
+    document.getElementById("autocomplete-input").classList.toggle("hide");
 }
 
 if (document.querySelector("#f-back-button")) {
     document.getElementById("f-back-button").onclick = function (e) {
         e.preventDefault();
         history.go(parseInt(sessionStorage.getItem("backIndex")));
-    }
+    };
 }
 
 if (document.querySelector("#f-button-disabled")) {
     document.getElementById("f-button-disabled").onclick = function (e) {
         e.preventDefault();
         document.getElementById("f-button-disabled-warning").classList.remove("hide");
-    }
+    };
 }
 
-document.querySelectorAll(".min-date-today")
-    .forEach(function(input) {
-    input.setAttribute("min", new Date().toISOString().split('T')[0]);
+document.querySelectorAll(".min-date-today").forEach(function (input) {
+    input.setAttribute("min", new Date().toISOString().split("T")[0]);
 });
 
 const manageFilters = document.querySelectorAll('[data-module="filters"]');
@@ -72,8 +72,23 @@ jumpMenus.forEach(function (jumpMenu) {
     new ManageJumpMenus(jumpMenu);
 });
 
+const closedGCMIssue = document.querySelectorAll('[data-module="close-gcm-issue"]');
+closedGCMIssue.forEach(function (closedGCMIssue) {
+    new CloseGcmIssue(closedGCMIssue);
+});
+
+const manageClient = document.querySelectorAll('[data-module="manage-client"]');
+manageClient.forEach(function (manageClient) {
+    new ManageClient(manageClient);
+});
+
+const documentList = document.querySelectorAll('[data-module="document-list"]');
+documentList.forEach(function (documentListElement) {
+    new DownloadChecker(documentListElement);
+});
+
 function onHomePage() {
-    const homePageUrlRegex = new RegExp('^\\/(supervision/deputies\\/)?\\d+\\/*$');
+    const homePageUrlRegex = new RegExp("^\\/(supervision/deputies\\/)?\\d+\\/*$");
     return homePageUrlRegex.test(location.pathname);
 }
 

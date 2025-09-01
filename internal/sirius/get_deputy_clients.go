@@ -41,6 +41,7 @@ type DeputyClient struct {
 	SupervisionLevel       string
 	OrderStatus            string
 	ActivePfaOrderMadeDate string
+	HasActiveHWOrder       bool
 }
 
 type Page struct {
@@ -73,7 +74,7 @@ type ClientListParams struct {
 func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientList, error) {
 	var clientList ClientList
 
-	url := fmt.Sprintf("/api/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
+	url := fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%s/%d/clients?&limit=%d&page=%d&sort=%s", strings.ToLower(params.DeputyType), params.DeputyId, params.Limit, params.Search, params.Sort)
 
 	filter := params.CreateFilter()
 
@@ -93,7 +94,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 		return clientList, err
 	}
 
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return clientList, ErrUnauthorized
@@ -119,6 +120,7 @@ func (c *Client) GetDeputyClients(ctx Context, params ClientListParams) (ClientL
 			ClientAccommodation:    t.ClientAccommodation,
 			OrderStatus:            getOrderStatus(t.Orders),
 			ActivePfaOrderMadeDate: getActivePfaOrderMadeDate(t.Orders),
+			HasActiveHWOrder:       hasHwOrder(t.Orders),
 			SupervisionLevel:       getMostRecentSupervisionLevel(t.Orders),
 			OldestReport:           t.OldestReport,
 			LatestCompletedVisit: model.LatestCompletedVisit{
@@ -144,7 +146,7 @@ func (p ClientListParams) CreateFilter() string {
 		filter += "order-status:" + s + ","
 	}
 	for _, k := range p.AccommodationTypes {
-		filter += "accommodation:" + strings.Replace(k, " ", "%20", -1) + ","
+		filter += "accommodation:" + strings.ReplaceAll(k, " ", "%20") + ","
 	}
 	for _, s := range p.SupervisionLevels {
 		filter += "supervision-level:" + s + ","
@@ -194,6 +196,15 @@ func getActivePfaOrderMadeDate(orders []Order) string {
 		}
 	}
 	return ""
+}
+
+func hasHwOrder(orders []Order) bool {
+	for _, o := range orders {
+		if o.CaseSubType == "hw" && o.OrderStatus.Label == "Active" {
+			return true
+		}
+	}
+	return false
 }
 
 func getMostRecentSupervisionLevel(orders []Order) string {

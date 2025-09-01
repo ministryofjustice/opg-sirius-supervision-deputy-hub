@@ -1,9 +1,9 @@
 [
-  ["Deputy details", "/supervision/deputies/1"],
-  ["Contacts", "/supervision/deputies/1/contacts"],
-  ["Clients", "/supervision/deputies/1/clients"],
-  ["Timeline", "/supervision/deputies/1/timeline"],
-  ["Notes", "/supervision/deputies/1/notes"],
-  ["Tasks", "/supervision/deputies/1/tasks"],
-  ["Assurance visits", "/supervision/deputies/1/assurances"]
+    ["Deputy details", "/supervision/deputies/1"],
+    ["Contacts", "/supervision/deputies/1/contacts"],
+    ["Clients", "/supervision/deputies/1/clients"],
+    ["Timeline", "/supervision/deputies/1/timeline"],
+    ["Notes", "/supervision/deputies/1/notes"],
+    ["Tasks", "/supervision/deputies/1/tasks"],
+    ["Assurance visits", "/supervision/deputies/1/assurances"]
 ]

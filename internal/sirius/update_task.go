@@ -31,7 +31,7 @@ func (c *Client) UpdateTask(ctx Context, deputyId int, taskId int, dueDate strin
 		return err
 	}
 
-	requestURL := fmt.Sprintf("/api/v1/tasks/%d", taskId)
+	requestURL := fmt.Sprintf(SupervisionAPIPath+"/v1/tasks/%d", taskId)
 
 	req, err := c.newRequest(ctx, http.MethodPut, requestURL, &body)
 
@@ -44,7 +44,7 @@ func (c *Client) UpdateTask(ctx Context, deputyId int, taskId int, dueDate strin
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer unchecked(resp.Body.Close)
 
 	if resp.StatusCode == http.StatusUnauthorized {
 		return ErrUnauthorized
