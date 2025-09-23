@@ -6,7 +6,8 @@ module.exports = defineConfig({
         // You may want to clean this up later by importing these.
         setupNodeEvents(on, config) {
             require("./cypress/plugins/index.js")(on, config);
-            require("@cypress/grep/src/plugin")(config);
+            const { plugin: cypressGrepPlugin } = require("@cypress/grep/plugin");
+            cypressGrepPlugin(config);
             return config;
         },
         baseUrl: "http://localhost:8888",
