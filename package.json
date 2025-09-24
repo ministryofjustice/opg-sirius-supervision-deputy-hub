@@ -19,7 +19,7 @@
         "watch": "yarn build:js --watch=forever"
     },
     "dependencies": {
-        "@cypress/grep": "^4.0.1",
+        "@cypress/grep": "^5.0.0",
         "@ministryofjustice/frontend": "^5.0.0",
         "accessible-autocomplete": "^3.0.0",
         "govuk-frontend": "^5.0.0",
