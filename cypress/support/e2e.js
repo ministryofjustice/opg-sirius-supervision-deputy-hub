@@ -1,3 +1,3 @@
 require("cypress-failed-log");
-const registerCypressGrep = require("@cypress/grep");
+const { register: registerCypressGrep } = require("@cypress/grep");
 registerCypressGrep();
