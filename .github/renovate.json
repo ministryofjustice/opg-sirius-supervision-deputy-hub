@@ -20,6 +20,7 @@
     ],
     "major": {
         "labels": ["Dependencies", "Renovate"],
+        "minimumReleaseAge": "3 days"
     },
     "vulnerabilityAlerts": {
         "groupName": "Vulnerability Patches",
@@ -28,6 +29,6 @@
         "rangeStrategy": "update-lockfile",
         "commitMessagePrefix": "[SECURITY]",
         "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
-        "prCreation": "immediate",
+        "prCreation": "immediate"
     }
 }
