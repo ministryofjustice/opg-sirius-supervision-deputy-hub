@@ -19,15 +19,15 @@
         "watch": "yarn build:js --watch=forever"
     },
     "dependencies": {
-        "@cypress/grep": "^4.0.1",
+        "@cypress/grep": "^5.0.0",
         "@ministryofjustice/frontend": "^5.0.0",
         "accessible-autocomplete": "^3.0.0",
         "govuk-frontend": "^5.0.0",
-        "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.50.2"
+        "opg-sirius-header": "ministryofjustice/opg-sirius-header#semver:v0.50.4"
     },
     "devDependencies": {
         "axe-core": "^4.9.0",
-        "cypress": "^14.0.0",
+        "cypress": "^15.0.0",
         "cypress-axe": "^1.5.0",
         "cypress-failed-log": "^2.10.0",
         "esbuild": "^0.25.0",
