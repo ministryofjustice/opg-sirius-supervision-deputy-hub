@@ -46,14 +46,14 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 
 ---
 
-## Run Cypress tests
+## Run *one* Cypress test headless (i.e. not in UI)
+`docker compose run --build cypress --spec cypress/e2e/accessibility.cy.js` <br>
 
-```
-make build cypress
-```
+## Run *all* the Cypress tests headless
+`make build` (optional) <br>
+`make cypress`
 
 ## Run Cypress tests in UI
-
 - `make up && yarn cypress`
 
 ---
