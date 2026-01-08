@@ -40,6 +40,10 @@ cypress: setup-directories build-all
 	docker compose up -d --wait deputy-hub json-server
 	docker compose run --rm cypress run --env grepUntagged=true
 
+cypress-single: setup-directories build-all
+	docker compose up -d --wait deputy-hub json-server
+	docker compose run --rm cypress run --spec cypress/e2e/$(SPEC)
+
 axe: setup-directories build-all
 	docker compose up -d --wait deputy-hub
 	docker compose run --rm cypress run --env grepTags="@axe"
