@@ -2,7 +2,7 @@ module github.com/ministryofjustice/opg-sirius-supervision-deputy-hub
 
 go 1.24.3
 
-toolchain go1.25.5
+toolchain go1.25.6
 
 require (
 	github.com/gorilla/mux v1.8.1
