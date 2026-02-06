@@ -186,6 +186,12 @@ describe("Tasks", () => {
 
         it("shows validation errors", () => {
             cy.setCookie("fail-route", "manageTask");
+
+            let validDate = new Date();
+            validDate.setDate(validDate.getDate() + 1);
+            const dateString = validDate.toISOString().split("T")[0];
+            cy.get("#duedate").clear().type(dateString);
+
             cy.get("#f-2-note").clear();
             cy.get("#f-2-note").type("updated notes");
             cy.contains("button", "Save task").click();
