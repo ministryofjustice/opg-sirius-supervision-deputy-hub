@@ -5,7 +5,7 @@ WORKDIR /root
 RUN npm install "cypress-failed-log@2.9.2"
 RUN npm install axe-core
 RUN npm install cypress-axe
-RUN npm install @cypress/grep
+RUN npm install "@cypress/grep@5.1.0"
 
 ENV CYPRESS_VIDEO=false
 ENV CYPRESS_baseUrl=http://deputy-hub:8888
