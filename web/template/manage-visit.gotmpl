@@ -94,7 +94,7 @@
                                     <div class="govuk-radios__item">
                                         <input class="govuk-radios__input" id="visit-outcome-{{ .Label }}"
                                                name="visit-outcome" type="radio"
-                                               value="{{ .Label }}" {{ if ne $currentVisitOutcomeLabel "" }}{{ if eq $currentVisitOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                               value="{{ .Handle }}" {{ if ne $currentVisitOutcomeLabel "" }}{{ if eq $currentVisitOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
                                         <label class="govuk-label govuk-radios__label" for="visit-outcome-{{ .Label }}">
                                             {{ .Label }}
                                         </label>
@@ -135,7 +135,7 @@
                                 <div class="govuk-radios__item">
                                     <input class="govuk-radios__input" id="visit-report-marked-as-{{ .Label }}"
                                            name="visit-report-marked-as" type="radio"
-                                           value="{{ .Label }}" {{ if ne $currentReportMarkedAsLabel "" }}{{ if eq $currentReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
+                                           value="{{ .Handle }}" {{ if ne $currentReportMarkedAsLabel "" }}{{ if eq $currentReportMarkedAsLabel .Label }} checked="true"{{ end }}{{ end }}>
                                     <label class="govuk-label govuk-radios__label"
                                            for="visit-report-marked-as-{{ .Label }}">
                                         {{ .Label }}
