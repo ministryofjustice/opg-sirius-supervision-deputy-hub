@@ -1,10 +1,11 @@
 package server
 
 import (
+	"net/http"
+
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
-	"net/http"
 )
 
 type DeputyHubEventInformation interface {
@@ -13,8 +14,7 @@ type DeputyHubEventInformation interface {
 
 type deputyHubEventVars struct {
 	DeputyEvents sirius.DeputyEvents
-	AppVars
-	Pagination paginate.Pagination
+	ListPage
 }
 
 func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Template, vars EnvironmentVars) Handler {
@@ -25,7 +25,10 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 
 		ctx := getContext(r)
 
+		vars := deputyHubEventVars{}
 		app.PageName = "Timeline"
+		vars.AppVars = app
+
 		params := r.URL.Query()
 		page := paginate.GetRequestedPage(params.Get("page"))
 		limit := paginate.GetRequestedPage(params.Get("limit"))
@@ -35,6 +38,7 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 
 		perPageOptions := []int{25, 50, 100}
 		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
+		vars.PerPage = timelineEventsPerPage
 
 		deputyTimelineList, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, limit)
 		if err != nil {
@@ -43,21 +47,17 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 
 		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, vars.Prefix)
 
-		pagination := paginate.Pagination{
+		vars.Pagination = paginate.Pagination{
 			CurrentPage:     page,
 			TotalPages:      deputyTimelineList.Pages.Total,
 			TotalElements:   deputyTimelineList.Total,
-			ElementsPerPage: timelineEventsPerPage,
+			ElementsPerPage: vars.PerPage,
 			ElementName:     "timeline event(s)",
 			PerPageOptions:  perPageOptions,
 			UrlBuilder:      myUrlBuilder,
 		}
 
-		vars := deputyHubEventVars{
-			DeputyEvents: deputyTimelineList.DeputyEvents,
-			Pagination:   pagination,
-			AppVars:      app,
-		}
+		vars.DeputyEvents = deputyTimelineList.DeputyEvents
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
 	}
