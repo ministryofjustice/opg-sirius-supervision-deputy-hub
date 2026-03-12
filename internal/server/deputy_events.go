@@ -31,21 +31,17 @@ func renderTemplateForDeputyHubEvents(client DeputyHubEventInformation, tmpl Tem
 
 		params := r.URL.Query()
 		page := paginate.GetRequestedPage(params.Get("page"))
-		limit := paginate.GetRequestedPage(params.Get("limit"))
-		if limit == 1 {
-			limit = 25
-		}
-
 		perPageOptions := []int{25, 50, 100}
-		timelineEventsPerPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
-		vars.PerPage = timelineEventsPerPage
+		perPage := paginate.GetRequestedElementsPerPage(params.Get("limit"), perPageOptions)
 
-		deputyTimelineList, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, limit)
+		vars.PerPage = perPage
+
+		deputyTimelineList, err := client.GetDeputyEvents(ctx, app.DeputyId(), page, perPage)
 		if err != nil {
 			return err
 		}
 
-		myUrlBuilder := CreateUrlBuilder(r.URL.Path, timelineEventsPerPage, vars.Prefix)
+		myUrlBuilder := CreateUrlBuilder(r.URL.Path, perPage, vars.Prefix)
 
 		vars.Pagination = paginate.Pagination{
 			CurrentPage:     page,
