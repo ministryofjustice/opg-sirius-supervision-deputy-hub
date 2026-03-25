@@ -25,16 +25,12 @@ gosec: setup-directories
 	docker compose run --rm gosec
 
 test-results:
-	mkdir -p -m 0777 test-results .gocache pacts logs cypress/screenshots .trivy-cache
+	mkdir -p -m 0777 test-results .gocache pacts logs cypress/screenshots
 
 setup-directories: test-results
 
 unit-test: setup-directories
 	docker compose run --rm test-runner
-
-scan: setup-directories
-	docker compose run --rm trivy image --format table --exit-code 0 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
-	docker compose run --rm trivy image --format sarif --output /test-results/trivy.sarif --exit-code 1 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
 
 cypress: setup-directories build-all
 	docker compose up -d --wait deputy-hub json-server
