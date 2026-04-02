@@ -14,7 +14,7 @@ COPY web/assets web/assets
 COPY package.json .
 COPY yarn.lock .
 
-RUN yarn install
+RUN yarn install --frozen-lockfile --ignore-scripts
 RUN yarn build
 
 ### Development with hot reload and debugger
