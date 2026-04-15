@@ -49,7 +49,7 @@ FROM alpine:latest
 
 WORKDIR /go/bin
 
-RUN apk upgrade --no-cache busybox libcrypto3 libssl3 zlib
+RUN apk upgrade --no-cache busybox libcrypto3 libssl3 musl musl-utils zlib
 RUN apk --no-cache add tzdata
 ENV TZ="Europe/London"
 
