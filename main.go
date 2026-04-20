@@ -24,10 +24,12 @@ func main() {
 	logger := telemetry.NewLogger("opg-sirius-supervision-deputy-hub ")
 	// manually set time zone
 	if tz := os.Getenv("TZ"); tz != "" {
+		// Sanitize tz to prevent log injection
+		sanitisedTz := strings.ReplaceAll(strings.ReplaceAll(tz, "\n", ""), "\r", "")
 		var err error
-		time.Local, err = time.LoadLocation(tz)
+		time.Local, err = time.LoadLocation(sanitisedTz)
 		if err != nil {
-			log.Printf("error loading location '%s': %v\n", tz, err)
+			log.Printf("error loading location '%s': %v\n", sanitisedTz, err)
 		}
 	}
 
