@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html"
-	"html/template"
 	"net/http"
 	"net/url"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubInformation interface {
@@ -13,7 +13,7 @@ type DeputyHubInformation interface {
 }
 
 type deputyHubVars struct {
-	SuccessMessage    template.HTML
+	SuccessMessage    string
 	ActiveClientCount int
 	AppVars
 }
@@ -46,7 +46,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		vars := deputyHubVars{
 			AppVars:           app,
 			ActiveClientCount: clientList.Metadata.TotalActiveClients,
-			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
+			SuccessMessage:    getSuccessFromUrl(r.URL, app.DeputyDetails),
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)

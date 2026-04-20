@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"net/http"
 )
 
 type DeputyContactDetailsInformation interface {
@@ -28,6 +29,10 @@ func renderTemplateForManageDeputyContactDetails(client DeputyContactDetailsInfo
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			form := sirius.DeputyContactDetails{
 				DeputySubType:    app.DeputyDetails.DeputySubType.SubType,
 				DeputyFirstName:  r.PostFormValue("deputy-first-name"),
