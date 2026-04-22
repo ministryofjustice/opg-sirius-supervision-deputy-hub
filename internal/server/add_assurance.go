@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"net/http"
 )
 
 type AddAssuranceClient interface {
@@ -30,6 +31,9 @@ func renderTemplateForAddAssurance(client AddAssuranceClient, tmpl Template) Han
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			var assuranceType = r.PostFormValue("assurance-type")
 			var requestedDate = r.PostFormValue("requested-date")
 

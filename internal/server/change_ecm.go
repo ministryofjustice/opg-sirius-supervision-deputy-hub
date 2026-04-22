@@ -54,6 +54,9 @@ func renderTemplateForChangeECM(client ChangeECMInformation, tmpl Template) Hand
 				return err
 			}
 
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			EcmIdStringValue := r.PostFormValue("select-ecm")
 
 			if EcmIdStringValue == "" {

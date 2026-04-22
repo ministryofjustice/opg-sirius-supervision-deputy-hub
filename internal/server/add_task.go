@@ -2,11 +2,12 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+	"strconv"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"net/http"
-	"strconv"
 )
 
 type AddTasksClient interface {
@@ -50,6 +51,9 @@ func renderTemplateForAddTask(client AddTasksClient, tmpl Template) Handler {
 			Assignees: assignees,
 			AppVars:   app,
 		}
+
+		// Specify max file size to 10mb
+		r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 
 		if r.Method == http.MethodGet {
 			return tmpl.ExecuteTemplate(w, "page", vars)

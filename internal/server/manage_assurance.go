@@ -135,6 +135,9 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 				pdrOutcome = "RECEIVED"
 			}
 
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			manageAssuranceForm := sirius.UpdateAssuranceDetails{
 				CommissionedDate:   r.PostFormValue("commissioned-date"),
 				VisitorAllocated:   r.PostFormValue("visitor-allocated"),
