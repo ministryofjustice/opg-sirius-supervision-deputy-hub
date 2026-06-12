@@ -2,13 +2,14 @@ package server
 
 import (
 	"fmt"
+	"mime/multipart"
+	"net/http"
+	"time"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
-	"mime/multipart"
-	"net/http"
-	"time"
 )
 
 type AddDocumentClient interface {
@@ -65,7 +66,8 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 		if r.Method == http.MethodPost {
 			vars.Errors = sirius.ValidationErrors{}
 
-			// Specify max file size to 100mb
+			// Specify max file size to 100mb and limit request body size
+			r.Body = http.MaxBytesReader(w, r.Body, 100<<20)
 			err := r.ParseMultipartForm(100 << 20)
 			if err != nil {
 				return err

@@ -89,6 +89,10 @@ func renderTemplateForManageContact(client ManageContact, tmpl Template) Handler
 				successVar = "newContact"
 			} else {
 				err = client.UpdateContact(ctx, deputyId, contactId, manageContactForm)
+
+				// Specify max file size to 10mb
+				r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 				successVar = "updatedContact&contactName=" + r.PostFormValue("contact-name")
 			}
 
