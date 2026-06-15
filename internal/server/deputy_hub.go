@@ -59,7 +59,7 @@ func getSuccessFromUrl(url *url.URL, deputyDetails sirius.DeputyDetails) string 
 	case "deputyDetails":
 		return "Deputy details updated"
 	case "ecm":
-		return "<abbr title='Executive Case Manager'>ECM</abbr> changed to " + html.EscapeString(deputyDetails.ExecutiveCaseManager.EcmName)
+		return "Executive Case Manager changed to " + html.EscapeString(deputyDetails.ExecutiveCaseManager.EcmName)
 	case "importantInformation":
 		return "Important information updated"
 	case "newFirm":
