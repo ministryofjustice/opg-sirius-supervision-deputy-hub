@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -58,15 +57,9 @@ func TestPostManageDeputyDetails(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
-	var redirect error
+	returnedError := renderTemplateForManageDeputyContactDetails(client, template)(manageContactAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageDeputyContactDetails(client, template)(manageContactAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-	assert.Equal(redirect, Redirect("/123?success=deputyDetails"))
+	assert.Equal(Redirect("/123?success=deputyDetails"), returnedError)
 }
 
 func TestManageDeputyDetailsValidationErrors(t *testing.T) {
@@ -88,15 +81,9 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
-	var returnedError error
+	returnedError := renderTemplateForManageDeputyContactDetails(client, template)(manageContactAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageDeputyContactDetails(client, template)(manageContactAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
+	assert.Nil(returnedError)
 	assert.Equal(1, client.count)
 	assert.Equal(1, template.count)
 	assert.Equal("page", template.lastName)
@@ -107,8 +94,6 @@ func TestManageDeputyDetailsValidationErrors(t *testing.T) {
 			PageName:      "Manage deputy contact details",
 		},
 	}, template.lastVars)
-
-	assert.Nil(returnedError)
 }
 
 func TestDeputyContactDetailsHandlesErrors(t *testing.T) {

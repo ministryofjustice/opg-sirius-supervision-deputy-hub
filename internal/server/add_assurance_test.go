@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -59,14 +58,8 @@ func TestPostAssurance(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123/assurances", strings.NewReader(form.Encode()))
 	r.PostForm = form
 
-	var returnedError error
+	returnedError := renderTemplateForAddAssurance(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurances", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddAssurance(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(Redirect("/123/assurances?success=addAssurance"), returnedError)

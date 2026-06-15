@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -147,16 +146,9 @@ func TestPostManageImportantInformation(t *testing.T) {
 			r, _ := http.NewRequest("POST", "/123", strings.NewReader(tc.form.Encode()))
 			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-			var redirect error
+			returnedError := renderTemplateForImportantInformation(client, template)(tc.app, w, r)
 
-			testHandler := mux.NewRouter()
-			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				redirect = renderTemplateForImportantInformation(client, template)(tc.app, w, r)
-			})
-
-			testHandler.ServeHTTP(w, r)
-
-			assert.Equal(Redirect("/123?success=importantInformation"), redirect)
+			assert.Equal(Redirect("/123?success=importantInformation"), returnedError)
 		})
 	}
 }
