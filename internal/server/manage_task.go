@@ -63,6 +63,10 @@ func renderTemplateForManageTasks(client ManageTasks, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			var (
 				dueDate    = r.PostFormValue("duedate")
 				notes      = r.PostFormValue("notes")
