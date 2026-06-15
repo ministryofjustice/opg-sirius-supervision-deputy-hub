@@ -24,7 +24,7 @@ services:
             retries: 3
 
     go-lint:
-        image: golangci/golangci-lint:v2.12.2
+        image: golangci/golangci-lint:v2.12.2@sha256:5cceeef04e53efe1470638d4b4b4f5ceefd574955ab3941b2d9a68a8c9ad5240
         working_dir: /go/src/app
         volumes:
             - ./:/go/src/app
@@ -32,14 +32,14 @@ services:
         command: golangci-lint run -v --timeout 5m
 
     gosec:
-        image: securego/gosec:2.22.11
+        image: securego/gosec:2.22.11@sha256:4c42d880c93d9a38771dc130a705bae2480a45a1bb32240249806b12d7641d6d
         working_dir: /app
         volumes:
             - .:/app
         command: -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
 
     yarn:
-        image: node:24.14.0-alpine3.23
+        image: node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114
         working_dir: /home/node/app
         entrypoint: yarn
         volumes:
