@@ -2,11 +2,12 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
-	"net/http"
 )
 
 type AddGcmIssue interface {
@@ -53,6 +54,10 @@ func renderTemplateForAddGcmIssue(client AddGcmIssue, tmpl Template) Handler {
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
+
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			var caseRecNumber = r.PostFormValue("case-number")
 			var gcmIssueType = r.PostFormValue("issue-type")
 			var notes = r.PostFormValue("gcm-note")

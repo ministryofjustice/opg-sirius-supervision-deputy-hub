@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"html"
-	"html/template"
 	"net/http"
 	"net/url"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 )
 
 type DeputyHubInformation interface {
@@ -13,7 +13,7 @@ type DeputyHubInformation interface {
 }
 
 type deputyHubVars struct {
-	SuccessMessage    template.HTML
+	SuccessMessage    string
 	ActiveClientCount int
 	AppVars
 }
@@ -46,7 +46,7 @@ func renderTemplateForDeputyHub(client DeputyHubInformation, tmpl Template) Hand
 		vars := deputyHubVars{
 			AppVars:           app,
 			ActiveClientCount: clientList.Metadata.TotalActiveClients,
-			SuccessMessage:    template.HTML(getSuccessFromUrl(r.URL, app.DeputyDetails)),
+			SuccessMessage:    getSuccessFromUrl(r.URL, app.DeputyDetails),
 		}
 
 		return tmpl.ExecuteTemplate(w, "page", vars)
@@ -59,7 +59,7 @@ func getSuccessFromUrl(url *url.URL, deputyDetails sirius.DeputyDetails) string 
 	case "deputyDetails":
 		return "Deputy details updated"
 	case "ecm":
-		return "<abbr title='Executive Case Manager'>ECM</abbr> changed to " + html.EscapeString(deputyDetails.ExecutiveCaseManager.EcmName)
+		return "Executive Case Manager changed to " + html.EscapeString(deputyDetails.ExecutiveCaseManager.EcmName)
 	case "importantInformation":
 		return "Important information updated"
 	case "newFirm":

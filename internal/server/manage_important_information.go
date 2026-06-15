@@ -2,10 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"golang.org/x/sync/errgroup"
@@ -90,6 +91,9 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			} else if annualBillingInvoice == "" {
 				annualBillingInvoice = "UNKNOWN"
 			}
+
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 
 			importantInfoForm := sirius.ImportantInformationDetails{
 				DeputyType:                vars.DeputyType(),
