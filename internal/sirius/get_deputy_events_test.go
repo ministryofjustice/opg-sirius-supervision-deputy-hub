@@ -75,7 +75,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		  {
 				"id": 369,
 				"hash": "A9",
-				"timestamp": "2021-09-09 14:01:59",
+				"timestamp": "2021-09-09T14:01:59+00:00",
 				"eventType": "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
 				"user": {
 				  "id": 21,
@@ -120,7 +120,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		  {
 			"id": 397,
 			"hash": "AY",
-			"timestamp": "2021-01-10 15:01:59",
+			"timestamp": "2021-01-10T15:01:59+00:00",
 			"eventType": "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
 			"user": {
 			  "id": 21,
@@ -301,7 +301,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	uneditedData := DeputyEvents{
 		model.DeputyEvent{
 			ID:        387,
-			Timestamp: "2020-10-18 11:12:08",
+			Timestamp: "2020-10-18T11:12:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PaDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -342,7 +342,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        388,
-			Timestamp: "2020-10-18 10:11:08",
+			Timestamp: "2020-10-18T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PersonContactDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -373,7 +373,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        389,
-			Timestamp: "2020-10-16 10:11:08",
+			Timestamp: "2020-10-16T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PADeputyCreated",
 			User: model.User{
 				ID:          51,
@@ -393,7 +393,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        390,
-			Timestamp: "2020-09-20 10:11:08",
+			Timestamp: "2020-09-20T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
 			User: model.User{
 				ID:          51,

@@ -1452,7 +1452,7 @@ module.exports = function () {
                 {
                     id: 1,
                     hash: "AW",
-                    timestamp: "2021-09-09 14:01:59",
+                    timestamp: "2021-09-09T14:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
                     user: {
                         id: 41,
@@ -1486,7 +1486,7 @@ module.exports = function () {
                 {
                     id: 2,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Person\\DeputyContactDetailsChanged",
                     user: {
                         id: 51,
@@ -1520,7 +1520,7 @@ module.exports = function () {
                 {
                     id: 3,
                     hash: "AS",
-                    timestamp: "2022-03-22 15:57:11",
+                    timestamp: "2022-03-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
                     user: {
                         id: 51,
@@ -1553,7 +1553,7 @@ module.exports = function () {
                 {
                     id: 4,
                     hash: "AR",
-                    timestamp: "2022-03-22 15:56:53",
+                    timestamp: "2022-03-22T15:56:53+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Client\\DeputyAllocatedToFirm",
                     user: {
                         id: 51,
@@ -1586,7 +1586,7 @@ module.exports = function () {
                 {
                     id: 5,
                     hash: "AY",
-                    timestamp: "2021-11-24 14:01:59",
+                    timestamp: "2021-11-24T14:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Client\\DeputyAllocated",
                     user: {
                         id: 51,
@@ -1606,7 +1606,7 @@ module.exports = function () {
                 {
                     id: 6,
                     hash: "AY",
-                    timestamp: "2021-09-09 14:01:59",
+                    timestamp: "2021-09-09T14:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Order\\DeputyOrderDetailsChanged",
                     user: {
                         id: 41,
@@ -1648,7 +1648,7 @@ module.exports = function () {
                 {
                     id: 7,
                     hash: "AY",
-                    timestamp: "2021-10-10 15:01:59",
+                    timestamp: "2021-10-10T15:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Client\\PADeputyCreated",
                     user: {
                         id: 21,
@@ -1666,7 +1666,7 @@ module.exports = function () {
                 {
                     id: 8,
                     hash: "AY",
-                    timestamp: "2021-10-10 15:01:59",
+                    timestamp: "2021-10-10T15:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Deputy\\AssuranceVisitAdded",
                     user: {
                         id: 21,
@@ -1697,7 +1697,7 @@ module.exports = function () {
                 {
                     id: 9,
                     hash: "AY",
-                    timestamp: "2021-10-10 15:01:59",
+                    timestamp: "2021-10-10T15:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
                     user: {
                         id: 21,
@@ -1724,7 +1724,7 @@ module.exports = function () {
                 {
                     id: 10,
                     hash: "AY",
-                    timestamp: "2023-10-10 15:01:59",
+                    timestamp: "2023-10-10T15:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
                     user: {
                         id: 21,
@@ -1768,7 +1768,7 @@ module.exports = function () {
                     id: 11,
                     id: 398,
                     hash: "AY",
-                    timestamp: "2023-10-10 15:01:59",
+                    timestamp: "2023-10-10T15:01:59+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\Task\\TaskReassigned",
                     user: {
                         id: 21,
@@ -1796,7 +1796,7 @@ module.exports = function () {
                 {
                     id: 377,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactAdded",
                     user: {
                         id: 51,
@@ -1818,7 +1818,7 @@ module.exports = function () {
                 {
                     id: 12,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactEdited",
                     user: {
                         id: 51,
@@ -1848,7 +1848,7 @@ module.exports = function () {
                 {
                     id: 13,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsMain",
                     user: {
                         id: 51,
@@ -1870,7 +1870,7 @@ module.exports = function () {
                 {
                     id: 14,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsMain",
                     user: {
                         id: 51,
@@ -1892,7 +1892,7 @@ module.exports = function () {
                 {
                     id: 15,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactSetAsNamed",
                     user: {
                         id: 51,
@@ -1914,7 +1914,7 @@ module.exports = function () {
                 {
                     id: 16,
                     hash: "AS",
-                    timestamp: "2022-04-22 15:57:11",
+                    timestamp: "2022-04-22T15:57:11+00:00",
                     eventType: "Opg\\Core\\Model\\Event\\DeputyContact\\DeputyContactRemovedAsNamed",
                     user: {
                         id: 51,
