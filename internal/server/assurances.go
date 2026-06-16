@@ -61,7 +61,7 @@ func isAddVisitDisabled(assurances []model.Assurance) (bool, string) {
 			}
 			return true, "You cannot add anything until the current assurance process has a review date or is marked as 'Not received'"
 		}
-		if (assurances[0].ReportReviewDate != "" && assurances[0].ReportMarkedAs.Label != "") || assurances[0].VisitOutcome.Label == "Cancelled" {
+		if (assurances[0].ReportReviewDate != "" && assurances[0].ReportMarkedAs.Label != "") || assurances[0].VisitOutcome.Handle == "CANCELLED" {
 			return false, ""
 		}
 		return true, "You cannot add anything until the current assurance process has a review date and RAG status or is cancelled"

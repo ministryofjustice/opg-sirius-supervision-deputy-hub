@@ -38,7 +38,7 @@ func parseAssuranceForm(assuranceForm sirius.UpdateAssuranceDetails) model.Assur
 		VisitorAllocated:   assuranceForm.VisitorAllocated,
 		ReportDueDate:      assuranceForm.ReportDueDate,
 		ReportReceivedDate: assuranceForm.ReportReceivedDate,
-		VisitOutcome:       model.RefData{Label: assuranceForm.VisitOutcome},
+		VisitOutcome:       model.RefData{Handle: assuranceForm.VisitOutcome},
 		PdrOutcome:         model.RefData{Label: assuranceForm.PdrOutcome},
 		ReportReviewDate:   assuranceForm.ReportReviewDate,
 		ReportMarkedAs:     model.RAGRating{Label: assuranceForm.ReportMarkedAs},

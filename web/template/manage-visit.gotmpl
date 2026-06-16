@@ -87,15 +87,15 @@
                         <legend class="govuk-fieldset__legend">
                             Outcome
                         </legend>
-                        {{ $currentVisitOutcomeLabel:=.Assurance.VisitOutcome.Label }}
+                        {{ $currentVisitOutcomeHandle:=.Assurance.VisitOutcome.Handle }}
                         <div class="govuk-radios">
                             {{ range .VisitOutcomeTypes }}
                                 {{ if ne .Label "Aborted" }}
                                     <div class="govuk-radios__item">
-                                        <input class="govuk-radios__input" id="visit-outcome-{{ .Label }}"
+                                        <input class="govuk-radios__input" id="visit-outcome-{{ .Handle }}"
                                                name="visit-outcome" type="radio"
-                                               value="{{ .Label }}" {{ if ne $currentVisitOutcomeLabel "" }}{{ if eq $currentVisitOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
-                                        <label class="govuk-label govuk-radios__label" for="visit-outcome-{{ .Label }}">
+                                               value="{{ .Handle }}" {{ if ne $currentVisitOutcomeHandle "" }}{{ if eq $currentVisitOutcomeHandle .Handle }} checked="true"{{ end }}{{ end }}>
+                                        <label class="govuk-label govuk-radios__label" for="visit-outcome-{{ .Handle }}">
                                             {{ .Label }}
                                         </label>
                                     </div>
