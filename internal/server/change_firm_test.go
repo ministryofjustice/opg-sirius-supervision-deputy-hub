@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -66,14 +65,7 @@ func TestPostChangeFirm(t *testing.T) {
 	form.Add("select-existing-firm", "26")
 	r.PostForm = form
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/firm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeFirm(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForChangeFirm(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
