@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"github.com/stretchr/testify/mock"
@@ -108,15 +107,9 @@ func TestCloseGCMIssue(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123/gcm-issues/closed-issues", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var redirect error
+	returnedError := renderTemplateForGcmIssues(client, template)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/gcm-issues/closed-issues", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForGcmIssues(client, template)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/gcm-issues/open-issues?success=closedGcms&count=1"), redirect)
+	assert.Equal(Redirect("/123/gcm-issues/open-issues?success=closedGcms&count=1"), returnedError)
 }

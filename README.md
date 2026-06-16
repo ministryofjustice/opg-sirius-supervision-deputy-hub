@@ -46,11 +46,14 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 
 ---
 
-## Run Cypress tests
+## Run _one_ Cypress test headless (i.e. not in UI)
 
-```
-make build cypress
-```
+`make cypress-single SPEC=accessibility.cy.js` <br>
+
+## Run _all_ the Cypress tests headless
+
+`make build` (optional) <br>
+`make cypress`
 
 ## Run Cypress tests in UI
 

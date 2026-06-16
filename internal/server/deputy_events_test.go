@@ -1,12 +1,13 @@
 package server
 
 import (
-	"github.com/ministryofjustice/opg-go-common/paginate"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/ministryofjustice/opg-go-common/paginate"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -62,8 +63,23 @@ func TestNavigateToTimeline(t *testing.T) {
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Equal(deputyHubEventVars{
-		AppVars: AppVars{
-			PageName: "Timeline",
+		ListPage: ListPage{
+			AppVars: AppVars{
+				PageName: "Timeline",
+			},
+			Pagination: paginate.Pagination{
+				CurrentPage:     1,
+				TotalPages:      1,
+				TotalElements:   2,
+				ElementsPerPage: 25,
+				ElementName:     "timeline event(s)",
+				PerPageOptions:  []int{25, 50, 100},
+				UrlBuilder: urlbuilder.UrlBuilder{
+					OriginalPath:    "/path",
+					SelectedPerPage: 25,
+				},
+			},
+			PerPage: 25,
 		},
 		DeputyEvents: sirius.DeputyEvents{
 			{
@@ -71,18 +87,6 @@ func TestNavigateToTimeline(t *testing.T) {
 			},
 			{
 				ID: 2,
-			},
-		},
-		Pagination: paginate.Pagination{
-			CurrentPage:     1,
-			TotalPages:      1,
-			TotalElements:   2,
-			ElementsPerPage: 25,
-			ElementName:     "timeline event(s)",
-			PerPageOptions:  []int{25, 50, 100},
-			UrlBuilder: urlbuilder.UrlBuilder{
-				OriginalPath:    "/path",
-				SelectedPerPage: 25,
 			},
 		},
 	}, template.lastVars)

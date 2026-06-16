@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
 
@@ -122,17 +121,11 @@ func TestPostManageAssurance(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123/assurances/1", strings.NewReader("{commissionedDate:'2200/10/20'}"))
 	r.SetPathValue("visitId", "1")
 
-	var redirect error
+	returnedError := renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurances/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/assurances?success=manageVisit"), redirect)
+	assert.Equal(Redirect("/123/assurances?success=manageVisit"), returnedError)
 }
 
 func TestGetManagePDR(t *testing.T) {
@@ -198,17 +191,11 @@ func TestPostManagePDR(t *testing.T) {
 	r.SetPathValue("id", "123")
 	r.SetPathValue("visitId", "1")
 
-	var redirect error
+	returnedError := renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/assurances/{visitId}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageAssurance(client, visitTemplate, pdrTemplate)(manageAssuranceAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/assurances?success=managePDR"), redirect)
+	assert.Equal(Redirect("/123/assurances?success=managePDR"), returnedError)
 }
 
 func TestParseVisitForm(t *testing.T) {

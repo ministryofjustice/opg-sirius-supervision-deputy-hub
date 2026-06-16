@@ -89,6 +89,7 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 			vars.Errors = sirius.ValidationErrors{}
 
 			// Specify max file size to 100mb
+			r.Body = http.MaxBytesReader(w, r.Body, 100<<20)
 			err := r.ParseMultipartForm(100 << 20)
 			if err != nil {
 				return err

@@ -37,7 +37,7 @@ describe("Change ECM", () => {
             cy.contains("#f-select-ecm__listbox", "Jon Snow").click();
             cy.get("form").submit();
             cy.get("h1").should("contain", "Deputy details");
-            cy.get(".moj-banner--success").should("contain", "ECM changed to");
+            cy.get(".moj-banner--success").should("contain", "Executive Case Manager changed to");
         });
 
         it("displays warning when no ecm chosen and form submitted", () => {

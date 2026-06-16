@@ -3,7 +3,6 @@ package server
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -146,16 +145,9 @@ func TestPostReplaceDocument(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", body)
 	r.Header.Add("Content-Type", writer.FormDataContentType())
 
-	var res error
+	returnedError := renderTemplateForReplaceDocument(client, nil)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForReplaceDocument(client, nil)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(res, Redirect(fmt.Sprintf("/123/documents?success=replaceDocument&previousFilename=%s&filename=%s", "bad-doc.png", "data.txt")))
+	assert.Equal(Redirect(fmt.Sprintf("/123/documents?success=replaceDocument&previousFilename=%s&filename=%s", "bad-doc.png", "data.txt")), returnedError)
 }
 
 func TestPostReplaceDocumentReturnsErrorsFromSirius(t *testing.T) {
