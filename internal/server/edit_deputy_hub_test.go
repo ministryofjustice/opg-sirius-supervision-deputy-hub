@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -53,18 +52,11 @@ func TestPostEditDeputyHub(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForEditDeputyHub(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForEditDeputyHub(client, template)(AppVars{DeputyDetails: testDeputy}, w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(returnedError, Redirect("/123?success=teamDetails"))
+	assert.Equal(Redirect("/123?success=teamDetails"), returnedError)
 }
 
 func TestEditDeputyValidationErrors(t *testing.T) {

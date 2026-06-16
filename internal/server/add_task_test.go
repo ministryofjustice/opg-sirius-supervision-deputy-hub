@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -139,16 +138,9 @@ func TestAddTask_success_ecm(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var res error
+	returnedError := renderTemplateForAddTask(client, nil)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(res, Redirect("/123/tasks?success=add&taskType=A Big Critical Task"))
+	assert.Equal(Redirect("/123/tasks?success=add&taskType=A Big Critical Task"), returnedError)
 	assert.Equal(1, client.selectedAssignee)
 }
 
@@ -177,16 +169,9 @@ func TestAddTask_success_other(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var res error
+	returnedError := renderTemplateForAddTask(client, nil)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddTask(client, nil)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(res, Redirect("/123/tasks?success=add&taskType=A Big Critical Task"))
+	assert.Equal(Redirect("/123/tasks?success=add&taskType=A Big Critical Task"), returnedError)
 	assert.Equal(2, client.selectedAssignee)
 }
 

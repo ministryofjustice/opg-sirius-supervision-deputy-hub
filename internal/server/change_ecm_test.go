@@ -8,7 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
@@ -79,18 +78,11 @@ func TestPostChangeECM(t *testing.T) {
 	r.PostForm = form
 	r.SetPathValue("id", "76")
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/ecm", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForChangeECM(client, template)(AppVars{}, w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(returnedError, Redirect("/76?success=ecm"))
+	assert.Equal(Redirect("/76?success=ecm"), returnedError)
 }
 
 func TestPostChangeECMReturnsErrorWithNoECM(t *testing.T) {
