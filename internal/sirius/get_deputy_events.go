@@ -72,7 +72,7 @@ func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
 	var list DeputyEvents
 	for _, e := range events {
 		event := model.DeputyEvent{
-			Timestamp:  PermissiveFormatIsoDateTime(e.Timestamp, SiriusDateTime),
+			Timestamp:  FormatDateTime(IsoDateTimeZone, e.Timestamp, SiriusDateTime),
 			EventType:  reformatEventType(e.EventType),
 			ID:         e.ID,
 			User:       e.User,
