@@ -110,7 +110,7 @@ func includesTaskEvent(events DeputyEvents) bool {
 func updateTaskInfo(event model.Event, taskTypes TaskTypeMap) model.Event {
 	if event.TaskType > "" {
 		event.TaskType = taskTypes[event.TaskType].Description
-		event.DueDate = FormatDateTime(IsoDateTime, event.DueDate, SiriusDate)
+		event.DueDate = PermissiveFormatIsoDateTime(event.DueDate, SiriusDate)
 	}
 	return event
 }

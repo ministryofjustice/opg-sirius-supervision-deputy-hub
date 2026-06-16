@@ -88,7 +88,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 					"isPersonEvent": true,
 					"taskId": 184,
 					"taskType": "AVFU",
-					"dueDate": "2023-03-01 00:00:00",
+					"dueDate": "2023-03-01T00:00:00+00:00",
 					"notes": "Edited notes for edited task",
 					"name": "",
 					"assigneeId": 21,
