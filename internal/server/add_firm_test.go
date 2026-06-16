@@ -7,7 +7,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -66,14 +65,8 @@ func TestPostAddFirm(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
-	var returnedError error
+	returnedError := renderTemplateForAddFirm(client, nil)(addFirmAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, nil)(addFirmAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(returnedError, Redirect("/123?success=newFirm"))
 }
 
@@ -126,14 +119,7 @@ func TestErrorAddFirmMessageWhenIsEmpty(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/133", strings.NewReader(""))
 
-	var returnedError error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForAddFirm(client, template)(addFirmAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddFirm(client, template)(addFirmAppVars, w, r)
 
 	expectedValidationErrors := sirius.ValidationErrors{
 		"firmName": {

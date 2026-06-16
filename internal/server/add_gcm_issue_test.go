@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"net/http/httptest"
@@ -102,14 +101,7 @@ func TestPostAddGCMIssueSearchForClient(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var res error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddGcmIssue(client, template)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddGcmIssue(client, template)(app, w, r)
 
 	assert.Equal(AddGcmIssueVars{
 		AppVars: AppVars{
@@ -134,7 +126,7 @@ func TestPostAddGCMIssueSearchForClient(t *testing.T) {
 		Notes:        "",
 	}, template.lastVars)
 
-	assert.Nil(res)
+	assert.Nil(returnedError)
 }
 
 func TestPostAddGCMIssueSubmitForm(t *testing.T) {
@@ -167,18 +159,11 @@ func TestPostAddGCMIssueSubmitForm(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var res error
-
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddGcmIssue(client, template)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
+	returnedError := renderTemplateForAddGcmIssue(client, template)(app, w, r)
 
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(res, Redirect("/123/gcm-issues/open-issues?success=addGcmIssue&123456"))
+	assert.Equal(Redirect("/123/gcm-issues/open-issues?success=addGcmIssue&123456"), returnedError)
 }
 
 func TestPostAddGCMIssueErrorsIfNoCaseNumber(t *testing.T) {
@@ -215,16 +200,9 @@ func TestPostAddGCMIssueErrorsIfNoCaseNumber(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(form.Encode()))
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	var res error
+	returnedError := renderTemplateForAddGcmIssue(client, template)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		res = renderTemplateForAddGcmIssue(client, template)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Nil(res)
+	assert.Nil(returnedError)
 
 	assert.Equal(AddGcmIssueVars{
 		AppVars: app,
@@ -285,16 +263,9 @@ func TestPostAddGCMIssueHandlesErrorsInOtherClientFiles(t *testing.T) {
 			r, _ := http.NewRequest("POST", "/123", strings.NewReader(tc.Form.Encode()))
 			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-			var res error
+			returnedError := renderTemplateForAddGcmIssue(tc.Client, template)(app, w, r)
 
-			testHandler := mux.NewRouter()
-			testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-				res = renderTemplateForAddGcmIssue(tc.Client, template)(app, w, r)
-			})
-
-			testHandler.ServeHTTP(w, r)
-
-			assert.Equal(t, expectedError, res)
+			assert.Equal(t, expectedError, returnedError)
 		})
 	}
 }

@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/stretchr/testify/mock"
 	"net/http"
@@ -105,17 +104,12 @@ func TestPostManageTask(t *testing.T) {
 	form := url.Values{"dueDate": {"2023-11-02"}}
 
 	r, _ := http.NewRequest("POST", "/tasks/123", strings.NewReader(form.Encode()))
-	var redirect error
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/tasks/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForManageTasks(client, template)(app, w, r)
-	})
+	returnedError := renderTemplateForManageTasks(client, template)(app, w, r)
 
-	testHandler.ServeHTTP(w, r)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
-	assert.Equal(Redirect("/123/tasks?success=manage&taskType=TaskDescription"), redirect)
+	assert.Equal(Redirect("/123/tasks?success=manage&taskType=TaskDescription"), returnedError)
 }
 
 func TestRenameErrors(t *testing.T) {

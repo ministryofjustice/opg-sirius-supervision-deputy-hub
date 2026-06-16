@@ -1,8 +1,6 @@
 package server
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
@@ -247,15 +245,8 @@ func TestPostBulkAssuranceVisitTask(t *testing.T) {
 	r.PostForm = form
 	r.SetPathValue("id", "76")
 
-	var returnedError error
+	returnedError := renderTemplateForClientTab(client, template)(AppVars{}, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/bulk-assurance-visit-tasks", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForClientTab(client, template)(AppVars{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-	fmt.Print(returnedError)
 	resp := w.Result()
 	assert.Equal(http.StatusOK, resp.StatusCode)
 	assert.Nil(returnedError)

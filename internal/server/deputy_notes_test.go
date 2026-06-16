@@ -8,8 +8,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
-
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -78,14 +76,8 @@ func TestPostAddNote(t *testing.T) {
 	w := httptest.NewRecorder()
 	r, _ := http.NewRequest("POST", "/123", strings.NewReader(""))
 
-	var returnedError error
+	returnedError := renderTemplateForDeputyHubNotes(client, nil)(deputyNotesAppVars, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeputyHubNotes(client, nil)(deputyNotesAppVars, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(returnedError, Redirect("/123/notes?success=true"))
 }
 

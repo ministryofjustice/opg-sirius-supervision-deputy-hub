@@ -2,9 +2,10 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
-	"net/http"
 )
 
 type FirmInformation interface {
@@ -25,6 +26,9 @@ func renderTemplateForAddFirm(client FirmInformation, tmpl Template) Handler {
 		vars := addFirmVars{
 			AppVars: app,
 		}
+
+		// Specify max file size to 10mb
+		r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 
 		switch r.Method {
 		case http.MethodGet:

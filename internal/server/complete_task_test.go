@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"github.com/stretchr/testify/mock"
@@ -120,16 +119,9 @@ func TestPostCompleteTask(t *testing.T) {
 	form := url.Values{"taskCompletedNotes": {"some notes"}}
 	r, _ := http.NewRequest("POST", "/path", strings.NewReader(form.Encode()))
 
-	var redirect error
+	returnedError := renderTemplateForCompleteTask(client, template)(app, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		redirect = renderTemplateForCompleteTask(client, template)(app, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
-
-	assert.Equal(Redirect("/123/tasks?success=complete&taskType=TaskDescription"), redirect)
+	assert.Equal(Redirect("/123/tasks?success=complete&taskType=TaskDescription"), returnedError)
 }
 
 func TestCompleteTaskValidationErrors(t *testing.T) {

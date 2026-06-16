@@ -2,10 +2,11 @@ package server
 
 import (
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"net/http"
 	"strconv"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 )
 
 type DeputyChangeFirmInformation interface {
@@ -42,6 +43,10 @@ func renderTemplateForChangeFirm(client DeputyChangeFirmInformation, tmpl Templa
 
 		case http.MethodPost:
 			var vars changeFirmVars
+
+			// Specify max file size to 10mb
+			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
+
 			newFirm := r.PostFormValue("select-firm")
 			AssignToExistingFirmStringIdValue := r.PostFormValue("select-existing-firm")
 

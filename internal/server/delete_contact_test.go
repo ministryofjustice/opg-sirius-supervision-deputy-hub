@@ -6,7 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -61,13 +60,7 @@ func TestPostDeleteContact(t *testing.T) {
 	r, _ := http.NewRequest("POST", "/123/1", strings.NewReader(""))
 	r.SetPathValue("id", "123")
 
-	var returnedError error
+	returnedError := renderTemplateForDeleteContact(client, nil)(AppVars{}, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/{contactId}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForDeleteContact(client, nil)(AppVars{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(Redirect("/123/contacts?success=deletedContact&contactName="), returnedError)
 }

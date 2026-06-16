@@ -6,8 +6,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
-
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/stretchr/testify/assert"
 )
@@ -79,13 +77,6 @@ func TestGetManageContact(t *testing.T) {
 	r.SetPathValue("id", "133")
 	r.SetPathValue("contactId", "1")
 
-	vars := map[string]string{
-		"id":        "133",
-		"contactId": "1",
-	}
-
-	r = mux.SetURLVars(r, vars)
-
 	app := AppVars{PageName: "Manage contact"}
 
 	handler := renderTemplateForManageContact(client, template)
@@ -117,14 +108,8 @@ func TestPostAddContact(t *testing.T) {
 
 	r.SetPathValue("id", "123")
 
-	var returnedError error
+	returnedError := renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(Redirect("/123/contacts?success=newContact"), returnedError)
 }
 
@@ -137,14 +122,8 @@ func TestPostManageContact(t *testing.T) {
 	r.SetPathValue("id", "123")
 	r.SetPathValue("contactId", "1")
 
-	var returnedError error
+	returnedError := renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
 
-	testHandler := mux.NewRouter()
-	testHandler.HandleFunc("/{id}/{contactId}", func(w http.ResponseWriter, r *http.Request) {
-		returnedError = renderTemplateForManageContact(client, nil)(AppVars{}, w, r)
-	})
-
-	testHandler.ServeHTTP(w, r)
 	assert.Equal(Redirect("/123/contacts?success=updatedContact&contactName="), returnedError)
 }
 
@@ -212,15 +191,9 @@ func TestPostManageContactReturnsNonValidationErrors(t *testing.T) {
 
 	template := &mockTemplates{}
 
-	vars := map[string]string{
-		"id":        "123",
-		"contactId": "1",
-	}
-
 	w := httptest.NewRecorder()
 
 	r, _ := http.NewRequest("POST", "/123/contacts/1", strings.NewReader(""))
-	r = mux.SetURLVars(r, vars)
 	r.SetPathValue("id", "123")
 	r.SetPathValue("contactId", "1")
 
@@ -236,15 +209,9 @@ func TestGetManageContactReturnsNonValidationErrors(t *testing.T) {
 
 	template := &mockTemplates{}
 
-	vars := map[string]string{
-		"id":        "123",
-		"contactId": "1",
-	}
-
 	w := httptest.NewRecorder()
 
 	r, _ := http.NewRequest("GET", "/123/contacts/1", strings.NewReader(""))
-	r = mux.SetURLVars(r, vars)
 	r.SetPathValue("id", "123")
 	r.SetPathValue("contactId", "1")
 

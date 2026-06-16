@@ -1,4 +1,4 @@
-FROM golang:1.26-alpine AS base
+FROM golang:1.26-alpine@sha256:7a3e50096189ad57c9f9f865e7e4aa8585ed1585248513dc5cda498e2f41812c AS base
 WORKDIR /app
 
 ENV CGO_ENABLED=0
@@ -6,7 +6,7 @@ ENV GOOS=linux
 
 RUN update-ca-certificates
 
-FROM node:24.14.0-alpine3.23 AS asset-env
+FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS asset-env
 
 WORKDIR /app
 
@@ -45,7 +45,7 @@ RUN go mod download
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:latest
+FROM alpine:latest@sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4
 
 WORKDIR /go/bin
 

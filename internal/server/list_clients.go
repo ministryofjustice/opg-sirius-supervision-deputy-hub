@@ -2,15 +2,16 @@ package server
 
 import (
 	"fmt"
+	"net/http"
+	"net/url"
+	"strconv"
+
 	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
 	"golang.org/x/sync/errgroup"
-	"net/http"
-	"net/url"
-	"strconv"
 )
 
 type DeputyHubClientInformation interface {
@@ -194,6 +195,9 @@ func renderTemplateForClientTab(client DeputyHubClientInformation, tmpl Template
 				vars.Errors = util.RenameErrors(selectDueDateError)
 			} else {
 				vars.AppVars = app
+
+				// Specify max file size to 10mb
+				r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 
 				vars.SuccessMessage, err = client.BulkAssignAssuranceVisitTasksToClients(ctx, sirius.BulkAssignAssuranceVisitTasksToClientsParams{
 					DueDate:   r.FormValue("dueDate"),
