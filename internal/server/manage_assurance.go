@@ -39,7 +39,7 @@ func parseAssuranceForm(assuranceForm sirius.UpdateAssuranceDetails) model.Assur
 		ReportDueDate:      assuranceForm.ReportDueDate,
 		ReportReceivedDate: assuranceForm.ReportReceivedDate,
 		VisitOutcome:       model.RefData{Handle: assuranceForm.VisitOutcome},
-		PdrOutcome:         model.RefData{Label: assuranceForm.PdrOutcome},
+		PdrOutcome:         model.RefData{Handle: assuranceForm.PdrOutcome},
 		ReportReviewDate:   assuranceForm.ReportReviewDate,
 		ReportMarkedAs:     model.RAGRating{Label: assuranceForm.ReportMarkedAs},
 		ReviewedBy:         model.User{ID: assuranceForm.ReviewedBy},
@@ -128,13 +128,6 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 				reviewedBy = app.UserDetails.ID
 			}
 
-			pdrOutcome := ""
-			if r.PostFormValue("pdr-outcome") == "Not received" {
-				pdrOutcome = "NOT_RECEIVED"
-			} else if r.PostFormValue("pdr-outcome") == "Received" {
-				pdrOutcome = "RECEIVED"
-			}
-
 			// Specify max file size to 10mb
 			r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 
@@ -144,7 +137,7 @@ func renderTemplateForManageAssurance(client ManageAssuranceClient, visitTmpl Te
 				ReportDueDate:      r.PostFormValue("report-due-date"),
 				ReportReceivedDate: r.PostFormValue("report-received-date"),
 				VisitOutcome:       r.PostFormValue("visit-outcome"),
-				PdrOutcome:         pdrOutcome,
+				PdrOutcome:         r.PostFormValue("pdr-outcome"),
 				ReportReviewDate:   reportReviewDate,
 				ReportMarkedAs:     r.PostFormValue("visit-report-marked-as"),
 				ReviewedBy:         reviewedBy,

@@ -60,14 +60,14 @@
                         <legend class="govuk-fieldset__legend">
                             Outcome
                         </legend>
-                        {{ $currentPdrOutcomeLabel:=.Assurance.PdrOutcome.Label }}
+                        {{ $currentPdrOutcomeHandle:=.Assurance.PdrOutcome.Handle }}
                         <div class="govuk-radios">
                             {{ range .PdrOutcomeTypes }}
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="pdr-outcome-{{ .Label }}"
+                                    <input class="govuk-radios__input" id="pdr-outcome-{{ .Handle }}"
                                            name="pdr-outcome" type="radio"
-                                           value="{{ .Label }}" {{ if ne $currentPdrOutcomeLabel "" }}{{ if eq $currentPdrOutcomeLabel .Label }} checked="true"{{ end }}{{ end }}>
-                                    <label class="govuk-label govuk-radios__label" for="pdr-outcome-{{ .Label }}">
+                                           value="{{ .Handle }}" {{ if ne $currentPdrOutcomeHandle "" }}{{ if eq $currentPdrOutcomeHandle .Handle }} checked="true"{{ end }}{{ end }}>
+                                    <label class="govuk-label govuk-radios__label" for="pdr-outcome-{{ .Handle }}">
                                         {{ .Label }}
                                     </label>
                                 </div>
