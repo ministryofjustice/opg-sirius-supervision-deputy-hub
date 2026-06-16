@@ -16,15 +16,15 @@ func TestRAGRating_GetRiskMarker(t *testing.T) {
 			want: VisitReportMarkedAs{},
 		},
 		{
-			rag:  RAGRating{Handle: "red"},
+			rag:  RAGRating{Handle: "RED"},
 			want: VisitReportMarkedAs{Name: "High risk", Colour: "red"},
 		},
 		{
-			rag:  RAGRating{Handle: "amber"},
+			rag:  RAGRating{Handle: "AMBER"},
 			want: VisitReportMarkedAs{Name: "Medium risk", Colour: "orange"},
 		},
 		{
-			rag:  RAGRating{Handle: "green"},
+			rag:  RAGRating{Handle: "GREEN"},
 			want: VisitReportMarkedAs{Name: "Low risk", Colour: "green"},
 		},
 	}

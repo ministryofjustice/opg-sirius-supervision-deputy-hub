@@ -30,7 +30,7 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("form autofills in existing data", () => {
-            cy.get("#visit-report-marked-as-Red").should("be.checked");
+            cy.get("#visit-report-marked-as-RED").should("be.checked");
         });
 
         it("form keeps data if validation error", () => {
@@ -41,7 +41,7 @@ describe("Manage an Assurance Visit", () => {
             cy.get("#f-report-received-date").type("2021-02-03");
             cy.get("#visit-outcome-SUCCESSFUL").click();
             cy.get("#f-report-review-date").type("2021-02-04");
-            cy.get("#visit-report-marked-as-Green").click();
+            cy.get("#visit-report-marked-as-GREEN").click();
             cy.get("#f-note").type("This is a test note");
 
             cy.get("#manage-assurance-form").submit();
@@ -62,7 +62,7 @@ describe("Manage an Assurance Visit", () => {
             cy.get("#f-report-received-date").should("have.value", "2021-02-03");
             cy.get("#visit-outcome-SUCCESSFUL").should("be.checked");
             cy.get("#f-report-review-date").should("have.value", "2021-02-04");
-            cy.get("#visit-report-marked-as-Green").should("be.checked");
+            cy.get("#visit-report-marked-as-GREEN").should("be.checked");
             cy.get("#f-note").contains("This is a test note");
         });
 
@@ -99,7 +99,7 @@ describe("Manage an Assurance Visit", () => {
         });
 
         it("form autofills in existing data", () => {
-            cy.get("#visit-report-marked-as-Red").should("be.checked");
+            cy.get("#visit-report-marked-as-RED").should("be.checked");
         });
 
         it("allows user to edit and submit the form", () => {
