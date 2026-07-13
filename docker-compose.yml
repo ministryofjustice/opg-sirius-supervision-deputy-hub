@@ -6,9 +6,12 @@ services:
         ports: ["8888:8888"]
         depends_on:
             - json-server
+        privileged: false
+        user: app
         environment:
             PORT: 8888
             SIRIUS_URL: http://json-server:3000
+            HEALTHCHECK: /supervision/deputies/health-check
             PREFIX: /supervision/deputies
             FEATURES:
 

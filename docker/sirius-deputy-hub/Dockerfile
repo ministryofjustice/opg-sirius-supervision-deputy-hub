@@ -4,6 +4,19 @@ WORKDIR /app
 ENV CGO_ENABLED=0
 ENV GOOS=linux
 
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid 65532 \
+    app
+
+RUN apk --update --no-cache add \
+    ca-certificates \
+    tzdata
+
 RUN update-ca-certificates
 
 FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS asset-env
@@ -45,15 +58,30 @@ RUN go mod download
 
 RUN go build -a -installsuffix cgo -o /go/bin/opg-sirius-supervision-deputy-hub
 
-FROM alpine:latest@sha256:a2d49ea686c2adfe3c992e47dc3b5e7fa6e6b5055609400dc2acaeb241c829f4
+FROM base AS healthcheck-build
+WORKDIR /app
+
+COPY healthcheck healthcheck
+
+WORKDIR /app/healthcheck
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /go/bin/healthcheck
+
+FROM scratch
 
 WORKDIR /go/bin
 
-RUN apk upgrade --no-cache busybox libcrypto3 libssl3 musl musl-utils zlib
-RUN apk --no-cache add tzdata
-ENV TZ="Europe/London"
+COPY --from=base /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=base /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=base /etc/passwd /etc/passwd
+COPY --from=base /etc/group /etc/group
 
 COPY --from=build-env /go/bin/opg-sirius-supervision-deputy-hub opg-sirius-supervision-deputy-hub
+COPY --from=healthcheck-build /go/bin/healthcheck healthcheck
 COPY --from=build-env /app/web/template web/template
 COPY --from=asset-env /app/web/static web/static
+
+USER app
+
+HEALTHCHECK --interval=5s --timeout=5s --start-period=5s --retries=3 CMD [ "/go/bin/healthcheck" ]
+
 ENTRYPOINT ["./opg-sirius-supervision-deputy-hub"]
