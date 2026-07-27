@@ -19,7 +19,7 @@ RUN apk --update --no-cache add \
 
 RUN update-ca-certificates
 
-FROM node:24.14.0-alpine3.23@sha256:7fddd9ddeae8196abf4a3ef2de34e11f7b1a722119f91f28ddf1e99dcafdf114 AS asset-env
+FROM node:24.18.0-alpine3.23@sha256:595398b0081eacda8e1c4c5b97b76cd1020e4d58a8ebcb4843b9bca1e79e7436 AS asset-env
 
 WORKDIR /app
 
