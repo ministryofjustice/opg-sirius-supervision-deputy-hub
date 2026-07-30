@@ -1,4 +1,4 @@
 a.sorting-arrows {
-  @extend button;
+  @extend button !optional;
   text-decoration: none !important;
 }

@@ -1,4 +1,91 @@
+@use "node_modules/@ministryofjustice/frontend/moj/all" as *;
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
+//$govuk-border-colour: #b1b4b6;
+//$govuk-secondary-text-colour: #505a5f;
+//$moj-assets-path: "/supervision/deputies/static/assets/";
+//$govuk-assets-path: "/supervision/deputies/static/assets/";
+
+$govuk-border-colour: govuk-functional-colour("secondary-text");
+$govuk-secondary-text-colour: govuk-functional-colour("secondary-text");
+$moj-assets-path: "/supervision/deputies/static/assets/";
+$govuk-assets-path: "/supervision/deputies/static/assets/";
+$govuk-brand-colour: govuk-functional-colour("brand");
+$govuk-link-active-colour: govuk-functional-colour("link-active");
+$govuk-link-visited-colour: govuk-functional-colour("link-visited");
+$govuk-link-hover-colour: govuk-functional-colour("link-hover");
+
 // Sirius specific styles
+.moj-header__container {
+  max-width: 98%;
+}
+
+.moj-timeline__item {
+  max-width: 60em;
+}
+
+.govuk-form-group {
+  max-width: 40em;
+}
+
+.title-and-buttons-inline {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em 0 0.5em;
+  border-bottom: 1px solid $govuk-border-colour;
+  margin-bottom: 2em;
+}
+
+.hide {
+  display: none;
+}
+
+.autocomplete__wrapper {
+  font-family: "GDS Transport", arial, sans-serif;
+}
+
+#delete-contact-button-group {
+  max-width: 75ch;
+  border-top: 1px solid $govuk-border-colour;
+  padding-top: 1em;
+}
+
+.opg-tab {
+  color: black;
+}
+
+.opg-tab-selected {
+  text-decoration: none;
+}
+
+.sirius-blue {
+  color: #1d70b8;
+}
+
+#checkbox-column {
+  max-width: 15px;
+  width: 15px;
+}
+
+.govuk-button--blue {
+  background: govuk-colour("blue");
+
+  &:hover {
+    background: govuk-colour("dark-blue");
+  }
+}
+
+#edit-assign-title {
+  display: block;
+}
+
+#error-banner-message {
+  color: #d4351c;
+}
+
+#footer-background {
+  background: #f4f8fb;
+}
 
 .sirius-prohub {
   .govuk-width-container,
