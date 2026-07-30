@@ -1,9 +1,17 @@
-$govuk-moj-table-background-color: govuk-colour("white");
+@use "node_modules/@ministryofjustice/frontend/moj/all" as *;
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
+
+$moj-assets-path: "/supervision/deputies/static/assets/";
 
 .moj-manage-list {
+  .moj-filter__tag::after {
+    background-image: url("#{$moj-assets-path}images/icon-tag-remove-cross.svg");
+  }
+
   .govuk-table {
     .govuk-table__row.selected {
-      background: $govuk-moj-table-background-color;
+      background: govuk-colour("white");
       .govuk-table__cell {
         &:first-child {
           border-left: govuk-spacing(1) solid govuk-colour("blue") !important;

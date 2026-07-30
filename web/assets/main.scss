@@ -2,21 +2,12 @@ $govuk-new-link-styles: true;
 $govuk-include-default-font-face: false;
 $govuk-moj-table-background-color: govuk-colour("white");
 $moj-assets-path: "/supervision/deputies/static/assets/";
-$govuk-assets-path: "/supervision/deputies/static/assets/";
 
 @forward "node_modules/accessible-autocomplete/src/autocomplete";
 @forward "node_modules/opg-sirius-header/sass/main";
-@forward "./scss/app-c-option-select";
+@forward "./scss/filters";
 @forward "./scss/pa-hub";
 @forward "./scss/pro-hub";
 @forward "./scss/_moj-pagination";
 @forward "./scss/sorting";
 @forward "./scss/moj-manage-list";
-
-.moj-button-menu__item {
-  display: inline-block;
-  width: auto;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  vertical-align: baseline;
-}

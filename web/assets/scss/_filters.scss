@@ -1,4 +1,9 @@
-.app-c-option-select {
+@use "node_modules/@ministryofjustice/frontend/moj/all" as *;
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
+$moj-assets-path: "/supervision/deputies/static/assets/";
+
+.client-filter {
   position: relative;
 
   &__heading {
@@ -34,11 +39,11 @@
     height: 40px;
     fill: govuk-colour("black");
 
-    [aria-expanded="true"] ~ .app-c-option-select--up {
+    [aria-expanded="true"] ~ .client-filter--up {
       display: block;
     }
 
-    [aria-expanded="false"] ~ .app-c-option-select--down {
+    [aria-expanded="false"] ~ .client-filter--down {
       display: block;
     }
   }
@@ -61,7 +66,7 @@
       font-size: 16px;
       line-height: 1.25;
       padding-left: 33px;
-      background: url("/public/images/icon-search.svg") govuk-colour("white") no-repeat -5px -3px;
+      background: url("#{$moj-assets-path}images/icon-search-black.svg") govuk-colour("white") no-repeat -5px -3px;
     }
   }
 

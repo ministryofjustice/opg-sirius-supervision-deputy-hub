@@ -14,7 +14,7 @@
                     href="{{ prefix (printf "/%d/delete-deputy" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-0 {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary {{if or (not .UserDetails.IsSystemManager) (not .DeputyDetails.CanDelete) }} hide{{end}}"
                     data-module="govuk-button">
                     Delete deputy
                 </a>
@@ -22,7 +22,7 @@
                     href="{{ sirius (printf "/api/v1/finance/reports/deputies/%d/download-billing-schedule?OPG-Bypass-Membrane=1" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-0"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary"
                     data-module="govuk-button">
                     Download client debt
                 </a>
@@ -30,7 +30,7 @@
                     href="{{ prefix (printf "/%d/change-firm" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-0"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
                     data-module="govuk-button"
                     id="change-firm">
                     Change firm
@@ -39,7 +39,7 @@
                     href="{{ prefix (printf "/%d/change-ecm" .DeputyDetails.ID) }}"
                     role="button"
                     draggable="false"
-                    class="govuk-button moj-button-menu__item govuk-button--secondary govuk-!-margin-bottom-0"
+                    class="govuk-button moj-button-menu__item govuk-button--secondary "
                     data-module="govuk-button"
                     id="change-ecm">
                     Change ECM
@@ -137,7 +137,7 @@
                 href="{{ prefix (printf "/%d/manage-deputy-contact-details" .DeputyDetails.ID) }}"
                 role="button"
                 draggable="false"
-                class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0"
+                class="govuk-button govuk-button--secondary"
                 data-module="govuk-button"
                 data-cy="manage-deputy-contact-details-btn">
                 Manage deputy contact details
