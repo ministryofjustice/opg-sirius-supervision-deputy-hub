@@ -3,13 +3,6 @@
 
 $moj-assets-path: "/supervision/deputies/static/assets/";
 
-$govuk-border-colour: govuk-functional-colour("border");
-$govuk-secondary-text-colour: govuk-functional-colour("secondary-text");
-$govuk-brand-colour: govuk-functional-colour("brand");
-$govuk-link-active-colour: govuk-functional-colour("link-active");
-$govuk-link-visited-colour: govuk-functional-colour("link-visited");
-$govuk-link-hover-colour: govuk-functional-colour("link-hover");
-
 // Sirius specific styles
 .moj-header__container {
   max-width: 98%;
@@ -27,7 +20,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   display: flex;
   justify-content: space-between;
   padding: 1em 0 0.5em;
-  border-bottom: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid govuk-functional-colour("border");
   margin-bottom: 2em;
 }
 
@@ -41,7 +34,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
 
 #delete-contact-button-group {
   max-width: 75ch;
-  border-top: 1px solid $govuk-border-colour;
+  border-top: 1px solid govuk-functional-colour("border");
   padding-top: 1em;
 }
 
@@ -83,42 +76,9 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
 }
 
 .sirius-prohub {
-  .govuk-width-container,
-  .moj-header__container,
-  .moj-primary-navigation__container {
-    max-width: none;
-    padding: 0 15px;
-  }
 
-  .flex-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .govuk-button-group .govuk-link {
-    font-size: 19px;
-    font-size: 1.1875rem;
-    line-height: 1;
-    padding: 8px 10px 7px;
-    display: inline-block;
-    max-width: 100%;
-    margin-bottom: 20px;
-    margin-top: 0;
-  }
 
   main {
-    header {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5em 0 0.5em;
-      border-bottom: 1px solid $govuk-border-colour;
-      margin-bottom: 2em;
-    }
-
-    .moj-sub-navigation {
-      margin-bottom: 0;
-    }
-
     #overview {
       display: flex;
       justify-content: flex-start;
@@ -127,17 +87,6 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
     }
   }
 
-  .moj-header__container {
-    max-width: 98%;
-  }
-
-  .moj-timeline__item {
-    max-width: 60em;
-  }
-
-  .govuk-form-group {
-    max-width: 40em;
-  }
 
   .data-item-container {
     padding-right: 3em;
@@ -157,7 +106,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   }
 
   span.secondary {
-    color: $govuk-secondary-text-colour;
+    color: govuk-functional-colour("secondary-text");
     font-size: 16px;
     font-size: 1rem;
     line-height: 1.25;
@@ -199,7 +148,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
         }
 
         &.secondary {
-          color: $govuk-secondary-text-colour;
+          color: govuk-functional-colour("secondary-text");
           font-size: 16px;
           font-size: 1rem;
           line-height: 1.25;

@@ -3,14 +3,6 @@
 
 $moj-assets-path: "/supervision/deputies/static/assets/";
 
-$govuk-border-colour: govuk-functional-colour("border");
-$govuk-secondary-text-colour: govuk-functional-colour("secondary-text");
-$govuk-brand-colour: govuk-functional-colour("brand");
-$govuk-link-active-colour: govuk-functional-colour("link-active");
-$govuk-link-visited-colour: govuk-functional-colour("link-visited");
-$govuk-link-hover-colour: govuk-functional-colour("link-hover");
-
-  // Sirius specific styles
 .moj-header__container {
   max-width: 98%;
 }
@@ -27,7 +19,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   display: flex;
   justify-content: space-between;
   padding: 1em 0 0.5em;
-  border-bottom: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid govuk-functional-colour("border");
   margin-bottom: 2em;
 }
 
@@ -41,7 +33,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
 
 #delete-contact-button-group {
   max-width: 75ch;
-  border-top: 1px solid $govuk-border-colour;
+  border-top: 1px solid govuk-functional-colour("border");
   padding-top: 1em;
 }
 
@@ -82,52 +74,52 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   background: #f4f8fb;
 }
 
-.sirius-pahub {
-  .govuk-width-container,
-  .moj-header__container,
-  .moj-primary-navigation__container {
-    max-width: none;
-    padding: 0 15px;
-  }
+.govuk-width-container,
+.moj-header__container,
+.moj-primary-navigation__container {
+  max-width: none;
+  padding: 0 15px;
+}
 
-  .flex-container {
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.govuk-button-group .govuk-link {
+  font-size: 19px;
+  font-size: 1.1875rem;
+  line-height: 1;
+  padding: 8px 10px 7px;
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+main {
+  header {
     display: flex;
     justify-content: space-between;
+    padding: 0.5em 0 0.5em;
+    border-bottom: 1px solid govuk-functional-colour("border");
+    margin-bottom: 2em;
   }
 
-  .govuk-button-group .govuk-link {
-    font-size: 19px;
-    font-size: 1.1875rem;
-    line-height: 1;
-    padding: 8px 10px 7px;
-    display: inline-block;
-    max-width: 100%;
-    margin-bottom: 20px;
-    margin-top: 0;
+  .moj-sub-navigation {
+    margin-bottom: 0;
   }
+}
 
+.sirius-pahub {
   main {
-    header {
-      display: flex;
-      justify-content: space-between;
-      padding: 1em 0 0.5em;
-      border-bottom: 1px solid $govuk-border-colour;
-      margin-bottom: 2em;
-    }
-
-    .moj-sub-navigation {
-      margin-bottom: 0;
-    }
-
     // DASHBOARD
-
     #overview {
       display: flex;
-      /* or inline-flex */
       justify-content: flex-start;
       margin-bottom: 2em;
       padding-bottom: 2em;
-      border-bottom: 1px solid $govuk-border-colour;
+      border-bottom: 1px solid govuk-functional-colour("border");
 
       .data-item-container {
         padding-right: 3em;
@@ -196,7 +188,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
         }
 
         &.secondary {
-          color: $govuk-secondary-text-colour;
+          color: govuk-functional-colour("secondary-text");
           font-size: 16px;
           font-size: 1rem;
           line-height: 1.25;
@@ -270,7 +262,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
 
     dl {
       margin: 0;
-      color: $govuk-secondary-text-colour;
+      color: govuk-functional-colour("secondary-text");
       font-size: 1rem;
       line-height: 1.25;
 
@@ -313,7 +305,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   position: relative;
   padding: 0 0 10px;
   margin-bottom: 10px;
-  border-bottom: 1px solid $govuk-border-colour;
+  border-bottom: 1px solid govuk-functional-colour("border");
 }
 
 .filters-accordion__heading {
@@ -329,7 +321,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   text-align: left;
   padding: 0;
   cursor: pointer;
-  color: $govuk-brand-colour;
+  color: govuk-functional-colour("brand");
 }
 .filters-accordion__title {
   font-size: 19px;
@@ -341,7 +333,7 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
   top: 20px;
   left: 2px;
   width: 20px;
-  fill: $govuk-link-active-colour;
+  fill: govuk-functional-colour("link-active");
 }
 
 [aria-expanded="true"] ~ .filters-accordion__icon--up {
@@ -413,15 +405,15 @@ $govuk-link-hover-colour: govuk-functional-colour("link-hover");
 
 // mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
 a[href^="mailto:"] {
-  color: $govuk-link-visited-colour;
+  color: govuk-functional-colour("link-visited");
   &:hover {
-    color: $govuk-link-hover-colour;
+    color: govuk-functional-colour("link-hover");
   }
 }
 
 assurance {
   header {
-    border-top: 1px solid $govuk-border-colour;
+    border-top: 1px solid govuk-functional-colour("border");
   }
 }
 
