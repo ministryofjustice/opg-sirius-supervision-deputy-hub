@@ -140,7 +140,30 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
   font-size: 16px;
   line-height: 1.25;
   padding-left: 33px;
-  background: url("/public/images/icon-search.svg") govuk-functional-colour("body-background") no-repeat -5px -3px;
+  background: url("#{$moj-assets-path}images/icon-search.svg") govuk-functional-colour("body-background") no-repeat -5px -3px;
+}
+
+@supports (-webkit-mask-position: initial) or (mask-position: initial) {
+  .govuk-footer__copyright-logo::before {
+    mask-image: url("#{$moj-assets-path}images/govuk-crest.svg");
+    mask-repeat: no-repeat;
+    mask-size: 125px 102px;
+    background: currentcolor;
+    mask-position: 50% 0%;
+  }
+}
+
+.govuk-footer__copyright-logo::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 112px;
+  background-image: url("#{$moj-assets-path}images/govuk-crest.svg");
+  background-repeat: no-repeat;
+  background-size: 125px 102px;
+  text-align: center;
+  background-position: 50% 0%;
+  white-space: nowrap;
 }
 
 .filters-accordion__container-inner {
@@ -229,7 +252,6 @@ assurance {
   margin-bottom: 20px;
   margin-top: 0;
 }
-
 
 main {
   header {
@@ -334,6 +356,4 @@ table {
     padding-left: 20px;
     line-height: normal !important;
   }
-
-
 }
