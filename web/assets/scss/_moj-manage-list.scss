@@ -11,10 +11,10 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 
   .govuk-table {
     .govuk-table__row.selected {
-      background: govuk-colour("white");
+      background: govuk-functional-colour("body-background");
       .govuk-table__cell {
         &:first-child {
-          border-left: govuk-spacing(1) solid govuk-colour("blue") !important;
+          border-left: govuk-spacing(1) solid govuk-functional-colour("brand") !important;
         }
       }
     }
@@ -30,7 +30,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
         }
 
         .secondary {
-          color: govuk-colour("black");
+          color: govuk-functional-colour("text");
           font-size: 16px;
           font-size: 1rem;
           line-height: 1.25;
@@ -71,7 +71,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 
     .govuk-button--cancel {
       background: none !important;
-      color: govuk-colour("black");
+      color: govuk-functional-colour("text");
       border-color: transparent;
       box-shadow: 0 2px 0 transparent !important;
       text-decoration: underline;
@@ -79,10 +79,10 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
   }
 
   .govuk-button--blue {
-    background: govuk-colour("blue");
+    background: govuk-functional-colour("brand");
 
     &:hover {
-      background: govuk-colour("dark-blue");
+      background: govuk-functional-colour("link-hover");
     }
   }
 }

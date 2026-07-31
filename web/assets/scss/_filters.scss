@@ -19,7 +19,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
     text-align: left;
     padding: 0;
     cursor: pointer;
-    color: govuk-colour("blue");
+    color: govuk-functional-colour("brand");
     display: flex;
     width: fit-content;
 
@@ -55,7 +55,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 
   &__filter {
     position: relative;
-    background: govuk-colour("white");
+    background: govuk-functional-colour("body-background");
     padding: 13px 13px 10px 13px;
 
     &-input {
@@ -66,7 +66,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
       font-size: 16px;
       line-height: 1.25;
       padding-left: 33px;
-      background: url("#{$moj-assets-path}images/icon-search-black.svg") govuk-colour("white") no-repeat -5px -3px;
+      background: url("#{$moj-assets-path}images/icon-search-black.svg") govuk-functional-colour("body-background") no-repeat -5px -3px;
     }
   }
 
@@ -75,7 +75,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
     max-height: 200px;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: govuk-colour("white");
+    background-color: govuk-functional-colour("body-background");
 
     &-inner {
       padding-top: govuk-spacing(2);

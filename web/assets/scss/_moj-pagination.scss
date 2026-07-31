@@ -4,7 +4,7 @@
     border: none;
     padding: 0 !important;
     font-family: arial, sans-serif;
-    color: govuk-colour("blue");
+    color: govuk-functional-colour("brand");
     cursor: pointer;
     font-size: large;
   }
@@ -15,7 +15,7 @@
         height: govuk-spacing(2);
         width: govuk-spacing(2);
         border-style: solid;
-        color: govuk-colour("black");
+        color: govuk-functional-colour("text");
         background: transparent;
         -webkit-transform: rotate(-45deg);
         -ms-transform: rotate(-45deg);
@@ -31,7 +31,7 @@
         height: govuk-spacing(2);
         width: govuk-spacing(2);
         border-style: solid;
-        color: govuk-colour("black");
+        color: govuk-functional-colour("text");
         background: transparent;
         -webkit-transform: rotate(-45deg);
         -ms-transform: rotate(-45deg);
