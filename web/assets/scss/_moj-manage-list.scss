@@ -1,7 +1,6 @@
 @use "node_modules/@ministryofjustice/frontend/moj/all" as *;
 @use "node_modules/govuk-frontend/dist/govuk" as *;
 
-
 $moj-assets-path: "/supervision/deputies/static/assets/";
 
 .moj-manage-list {
