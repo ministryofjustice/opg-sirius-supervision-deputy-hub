@@ -66,7 +66,8 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
       font-size: 16px;
       line-height: 1.25;
       padding-left: 33px;
-      background: url("#{$moj-assets-path}images/icon-search-black.svg") govuk-functional-colour("body-background") no-repeat -5px -3px;
+      background: url("#{$moj-assets-path}images/icon-search-black.svg") govuk-functional-colour("body-background")
+        no-repeat -5px -3px;
     }
   }
 
