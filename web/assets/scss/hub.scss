@@ -58,7 +58,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
   background: govuk-colour("blue");
 
   &:hover {
-    background: govuk-colour("dark-blue");
+    background: govuk-colour("blue", $variant: "shade-50");
   }
 }
 
