@@ -89,6 +89,10 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
     }
   }
 
+  .hide {
+    display: none;
+  }
+
   .govuk-grid-column-one-fifth {
     float: left;
     box-sizing: border-box;
