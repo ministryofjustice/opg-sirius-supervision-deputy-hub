@@ -55,7 +55,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 }
 
 .govuk-button--blue {
-  background: govuk-colour("blue");;
+  background: govuk-colour("blue");
 
   &:hover {
     background: govuk-colour("dark-blue");
@@ -94,7 +94,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
   text-align: left;
   padding: 0;
   cursor: pointer;
-  color: govuk-colour("blue");;
+  color: govuk-colour("blue");
 }
 .filters-accordion__title {
   font-size: 19px;
