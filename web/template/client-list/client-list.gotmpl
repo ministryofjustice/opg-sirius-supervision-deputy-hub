@@ -15,31 +15,46 @@
                 </div>
             </th>
             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "surname" }}">
-                <a href="{{ .UrlBuilder.GetSortUrl "surname" }}" class="sortable-{{ .Sort.GetAriaSort "surname" }}">
-                    <button type="button">Client</button>
+                <a href="{{ .UrlBuilder.GetSortUrl "surname" }}">
+                    <button type="button">Client
+                        {{ $surnameSort := .Sort.GetAriaSort "surname" }}
+                        {{ template "sort-arrow" $surnameSort }}
+                    </button>
                 </a>
             </th>
             <th scope="col" class="govuk-table__header">Accommodation type</th>
             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "orderMadeDate" }}">
-                <a href="{{ .UrlBuilder.GetSortUrl "orderMadeDate" }}" class="sortable-{{ .Sort.GetAriaSort "orderMadeDate" }}">
-                    <button type="button">Order made date</button>
+                <a href="{{ .UrlBuilder.GetSortUrl "orderMadeDate" }}">
+                    <button type="button">Order made date
+                        {{ $orderMadeSort := .Sort.GetAriaSort "orderMadeDate" }}
+                        {{ template "sort-arrow" $orderMadeSort }}
+                    </button>
                 </a>
             </th>
             <th scope="col" class="govuk-table__header">Status</th>
             <th scope="col" class="govuk-table__header">Supervision level</th>
             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "visitDate" }}">
-                <a href="{{ .UrlBuilder.GetSortUrl "visitDate" }}" class="sortable-{{ .Sort.GetAriaSort "visitDate" }}">
-                    <button type="button">Visits</button>
+                <a href="{{ .UrlBuilder.GetSortUrl "visitDate" }}">
+                    <button type="button">Visits
+                        {{ $visitSort := .Sort.GetAriaSort "visitDate" }}
+                        {{ template "sort-arrow" $visitSort }}
+                    </button>
                 </a>
             </th>
             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "reportDue" }}">
-                <a href="{{ .UrlBuilder.GetSortUrl "reportDue" }}" class="sortable-{{ .Sort.GetAriaSort "reportDue" }}">
-                    <button type="button">Report due</button>
+                <a href="{{ .UrlBuilder.GetSortUrl "reportDue" }}">
+                    <button type="button">Report due
+                        {{ $reportSort := .Sort.GetAriaSort "reportDue" }}
+                        {{ template "sort-arrow" $reportSort }}
+                    </button>
                 </a>
             </th>
             <th scope="col" class="govuk-table__header" aria-sort="{{ .Sort.GetAriaSort "crec" }}">
-                <a href="{{ .UrlBuilder.GetSortUrl "crec" }}" class="sortable-{{ .Sort.GetAriaSort "crec" }}">
-                    <button type="button">Risk</button>
+                <a href="{{ .UrlBuilder.GetSortUrl "crec" }}">
+                    <button type="button">Risk
+                        {{ $riskSort := .Sort.GetAriaSort "crec" }}
+                        {{ template "sort-arrow" $riskSort }}
+                    </button>
                 </a>
             </th>
         </tr>
