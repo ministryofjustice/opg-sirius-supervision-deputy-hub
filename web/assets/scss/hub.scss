@@ -24,7 +24,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .autocomplete__wrapper {
