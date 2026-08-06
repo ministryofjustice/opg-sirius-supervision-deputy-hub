@@ -24,7 +24,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 }
 
 .hide {
-  display: none;
+  display: none !important;
 }
 
 .autocomplete__wrapper {
@@ -71,7 +71,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
 }
 
 #footer-background {
-  background: #f4f8fb;
+  background: govuk-functional-colour("template-background");
 }
 
 .filters-accordion {
@@ -150,7 +150,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
     mask-repeat: no-repeat;
     mask-size: 125px 102px;
     background: currentcolor;
-    mask-position: 50% 0%;
+    mask-position: 50%;
   }
 }
 
@@ -163,7 +163,7 @@ $moj-assets-path: "/supervision/deputies/static/assets/";
   background-repeat: no-repeat;
   background-size: 125px 102px;
   text-align: center;
-  background-position: 50% 0%;
+  background-position: 50%;
   white-space: nowrap;
 }
 
@@ -208,7 +208,7 @@ a[href^="mailto:"] {
   }
 }
 
-assurance {
+.assurance {
   header {
     border-top: 1px solid govuk-functional-colour("border");
   }
