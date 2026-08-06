@@ -1,0 +1,360 @@
+@use "node_modules/@ministryofjustice/frontend/moj/all" as *;
+@use "node_modules/govuk-frontend/dist/govuk" as *;
+
+$moj-assets-path: "/supervision/deputies/static/assets/";
+
+.moj-header__container {
+  max-width: 98%;
+}
+
+.moj-timeline__item {
+  max-width: 60em;
+}
+
+.govuk-form-group {
+  max-width: 40em;
+}
+
+.title-and-buttons-inline {
+  display: flex;
+  justify-content: space-between;
+  padding: 1em 0 0.5em;
+  border-bottom: 1px solid govuk-functional-colour("border");
+  margin-bottom: 2em;
+}
+
+.hide {
+  display: none !important;
+}
+
+.autocomplete__wrapper {
+  font-family: "GDS Transport", arial, sans-serif;
+}
+
+#delete-contact-button-group {
+  max-width: 75ch;
+  border-top: 1px solid govuk-functional-colour("border");
+  padding-top: 1em;
+}
+
+.opg-tab {
+  color: black;
+}
+
+.opg-tab-selected {
+  text-decoration: none;
+}
+
+.sirius-blue {
+  color: govuk-functional-colour("brand");
+}
+
+#checkbox-column {
+  max-width: 15px;
+  width: 15px;
+}
+
+.govuk-button--blue {
+  background: govuk-colour("blue");
+
+  &:hover {
+    background: govuk-colour("blue", $variant: "shade-50");
+  }
+}
+
+#edit-assign-title {
+  display: block;
+}
+
+#error-banner-message {
+  color: #d4351c;
+}
+
+#footer-background {
+  background: govuk-functional-colour("template-background");
+}
+
+.filters-accordion {
+  position: relative;
+  padding: 0 0 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid govuk-functional-colour("border");
+}
+
+.filters-accordion__heading {
+  position: relative;
+  padding: 10px 8px 5px 30px;
+  margin: 0;
+}
+
+.filters-accordion__button {
+  z-index: 1;
+  background: none;
+  border: 0;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+  color: govuk-colour("blue");
+}
+.filters-accordion__title {
+  font-size: 19px;
+  line-height: 1.3157894737;
+}
+.filters-accordion__icon {
+  display: none;
+  position: absolute;
+  top: 20px;
+  left: 2px;
+  width: 20px;
+  fill: govuk-functional-colour("link-active");
+}
+
+[aria-expanded="true"] ~ .filters-accordion__icon--up {
+  display: block;
+}
+
+[aria-expanded="false"] ~ .filters-accordion__icon--down {
+  display: block;
+}
+
+.filters-accordion__selected-counter {
+  font-size: 14px;
+  line-height: 1.4285714286;
+}
+
+.filters-accordion__filter {
+  position: relative;
+  background: govuk-colour("white");
+  padding: 13px 0px 10px 0px;
+}
+
+.filters-accordion__search {
+  padding-bottom: 10px;
+}
+
+.filters-accordion__filter-input {
+  font-family: "nta", arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.25;
+  padding-left: 33px;
+  background: url("#{$moj-assets-path}images/icon-search.svg") govuk-functional-colour("body-background")
+    no-repeat -5px -3px;
+}
+
+@supports (-webkit-mask-position: initial) or (mask-position: initial) {
+  .govuk-footer__copyright-logo::before {
+    mask-image: url("#{$moj-assets-path}images/govuk-crest.svg");
+    mask-repeat: no-repeat;
+    mask-size: 125px 102px;
+    background: currentcolor;
+    mask-position: 50% ;
+  }
+}
+
+.govuk-footer__copyright-logo::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 112px;
+  background-image: url("#{$moj-assets-path}images/govuk-crest.svg");
+  background-repeat: no-repeat;
+  background-size: 125px 102px;
+  text-align: center;
+  background-position: 50% ;
+  white-space: nowrap;
+}
+
+.filters-accordion__container-inner {
+  padding: 5px 13px;
+}
+
+.filters-accordion__container {
+  position: relative;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: govuk-colour("white");
+}
+
+.filters-accordion.js-closed .filters-accordion__filter,
+.filters-accordion.js-closed .filters-accordion__container {
+  display: none;
+}
+
+.govuk-details__text {
+  white-space: normal;
+}
+
+.govuk-footer__copyright-logo {
+  text-decoration: none;
+}
+
+.govuk-details__fixed-table {
+  table-layout: fixed;
+}
+
+.govuk-details__fixed-width {
+  width: 33%;
+}
+
+// mailto links have a higher css specificity than classes, so it's styling needs to be overwritten
+a[href^="mailto:"] {
+  color: govuk-functional-colour("link-visited");
+  &:hover {
+    color: govuk-functional-colour("link-hover");
+  }
+}
+
+assurance {
+  header {
+    border-top: 1px solid govuk-functional-colour("border");
+  }
+}
+
+.moj-button-menu__item {
+  display: inline-block;
+  width: auto;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  vertical-align: baseline;
+}
+
+.govuk-summary-list__key,
+.govuk-summary-list__value {
+  vertical-align: baseline;
+}
+
+.moj-filter__tag::after {
+  background-image: url("#{$moj-assets-path}images/icon-tag-remove-cross.svg");
+}
+
+.govuk-width-container,
+.moj-header__container,
+.moj-primary-navigation__container {
+  max-width: none;
+  padding: 0 15px;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.govuk-button-group .govuk-link {
+  font-size: 19px;
+  font-size: 1.1875rem;
+  line-height: 1;
+  padding: 8px 10px 7px;
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+main {
+  header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em 0 0.5em;
+    border-bottom: 1px solid govuk-functional-colour("border");
+    margin-bottom: 2em;
+  }
+
+  .moj-sub-navigation {
+    margin-bottom: 0;
+  }
+}
+
+span.rag {
+  font-weight: bold;
+  &.green {
+    color: govuk-colour("green") !important;
+  }
+  &.amber {
+    color: govuk-colour("orange") !important;
+  }
+  &.red {
+    color: govuk-colour("red") !important;
+  }
+}
+
+table {
+  .govuk-table__cell--checkboxes {
+    width: 1%;
+    white-space: nowrap;
+    label {
+      padding: 0;
+    }
+  }
+
+  td.govuk-table__cell {
+    &.nowrap {
+      white-space: nowrap;
+    }
+    &.capitalise {
+      text-transform: capitalize;
+    }
+
+    span {
+      display: block;
+
+      &.moj-badge,
+      &.name {
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      &.job_title,
+      &.name {
+        white-space: nowrap;
+      }
+
+      &.name {
+        font-weight: 600;
+      }
+
+      &.secondary {
+        color: govuk-functional-colour("secondary-text");
+        font-size: 16px;
+        font-size: 1rem;
+        line-height: 1.25;
+      }
+      &.sentence-case::first-letter {
+        text-transform: capitalize;
+      }
+
+      &.infected-label {
+        color: govuk-functional-colour("error") !important;
+        border: 2px solid govuk-functional-colour("error") !important;
+        padding: 3px 11px;
+        display: inline;
+        margin-left: 10px;
+
+        &[hidden] {
+          display: none;
+        }
+      }
+    }
+  }
+  td.overdue span {
+    border-left: 5px solid govuk-colour("red");
+    padding-left: 5px;
+    font-weight: bold;
+  }
+
+  a.govuk-button {
+    margin-bottom: 0;
+    margin-right: 10px;
+  }
+
+  span.rem-warning {
+    font-weight: bold;
+    color: govuk-colour(red) !important;
+    background: url("#{$moj-assets-path}images/flag.svg") no-repeat 3px 3px;
+    padding-left: 20px;
+    line-height: normal !important;
+  }
+}
