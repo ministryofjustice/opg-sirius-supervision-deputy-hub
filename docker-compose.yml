@@ -4,6 +4,7 @@ services:
         build:
             dockerfile: docker/sirius-deputy-hub/Dockerfile
         ports: ["8888:8888"]
+        read_only: true
         depends_on:
             - json-server
         privileged: false
