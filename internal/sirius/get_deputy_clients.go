@@ -3,10 +3,11 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"sort"
 	"strings"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 )
 
 type Order struct {
