@@ -1,4 +1,4 @@
-FROM cypress/included:15.19.0@sha256:418f70c94f6d727580da697faf8f4ca50c40fda78a57590708fa57772237697c
+FROM cypress/included:15.20.0@sha256:5baa6e2f1831e7b9823246d22b5914fe77187a9bab030aa2f44fceabde17c9d1
 
 WORKDIR /root
 
