@@ -3,9 +3,10 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"strings"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 )
 
 type DeputyEvents []model.DeputyEvent
@@ -72,7 +73,7 @@ func editDeputyEvents(events DeputyEvents, taskTypes TaskTypeMap) DeputyEvents {
 	var list DeputyEvents
 	for _, e := range events {
 		event := model.DeputyEvent{
-			Timestamp:  FormatDateTime(IsoDateTimeZone, e.Timestamp, SiriusDateTime),
+			Timestamp:  e.Timestamp,
 			EventType:  reformatEventType(e.EventType),
 			ID:         e.ID,
 			User:       e.User,
