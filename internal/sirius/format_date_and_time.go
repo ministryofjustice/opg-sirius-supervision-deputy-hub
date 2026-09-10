@@ -1,6 +1,7 @@
 package sirius
 
 import (
+	"log"
 	"regexp"
 	"time"
 )
@@ -15,8 +16,13 @@ func FormatDateTime(currentFormat string, dateString string, displayFormat strin
 	if dateString == "" {
 		return dateString
 	}
-	stringToDateTime, _ := time.Parse(currentFormat, dateString)
+	stringToDateTime, err := time.Parse(currentFormat, dateString)
+	if err != nil {
+		log.Printf("parse failed: layout=%q input=%q", currentFormat, dateString)
+		return dateString
+	}
 	dateTime := stringToDateTime.Local().Format(displayFormat)
+	log.Printf("parse succeeded, %q", dateTime)
 	return dateTime
 }
 
