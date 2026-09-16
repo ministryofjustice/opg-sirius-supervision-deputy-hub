@@ -19,4 +19,3 @@ cypress/downloads
 .DS_Store
 .cache
 .gocache
-yarn-error.log
