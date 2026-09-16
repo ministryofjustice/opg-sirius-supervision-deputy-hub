@@ -2,7 +2,7 @@
 
 all: go-lint build-all unit-test scan pa11y lighthouse cypress down
 
-lint: go-lint yarn-lint
+lint: go-lint npm-lint
 
 build:
 	docker compose build --no-cache --parallel deputy-hub
@@ -10,13 +10,13 @@ build:
 build-all:
 	docker compose build --parallel deputy-hub cypress test-runner json-server
 
-yarn-lint:
-	docker compose run --rm yarn
-	docker compose run --rm yarn lint
+npm-lint:
+	docker compose run --rm npm
+	docker compose run --rm npm run lint
 
-yarn-prettier:
-	docker compose run --rm yarn
-	docker compose run --rm yarn prettier . --write
+npm-prettier:
+	docker compose run --rm npm
+	docker compose run --rm npm run prettier
 
 go-lint:
 	docker compose run --rm go-lint
@@ -48,9 +48,9 @@ up:
 	docker compose up --build -d deputy-hub
 
 dev-up:
-	docker compose run --rm yarn
-	docker compose run --rm yarn build
-	docker compose -f docker-compose.yml -f docker/docker-compose.dev.yml up --build yarn deputy-hub json-server
+	docker compose run --rm npm
+	docker compose run --rm npm run build
+	docker compose -f docker-compose.yml -f docker/docker-compose.dev.yml up --build npm deputy-hub json-server
 
 down:
 	docker compose down
