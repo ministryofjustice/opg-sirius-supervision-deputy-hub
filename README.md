@@ -7,7 +7,7 @@
 
 #### Installing dependencies locally:
 
-- `yarn install`
+- `npm ci --ignore-scripts`
 - `go mod download`
 
 ---
@@ -40,7 +40,7 @@ Note that if you are integrating with local Sirius instead of the mock server, y
 
 Alternatively to set it up not using Docker use below. This hosts it on `localhost:1234`
 
-- `yarn install && yarn build `
+- `npm ci --ignore-scripts && npm run build `
 - `go build main.go `
 - `./main `
 
@@ -57,14 +57,14 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 
 ## Run Cypress tests in UI
 
-- `make up && yarn cypress`
+- `make up && npm cypress`
 
 ---
 
 ### Run the unit/functional tests
 
-test sirius files: `yarn test-sirius`
-test server files: `yarn test-server`
+test sirius files: `npm test-sirius`
+test server files: `npm test-server`
 Run all Go tests: `make unit-test`
 
 ---
@@ -74,8 +74,8 @@ Run all Go tests: `make unit-test`
 This project uses the standard Golang styleguide, and can be autoformatting by running `gofmt -s -w .`.
 To run the go linter run `make go-lint`.
 
-To format .gotmpl files and other assets, we use Prettier, which can be run using `yarn fmt`.
-To run the JS linter run `make yarn-lint`
+To format .gotmpl files and other assets, we use Prettier, which can be run using `npm fmt`.
+To run the JS linter run `make npm-lint`
 
 ---
 
