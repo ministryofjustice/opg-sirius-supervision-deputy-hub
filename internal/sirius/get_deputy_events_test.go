@@ -2,12 +2,13 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/stretchr/testify/assert"
 )
 
 type mockEventClient struct {
@@ -37,7 +38,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		  {
 			"id": 300,
 			"hash": "AW",
-			"timestamp": "31/07/2023 08:45:22",
+			"timestamp": "2023-07-31T08:45:22+00:00",
 			"eventType": "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
 			"user": {
 			  "id": 41,
@@ -71,7 +72,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		  {
 				"id": 369,
 				"hash": "A9",
-				"timestamp": "09/09/2021 14:01:59",
+				"timestamp": "2021-09-09T14:01:59+00:00",
 				"eventType": "Opg\\Core\\Model\\Event\\Task\\TaskEdited",
 				"user": {
 				  "id": 21,
@@ -116,7 +117,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		  {
 			"id": 397,
 			"hash": "AY",
-			"timestamp": "10/01/2021 15:01:59",
+			"timestamp": "2021-01-10T15:01:59+00:00",
 			"eventType": "Opg\\Core\\Model\\Event\\Common\\TaskCreated",
 			"user": {
 			  "id": 21,
@@ -189,7 +190,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		DeputyEvents: []model.DeputyEvent{
 			model.DeputyEvent{
 				ID:        300,
-				Timestamp: "31/07/2023 08:45:22",
+				Timestamp: "31/07/2023 09:45:22",
 				EventType: "DeputyLinkedToOrder",
 				User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678", Email: "system.admin@opgtest.com"},
 				Event: model.Event{
@@ -203,7 +204,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			},
 			model.DeputyEvent{
 				ID:        369,
-				Timestamp: "09/09/2021 14:01:59",
+				Timestamp: "09/09/2021 15:01:59",
 				EventType: "TaskEdited",
 				User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 				Event: model.Event{
@@ -297,7 +298,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	uneditedData := DeputyEvents{
 		model.DeputyEvent{
 			ID:        387,
-			Timestamp: "18/10/2020 11:12:08",
+			Timestamp: "2020-10-18T11:12:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PaDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -338,7 +339,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        388,
-			Timestamp: "18/10/2020 10:11:08",
+			Timestamp: "2020-10-18T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PersonContactDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -369,7 +370,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        389,
-			Timestamp: "16/10/2020 10:11:08",
+			Timestamp: "2020-10-16T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\PADeputyCreated",
 			User: model.User{
 				ID:          51,
@@ -389,7 +390,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        390,
-			Timestamp: "20/09/2020 10:11:08",
+			Timestamp: "2020-09-20T10:11:08+00:00",
 			EventType: "Opg\\Core\\Model\\Event\\Order\\DeputyLinkedToOrder",
 			User: model.User{
 				ID:          51,
@@ -418,7 +419,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	expectedResponse := DeputyEvents{
 		model.DeputyEvent{
 			ID:        387,
-			Timestamp: "18/10/2020 11:12:08",
+			Timestamp: "18/10/2020 12:12:08",
 			EventType: "PaDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -459,7 +460,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        388,
-			Timestamp: "18/10/2020 10:11:08",
+			Timestamp: "18/10/2020 11:11:08",
 			EventType: "PersonContactDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -490,7 +491,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        389,
-			Timestamp: "16/10/2020 10:11:08",
+			Timestamp: "16/10/2020 11:11:08",
 			EventType: "PADeputyCreated",
 			User: model.User{
 				ID:          51,
@@ -510,7 +511,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        390,
-			Timestamp: "20/09/2020 10:11:08",
+			Timestamp: "20/09/2020 11:11:08",
 			EventType: "DeputyLinkedToOrder",
 			User: model.User{
 				ID:          51,
