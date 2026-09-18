@@ -1,5 +1,4 @@
 node_modules
-package-lock.json
 test-results
 tmp/
 web/static
@@ -19,4 +18,3 @@ cypress/downloads
 .DS_Store
 .cache
 .gocache
-yarn-error.log

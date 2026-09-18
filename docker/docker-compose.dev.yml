@@ -1,5 +1,3 @@
-version: "3.6"
-
 services:
   deputy-hub:
     platform: linux/amd64
@@ -20,7 +18,7 @@ services:
       PREFIX: /supervision/deputies
       FEATURES:
 
-  yarn:
+  npm:
     command: watch
 
   json-server:
