@@ -2,17 +2,14 @@ package sirius
 
 import (
 	"bytes"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-)
 
-func AmendDateForDST(date string) string {
-	return FormatDateTime(SiriusDateTime, date, SiriusDateTime)
-}
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
+	"github.com/stretchr/testify/assert"
+)
 
 type mockEventClient struct {
 	responses []io.ReadCloser
@@ -193,7 +190,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 		DeputyEvents: []model.DeputyEvent{
 			model.DeputyEvent{
 				ID:        300,
-				Timestamp: AmendDateForDST("31/07/2023 08:45:22"),
+				Timestamp: "31/07/2023 09:45:22",
 				EventType: "DeputyLinkedToOrder",
 				User:      model.User{ID: 41, Name: "system admin", PhoneNumber: "12345678", Email: "system.admin@opgtest.com"},
 				Event: model.Event{
@@ -207,7 +204,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			},
 			model.DeputyEvent{
 				ID:        369,
-				Timestamp: AmendDateForDST("09/09/2021 14:01:59"),
+				Timestamp: "09/09/2021 15:01:59",
 				EventType: "TaskEdited",
 				User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 				Event: model.Event{
@@ -234,7 +231,7 @@ func TestDeputyEventsReturned(t *testing.T) {
 			},
 			model.DeputyEvent{
 				ID:        397,
-				Timestamp: AmendDateForDST("10/01/2021 15:01:59"),
+				Timestamp: "10/01/2021 15:01:59",
 				EventType: "TaskCreated",
 				User:      model.User{ID: 21, Name: "Lay Team 1 - (Supervision)", PhoneNumber: "0123456789", Email: "LayTeam1.team@opgtest.com"},
 				Event: model.Event{
@@ -422,7 +419,7 @@ func TestEditDeputyEvents(t *testing.T) {
 	expectedResponse := DeputyEvents{
 		model.DeputyEvent{
 			ID:        387,
-			Timestamp: AmendDateForDST("18/10/2020 11:12:08"),
+			Timestamp: "18/10/2020 12:12:08",
 			EventType: "PaDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -463,7 +460,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        388,
-			Timestamp: AmendDateForDST("18/10/2020 10:11:08"),
+			Timestamp: "18/10/2020 11:11:08",
 			EventType: "PersonContactDetailsChanged",
 			User: model.User{
 				ID:          51,
@@ -494,7 +491,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        389,
-			Timestamp: AmendDateForDST("16/10/2020 10:11:08"),
+			Timestamp: "16/10/2020 11:11:08",
 			EventType: "PADeputyCreated",
 			User: model.User{
 				ID:          51,
@@ -514,7 +511,7 @@ func TestEditDeputyEvents(t *testing.T) {
 		},
 		model.DeputyEvent{
 			ID:        390,
-			Timestamp: AmendDateForDST("20/09/2020 10:11:08"),
+			Timestamp: "20/09/2020 11:11:08",
 			EventType: "DeputyLinkedToOrder",
 			User: model.User{
 				ID:          51,

@@ -3,9 +3,10 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
 	"strings"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 )
 
 type DeputyEvents []model.DeputyEvent
