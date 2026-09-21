@@ -3,6 +3,6 @@ ignore:
     SNYK-GOLANG-GITHUBCOMGRPCECOSYSTEMGRPCGATEWAYV2RUNTIME-19432132:
         - '*' :
             reason: "Not yet fixed"
-            expires: "2026-09-21T00:00:00Z"
-            created: "2026-09-14T09:30:00Z"
+            expires: "2026-10-06T00:00:00Z"
+            created: "2026-09-21T08:30:00Z"
 patch:
