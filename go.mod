@@ -5,7 +5,7 @@ go 1.26.2
 require (
 	github.com/ministryofjustice/opg-go-common v1.165.29
 	github.com/stretchr/testify v1.12.1
-	golang.org/x/sync v0.23.0
+	golang.org/x/sync v0.24.0
 )
 
 require (
