@@ -34,7 +34,7 @@ unit-test: setup-directories
 
 cypress: setup-directories build-all
 	docker compose up -d --wait deputy-hub json-server
-	docker compose run --rm cypress run --env grepUntagged=true
+	docker compose run --rm cypress run --expose grepUntagged=true
 
 cypress-single: setup-directories
 	docker compose up -d --wait deputy-hub json-server
@@ -42,7 +42,7 @@ cypress-single: setup-directories
 
 axe: setup-directories build-all
 	docker compose up -d --wait deputy-hub
-	docker compose run --rm cypress run --env grepTags="@axe"
+	docker compose run --rm cypress run --expose grepTags="@axe"
 
 up:
 	docker compose up --build -d deputy-hub

@@ -2,10 +2,10 @@ FROM cypress/included:16.1.1@sha256:e652cda84399aaf99c68d1d0322085dc3faa7ca9ace8
 
 WORKDIR /root
 
-RUN npm install "cypress-failed-log@2.9.2"
-RUN npm install axe-core
-RUN npm install cypress-axe
-RUN npm install "@cypress/grep@5.1.0"
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm ci --ignore-scripts
 
 ENV CYPRESS_VIDEO=false
 ENV CYPRESS_baseUrl=http://deputy-hub:8888

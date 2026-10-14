@@ -7,8 +7,8 @@ EXPOSE 3000
 
 COPY json-server .
 
-RUN yarn install
+RUN npm ci --ignore-scripts
 
 RUN apk add --no-cache curl
 
-ENTRYPOINT ["yarn", "serve"]
+ENTRYPOINT ["npm", "run", "serve"]
