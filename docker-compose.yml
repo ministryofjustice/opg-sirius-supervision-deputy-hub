@@ -1,70 +1,66 @@
 services:
-    deputy-hub:
-        image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
-        build:
-            dockerfile: docker/sirius-deputy-hub/Dockerfile
-        ports: ["8888:8888"]
-        read_only: true
-        depends_on:
-            - json-server
-        privileged: false
-        user: app
-        environment:
-            PORT: 8888
-            SIRIUS_URL: http://json-server:3000
-            HEALTHCHECK: /supervision/deputies/health-check
-            PREFIX: /supervision/deputies
-            FEATURES:
+  deputy-hub:
+    image: 311462405659.dkr.ecr.eu-west-1.amazonaws.com/sirius/sirius-deputy-hub:latest
+    build:
+      dockerfile: docker/sirius-deputy-hub/Dockerfile
+    ports: [ "8888:8888" ]
+    read_only: true
+    depends_on:
+      json-server:
+        condition: service_started
+    privileged: false
+    user: app
+    environment:
+      PORT: 8888
+      SIRIUS_URL: http://json-server:3000
+      HEALTHCHECK: /supervision/deputies/health-check
+      PREFIX: /supervision/deputies
+      FEATURES:
 
-    json-server:
-        build:
-            dockerfile: docker/json-server/Dockerfile
-        ports:
-            - "3000:3000"
-        healthcheck:
-            test: ["CMD", "curl", "-I", "-f", "http://localhost:3000"]
-            interval: 2s
-            timeout: 2s
-            retries: 3
+  json-server:
+    build:
+      dockerfile: docker/json-server/Dockerfile
+    ports:
+      - "3000:3000"
 
-    go-lint:
-        image: golangci/golangci-lint:v2.14.0@sha256:ad862ba6b3798cbe0fd9fd7408d498fd74fbd2623a92406b2fd3898faf0bf98f
-        working_dir: /go/src/app
-        volumes:
-            - ./:/go/src/app
-            - ./.cache/golangci-lint/v2.2.1:/root/.cache
-        command: golangci-lint run -v --timeout 5m
+  go-lint:
+    image: golangci/golangci-lint:v2.14.0@sha256:ad862ba6b3798cbe0fd9fd7408d498fd74fbd2623a92406b2fd3898faf0bf98f
+    working_dir: /go/src/app
+    volumes:
+      - ./:/go/src/app
+      - ./.cache/golangci-lint/v2.2.1:/root/.cache
+    command: golangci-lint run -v --timeout 5m
 
-    gosec:
-        image: securego/gosec:2.24.6@sha256:2cf71ea78210c496c65e3a987576a9c8317b68e20f2960520b3f6f8f9f539be5
-        working_dir: /app
-        volumes:
-            - .:/app
-        command: -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
+  gosec:
+    image: securego/gosec:2.24.6@sha256:2cf71ea78210c496c65e3a987576a9c8317b68e20f2960520b3f6f8f9f539be5
+    working_dir: /app
+    volumes:
+      - .:/app
+    command: -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
 
-    npm:
-        build:
-            dockerfile: docker/npm/Dockerfile
-        command: ["ci", "--ignore-scripts"]
-        volumes:
-            - ./:/home/node/app
+  npm:
+    build:
+      dockerfile: docker/npm/Dockerfile
+    command: [ "ci", "--ignore-scripts" ]
+    volumes:
+      - ./:/home/node/app
 
-    test-runner:
-        build:
-            context: docker/test-runner/
-        command: gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
-        working_dir: /go/src/app
-        volumes:
-            - ./:/go/src/app
-            - ./.gocache:/go/pkg/mod
+  test-runner:
+    build:
+      context: docker/test-runner/
+    command: gotestsum --junitfile test-results/unit-tests.xml -- ./... -coverprofile=test-results/test-coverage.txt
+    working_dir: /go/src/app
+    volumes:
+      - ./:/go/src/app
+      - ./.gocache:/go/pkg/mod
 
-    cypress:
-        build:
-            dockerfile: docker/cypress/Dockerfile
-        command: ["--headless", "-b", "chrome"]
-        volumes:
-            - ./cypress/screenshots:/root/cypress/screenshots:rw,delegated
-            - ./cypress/logs:/root/cypress/logs:rw,delegated
-        depends_on:
-            - deputy-hub
-            - json-server
+  cypress:
+    build:
+      dockerfile: docker/cypress/Dockerfile
+    command: [ "--headless", "-b", "chrome" ]
+    volumes:
+      - ./cypress/screenshots:/root/cypress/screenshots:rw,delegated
+      - ./cypress/logs:/root/cypress/logs:rw,delegated
+    depends_on:
+      - deputy-hub
+      - json-server
