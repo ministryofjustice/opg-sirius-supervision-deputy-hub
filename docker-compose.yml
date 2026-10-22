@@ -6,7 +6,8 @@ services:
         ports: ["8888:8888"]
         read_only: true
         depends_on:
-            - json-server
+            json-server:
+                condition: service_started
         privileged: false
         user: app
         environment:
@@ -21,11 +22,6 @@ services:
             dockerfile: docker/json-server/Dockerfile
         ports:
             - "3000:3000"
-        healthcheck:
-            test: ["CMD", "curl", "-I", "-f", "http://localhost:3000"]
-            interval: 2s
-            timeout: 2s
-            retries: 3
 
     go-lint:
         image: golangci/golangci-lint:v2.14.0@sha256:ad862ba6b3798cbe0fd9fd7408d498fd74fbd2623a92406b2fd3898faf0bf98f
