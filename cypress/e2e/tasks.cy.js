@@ -47,7 +47,7 @@ describe("Tasks", () => {
 
             cy.get(":nth-child(4) > .task_type").should("not.contain.text", "Notes");
 
-            cy.get(":nth-child(2) > .task_type > .govuk-details").click();
+            cy.get(":nth-child(2) > .task_type > .govuk-details > .govuk-details__summary").click();
             cy.get(":nth-child(2) > .task_type > .govuk-details > .govuk-details__text").should("be.visible");
             cy.get(":nth-child(2) > .task_type > .govuk-details > .govuk-details__text").should(
                 "contain.text",
