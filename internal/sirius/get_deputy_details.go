@@ -44,7 +44,7 @@ type DeputyImportantInformation struct {
 	Complaints                HandleLabel `json:"complaints"`
 	IndependentVisitorCharges HandleLabel `json:"independentVisitorCharges"`
 	MonthlySpreadsheet        HandleLabel `json:"monthlySpreadsheet"`
-	PanelDeputy               bool        `json:"panelDeputy"`
+	PanelDeputyStatus         HandleLabel `json:"panelDeputyStatus"`
 	ReportSystem              HandleLabel `json:"reportSystemType"`
 	OtherImportantInformation string      `json:"otherImportantInformation"`
 }
@@ -99,6 +99,10 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam
 	}
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
+
+	if v.DeputyImportantInformation.PanelDeputyStatus.Handle == "" {
+		fmt.Println(v.DeputyImportantInformation.PanelDeputyStatus)
+	}
 
 	if v.DeputyType.Handle == "PA" && v.ExecutiveCaseManager.EcmId == 0 {
 		v.ExecutiveCaseManager.EcmId = defaultPATeam
