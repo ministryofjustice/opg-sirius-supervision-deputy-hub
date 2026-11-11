@@ -38,12 +38,13 @@ services:
             - .:/app
         command: go tool gosec -exclude-dir=.gocache -fmt=sarif -out=/app/test-results/gosec.sarif -stdout -verbose=text /app/...
 
-    npm:
-        build:
-            dockerfile: docker/npm/Dockerfile
-        command: ["ci", "--ignore-scripts"]
+    watch-assets:
+        image: node:24-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
+        working_dir: /home/node/app
+        entrypoint: ["sh"]
         volumes:
             - ./:/home/node/app
+            - watch-assets-node-modules:/home/node/app/node_modules
 
     test-runner:
         build:
@@ -64,3 +65,6 @@ services:
         depends_on:
             - deputy-hub
             - json-server
+
+volumes:
+    watch-assets-node-modules:

@@ -16,7 +16,7 @@
 
 The application ran through Docker can be accessed on `localhost:8888/supervision/deputies/1`.
 
-To enable debugging and hot-reloading of Go and Java Script files:
+To enable debugging and hot-reloading of Go and JavaScript files:
 
 `make dev-up`
 
@@ -75,7 +75,7 @@ This project uses the standard Golang styleguide, and can be autoformatting by r
 To run the go linter run `make go-lint`.
 
 To format .gotmpl files and other assets, we use Prettier, which can be run using `npm fmt`.
-To run the JS linter run `make npm-lint`
+To run the JS linter run `npm run lint`.
 
 ---
 
