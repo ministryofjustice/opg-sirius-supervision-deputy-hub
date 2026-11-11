@@ -41,9 +41,9 @@ services:
     npm:
         build:
             dockerfile: docker/npm/Dockerfile
-        command: ["ci", "--ignore-scripts"]
         volumes:
             - ./:/home/node/app
+            - /home/node/app/node_modules
 
     test-runner:
         build:
