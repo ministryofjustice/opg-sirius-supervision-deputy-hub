@@ -20,7 +20,7 @@ services:
       FEATURES:
 
   npm:
-    command: watch
+    command: ["-c", "exec npm run watch"]
 
   json-server:
     volumes:
