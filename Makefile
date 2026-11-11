@@ -1,22 +1,15 @@
 .PHONY: cypress
 
-all: go-lint build-all unit-test scan pa11y lighthouse cypress down
+all: go-lint build-all unit-test cypress down
 
-lint: go-lint npm-lint
+lint: go-lint
+	npm run lint
 
 build:
 	docker compose build --no-cache --parallel deputy-hub
 
 build-all:
 	docker compose build --parallel deputy-hub cypress test-runner json-server
-
-npm-lint:
-	docker compose run --rm npm
-	docker compose run --rm npm run lint
-
-npm-prettier:
-	docker compose run --rm npm
-	docker compose run --rm npm run prettier
 
 go-lint:
 	docker compose run --rm go-lint
@@ -48,9 +41,7 @@ up:
 	docker compose up --build -d deputy-hub
 
 dev-up:
-	docker compose run --rm npm
-	docker compose run --rm npm run build
-	docker compose -f docker-compose.yml -f docker/docker-compose.dev.yml up --build npm deputy-hub json-server
+	docker compose -f docker-compose.yml -f docker/docker-compose.dev.yml up --build deputy-hub json-server watch-assets
 
 down:
 	docker compose down

@@ -16,7 +16,7 @@
         "lint": "prettier --check .",
         "prettier": "prettier --write .",
         "fmt": "prettier --write .",
-        "watch": "npm run build:js --watch=forever"
+        "watch": "npm run build:css && npm run build:js -- --watch=forever"
     },
     "dependencies": {
         "@cypress/grep": "^7.0.0",

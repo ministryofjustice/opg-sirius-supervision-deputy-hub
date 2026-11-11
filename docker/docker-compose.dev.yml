@@ -19,9 +19,12 @@ services:
       PREFIX: /supervision/deputies
       FEATURES:
 
-  npm:
-    command: watch
+  watch-assets:
+    command: -lc "apk add --no-cache git && npm ci --ignore-scripts && npm run watch"
 
   json-server:
     volumes:
       - ./json-server/config:/app/config
+
+volumes:
+  watch-assets-node-modules:
