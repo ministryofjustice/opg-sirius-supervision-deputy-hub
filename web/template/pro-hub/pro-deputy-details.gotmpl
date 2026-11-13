@@ -159,11 +159,14 @@
                     <dt class="govuk-summary-list__key">Panel deputy</dt>
                     <dd class="govuk-summary-list__value">
                         {{ if ne .DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Label "" }}
-                            {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputy true }}
+                            {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "YES" }}
                                 Yes
                             {{ end }}
-                            {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputy false }}
+                            {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "NO" }}
                                 No
+                            {{ end }}
+                            {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "REMOVED" }}
+                                Removed
                             {{ end }}
                         {{ end }}
                     </dd>

@@ -97,7 +97,7 @@ func TestUpdateImportantInformationForProData(t *testing.T) {
 	}
 
 	formData := ImportantInformationDetails{
-		PanelDeputy:               true,
+		PanelDeputyStatus:         "YES",
 		Complaints:                "NO",
 		AnnualBillingInvoice:      "SCHEDULE AND INVOICE",
 		OtherImportantInformation: "important info",
@@ -131,7 +131,7 @@ func TestUpdateImportantInformationReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    fmt.Sprintf("%v/v1/deputies/%d/important-information", svr.URL + SupervisionAPIPath, ID),
+		URL:    fmt.Sprintf("%v/v1/deputies/%d/important-information", svr.URL+SupervisionAPIPath, ID),
 		Method: http.MethodPut,
 	}, err)
 }

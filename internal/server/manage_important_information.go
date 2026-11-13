@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/util"
@@ -75,15 +74,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			return tmpl.ExecuteTemplate(w, "page", vars)
 
 		case http.MethodPost:
-			var panelDeputyBool bool
 			var err error
-
-			if r.PostFormValue("panel-deputy") != "" {
-				panelDeputyBool, err = strconv.ParseBool(r.PostFormValue("panel-deputy"))
-				if err != nil {
-					return err
-				}
-			}
 
 			annualBillingInvoice := vars.DeputyDetails.DeputyImportantInformation.AnnualBillingInvoice.Handle
 			if r.PostFormValue("annual-billing") != "" {
@@ -98,7 +89,7 @@ func renderTemplateForImportantInformation(client ManageProDeputyImportantInform
 			importantInfoForm := sirius.ImportantInformationDetails{
 				DeputyType:                vars.DeputyType(),
 				Complaints:                r.PostFormValue("complaints"),
-				PanelDeputy:               panelDeputyBool,
+				PanelDeputyStatus:         r.PostFormValue("panel-deputy"),
 				AnnualBillingInvoice:      annualBillingInvoice,
 				OtherImportantInformation: r.PostFormValue("other-info-note"),
 				MonthlySpreadsheet:        r.PostFormValue("monthly-spreadsheet"),

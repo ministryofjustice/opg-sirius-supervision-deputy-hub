@@ -24,7 +24,7 @@ module.exports = function () {
             email: "case.manager@opgtest.com",
             firstname: "case",
             surname: "manager",
-            roles: ["OPG User", "Case Manager", "Finance Manager"],
+            roles: ["OPG User", "Case Manager", "Finance Manager", "Panel Deputy User"],
             locked: false,
             suspended: false,
         },
@@ -280,7 +280,10 @@ module.exports = function () {
                         handle: "YES",
                         label: "Yes",
                     },
-                    panelDeputy: true,
+                    panelDeputyStatus: {
+                        handle: "YES",
+                        label: "Yes",
+                    },
                     annualBillingInvoice: {
                         handle: "SCHEDULE",
                         label: "Schedule",

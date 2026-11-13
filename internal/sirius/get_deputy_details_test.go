@@ -70,6 +70,13 @@ func TestDeputyDetailsReturnedPA(t *testing.T) {
 			Handle: "PA",
 			Label:  "Public Authority",
 		},
+		DeputyImportantInformation: DeputyImportantInformation{
+			PanelDeputyStatus: HandleLabel{
+
+				Handle: "NO",
+				Label:  "No",
+			},
+		},
 	}
 
 	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
@@ -132,6 +139,13 @@ func TestDeputyDetailsReturnedPADefaultECM(t *testing.T) {
 			Handle: "PA",
 			Label:  "Public Authority",
 		},
+		DeputyImportantInformation: DeputyImportantInformation{
+			PanelDeputyStatus: HandleLabel{
+
+				Handle: "NO",
+				Label:  "No",
+			},
+		},
 	}
 
 	deputyDetails, err := client.GetDeputyDetails(getContext(nil), 23, 28, 1)
@@ -193,6 +207,12 @@ func TestDeputyDetailsReturnedPRODefaultECM(t *testing.T) {
 		DeputyType: DeputyType{
 			Handle: "PRO",
 			Label:  "Professional",
+		},
+		DeputyImportantInformation: DeputyImportantInformation{
+			PanelDeputyStatus: HandleLabel{
+				Handle: "NO",
+				Label:  "No",
+			},
 		},
 	}
 
@@ -258,6 +278,13 @@ func TestDeputyDetailsReturnedPro(t *testing.T) {
 		},
 		DeputySubType: DeputySubType{
 			SubType: "PERSON",
+		},
+		DeputyImportantInformation: DeputyImportantInformation{
+			PanelDeputyStatus: HandleLabel{
+
+				Handle: "NO",
+				Label:  "No",
+			},
 		},
 	}
 
