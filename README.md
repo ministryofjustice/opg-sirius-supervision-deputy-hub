@@ -61,7 +61,8 @@ Alternatively to set it up not using Docker use below. This hosts it on `localho
 
 ## Run Cypress tests in UI
 
-- `make up && npm cypress`
+`make dev-up` <br>
+`(in another terminal window) npx cypress open` 
 
 ---
 

@@ -46,7 +46,7 @@ describe("Manage important Information", () => {
         it("allows me to edit and submit the form", () => {
             cy.setCookie("success-route", "/deputies/1");
             cy.get("#complaints-No").click();
-            cy.get("#panel-deputy-no").click();
+            cy.get("#panel-deputy-removed").click();
             cy.get("#annual-billing-Invoice").click();
             cy.get("#f-otherImportantInformation").clear().type("new data entered into box");
             cy.get(".govuk-button").click();
