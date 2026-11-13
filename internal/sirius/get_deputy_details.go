@@ -100,10 +100,6 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam
 
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
-	if v.DeputyImportantInformation.PanelDeputyStatus.Handle == "" {
-		fmt.Println(v.DeputyImportantInformation.PanelDeputyStatus)
-	}
-
 	if v.DeputyType.Handle == "PA" && v.ExecutiveCaseManager.EcmId == 0 {
 		v.ExecutiveCaseManager.EcmId = defaultPATeam
 		v.ExecutiveCaseManager.EcmName = "Public Authority Deputy Team"
@@ -118,6 +114,13 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam
 	}
 	if v.ExecutiveCaseManager.EcmId == defaultPROTeam {
 		v.ExecutiveCaseManager.IsDefault = true
+	}
+
+	if v.DeputyImportantInformation.PanelDeputyStatus.Handle == "" {
+		v.DeputyImportantInformation.PanelDeputyStatus = HandleLabel{
+			Handle: "NO",
+			Label:  "No",
+		}
 	}
 
 	return v, err

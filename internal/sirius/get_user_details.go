@@ -32,6 +32,16 @@ func (u UserDetails) IsSystemManager() bool {
 	return false
 }
 
+func (u UserDetails) IsPanelDeputyUser() bool {
+	for _, role := range u.Roles {
+		if role == "Panel Deputy User" {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (u UserDetails) GetRoles() string {
 	return strings.Join(u.Roles, ",")
 }

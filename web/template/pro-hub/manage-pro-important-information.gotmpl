@@ -40,38 +40,43 @@
                   </fieldset>
                 </div>
 
-                <div class="govuk-form-group">
-                  <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend">
-                        Panel deputy
-                    </legend>
-                    <div class="govuk-radios">
-                      <div class="govuk-radios__item">
-                        <input class="govuk-radios__input" id="panel-deputy-yes" name="panel-deputy" type="radio" value="YES" {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "YES" }} checked="true"{{end}}>
-                        <label class="govuk-label govuk-radios__label" for="panel-deputy-yes">
-                          Yes
-                        </label>
-                      </div>
-                        {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus nil }}
+                {{ if .UserDetails.IsPanelDeputyUser }}
+                    <div class="govuk-form-group">
+                      <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend">
+                            Panel deputy
+                        </legend>
+                        <div class="govuk-radios">
                           <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="panel-deputy-no" name="panel-deputy" type="radio" value="NO" {{ if or eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "NO" eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "UNKNOWN" }} checked="true"{{end}}>
-                            <label class="govuk-label govuk-radios__label" for="panel-deputy-no">
-                              No
+                            <input class="govuk-radios__input" id="panel-deputy-yes" name="panel-deputy" type="radio" value="YES" {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "YES" }} checked="true"{{end}}>
+                            <label class="govuk-label govuk-radios__label" for="panel-deputy-yes">
+                              Yes
                             </label>
                           </div>
-                        {{ end }}
-                        {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "YES" }}
-                          <div class="govuk-radios__item">
-                            <input class="govuk-radios__input" id="panel-deputy-removed" name="panel-deputy" type="radio" value="REMOVED" {{ if eq .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle "REMOVED" }} checked="true"{{end}}>
-                            <label class="govuk-label govuk-radios__label" for="panel-deputy-removed">
-                              Removed
-                            </label>
-                          </div>
-                        {{ end }}
-                    </div>
+                            {{ $panelDeputyStatus := .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle }}
+                            {{ if eq $panelDeputyStatus "NO" }}
+                              <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="panel-deputy-no" name="panel-deputy" type="radio" value="NO" {{ if eq $panelDeputyStatus "NO" }} checked="true"{{end}}>
+                                <label class="govuk-label govuk-radios__label" for="panel-deputy-no">
+                                  No
+                                </label>
+                              </div>
+                            {{ end }}
+                            {{ if or (eq $panelDeputyStatus "YES") (eq $panelDeputyStatus "REMOVED") }}
+                              <div class="govuk-radios__item">
+                                <input class="govuk-radios__input" id="panel-deputy-removed" name="panel-deputy" type="radio" value="REMOVED" {{ if eq $panelDeputyStatus "REMOVED" }} checked="true"{{end}}>
+                                <label class="govuk-label govuk-radios__label" for="panel-deputy-removed">
+                                  Removed
+                                </label>
+                              </div>
+                            {{ end }}
+                        </div>
 
-                  </fieldset>
-                </div>
+                      </fieldset>
+                    </div>
+                {{ else }}
+                    <input class="govuk-radios__input" id="panel-deputy-hidden" name="panel-deputy" type="hidden" value="{{ .DeputyDetails.DeputyImportantInformation.PanelDeputyStatus.Handle }}">
+                {{ end }}
 
                 {{ if .UserDetails.IsFinanceManager }}
                 <div class="govuk-form-group">
