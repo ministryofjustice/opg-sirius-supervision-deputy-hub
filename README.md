@@ -16,9 +16,13 @@
 
 The application ran through Docker can be accessed on `localhost:8888/supervision/deputies/1`.
 
-To enable debugging and hot-reloading of Go and Java Script files:
+To enable debugging and hot-reloading of Go and JavaScript files:
 
 `make dev-up`
+
+The npm image installs dependencies during its build. A separate container volume keeps
+them available alongside the mounted source code; `make dev-up` renews this volume so
+rebuilt dependencies are picked up.
 
 If you are using VSCode, you can then attach a remote debugger on port `2345`. The same is also possible in Goland.
 You will then be able to use breakpoints to stop and inspect the application.
@@ -75,7 +79,11 @@ This project uses the standard Golang styleguide, and can be autoformatting by r
 To run the go linter run `make go-lint`.
 
 To format .gotmpl files and other assets, we use Prettier, which can be run using `npm fmt`.
-To run the JS linter run `make npm-lint`
+To run the JS linter run `npm run lint`.
+
+To run both Go and JS linting in Docker without installing npm dependencies locally, run `make lint`.
+The npm container uses `sh` as its entrypoint, so other commands can be passed with `-c`,
+for example `docker compose run --build --rm npm -c "npm run fmt"`.
 
 ---
 
