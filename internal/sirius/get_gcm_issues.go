@@ -3,8 +3,9 @@ package sirius
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 	"net/http"
+
+	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/model"
 )
 
 type GcmClient struct {
@@ -34,13 +35,26 @@ type GcmIssue struct {
 type GcmIssuesParams struct {
 	IssueStatus string
 	Sort        string
+	Limit       int
+	Page        int
 }
 
-func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams) ([]GcmIssue, error) {
-	var v []GcmIssue
+type GcmIssueList struct {
+	GcmIssues []GcmIssue `json:"gcmIssues"`
+	Pages     Page       `json:"pages"`
+	Total     int        `json:"total"`
+	Limit     int        `json:"limit"`
+}
 
-	req, err := c.newRequest(ctx, http.MethodGet, fmt.Sprintf(SupervisionAPIPath+"/v1/deputies/%d/gcm-issues?&filter=%s&sort=%s", deputyId, params.IssueStatus, params.Sort), nil)
+func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams) (GcmIssueList, error) {
+	var v GcmIssueList
 
+	url := fmt.Sprintf(
+		SupervisionAPIPath+"/v1/deputies/%d/gcm-issues?filter=%s&sort=%s&limit=%d&page=%d",
+		deputyId, params.IssueStatus, params.Sort, params.Limit, params.Page,
+	)
+
+	req, err := c.newRequest(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return v, err
 	}
@@ -58,6 +72,7 @@ func (c *Client) GetGCMIssues(ctx Context, deputyId int, params GcmIssuesParams)
 	if resp.StatusCode != http.StatusOK {
 		return v, newStatusError(resp)
 	}
+
 	err = json.NewDecoder(resp.Body).Decode(&v)
 
 	return v, err

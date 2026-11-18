@@ -5,6 +5,9 @@
         {{ else }}
             <h3 class="govuk-heading-m">Closed issues</h3>
         {{ end }}
+        <nav id="top-pagination" aria-label="Top pagination">
+            {{ template "pagination" .Pagination }}
+        </nav>
         <form method="post">
             <input type="hidden" name="xsrfToken" value="{{ .XSRFToken }}" />
             <button type="submit" id="close-gcm-issue" class="govuk-button govuk-button--blue hide js-mt-edit-btn">
@@ -95,5 +98,8 @@
                 </tbody>
             </table>
         </form>
+        <nav id="bottom-pagination" aria-label="Bottom pagination">
+            {{ template "pagination" .Pagination }}
+        </nav>
     </div>
 {{ end }}

@@ -5,12 +5,13 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/ministryofjustice/opg-go-common/paginate"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/sirius"
 	"github.com/ministryofjustice/opg-sirius-supervision-deputy-hub/internal/urlbuilder"
 )
 
 type GetGcmIssues interface {
-	GetGCMIssues(ctx sirius.Context, deputyId int, params sirius.GcmIssuesParams) ([]sirius.GcmIssue, error)
+	GetGCMIssues(ctx sirius.Context, deputyId int, params sirius.GcmIssuesParams) (sirius.GcmIssueList, error)
 	CloseGCMIssues(ctx sirius.Context, gcmIds []string) error
 }
 
@@ -22,12 +23,15 @@ type GcmIssuesVars struct {
 	AppVars
 	UrlBuilder     urlbuilder.UrlBuilder
 	GCMIssueStatus string
+	PerPage        int
+	Pagination     paginate.Pagination
 }
 
 func (gv GcmIssuesVars) CreateUrlBuilder() urlbuilder.UrlBuilder {
 	return urlbuilder.UrlBuilder{
-		OriginalPath: "open-issues",
-		SelectedSort: gv.Sort,
+		OriginalPath:    fmt.Sprintf("%s-issues", gv.GCMIssueStatus),
+		SelectedPerPage: gv.PerPage,
+		SelectedSort:    gv.Sort,
 	}
 }
 
@@ -38,6 +42,9 @@ func renderTemplateForGcmIssues(client GetGcmIssues, tmpl Template) Handler {
 		switch r.Method {
 		case http.MethodGet:
 			urlParams := r.URL.Query()
+			page := paginate.GetRequestedPage(urlParams.Get("page"))
+			perPageOptions := []int{25, 50, 100}
+			perPage := paginate.GetRequestedElementsPerPage(urlParams.Get("limit"), perPageOptions)
 			sort := urlbuilder.CreateSortFromURL(urlParams, []string{"createdDate", "issueType"})
 			path := r.URL.Path
 			issueStatus := ""
@@ -62,10 +69,11 @@ func renderTemplateForGcmIssues(client GetGcmIssues, tmpl Template) Handler {
 			params := sirius.GcmIssuesParams{
 				IssueStatus: fmt.Sprintf("%s:%s", "status", issueStatus),
 				Sort:        fmt.Sprintf("%s:%s", sort.OrderBy, sort.GetDirection()),
+				Limit:       perPage,
+				Page:        page,
 			}
 
-			gcmIssues, err := client.GetGCMIssues(ctx, app.DeputyId(), params)
-
+			gcmIssueList, err := client.GetGCMIssues(ctx, app.DeputyId(), params)
 			if err != nil {
 				return err
 			}
@@ -73,12 +81,27 @@ func renderTemplateForGcmIssues(client GetGcmIssues, tmpl Template) Handler {
 			vars := GcmIssuesVars{
 				SuccessMessage: successMessage,
 				AppVars:        app,
-				GcmIssues:      gcmIssues,
+				GcmIssues:      gcmIssueList.GcmIssues,
 				Sort:           sort,
 				GCMIssueStatus: issueStatus,
+				PerPage:        perPage,
 			}
 
 			vars.UrlBuilder = vars.CreateUrlBuilder()
+
+			if page > gcmIssueList.Pages.PageTotal && gcmIssueList.Pages.PageTotal > 0 {
+				return Redirect(vars.UrlBuilder.GetPaginationUrl(gcmIssueList.Pages.PageTotal, perPage))
+			}
+
+			vars.Pagination = paginate.Pagination{
+				CurrentPage:     gcmIssueList.Pages.PageCurrent,
+				TotalPages:      gcmIssueList.Pages.PageTotal,
+				TotalElements:   gcmIssueList.Total,
+				ElementsPerPage: perPage,
+				ElementName:     "issues",
+				PerPageOptions:  perPageOptions,
+				UrlBuilder:      vars.UrlBuilder,
+			}
 
 			return tmpl.ExecuteTemplate(w, "page", vars)
 		case http.MethodPost:
