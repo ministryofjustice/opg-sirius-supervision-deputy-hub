@@ -90,7 +90,7 @@ func renderTemplateForReplaceDocument(client ReplaceDocumentClient, tmpl Templat
 
 			// Specify max file size to 100mb
 			r.Body = http.MaxBytesReader(w, r.Body, 100<<20)
-			err := r.ParseMultipartForm(100 << 20)
+			err := r.ParseMultipartForm(100 << 20) // #nosec G120 -- body already capped by http.MaxBytesReader above
 			if err != nil {
 				return err
 			}

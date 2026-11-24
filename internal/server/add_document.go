@@ -68,7 +68,7 @@ func renderTemplateForAddDocument(client AddDocumentClient, tmpl Template) Handl
 
 			// Specify max file size to 100mb and limit request body size
 			r.Body = http.MaxBytesReader(w, r.Body, 100<<20)
-			err := r.ParseMultipartForm(100 << 20)
+			err := r.ParseMultipartForm(100 << 20) // #nosec G120 -- body already capped by http.MaxBytesReader above
 			if err != nil {
 				return err
 			}
