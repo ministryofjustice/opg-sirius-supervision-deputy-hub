@@ -79,7 +79,10 @@ func TestUpdateImportantInformationForProData(t *testing.T) {
 			"handle": "NO",
 			"label": "No"
 		},
-		"panelDeputy": true,
+		"panelDeputyStatus": {
+			"handle": "YES",
+			"label": "Yes"
+		},
 		"annualBillingInvoice": {
 			"handle": "SCHEDULE AND INVOICE",
 			"label": "Schedule and Invoice"
