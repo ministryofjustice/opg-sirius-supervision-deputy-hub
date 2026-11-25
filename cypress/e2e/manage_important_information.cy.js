@@ -38,7 +38,7 @@ describe("Manage important Information", () => {
 
         it("autofills in existing data", () => {
             cy.get("#complaints-Yes").should("be.checked");
-            cy.get("#panel-deputy-yes").should("be.checked");
+            cy.get("#panel-deputy-status-yes").should("be.checked");
             cy.get("#annual-billing-Schedule").should("be.checked");
             cy.get("#f-otherImportantInformation").should("have.text", "Some important information is here");
         });
@@ -46,7 +46,7 @@ describe("Manage important Information", () => {
         it("allows me to edit and submit the form", () => {
             cy.setCookie("success-route", "/deputies/1");
             cy.get("#complaints-No").click();
-            cy.get("#panel-deputy-removed").click();
+            cy.get("#panel-deputy-status-removed").click();
             cy.get("#annual-billing-Invoice").click();
             cy.get("#f-otherImportantInformation").clear().type("new data entered into box");
             cy.get(".govuk-button").click();
@@ -83,7 +83,7 @@ describe("Manage important Information", () => {
             cy.get("body").should("contain", "Annual billing preference");
 
             cy.get("#complaints-Unknown").should("be.checked");
-            cy.get("#panel-deputy-no").should("be.checked");
+            cy.get("#panel-deputy-status-no").should("be.checked");
             cy.get("#annual-billing-Unknown").should("be.checked");
             cy.get("#f-otherImportantInformation").should("have.text", "");
         });
