@@ -12,7 +12,7 @@ type DeputyContactDetails struct {
 	DeputyFirstName  string `json:"firstname"`
 	DeputySurname    string `json:"surname"`
 	Email            string `json:"email"`
-	PhoneNumber      string `json:"workPhoneNumber"`
+	PhoneNumber      string `json:"phoneNumber"`
 	AddressLine1     string `json:"addressLine1"`
 	AddressLine2     string `json:"addressLine2"`
 	AddressLine3     string `json:"addressLine3"`

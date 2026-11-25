@@ -125,7 +125,7 @@ describe("Manage Deputy Contact Details", () => {
             );
 
             cy.get("#contact-details-form > :nth-child(5).govuk-form-group--error").should("exist");
-            cy.get("#f-workPhoneNumber.govuk-input--error").should("exist");
+            cy.get("#f-phoneNumber.govuk-input--error").should("exist");
             cy.get("#contact-details-form > :nth-child(5) > #name-error-stringLengthTooLong").should(
                 "contain",
                 "The telephone number must be 255 characters or fewer",

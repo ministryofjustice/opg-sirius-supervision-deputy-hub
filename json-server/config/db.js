@@ -2170,7 +2170,7 @@ module.exports = function () {
                     postcode: {
                         stringLengthTooLong: "",
                     },
-                    workPhoneNumber: {
+                    phoneNumber: {
                         stringLengthTooLong: "",
                     },
                     email: {
