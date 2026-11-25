@@ -20,7 +20,7 @@ var translationMappings = map[string]string{
 	"FIELD.county":                    "County",
 	"FIELD.country":                   "Country",
 	"FIELD.annualBillingInvoice":      "Annual billing invoice",
-	"FIELD.panelDeputy":               "Panel deputy",
+	"FIELD.panelDeputyStatus":         "Panel deputy",
 	"FIELD.independentVisitorCharges": "Independent visitor charges",
 	"FIELD.bankCharges":               "Bank charges",
 	"FIELD.apad":                      "APAD",

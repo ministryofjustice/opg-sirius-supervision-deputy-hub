@@ -17,7 +17,7 @@ type ImportantInformationDetails struct {
 	AnnualBillingInvoice      string `json:"annualBillingInvoice"`
 	OtherImportantInformation string `json:"otherImportantInformation"`
 	Complaints                string `json:"complaints"`
-	PanelDeputy               bool   `json:"panelDeputy"`
+	PanelDeputyStatus         string `json:"panelDeputyStatus"`
 }
 
 func (c *Client) UpdateImportantInformation(ctx Context, deputyId int, importantInfoForm ImportantInformationDetails) error {

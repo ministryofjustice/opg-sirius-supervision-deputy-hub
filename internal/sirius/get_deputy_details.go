@@ -44,7 +44,7 @@ type DeputyImportantInformation struct {
 	Complaints                HandleLabel `json:"complaints"`
 	IndependentVisitorCharges HandleLabel `json:"independentVisitorCharges"`
 	MonthlySpreadsheet        HandleLabel `json:"monthlySpreadsheet"`
-	PanelDeputy               bool        `json:"panelDeputy"`
+	PanelDeputyStatus         HandleLabel `json:"panelDeputyStatus"`
 	ReportSystem              HandleLabel `json:"reportSystemType"`
 	OtherImportantInformation string      `json:"otherImportantInformation"`
 }
@@ -114,6 +114,13 @@ func (c *Client) GetDeputyDetails(ctx Context, defaultPATeam int, defaultPROTeam
 	}
 	if v.ExecutiveCaseManager.EcmId == defaultPROTeam {
 		v.ExecutiveCaseManager.IsDefault = true
+	}
+
+	if v.DeputyImportantInformation.PanelDeputyStatus.Handle == "" {
+		v.DeputyImportantInformation.PanelDeputyStatus = HandleLabel{
+			Handle: "NO",
+			Label:  "No",
+		}
 	}
 
 	return v, err
