@@ -2,6 +2,7 @@ package sirius
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -18,7 +19,7 @@ func TestUpdateDeputyContactDetails(t *testing.T) {
 	mockClient := &mocks.MockClient{}
 	client, _ := NewClient(mockClient, "http://localhost:3000")
 
-	json := `{
+	responseJSON := `{
     "Email":                            "r.PostFormValue("email")",
     "PhoneNumber":                      "r.PostFormValue("telephone")",
     "AddressLine1":                     "r.PostFormValue("address-line-1")",
@@ -29,9 +30,11 @@ func TestUpdateDeputyContactDetails(t *testing.T) {
     "Postcode":                         "r.PostFormValue("postcode")",
 	}`
 
-	r := io.NopCloser(bytes.NewReader([]byte(json)))
+	r := io.NopCloser(bytes.NewReader([]byte(responseJSON)))
+	var requestBody map[string]interface{}
 
-	mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+	mocks.GetDoFunc = func(req *http.Request) (*http.Response, error) {
+		_ = json.NewDecoder(req.Body).Decode(&requestBody)
 		return &http.Response{
 			StatusCode: 200,
 			Body:       r,
@@ -51,6 +54,8 @@ func TestUpdateDeputyContactDetails(t *testing.T) {
 
 	err := client.UpdateDeputyContactDetails(getContext(nil), ID, formData)
 	assert.Nil(t, err)
+	assert.Equal(t, "telephone", requestBody["phoneNumber"])
+	assert.NotContains(t, requestBody, "workPhoneNumber")
 }
 
 func TestUpdateDeputyContactDetailsReturnsNewStatusError(t *testing.T) {
@@ -77,7 +82,7 @@ func TestUpdateDeputyContactDetailsReturnsNewStatusError(t *testing.T) {
 
 	assert.Equal(t, StatusError{
 		Code:   http.StatusMethodNotAllowed,
-		URL:    fmt.Sprintf("%v/v1/deputies/%d/contact-details", svr.URL + SupervisionAPIPath, ID),
+		URL:    fmt.Sprintf("%v/v1/deputies/%d/contact-details", svr.URL+SupervisionAPIPath, ID),
 		Method: http.MethodPut,
 	}, err)
 }

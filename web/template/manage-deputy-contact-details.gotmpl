@@ -196,14 +196,14 @@
                                     required/>
                             </div>
                         </fieldset>
-                        <div class="govuk-form-group{{ if index .Errors "workPhoneNumber" }} govuk-form-group--error{{ end }}">
-                            <label class="govuk-label" for="workPhoneNumber">
+                        <div class="govuk-form-group{{ if index .Errors "phoneNumber" }} govuk-form-group--error{{ end }}">
+                            <label class="govuk-label" for="phoneNumber">
                                 Telephone number
                             </label>
-                            {{ template "error-message" (index .Errors "workPhoneNumber") }}
+                            {{ template "error-message" (index .Errors "phoneNumber") }}
                             <input
-                                class="govuk-input{{ if index .Errors "workPhoneNumber" }} govuk-input--error{{ end }}"
-                                id="f-workPhoneNumber"
+                                class="govuk-input{{ if index .Errors "phoneNumber" }} govuk-input--error{{ end }}"
+                                id="f-phoneNumber"
                                 name="telephone"
                                 type="text"
                                 value="{{ .DeputyDetails.PhoneNumber }}" />

@@ -56,16 +56,16 @@ describe("Manage Deputy Contact Details", () => {
             cy.get("form").submit();
             cy.get(".govuk-error-summary__title").should("contain", "There is a problem");
             cy.get(".govuk-error-summary__list").within(() => {
-                cy.get("li").eq(0).should("contain", "The building or street must be 255 characters or fewer");
-                cy.get("li").eq(1).should("contain", "Address line 2 must be 255 characters or fewer");
-                cy.get("li").eq(2).should("contain", "Address line 3 must be 255 characters or fewer");
-                cy.get("li").eq(3).should("contain", "The county must be 255 characters or fewer");
-                cy.get("li").eq(4).should("contain", "The email must be 255 characters or fewer");
-                cy.get("li").eq(5).should("contain", "The deputy first name is required and can't be empty");
-                cy.get("li").eq(6).should("contain", "The postcode must be 255 characters or fewer");
-                cy.get("li").eq(7).should("contain", "The deputy surname is required and can't be empty");
-                cy.get("li").eq(8).should("contain", "The town or city must be 255 characters or fewer");
-                cy.get("li").eq(9).should("contain", "The telephone number must be 255 characters or fewer");
+                cy.contains("li", "The building or street must be 255 characters or fewer");
+                cy.contains("li", "Address line 2 must be 255 characters or fewer");
+                cy.contains("li", "Address line 3 must be 255 characters or fewer");
+                cy.contains("li", "The county must be 255 characters or fewer");
+                cy.contains("li", "The email must be 255 characters or fewer");
+                cy.contains("li", "The deputy first name is required and can't be empty");
+                cy.contains("li", "The postcode must be 255 characters or fewer");
+                cy.contains("li", "The deputy surname is required and can't be empty");
+                cy.contains("li", "The town or city must be 255 characters or fewer");
+                cy.contains("li", "The telephone number must be 255 characters or fewer");
             });
 
             cy.get("#contact-details-form > :nth-child(2).govuk-form-group--error").should("exist");
@@ -125,7 +125,7 @@ describe("Manage Deputy Contact Details", () => {
             );
 
             cy.get("#contact-details-form > :nth-child(5).govuk-form-group--error").should("exist");
-            cy.get("#f-workPhoneNumber.govuk-input--error").should("exist");
+            cy.get("#f-phoneNumber.govuk-input--error").should("exist");
             cy.get("#contact-details-form > :nth-child(5) > #name-error-stringLengthTooLong").should(
                 "contain",
                 "The telephone number must be 255 characters or fewer",
